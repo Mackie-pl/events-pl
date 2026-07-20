@@ -1,0 +1,22 @@
+name: daily-digest
+on:
+  schedule:
+    - cron: "0 15 * * *" # 17:00 czasu PL latem (CEST); zimą 16:00 — ew. zmienić na 16
+  workflow_dispatch:
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --omit=optional
+      - run: npm run digest
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          DIGEST_TO: ${{ secrets.DIGEST_TO }}
+          # opcjonalnie:
+          # DIGEST_CHILD_AGE: "5"
