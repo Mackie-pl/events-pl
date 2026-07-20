@@ -1,0 +1,72 @@
+{
+  "region": {
+    "name": "Poznań +15km",
+    "center": {"lat": 52.4064, "lon": 16.9252},
+    "radius_km": 15,
+    "discovered_at": "2026-07-20",
+    "discovery_method": "manual (stage-1 prototype); future runs: discover.py + smart model, monthly"
+  },
+  "comment": "verified=true → URL potwierdzony (fetch działał / znaleziony w wyszukiwarce). verified=false → kandydat do potwierdzenia przy pierwszym przebiegu daily.py (404 → flaga do re-discovery). fetch: plain|headless|pdf|api|fb",
+  "sources": [
+    {"id":"poznan-city-api","name":"Poznań – miejski web service wydarzeń","type":"api","url":"https://www.um.poznan.pl/web-service/events?wsdl","town":"Poznań","fetch":"api","verified":true,"notes":"SOAP/XML, getEvents(dateFrom,dateTo), max 250 wyników"},
+    {"id":"poznan-kultura","name":"kultura.poznan.pl – Kalendarium","type":"city_portal","url":"https://kultura.poznan.pl/mim/public/kultura/events.html?co=list&lang=pl&category=&p={page}","town":"Poznań","fetch":"plain","verified":true,"notes":"paginacja p=0..N; widok dzienny jest JS-only — używać listy"},
+    {"id":"poznan-kultura-rss","name":"kultura.poznan.pl – RSS","type":"rss","url":"https://kultura.poznan.pl/mim/feeds/","town":"Poznań","fetch":"plain","verified":true},
+    {"id":"poznan-events","name":"poznan.pl – Co? Gdzie? Kiedy?","type":"city_portal","url":"https://www.poznan.pl/mim/events/","town":"Poznań","fetch":"plain","verified":true},
+    {"id":"ck-zamek","name":"CK Zamek","type":"culture_center","url":"https://ckzamek.pl/wydarzenia/","town":"Poznań","fetch":"headless","verified":false},
+    {"id":"estrada","name":"Estrada Poznańska (Lato z Estradą, Estrada w Centrum)","type":"culture_center","url":"https://estrada.poznan.pl/","town":"Poznań","fetch":"plain","verified":false},
+    {"id":"brama-poznania","name":"Brama Poznania / Trakt Królewsko-Cesarski","type":"venue","url":"https://bramapoznania.pl/wydarzenia","town":"Poznań","fetch":"plain","verified":false},
+    {"id":"teatr-animacji","name":"Teatr Animacji (repertuar + wiek widzów)","type":"venue","url":"https://teatranimacji.pl/pl/repertuar","town":"Poznań","fetch":"plain","verified":true,"notes":"strona spektaklu ma pole WIEK"},
+    {"id":"biblraczynskich","name":"Biblioteka Raczyńskich – wydarzenia","type":"library","url":"https://bracz.edu.pl/wydarzenia/","town":"Poznań","fetch":"plain","verified":false},
+    {"id":"palmiarnia","name":"Palmiarnia Poznańska","type":"venue","url":"https://palmiarnia.poznan.pl/","town":"Poznań","fetch":"plain","verified":false},
+    {"id":"nowe-zoo","name":"ZOO Poznań – wydarzenia","type":"venue","url":"https://zoo.poznan.pl/","town":"Poznań","fetch":"plain","verified":false},
+    {"id":"dk-stokrotka","name":"Dom Kultury Stokrotka (Grunwald)","type":"culture_center","url":"https://www.facebook.com/DKStokrotka/","town":"Poznań","fetch":"fb","verified":false,"notes":"przykład DK dzielnicowego – FB jako główne medium"},
+    {"id":"dk-pod-lipami","name":"Dom Kultury Pod Lipami (Winogrady)","type":"culture_center","url":"https://www.psm-winogrady.pl/domy-kultury/","town":"Poznań","fetch":"plain","verified":false},
+    {"id":"dk-orbita","name":"Osiedlowy DK Orbita (os. Kosmonautów)","type":"culture_center","url":"https://www.psm-winogrady.pl/domy-kultury/","town":"Poznań","fetch":"plain","verified":false,"notes":"potwierdzony jako miejsce wydarzeń w kultura.poznan.pl"},
+    {"id":"fyrtel-glowna","name":"Fyrtel Główna","type":"culture_center","url":"https://www.facebook.com/fyrtelglowna/","town":"Poznań","fetch":"fb","verified":false},
+
+    {"id":"lubon-city","name":"Miasto Luboń – aktualności","type":"city_portal","url":"https://lubon.pl/","town":"Luboń","fetch":"plain","verified":true},
+    {"id":"lubon-ok","name":"Ośrodek Kultury w Luboniu","type":"culture_center","url":"https://www.oklubon.pl/","town":"Luboń","fetch":"plain","verified":true},
+    {"id":"lubon-ok-fb","name":"OK Luboń – Facebook","type":"fb_page","url":"https://www.facebook.com/OsrodekKulturyLubon/","town":"Luboń","fetch":"fb","verified":true},
+    {"id":"lubon-plaza","name":"Plaża miejska Luboń (kalendarz venue)","type":"venue","url":"https://www.facebook.com/plazamiejskalubon/","town":"Luboń","fetch":"fb","verified":false,"notes":"przykład kalendarza-venue wskazany przez użytkownika"},
+    {"id":"lubon-biblioteka","name":"Biblioteka Miejska w Luboniu","type":"library","url":"https://biblub.com.pl/","town":"Luboń","fetch":"plain","verified":false},
+
+    {"id":"puszczykowo-city","name":"Puszczykowo – instytucje kultury","type":"city_portal","url":"https://puszczykowo.pl/strefa-miejska/kultura/instytucje-kultury","town":"Puszczykowo","fetch":"plain","verified":true},
+    {"id":"puszczykowo-bmcak","name":"Biblioteka Miejska CAK Puszczykowo","type":"culture_center","url":"https://www.biblioteka.puszczykowo.pl/","town":"Puszczykowo","fetch":"plain","verified":false},
+
+    {"id":"mosina-city","name":"Gmina Mosina – kalendarz wydarzeń","type":"city_portal","url":"https://www.mosina.pl/wydarzenia?page={page}","town":"Mosina","fetch":"plain","verified":true,"notes":"czysty HTML, paginacja"},
+    {"id":"mosina-mok","name":"Mosiński Ośrodek Kultury","type":"culture_center","url":"https://www.kultura.gmina.pl/aktualnosci/","town":"Mosina","fetch":"plain","verified":true},
+    {"id":"mosina-osir","name":"OSiR Mosina – wydarzenia + programy PDF","type":"pdf_program","url":"https://osirmosina.pl/wydarzenia","town":"Mosina","fetch":"plain","verified":true,"notes":"strona linkuje PDF-y programów; daily.py rozwija PDF jednym hopem"},
+    {"id":"mosina-biblioteka","name":"Mosińska Biblioteka Publiczna","type":"library","url":"http://bibliotekamosina.pl/","town":"Mosina","fetch":"plain","verified":true},
+    {"id":"mosina-galeria","name":"Galeria Sztuki w Mosinie","type":"venue","url":"https://www.galeriamosina.pl/","town":"Mosina","fetch":"plain","verified":true},
+    {"id":"mosina-fb","name":"Gmina Mosina – Facebook","type":"fb_page","url":"https://www.facebook.com/gminamosina/","town":"Mosina","fetch":"fb","verified":true},
+
+    {"id":"komorniki-city","name":"Gmina Komorniki – kultura i sport","type":"city_portal","url":"https://www.komorniki.pl/kultura-i-sport.html","town":"Komorniki","fetch":"plain","verified":true},
+    {"id":"komorniki-gok","name":"GOK Komorniki (DK Koło, Remiza Plewiska…)","type":"culture_center","url":"https://gokkomorniki.pl/","town":"Komorniki","fetch":"plain","verified":false},
+
+    {"id":"dopiewo-city","name":"Gmina Dopiewo","type":"city_portal","url":"https://dopiewo.pl/","town":"Dopiewo","fetch":"plain","verified":false},
+    {"id":"dopiewo-gosir","name":"GOSiR Dopiewo / CRK Konarzewo","type":"culture_center","url":"https://gosir.dopiewo.pl/","town":"Dopiewo","fetch":"plain","verified":false},
+
+    {"id":"tarnowo-city","name":"Gmina Tarnowo Podgórne","type":"city_portal","url":"https://www.tarnowo-podgorne.pl/","town":"Tarnowo Podgórne","fetch":"plain","verified":false},
+    {"id":"tarnowo-gok","name":"GOK Sezam (Tarnowo Podgórne)","type":"culture_center","url":"https://goksezam.pl/","town":"Tarnowo Podgórne","fetch":"plain","verified":false},
+
+    {"id":"rokietnica-city","name":"Gmina Rokietnica","type":"city_portal","url":"https://rokietnica.pl/","town":"Rokietnica","fetch":"plain","verified":false},
+    {"id":"rokietnica-gok","name":"GOK Rokietnica","type":"culture_center","url":"https://kultura.rokietnica.pl/","town":"Rokietnica","fetch":"plain","verified":false},
+
+    {"id":"suchylas-city","name":"Gmina Suchy Las","type":"city_portal","url":"https://www.suchylas.pl/","town":"Suchy Las","fetch":"plain","verified":false},
+    {"id":"suchylas-ckbp","name":"CKiBP Suchy Las (Centrum Kultury i Biblioteka)","type":"culture_center","url":"https://www.osrodekkultury.pl/","town":"Suchy Las","fetch":"plain","verified":false},
+
+    {"id":"czerwonak-city","name":"Gmina Czerwonak","type":"city_portal","url":"https://www.czerwonak.pl/","town":"Czerwonak","fetch":"plain","verified":true},
+    {"id":"czerwonak-gok","name":"GOK Sokół (Czerwonak)","type":"culture_center","url":"https://goksokol.pl/","town":"Czerwonak","fetch":"plain","verified":false},
+
+    {"id":"swarzedz-city","name":"Miasto i Gmina Swarzędz","type":"city_portal","url":"https://www.swarzedz.pl/","town":"Swarzędz","fetch":"plain","verified":false},
+    {"id":"swarzedz-ok","name":"Ośrodek Kultury w Swarzędzu","type":"culture_center","url":"https://www.ok-swarzedz.pl/","town":"Swarzędz","fetch":"plain","verified":false},
+
+    {"id":"kornik-city","name":"Miasto i Gmina Kórnik","type":"city_portal","url":"https://www.kornik.pl/","town":"Kórnik","fetch":"plain","verified":false},
+    {"id":"kornik-kok","name":"Kórnicki Ośrodek Kultury","type":"culture_center","url":"https://kok.kornik.pl/","town":"Kórnik","fetch":"plain","verified":false},
+    {"id":"kornik-arboretum","name":"Arboretum Kórnickie","type":"venue","url":"https://www.idpan.poznan.pl/arboretum/","town":"Kórnik","fetch":"plain","verified":false},
+
+    {"id":"kleszczewo-gokis","name":"GOKiS Kleszczewo","type":"culture_center","url":"https://gokis-kleszczewo.pl/","town":"Kleszczewo","fetch":"plain","verified":false}
+  ],
+  "fb_note": "Źródła fetch:fb wymagają scrapera third-party (np. Apify facebook-events-scraper, ~5-10 USD/mies przy tej skali) LUB pominięcia w wersji zero-cost. Grupy zamknięte: świadomie poza zakresem.",
+  "todo_next_discovery": ["parafie (festyny)", "kawiarnie/księgarnie z eventami (Poznań: ~20 miejsc)", "muzea + oddziały", "filharmonia/orkiestry", "aquaparki/Termy", "biblioteki filialne z własnymi FB"]
+}

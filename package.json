@@ -1,0 +1,27 @@
+{
+  "name": "events-pl",
+  "version": "0.3.0",
+  "type": "module",
+  "description": "2-stage local events aggregation pipeline (discovery + daily extraction) via OpenRouter",
+  "repository": "github:Mackie-pl/events-pl",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "daily": "tsx src/daily.ts",
+    "discover": "tsx src/discover.ts",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "html-to-text": "^9.0.5",
+    "unpdf": "^0.12.1"
+  },
+  "optionalDependencies": {
+    "playwright": "^1.50.0"
+  },
+  "devDependencies": {
+    "@types/html-to-text": "^9.0.4",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

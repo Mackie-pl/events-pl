@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Co się dzieje? — wydarzenia lokalne</title>
+<style>
+  :root{--bg:#f6f4ef;--card:#fff;--ink:#22211e;--muted:#7a7568;--accent:#c2410c;--accent-soft:#fff1e8;--green:#3f6212;--green-soft:#f0f7e6;--border:#e5e0d5}
+  *{box-sizing:border-box} body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.45}
+  header{padding:28px 20px 10px;max-width:960px;margin:0 auto} h1{margin:0 0 4px;font-size:26px}
+  .sub{color:var(--muted);font-size:14px;margin-bottom:16px}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px 60px}
+  .controls{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;align-items:center}
+  .controls input[type=search]{flex:1;min-width:180px;padding:9px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px;background:var(--card)}
+  .agebox{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:999px;padding:4px 12px;font-size:13px}
+  .agebox input{width:52px;border:none;font-size:13px;outline:none;background:transparent}
+  .chip{border:1px solid var(--border);background:var(--card);border-radius:999px;padding:7px 14px;font-size:13px;cursor:pointer;user-select:none}
+  .chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .count{color:var(--muted);font-size:13px;margin:6px 0 14px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;gap:14px}
+  .when{min-width:86px;text-align:center;background:var(--accent-soft);border-radius:10px;padding:8px 6px}
+  .when .d{font-weight:700;font-size:15px;color:var(--accent)} .when .t{font-size:12px;color:var(--muted)}
+  .card h3{margin:0 0 3px;font-size:15px} .card h3 a{color:inherit;text-decoration:none} .card h3 a:hover{text-decoration:underline}
+  .meta{font-size:12.5px;color:var(--muted)}
+  .note{font-size:12px;color:#92400e;background:#fef3c7;border-radius:8px;padding:3px 8px;display:inline-block;margin-top:5px}
+  .tags{margin-top:6px;display:flex;flex-wrap:wrap;gap:5px}
+  .tag{font-size:11px;padding:2px 8px;border-radius:999px;background:#f0ede5;color:#5b564b;cursor:pointer}
+  .tag.family{background:var(--green-soft);color:var(--green)} .tag.age{background:#ffe4e6;color:#9f1239;font-weight:600}
+  .tag.free{background:#e7f0fb;color:#1e4f8f} .tag.paid{background:#fdf2d0;color:#854d0e}
+  .slots{margin-top:6px;font-size:12.5px;color:var(--muted);border-left:3px solid var(--border);padding-left:10px}
+  .empty{text-align:center;color:var(--muted);padding:40px 0}
+</style>
+</head>
+<body>
+<header><h1>Co się dzieje?</h1><div class="sub" id="gen"></div></header>
+<div class="wrap">
+  <div class="controls">
+    <input type="search" id="q" placeholder="szukaj lub kliknij tag…">
+    <span class="agebox">👶 wiek: <input type="number" id="age" min="0" max="18" placeholder="np. 5"></span>
+    <span class="chip" data-f="weekend">Najbliższy weekend</span>
+    <span class="chip" data-f="family">Dla dzieci</span>
+    <span class="chip" data-f="free">Bezpłatne</span>
+  </div>
+  <div class="count" id="count"></div>
+  <div id="list"></div>
+  <div class="empty" id="empty" style="display:none">Nic nie znaleziono 🤷</div>
+</div>
+<script>
+const DATA = /*__EVENTS__*/;
+const EVENTS = Array.isArray(DATA) ? DATA : (DATA.events||[]);
+const state={q:"",age:null,weekend:false,family:false,free:false};
+const dni=["nd","pon","wt","śr","czw","pt","sob"];
+function nextWeekend(){const t=new Date();const sat=new Date(t);sat.setDate(t.getDate()+((6-t.getDay())%7));const sun=new Date(sat);sun.setDate(sat.getDate()+1);const f=d=>d.toISOString().slice(0,10);return[f(sat),f(sun)];}
+const WK=nextWeekend();
+const fmt=iso=>{const d=new Date(iso+"T12:00:00");return dni[d.getDay()]+" "+d.getDate()+"."+String(d.getMonth()+1).padStart(2,"0")};
+const inWk=e=>WK.includes(e.date_start)||(e.date_end&&e.date_start<=WK[1]&&e.date_end>=WK[0]);
+function ageOk(e,w){if(w==null||isNaN(w))return true;const a=e.age||{};if(a.min!=null&&w<a.min)return false;if(a.max!=null&&w>a.max)return false;return true;}
+function matches(e){
+  if(e.is_noise)return false;
+  if(e.date_end?e.date_end<new Date().toISOString().slice(0,10):e.date_start<new Date().toISOString().slice(0,10))return false;
+  if(state.weekend&&!inWk(e))return false;
+  if(state.family&&e.family_friendly!==true)return false;
+  if(state.free&&!(e.price&&e.price.free===true))return false;
+  if(!ageOk(e,state.age))return false;
+  if(state.q){const h=((e.title||"")+" "+(e.venue||"")+" "+(e.tags||[]).join(" ")+" "+(e.town||"")).toLowerCase();if(!h.includes(state.q.toLowerCase()))return false;}
+  return true;
+}
+function render(){
+  const evs=EVENTS.filter(matches).sort((a,b)=>(a.date_start||"").localeCompare(b.date_start||"")||(a.time_start||"").localeCompare(b.time_start||""));
+  document.getElementById("list").innerHTML=evs.map(e=>{
+    const a=e.age||{},p=e.price||{};
+    return `<div class="card">
+      <div class="when"><div class="d">${fmt(e.date_start)}${e.date_end?"<br>–"+fmt(e.date_end):""}</div><div class="t">${e.time_start||""}${e.time_end?"–"+e.time_end:""}</div></div>
+      <div style="flex:1">
+        <h3><a href="${e.source_url}" target="_blank" rel="noopener">${e.title}</a></h3>
+        <div class="meta">📍 ${e.venue||"?"} · ${e.town||""}${e.geo?` · <a href="https://www.openstreetmap.org/?mlat=${e.geo.lat}&mlon=${e.geo.lon}#map=16/${e.geo.lat}/${e.geo.lon}" target="_blank">mapa</a>`:""}${e.registration?` · zapisy: ${e.registration}`:""}</div>
+        ${e.container?`<div class="meta">↳ część: ${e.container}</div>`:""}
+        ${e.conditional?`<div class="note">⚠️ ${e.conditional}</div>`:""}
+        ${e.sub_slots?`<div class="slots">${e.sub_slots.map(s=>`⏱ ${s.time} — ${s.label}${s.age&&s.age.label?" ("+s.age.label+")":""}`).join("<br>")}</div>`:""}
+        <div class="tags">
+          ${a.label?`<span class="tag age">wiek: ${a.label}</span>`:""}
+          ${e.family_friendly===true?'<span class="tag family">👨‍👦 dla dzieci</span>':(e.family_friendly==="maybe"?'<span class="tag">rodzinnie? 🤔</span>':"")}
+          ${p.free===true?'<span class="tag free">bezpłatne</span>':(p.free===false?`<span class="tag paid">${p.amount_pln?p.amount_pln+" zł":"płatne"}</span>`:"")}
+          ${(e.tags||[]).map(t=>`<span class="tag" onclick="setQ('${t}')">${t}</span>`).join("")}
+        </div>
+      </div></div>`}).join("");
+  document.getElementById("empty").style.display=evs.length?"none":"block";
+  document.getElementById("count").textContent=evs.length+" wydarzeń";
+}
+function setQ(t){state.q=t;document.getElementById("q").value=t;render();}
+document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{state[c.dataset.f]=!state[c.dataset.f];c.classList.toggle("on");render();}));
+document.getElementById("q").addEventListener("input",e=>{state.q=e.target.value;render();});
+document.getElementById("age").addEventListener("input",e=>{state.age=e.target.value===""?null:parseInt(e.target.value,10);render();});
+document.getElementById("gen").textContent="Wygenerowano automatycznie"+(DATA.generated?" · "+DATA.generated:"")+" · kliknij tag, by filtrować (np. warsztaty:ceramika)";
+render();
+</script>
+</body>
+</html>
