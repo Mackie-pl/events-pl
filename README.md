@@ -94,15 +94,23 @@ Opcjonalnie FB (Apify facebook-events-scraper): ~$5–10/mies.
 
 ### Suma: **~$6–15/mies** (bez FB ~$6, z FB ~$15). Discovery wliczone.
 
-## Digest mailowy (17:00)
+## Digest (17:00): Telegram (aktywny) / email (w zapasie)
 
 `src/digest.ts` + workflow `digest.yml` (cron 15:00 UTC = 17:00 CEST; zimą zmienić na 16).
 Logika dni: **pt** → sam WEEKEND (sob+nd) · **sob** → tylko JUTRO (nd) · **nd–czw** → JUTRO + najbliższy WEEKEND.
-Rodzinne 👨‍👦 sortowane na górę; szum (komisje itp.) odfiltrowany.
+Rodzinne 👨‍👦 na górze; szum (komisje itp.) odfiltrowany. Kanały niezależne — aktywny każdy, który ma ustawione env.
 
-Secrets: `RESEND_API_KEY` ([resend.com](https://resend.com) — darmowe 100 maili/dzień, wysyłka z `onboarding@resend.dev`
-bez własnej domeny) + `DIGEST_TO` (twój adres). Opcjonalnie `DIGEST_CHILD_AGE=5` — filtr wg wieku dziecka.
-Bez kluczy `npm run digest` robi dry-run na stdout.
+**Telegram (2 minuty setupu):**
+1. Napisz do [@BotFather](https://t.me/BotFather) → `/newbot` → skopiuj token → secret `TELEGRAM_BOT_TOKEN`.
+2. Napisz cokolwiek do swojego nowego bota (musisz zacząć konwersację!).
+3. Otwórz `https://api.telegram.org/bot<TOKEN>/getUpdates` → pole `message.chat.id` → secret `TELEGRAM_CHAT_ID`.
+
+Wiadomości: HTML, po jednej na sekcję (JUTRO / WEEKEND), auto-cięcie przy limicie 4096 znaków.
+
+**Email (Resend, uśpiony):** odkomentuj env w `digest.yml` + secrets `RESEND_API_KEY`
+([resend.com](https://resend.com) — 100 maili/dzień za darmo, wysyłka z `onboarding@resend.dev`) i `DIGEST_TO`.
+
+Wspólne: `DIGEST_CHILD_AGE=5` — filtr wg wieku dziecka. Bez żadnych kluczy `npm run digest` robi dry-run na stdout.
 
 ## Znane ograniczenia / TODO
 

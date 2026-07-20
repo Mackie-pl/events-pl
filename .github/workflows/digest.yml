@@ -16,7 +16,11 @@ jobs:
       - run: npm ci --omit=optional
       - run: npm run digest
         env:
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          DIGEST_TO: ${{ secrets.DIGEST_TO }}
+          # Telegram (aktywny kanał):
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          # Email — odkomentuj, gdy zechcesz używać:
+          # RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          # DIGEST_TO: ${{ secrets.DIGEST_TO }}
           # opcjonalnie:
           # DIGEST_CHILD_AGE: "5"

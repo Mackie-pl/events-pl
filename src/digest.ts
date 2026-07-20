@@ -5,11 +5,11 @@
  *   sob → tylko JUTRO (niedziela)
  *   pozostałe (nd–czw) → JUTRO + najbliższy WEEKEND
  *
- * Wysyłka: Resend (darmowy tier 100 maili/dzień, czysty fetch).
- * Env:
- *   RESEND_API_KEY   — brak = dry-run (digest na stdout)
- *   DIGEST_TO        — adres docelowy
- *   DIGEST_FROM      — default: "events-pl <onboarding@resend.dev>"
+ * Wysyłka — kanały niezależne, każdy aktywny gdy ustawione jego env:
+ *   Telegram (preferowany):  TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID
+ *   Email (Resend):          RESEND_API_KEY + DIGEST_TO  (+ opcjonalnie DIGEST_FROM)
+ *   Żaden skonfigurowany → dry-run na stdout.
+ * Wspólne:
  *   DIGEST_CHILD_AGE — opcjonalnie: filtruj wg wieku dziecka (np. 5)
  *
  * Uruchomienie: npm run digest
@@ -129,10 +129,27 @@ function lineHtml(e: EventItem): string {
   </li>`;
 }
 
+/** Escapowanie dla Telegram parse_mode=HTML. */
+function esc(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function lineTg(e: EventItem): string {
+  const meta = [
+    e.venue, e.town,
+    e.age.label ? `wiek: ${e.age.label}` : null,
+    e.price.free === true ? "bezpłatne" : e.price.amount_pln ? `${e.price.amount_pln} zł` : null,
+  ].filter(Boolean).map((x) => esc(String(x))).join(" · ");
+  const warn = e.conditional ? `\n   ⚠️ <i>${esc(e.conditional)}</i>` : "";
+  return `• ${e.time_start ? `<b>${e.time_start}</b> ` : ""}<a href="${e.source_url}">${esc(e.title)}</a>${e.family_friendly === true ? " 👨‍👦" : ""}\n   <i>${meta}</i>${warn}`;
+}
+
 interface Digest {
   subject: string;
   text: string;
   html: string;
+  /** po jednej wiadomości na sekcję (limit Telegrama: 4096 znaków) */
+  tgMessages: string[];
   total: number;
 }
 
@@ -140,6 +157,7 @@ export function buildDigest(data: EventsFile, today: string, childAge: number | 
   const sections = sectionsFor(today);
   const parts: string[] = [];
   const htmlParts: string[] = [];
+  const tgMessages: string[] = [];
   let total = 0;
 
   for (const s of sections) {
@@ -148,6 +166,18 @@ export function buildDigest(data: EventsFile, today: string, childAge: number | 
     parts.push(`=== ${s.label} ===\n${evs.length ? evs.map(lineTxt).join("\n") : "  (nic nie znaleziono)"}`);
     htmlParts.push(`<h3 style="margin:18px 0 6px">${s.label}</h3>
       <ul style="padding-left:18px;margin:0">${evs.length ? evs.map(lineHtml).join("") : "<li>(nic nie znaleziono)</li>"}</ul>`);
+    // Telegram: osobna wiadomość na sekcję; w razie potrzeby tnij co ~3900 znaków
+    const header = `<b>${esc(s.label)}</b>`;
+    const lines = evs.length ? evs.map(lineTg) : ["(nic nie znaleziono)"];
+    let buf = header;
+    for (const ln of lines) {
+      if (buf.length + ln.length + 2 > 3900) {
+        tgMessages.push(buf);
+        buf = `${header} <i>(cd.)</i>`;
+      }
+      buf += `\n\n${ln}`;
+    }
+    tgMessages.push(buf);
   }
 
   const subject = `Wydarzenia: ${sections.map((s) => s.label.split(" (")[0]).join(" + ")} — ${total} pozycji`;
@@ -157,20 +187,39 @@ export function buildDigest(data: EventsFile, today: string, childAge: number | 
     text: parts.join("\n\n") + footer,
     html: `<div style="font-family:system-ui,sans-serif;max-width:640px">${htmlParts.join("")}
       <p style="color:#999;font-size:12px;margin-top:20px">events-pl · dane: ${data.generated} · 👨‍👦 = rodzinne${childAge !== null ? ` · filtr wieku: ${childAge}` : ""}</p></div>`,
+    tgMessages,
     total,
   };
 }
 
 // ---------------- wysyłka ----------------
 
-async function sendResend(d: Digest): Promise<void> {
+async function sendTelegram(d: Digest): Promise<boolean> {
+  const token = process.env["TELEGRAM_BOT_TOKEN"];
+  const chatId = process.env["TELEGRAM_CHAT_ID"];
+  if (!token || !chatId) return false;
+  for (const text of d.tgMessages) {
+    const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text,
+        parse_mode: "HTML",
+        disable_web_page_preview: true,
+      }),
+      signal: AbortSignal.timeout(30_000),
+    });
+    if (!res.ok) throw new Error(`Telegram ${res.status}: ${await res.text()}`);
+  }
+  console.log(`Telegram: wysłano ${d.tgMessages.length} wiadomości (${d.total} pozycji)`);
+  return true;
+}
+
+async function sendResend(d: Digest): Promise<boolean> {
   const key = process.env["RESEND_API_KEY"];
   const to = process.env["DIGEST_TO"];
-  if (!key || !to) {
-    console.log("[dry-run] brak RESEND_API_KEY/DIGEST_TO — digest poniżej:\n");
-    console.log(`SUBJECT: ${d.subject}\n\n${d.text}`);
-    return;
-  }
+  if (!key || !to) return false;
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
@@ -184,7 +233,8 @@ async function sendResend(d: Digest): Promise<void> {
     signal: AbortSignal.timeout(30_000),
   });
   if (!res.ok) throw new Error(`Resend ${res.status}: ${await res.text()}`);
-  console.log(`Wysłano do ${to}: ${d.subject}`);
+  console.log(`Email: wysłano do ${to}: ${d.subject}`);
+  return true;
 }
 
 async function main(): Promise<void> {
@@ -192,7 +242,13 @@ async function main(): Promise<void> {
   const ageEnv = process.env["DIGEST_CHILD_AGE"];
   const childAge = ageEnv ? Number.parseInt(ageEnv, 10) : null;
   const digest = buildDigest(data, todayWarsaw(), Number.isNaN(childAge as number) ? null : childAge);
-  await sendResend(digest);
+
+  const sentTg = await sendTelegram(digest);
+  const sentMail = await sendResend(digest);
+  if (!sentTg && !sentMail) {
+    console.log("[dry-run] brak konfiguracji Telegram/Resend — digest poniżej:\n");
+    console.log(`SUBJECT: ${digest.subject}\n\n${digest.text}`);
+  }
 }
 
 // uruchom tylko gdy odpalony bezpośrednio (nie przy imporcie sectionsFor/buildDigest w testach)
