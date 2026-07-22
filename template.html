@@ -28,10 +28,16 @@
   .tag.free{background:#e7f0fb;color:#1e4f8f} .tag.paid{background:#fdf2d0;color:#854d0e}
   .slots{margin-top:6px;font-size:12.5px;color:var(--muted);border-left:3px solid var(--border);padding-left:10px}
   .empty{text-align:center;color:var(--muted);padding:40px 0}
+  .runbar{font-size:12px;color:var(--muted);margin-top:6px;display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+  .runbar b{color:var(--ink);font-weight:600}
+  .pill{border-radius:999px;padding:1px 8px;background:#f0ede5;color:#5b564b;white-space:nowrap}
+  .pill.ok{background:var(--green-soft);color:var(--green)}
+  .pill.warn{background:#fef3c7;color:#92400e}
+  .pill.err{background:#fee2e2;color:#991b1b}
 </style>
 </head>
 <body>
-<header><h1>Co się dzieje?</h1><div class="sub" id="gen"></div></header>
+<header><h1>Co się dzieje?</h1><div class="sub" id="gen"></div><div class="runbar" id="runbar"></div></header>
 <div class="wrap">
   <div class="controls">
     <input type="search" id="q" placeholder="szukaj lub kliknij tag…">
@@ -46,6 +52,7 @@
 </div>
 <script>
 const DATA = /*__EVENTS__*/;
+const RUN = /*__RUN__*/;
 const EVENTS = Array.isArray(DATA) ? DATA : (DATA.events||[]);
 const state={q:"",age:null,weekend:false,family:false,free:false};
 const dni=["nd","pon","wt","śr","czw","pt","sob"];
@@ -91,6 +98,26 @@ document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{st
 document.getElementById("q").addEventListener("input",e=>{state.q=e.target.value;render();});
 document.getElementById("age").addEventListener("input",e=>{state.age=e.target.value===""?null:parseInt(e.target.value,10);render();});
 document.getElementById("gen").textContent="Wygenerowano automatycznie"+(DATA.generated?" · "+DATA.generated:"")+" · kliknij tag, by filtrować (np. warsztaty:ceramika)";
+function renderRun(){
+  const bar=document.getElementById("runbar");
+  if(!RUN||!RUN.totals){bar.style.display="none";return;}
+  const t=RUN.totals;
+  const when=RUN.startedAt?new Date(RUN.startedAt).toLocaleString("pl-PL",{dateStyle:"short",timeStyle:"short"}):"";
+  const pill=(cls,txt)=>`<span class="pill ${cls}">${txt}</span>`;
+  const parts=[
+    `<b>Ostatni przebieg:</b> ${when}`,
+    pill("",`${t.sources} źródeł`),
+    pill("ok",`✅ ${t.ok} ok`),
+    pill("",`♻️ ${t.unchanged} bez zmian`),
+  ];
+  if(t.errors)parts.push(pill("err",`⚠️ ${t.errors} błędów`));
+  if(t.skippedFb)parts.push(pill("warn",`⏭️ ${t.skippedFb} fb`));
+  if(t.empty)parts.push(pill("",`∅ ${t.empty} pusto`));
+  parts.push(pill("",`<b>${t.events}</b> wydarzeń`));
+  if(t.costUsd!=null)parts.push(pill("",`$${Number(t.costUsd).toFixed(4)}`));
+  bar.innerHTML=parts.join("");
+}
+renderRun();
 render();
 </script>
 </body>
