@@ -1,0 +1,1223 @@
+[
+ {
+  "stage": "daily",
+  "startedAt": "2026-07-23T06:25:52.767Z",
+  "finishedAt": "2026-07-23T06:32:12.814Z",
+  "durationMs": 380046,
+  "totals": {
+   "sources": 46,
+   "ok": 8,
+   "unchanged": 11,
+   "errors": 15,
+   "skippedFb": 5,
+   "empty": 7,
+   "events": 71,
+   "followupsTried": 16,
+   "geoHits": 16,
+   "geoMisses": 21,
+   "calls": 27,
+   "promptTokens": 219975,
+   "completionTokens": 50751,
+   "costUsd": 0.47373
+  },
+  "sources": [
+   {
+    "id": "poznan-city-api",
+    "name": "Poznań – miejski web service wydarzeń",
+    "town": "Poznań",
+    "url": "https://www.um.poznan.pl/web-service/events?wsdl",
+    "fetch": "api",
+    "status": "empty",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 2506,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 0
+   },
+   {
+    "id": "poznan-kultura",
+    "name": "kultura.poznan.pl – Kalendarium",
+    "town": "Poznań",
+    "url": "https://kultura.poznan.pl/mim/public/kultura/events.html?co=list&lang=pl&category=&p=1",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 10086,
+     "completionTokens": 4000,
+     "costUsd": 0.030086
+    },
+    "ms": 22080,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 21775,
+    "changed": true
+   },
+   {
+    "id": "poznan-kultura-rss",
+    "name": "kultura.poznan.pl – RSS",
+    "town": "Poznań",
+    "url": "https://kultura.poznan.pl/mim/feeds/",
+    "fetch": "plain",
+    "status": "unchanged",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 1750,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 19142,
+    "changed": false
+   },
+   {
+    "id": "poznan-events",
+    "name": "poznan.pl – Co? Gdzie? Kiedy?",
+    "town": "Poznań",
+    "url": "https://www.poznan.pl/mim/events/",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 14136,
+     "completionTokens": 4000,
+     "costUsd": 0.034136
+    },
+    "ms": 21201,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 30567,
+    "changed": true
+   },
+   {
+    "id": "ck-zamek",
+    "name": "CK Zamek",
+    "town": "Poznań",
+    "url": "https://ckzamek.pl/wydarzenia/",
+    "fetch": "headless",
+    "status": "error",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 1,
+    "err": "Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'playwright' imported from /home/runner/work/events-pl/events-pl/src/daily.ts"
+   },
+   {
+    "id": "estrada",
+    "name": "Estrada Poznańska (Lato z Estradą, Estrada w Centrum)",
+    "town": "Poznań",
+    "url": "https://estrada.poznan.pl/",
+    "fetch": "plain",
+    "status": "unchanged",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 3458,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 34178,
+    "changed": false
+   },
+   {
+    "id": "brama-poznania",
+    "name": "Brama Poznania / Trakt Królewsko-Cesarski",
+    "town": "Poznań",
+    "url": "https://bramapoznania.pl/wydarzenia",
+    "fetch": "plain",
+    "status": "error",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 1082,
+    "err": "Error: HTTP 404 https://bramapoznania.pl/wydarzenia",
+    "httpStatus": 404
+   },
+   {
+    "id": "teatr-animacji",
+    "name": "Teatr Animacji (repertuar + wiek widzów)",
+    "town": "Poznań",
+    "url": "https://teatranimacji.pl/pl/repertuar",
+    "fetch": "plain",
+    "status": "unchanged",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 480,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 14,
+    "changed": false
+   },
+   {
+    "id": "biblraczynskich",
+    "name": "Biblioteka Raczyńskich – wydarzenia",
+    "town": "Poznań",
+    "url": "https://bracz.edu.pl/wydarzenia/",
+    "fetch": "plain",
+    "status": "error",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 2017,
+    "err": "Error: HTTP 404 https://bracz.edu.pl/wydarzenia/",
+    "httpStatus": 404
+   },
+   {
+    "id": "palmiarnia",
+    "name": "Palmiarnia Poznańska",
+    "town": "Poznań",
+    "url": "https://palmiarnia.poznan.pl/",
+    "fetch": "plain",
+    "status": "unchanged",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 1572,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 10925,
+    "changed": false
+   },
+   {
+    "id": "nowe-zoo",
+    "name": "ZOO Poznań – wydarzenia",
+    "town": "Poznań",
+    "url": "https://zoo.poznan.pl/",
+    "fetch": "plain",
+    "status": "unchanged",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 2443,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 17417,
+    "changed": false
+   },
+   {
+    "id": "dk-stokrotka",
+    "name": "Dom Kultury Stokrotka (Grunwald)",
+    "town": "Poznań",
+    "url": "https://www.facebook.com/DKStokrotka/",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "dk-pod-lipami",
+    "name": "Dom Kultury Pod Lipami (Winogrady)",
+    "town": "Poznań",
+    "url": "https://www.psm-winogrady.pl/domy-kultury/",
+    "fetch": "plain",
+    "status": "error",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 666,
+    "err": "TypeError: fetch failed"
+   },
+   {
+    "id": "dk-orbita",
+    "name": "Osiedlowy DK Orbita (os. Kosmonautów)",
+    "town": "Poznań",
+    "url": "https://www.psm-winogrady.pl/domy-kultury/",
+    "fetch": "plain",
+    "status": "error",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 638,
+    "err": "TypeError: fetch failed"
+   },
+   {
+    "id": "fyrtel-glowna",
+    "name": "Fyrtel Główna",
+    "town": "Poznań",
+    "url": "https://www.facebook.com/fyrtelglowna/",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "lubon-city",
+    "name": "Miasto Luboń – aktualności",
+    "town": "Luboń",
+    "url": "https://lubon.pl/",
+    "fetch": "plain",
+    "status": "unchanged",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 1291,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 16982,
+    "changed": false
+   },
+   {
+    "id": "lubon-ok",
+    "name": "Ośrodek Kultury w Luboniu",
+    "town": "Luboń",
+    "url": "https://www.oklubon.pl/",
+    "fetch": "plain",
+    "status": "unchanged",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 559,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 9368,
+    "changed": false
+   },
+   {
+    "id": "lubon-ok-fb",
+    "name": "OK Luboń – Facebook",
+    "town": "Luboń",
+    "url": "https://www.facebook.com/OsrodekKulturyLubon/",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "lubon-plaza",
+    "name": "Plaża miejska Luboń (kalendarz venue)",
+    "town": "Luboń",
+    "url": "https://www.facebook.com/plazamiejskalubon/",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "lubon-biblioteka",
+    "name": "Biblioteka Miejska w Luboniu",
+    "town": "Luboń",
+    "url": "https://biblub.com.pl/",
+    "fetch": "plain",
+    "status": "error",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 329,
+    "err": "TypeError: fetch failed"
+   },
+   {
+    "id": "puszczykowo-city",
+    "name": "Puszczykowo – instytucje kultury",
+    "town": "Puszczykowo",
+    "url": "https://puszczykowo.pl/strefa-miejska/kultura/instytucje-kultury",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 11,
+    "followups": [
+     {
+      "url": "https://puszczykowo.pl/strefa-miejska/kultura/wydarzenia-kulturalne",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 8
+     }
+    ],
+    "geo": {
+     "hits": 2,
+     "misses": 3
+    },
+    "llm": {
+     "calls": 2,
+     "promptTokens": 7449,
+     "completionTokens": 2988,
+     "costUsd": 0.022389
+    },
+    "ms": 19039,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 6622,
+    "changed": true
+   },
+   {
+    "id": "puszczykowo-bmcak",
+    "name": "Biblioteka Miejska CAK Puszczykowo",
+    "town": "Puszczykowo",
+    "url": "https://www.biblioteka.puszczykowo.pl/",
+    "fetch": "plain",
+    "status": "error",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 25,
+    "err": "TypeError: fetch failed"
+   },
+   {
+    "id": "mosina-city",
+    "name": "Gmina Mosina – kalendarz wydarzeń",
+    "town": "Mosina",
+    "url": "https://www.mosina.pl/wydarzenia?page=1",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 3966,
+     "completionTokens": 2192,
+     "costUsd": 0.014926
+    },
+    "ms": 13632,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 7206,
+    "changed": true
+   },
+   {
+    "id": "mosina-mok",
+    "name": "Mosiński Ośrodek Kultury",
+    "town": "Mosina",
+    "url": "https://www.kultura.gmina.pl/aktualnosci/",
+    "fetch": "plain",
+    "status": "unchanged",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 1669,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 26771,
+    "changed": false
+   },
+   {
+    "id": "mosina-osir",
+    "name": "OSiR Mosina – wydarzenia + programy PDF",
+    "town": "Mosina",
+    "url": "https://osirmosina.pl/wydarzenia",
+    "fetch": "plain",
+    "status": "error",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 540,
+    "err": "Error: HTTP 404 https://osirmosina.pl/wydarzenia",
+    "httpStatus": 404
+   },
+   {
+    "id": "mosina-biblioteka",
+    "name": "Mosińska Biblioteka Publiczna",
+    "town": "Mosina",
+    "url": "http://bibliotekamosina.pl/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 7,
+    "followups": [
+     {
+      "url": "http://bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/akcja-lato-z-biblioteka",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 5
+     },
+     {
+      "url": "http://bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/spektakl-klaudek-i-klaudynka-w-bibliotece",
+      "kind": "page",
+      "outcome": "error",
+      "events": 0,
+      "err": "TimeoutError: The operation was aborted due to timeout"
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 7
+    },
+    "llm": {
+     "calls": 2,
+     "promptTokens": 11414,
+     "completionTokens": 2490,
+     "costUsd": 0.023864
+    },
+    "ms": 48686,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 10997,
+    "changed": true
+   },
+   {
+    "id": "mosina-galeria",
+    "name": "Galeria Sztuki w Mosinie",
+    "town": "Mosina",
+    "url": "https://www.galeriamosina.pl/",
+    "fetch": "plain",
+    "status": "unchanged",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 979,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 5068,
+    "changed": false
+   },
+   {
+    "id": "mosina-fb",
+    "name": "Gmina Mosina – Facebook",
+    "town": "Mosina",
+    "url": "https://www.facebook.com/gminamosina/",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "komorniki-city",
+    "name": "Gmina Komorniki – kultura i sport",
+    "town": "Komorniki",
+    "url": "https://www.komorniki.pl/kultura-i-sport.html",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 16,
+    "followups": [
+     {
+      "url": "https://gokkomorniki.pl/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 9
+     },
+     {
+      "url": "https://gosirkomorniki.pl/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 4
+     },
+     {
+      "url": "https://www.biblioteka-komorniki.pl/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 3
+     }
+    ],
+    "geo": {
+     "hits": 3,
+     "misses": 3
+    },
+    "llm": {
+     "calls": 4,
+     "promptTokens": 29656,
+     "completionTokens": 4888,
+     "costUsd": 0.054096000000000005
+    },
+    "ms": 33871,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 15851,
+    "changed": true
+   },
+   {
+    "id": "komorniki-gok",
+    "name": "GOK Komorniki (DK Koło, Remiza Plewiska…)",
+    "town": "Komorniki",
+    "url": "https://gokkomorniki.pl/",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 7522,
+     "completionTokens": 4000,
+     "costUsd": 0.027522
+    },
+    "ms": 19337,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 15840,
+    "changed": true
+   },
+   {
+    "id": "dopiewo-city",
+    "name": "Gmina Dopiewo",
+    "town": "Dopiewo",
+    "url": "https://dopiewo.pl/",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 7242,
+     "completionTokens": 1485,
+     "costUsd": 0.014667
+    },
+    "ms": 8544,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 14476,
+    "changed": true
+   },
+   {
+    "id": "dopiewo-gosir",
+    "name": "GOSiR Dopiewo / CRK Konarzewo",
+    "town": "Dopiewo",
+    "url": "https://gosir.dopiewo.pl/",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 6101,
+     "completionTokens": 1310,
+     "costUsd": 0.012651
+    },
+    "ms": 9014,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 11780,
+    "changed": true
+   },
+   {
+    "id": "tarnowo-city",
+    "name": "Gmina Tarnowo Podgórne",
+    "town": "Tarnowo Podgórne",
+    "url": "https://www.tarnowo-podgorne.pl/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 2,
+    "followups": [
+     {
+      "url": "https://www.tarnowo-podgorne.pl/aktualnosci/wakacje-2026-w-gminie-tarnowo-podgorne-sierpien/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 2,
+     "promptTokens": 6491,
+     "completionTokens": 855,
+     "costUsd": 0.010766
+    },
+    "ms": 10906,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 8154,
+    "changed": true
+   },
+   {
+    "id": "tarnowo-gok",
+    "name": "GOK Sezam (Tarnowo Podgórne)",
+    "town": "Tarnowo Podgórne",
+    "url": "https://goksezam.pl/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 8,
+    "followups": [
+     {
+      "url": "https://goksezam.pl/wydarzenia.html",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 5,
+     "misses": 1
+    },
+    "llm": {
+     "calls": 2,
+     "promptTokens": 10302,
+     "completionTokens": 6130,
+     "costUsd": 0.040952
+    },
+    "ms": 30885,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 8206,
+    "changed": true
+   },
+   {
+    "id": "rokietnica-city",
+    "name": "Gmina Rokietnica",
+    "town": "Rokietnica",
+    "url": "https://rokietnica.pl/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 6,
+    "followups": [
+     {
+      "url": "https://rokietnica.pl/kalendarz-wydarzen/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 3
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 3
+    },
+    "llm": {
+     "calls": 2,
+     "promptTokens": 12313,
+     "completionTokens": 1563,
+     "costUsd": 0.020128
+    },
+    "ms": 15201,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 16777,
+    "changed": true
+   },
+   {
+    "id": "rokietnica-gok",
+    "name": "GOK Rokietnica",
+    "town": "Rokietnica",
+    "url": "https://kultura.rokietnica.pl/",
+    "fetch": "plain",
+    "status": "error",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 198,
+    "err": "TypeError: fetch failed"
+   },
+   {
+    "id": "suchylas-city",
+    "name": "Gmina Suchy Las",
+    "town": "Suchy Las",
+    "url": "https://www.suchylas.pl/",
+    "fetch": "plain",
+    "status": "error",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 133,
+    "err": "Error: HTTP 403 https://www.suchylas.pl/",
+    "httpStatus": 403
+   },
+   {
+    "id": "suchylas-ckbp",
+    "name": "CKiBP Suchy Las (Centrum Kultury i Biblioteka)",
+    "town": "Suchy Las",
+    "url": "https://www.osrodekkultury.pl/",
+    "fetch": "plain",
+    "status": "unchanged",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 4427,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 7790,
+    "changed": false
+   },
+   {
+    "id": "czerwonak-city",
+    "name": "Gmina Czerwonak",
+    "town": "Czerwonak",
+    "url": "https://www.czerwonak.pl/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 8,
+    "followups": [
+     {
+      "url": "https://www.czerwonak.pl/mieszkaniec/informacje/aktualnosci/wakacyjne-atrakcje-i-wydarzenia-w-gminie-czerwonak/10375",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 5
+     },
+     {
+      "url": "https://www.czerwonak.pl/mieszkaniec/kalendarz",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 2,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 3,
+     "promptTokens": 38211,
+     "completionTokens": 6507,
+     "costUsd": 0.070746
+    },
+    "ms": 37038,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 37210,
+    "changed": true
+   },
+   {
+    "id": "czerwonak-gok",
+    "name": "GOK Sokół (Czerwonak)",
+    "town": "Czerwonak",
+    "url": "https://goksokol.pl/",
+    "fetch": "plain",
+    "status": "error",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 56,
+    "err": "TypeError: fetch failed"
+   },
+   {
+    "id": "swarzedz-city",
+    "name": "Miasto i Gmina Swarzędz",
+    "town": "Swarzędz",
+    "url": "https://www.swarzedz.pl/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 13,
+    "followups": [
+     {
+      "url": "https://ok-swarzedz.pl/summer-swaj-party-noc-z-muzyka-klubowa-2026/",
+      "kind": "page",
+      "outcome": "error",
+      "events": 0,
+      "err": "Error: HTTP 403 https://ok-swarzedz.pl/summer-swaj-party-noc-z-muzyka-klubowa-2026/"
+     },
+     {
+      "url": "https://ok-swarzedz.pl/miedzynarodowy-festiwal-sztuki-ludowej/",
+      "kind": "page",
+      "outcome": "error",
+      "events": 0,
+      "err": "Error: HTTP 403 https://ok-swarzedz.pl/miedzynarodowy-festiwal-sztuki-ludowej/"
+     },
+     {
+      "url": "https://www.swarzedz.pl/index.php?id=618",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 0
+     },
+     {
+      "url": "https://www.swarzedz.pl/index.php?id=615",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 6
+     },
+     {
+      "url": "https://www.swarzedz.pl/index.php?id=374",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 4,
+     "misses": 4
+    },
+    "llm": {
+     "calls": 4,
+     "promptTokens": 55086,
+     "completionTokens": 8343,
+     "costUsd": 0.096801
+    },
+    "ms": 59610,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 26934,
+    "changed": true
+   },
+   {
+    "id": "swarzedz-ok",
+    "name": "Ośrodek Kultury w Swarzędzu",
+    "town": "Swarzędz",
+    "url": "https://www.ok-swarzedz.pl/",
+    "fetch": "plain",
+    "status": "error",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 568,
+    "err": "Error: HTTP 403 https://www.ok-swarzedz.pl/",
+    "httpStatus": 403
+   },
+   {
+    "id": "kornik-city",
+    "name": "Miasto i Gmina Kórnik",
+    "town": "Kórnik",
+    "url": "https://www.kornik.pl/",
+    "fetch": "plain",
+    "status": "unchanged",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 1386,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 11501,
+    "changed": false
+   },
+   {
+    "id": "kornik-kok",
+    "name": "Kórnicki Ośrodek Kultury",
+    "town": "Kórnik",
+    "url": "https://kok.kornik.pl/",
+    "fetch": "plain",
+    "status": "error",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 356,
+    "err": "TypeError: fetch failed"
+   },
+   {
+    "id": "kornik-arboretum",
+    "name": "Arboretum Kórnickie",
+    "town": "Kórnik",
+    "url": "https://www.idpan.poznan.pl/arboretum/",
+    "fetch": "plain",
+    "status": "error",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 1848,
+    "err": "Error: HTTP 500 https://www.idpan.poznan.pl/arboretum/",
+    "httpStatus": 500
+   },
+   {
+    "id": "kleszczewo-gokis",
+    "name": "GOKiS Kleszczewo",
+    "town": "Kleszczewo",
+    "url": "https://gokis-kleszczewo.pl/",
+    "fetch": "plain",
+    "status": "error",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 14,
+    "err": "TypeError: fetch failed"
+   }
+  ]
+ }
+]
