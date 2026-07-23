@@ -41,7 +41,15 @@ function dayOfWeek(iso: string): number {
   return new Date(`${iso}T12:00:00Z`).getUTCDay();
 }
 
-const DAY_NAMES = ["niedziela", "poniedziałek", "wtorek", "środa", "czwartek", "piątek", "sobota"] as const;
+const DAY_NAMES = [
+  "niedziela",
+  "poniedziałek",
+  "wtorek",
+  "środa",
+  "czwartek",
+  "piątek",
+  "sobota",
+] as const;
 
 function fmtDay(iso: string): string {
   const d = new Date(`${iso}T12:00:00Z`);
@@ -60,11 +68,19 @@ export function sectionsFor(today: string): Section[] {
   const tomorrow = addDays(today, 1);
   if (dow === 5) {
     // piątek: jutro==sobota, więc jedna sekcja weekendowa
-    return [{ label: `WEEKEND (${fmtDay(tomorrow)} – ${fmtDay(addDays(today, 2))})`, from: tomorrow, to: addDays(today, 2) }];
+    return [
+      {
+        label: `WEEKEND (${fmtDay(tomorrow)} – ${fmtDay(addDays(today, 2))})`,
+        from: tomorrow,
+        to: addDays(today, 2),
+      },
+    ];
   }
   if (dow === 6) {
     // sobota: została tylko niedziela
-    return [{ label: `JUTRO (${fmtDay(tomorrow)})`, from: tomorrow, to: tomorrow }];
+    return [
+      { label: `JUTRO (${fmtDay(tomorrow)})`, from: tomorrow, to: tomorrow },
+    ];
   }
   // nd–czw: jutro + najbliższy weekend
   const daysToSaturday = (6 - dow + 7) % 7 || 7; // nd→6, pon→5, ... czw→2
@@ -84,19 +100,31 @@ function overlaps(ev: EventItem, from: string, to: string): boolean {
 }
 
 function ageOk(ev: EventItem, childAge: number | null): boolean {
+  if (!ev.age) return true;
   if (childAge === null) return true;
   if (ev.age.min !== null && childAge < ev.age.min) return false;
   if (ev.age.max !== null && childAge > ev.age.max) return false;
   return true;
 }
 
-function pick(events: EventItem[], s: Section, childAge: number | null): EventItem[] {
+function pick(
+  events: EventItem[],
+  s: Section,
+  childAge: number | null,
+): EventItem[] {
   return events
-    .filter((e) => !e.is_noise && overlaps(e, s.from, s.to) && ageOk(e, childAge))
+    .filter(
+      (e) => !e.is_noise && overlaps(e, s.from, s.to) && ageOk(e, childAge),
+    )
     .sort((a, b) => {
       // rodzinne na górę, potem chronologicznie
-      const fam = Number(b.family_friendly === true) - Number(a.family_friendly === true);
-      return fam || a.date_start.localeCompare(b.date_start) || (a.time_start ?? "").localeCompare(b.time_start ?? "");
+      const fam =
+        Number(b.family_friendly === true) - Number(a.family_friendly === true);
+      return (
+        fam ||
+        a.date_start.localeCompare(b.date_start) ||
+        (a.time_start ?? "").localeCompare(b.time_start ?? "")
+      );
     });
 }
 
@@ -108,8 +136,12 @@ function lineTxt(e: EventItem): string {
     e.title,
     e.venue ? `@ ${e.venue}` : null,
     e.town ?? null,
-    e.age.label ? `[wiek: ${e.age.label}]` : null,
-    e.price.free === true ? "[bezpłatne]" : e.price.amount_pln ? `[${e.price.amount_pln} zł]` : null,
+    e.age?.label ? `[wiek: ${e.age.label}]` : null,
+    e.price.free === true
+      ? "[bezpłatne]"
+      : e.price.amount_pln
+        ? `[${e.price.amount_pln} zł]`
+        : null,
     e.family_friendly === true ? "👨‍👦" : null,
   ].filter(Boolean);
   const warn = e.conditional ? `\n    ⚠️ ${e.conditional}` : "";
@@ -118,10 +150,17 @@ function lineTxt(e: EventItem): string {
 
 function lineHtml(e: EventItem): string {
   const meta = [
-    e.venue, e.town,
-    e.age.label ? `wiek: ${e.age.label}` : null,
-    e.price.free === true ? "bezpłatne" : e.price.amount_pln ? `${e.price.amount_pln} zł` : null,
-  ].filter(Boolean).join(" · ");
+    e.venue,
+    e.town,
+    e.age?.label ? `wiek: ${e.age.label}` : null,
+    e.price.free === true
+      ? "bezpłatne"
+      : e.price.amount_pln
+        ? `${e.price.amount_pln} zł`
+        : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
   return `<li style="margin-bottom:8px">
     <b>${e.time_start ?? ""}</b> <a href="${e.source_url}">${e.title}</a> ${e.family_friendly === true ? "👨‍👦" : ""}<br>
     <span style="color:#666;font-size:13px">${meta}</span>
@@ -136,10 +175,18 @@ function esc(s: string): string {
 
 function lineTg(e: EventItem): string {
   const meta = [
-    e.venue, e.town,
-    e.age.label ? `wiek: ${e.age.label}` : null,
-    e.price.free === true ? "bezpłatne" : e.price.amount_pln ? `${e.price.amount_pln} zł` : null,
-  ].filter(Boolean).map((x) => esc(String(x))).join(" · ");
+    e.venue,
+    e.town,
+    e.age?.label ? `wiek: ${e.age.label}` : null,
+    e.price.free === true
+      ? "bezpłatne"
+      : e.price.amount_pln
+        ? `${e.price.amount_pln} zł`
+        : null,
+  ]
+    .filter(Boolean)
+    .map((x) => esc(String(x)))
+    .join(" · ");
   const warn = e.conditional ? `\n   ⚠️ <i>${esc(e.conditional)}</i>` : "";
   return `• ${e.time_start ? `<b>${e.time_start}</b> ` : ""}<a href="${e.source_url}">${esc(e.title)}</a>${e.family_friendly === true ? " 👨‍👦" : ""}\n   <i>${meta}</i>${warn}`;
 }
@@ -153,7 +200,11 @@ interface Digest {
   total: number;
 }
 
-export function buildDigest(data: EventsFile, today: string, childAge: number | null): Digest {
+export function buildDigest(
+  data: EventsFile,
+  today: string,
+  childAge: number | null,
+): Digest {
   const sections = sectionsFor(today);
   const parts: string[] = [];
   const htmlParts: string[] = [];
@@ -163,7 +214,9 @@ export function buildDigest(data: EventsFile, today: string, childAge: number | 
   for (const s of sections) {
     const evs = pick(data.events, s, childAge);
     total += evs.length;
-    parts.push(`=== ${s.label} ===\n${evs.length ? evs.map(lineTxt).join("\n") : "  (nic nie znaleziono)"}`);
+    parts.push(
+      `=== ${s.label} ===\n${evs.length ? evs.map(lineTxt).join("\n") : "  (nic nie znaleziono)"}`,
+    );
     htmlParts.push(`<h3 style="margin:18px 0 6px">${s.label}</h3>
       <ul style="padding-left:18px;margin:0">${evs.length ? evs.map(lineHtml).join("") : "<li>(nic nie znaleziono)</li>"}</ul>`);
     // Telegram: osobna wiadomość na sekcję; w razie potrzeby tnij co ~3900 znaków
@@ -199,20 +252,25 @@ async function sendTelegram(d: Digest): Promise<boolean> {
   const chatId = process.env["TELEGRAM_CHAT_ID"];
   if (!token || !chatId) return false;
   for (const text of d.tgMessages) {
-    const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text,
-        parse_mode: "HTML",
-        disable_web_page_preview: true,
-      }),
-      signal: AbortSignal.timeout(30_000),
-    });
+    const res = await fetch(
+      `https://api.telegram.org/bot${token}/sendMessage`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text,
+          parse_mode: "HTML",
+          disable_web_page_preview: true,
+        }),
+        signal: AbortSignal.timeout(30_000),
+      },
+    );
     if (!res.ok) throw new Error(`Telegram ${res.status}: ${await res.text()}`);
   }
-  console.log(`Telegram: wysłano ${d.tgMessages.length} wiadomości (${d.total} pozycji)`);
+  console.log(
+    `Telegram: wysłano ${d.tgMessages.length} wiadomości (${d.total} pozycji)`,
+  );
   return true;
 }
 
@@ -222,7 +280,10 @@ async function sendResend(d: Digest): Promise<boolean> {
   if (!key || !to) return false;
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
-    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+    headers: {
+      Authorization: `Bearer ${key}`,
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify({
       from: process.env["DIGEST_FROM"] ?? "events-pl <onboarding@resend.dev>",
       to: [to],
@@ -238,15 +299,23 @@ async function sendResend(d: Digest): Promise<boolean> {
 }
 
 async function main(): Promise<void> {
-  const data = JSON.parse(await readFile(join(ROOT, "events.json"), "utf-8")) as EventsFile;
+  const data = JSON.parse(
+    await readFile(join(ROOT, "events.json"), "utf-8"),
+  ) as EventsFile;
   const ageEnv = process.env["DIGEST_CHILD_AGE"];
   const childAge = ageEnv ? Number.parseInt(ageEnv, 10) : null;
-  const digest = buildDigest(data, todayWarsaw(), Number.isNaN(childAge as number) ? null : childAge);
+  const digest = buildDigest(
+    data,
+    todayWarsaw(),
+    Number.isNaN(childAge as number) ? null : childAge,
+  );
 
   const sentTg = await sendTelegram(digest);
   const sentMail = await sendResend(digest);
   if (!sentTg && !sentMail) {
-    console.log("[dry-run] brak konfiguracji Telegram/Resend — digest poniżej:\n");
+    console.log(
+      "[dry-run] brak konfiguracji Telegram/Resend — digest poniżej:\n",
+    );
     console.log(`SUBJECT: ${digest.subject}\n\n${digest.text}`);
   }
 }

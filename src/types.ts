@@ -70,7 +70,7 @@ export interface EventItem {
   venue: string | null;
   town: string | null;
   price: Price;
-  age: AgeRange;
+  age: AgeRange | null;
   family_friendly: boolean | "maybe";
   /** tagi zagnieżdżone, np. "dzieci:dmuchańce", "warsztaty:ceramika" */
   tags: string[];
