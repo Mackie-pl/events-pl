@@ -120,3 +120,67 @@ export interface SearchResult {
   url: string | null;
   desc: string | null;
 }
+
+// ---------------- observability / run reporting ----------------
+
+export type SourceStatus = "ok" | "unchanged" | "error" | "skipped-fb" | "empty";
+
+export interface FollowupRun {
+  url: string;
+  kind: "poster" | "page";
+  outcome: "ok" | "error";
+  events: number;
+  err?: string;
+}
+
+/** Zużycie LLM (tokeny + koszt) — akumulowane w llm.ts. */
+export interface LlmUsage {
+  calls: number;
+  promptTokens: number;
+  completionTokens: number;
+  costUsd: number;
+}
+
+export interface SourceRun {
+  id: string;
+  name: string;
+  town: string;
+  url: string;
+  fetch: FetchStrategy;
+  status: SourceStatus;
+  httpStatus?: number;
+  kind?: "html" | "pdf";
+  /** długość pobranego tekstu */
+  chars?: number;
+  /** czy hash różnił się od stanu (zmiana treści) */
+  changed?: boolean;
+  /** wydarzenia zachowane z tego źródła (łącznie z followupami) */
+  events: number;
+  followups: FollowupRun[];
+  geo: { hits: number; misses: number };
+  llm: LlmUsage;
+  ms: number;
+  err?: string;
+}
+
+export interface RunTotals extends LlmUsage {
+  sources: number;
+  ok: number;
+  unchanged: number;
+  errors: number;
+  skippedFb: number;
+  empty: number;
+  events: number;
+  followupsTried: number;
+  geoHits: number;
+  geoMisses: number;
+}
+
+export interface RunReport {
+  stage: "daily" | "digest";
+  startedAt: string;
+  finishedAt: string;
+  durationMs: number;
+  totals: RunTotals;
+  sources: SourceRun[];
+}
