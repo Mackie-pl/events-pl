@@ -86,7 +86,17 @@
           <ul>
             @for (f of s.followups; track f.url) {
               <li>
-                <span tuiBadge size="s" [appearance]="f.outcome === 'ok' ? 'positive' : 'negative'">
+                <span
+                  tuiBadge
+                  size="s"
+                  [appearance]="
+                    f.outcome === 'ok'
+                      ? 'positive'
+                      : f.outcome === 'unchanged'
+                        ? 'neutral'
+                        : 'negative'
+                  "
+                >
                   {{ f.outcome }}
                 </span>
                 <code>{{ f.kind }}</code>
@@ -94,6 +104,40 @@
                 <span class="muted">→ {{ f.events }} events</span>
                 @if (f.err) {
                   <span class="warn">{{ f.err }}</span>
+                }
+              </li>
+            }
+          </ul>
+        </section>
+      }
+
+      @if (archivePaths().length) {
+        <section class="archive">
+          <h2>
+            Archive ({{ archivePaths().length }})
+            @if (archive.available() !== true) {
+              <span class="muted hint">
+                private — run <code>npm run archive-server</code> locally to read contents
+              </span>
+            }
+          </h2>
+          <ul>
+            @for (p of archivePaths(); track p) {
+              <li>
+                @if (archive.available() === true) {
+                  <button tuiButton size="xs" appearance="flat" (click)="toggleArchive(p)">
+                    {{ openedPath() === p ? 'Hide' : archiveLabel(p) }}
+                  </button>
+                } @else {
+                  <span class="muted">{{ archiveLabel(p) }}</span>
+                }
+                <code class="path">{{ p }}</code>
+                @if (openedPath() === p) {
+                  @if (archiveLoading()) {
+                    <tui-loader size="s" />
+                  } @else if (archiveBody(); as body) {
+                    <pre class="raw">{{ body }}</pre>
+                  }
                 }
               </li>
             }

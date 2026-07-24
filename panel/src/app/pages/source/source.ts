@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { TuiButton, TuiIcon, TuiLink, TuiLoader, TuiTitle } from '@taiga-ui/core';
 import { TuiBadge, TuiChip } from '@taiga-ui/kit';
 
+import { ArchiveService } from '../../archive';
 import { DataService } from '../../data';
 import { STATUS_META, fmtDateTime, fmtMs, fmtNum, fmtTokens, fmtUsd } from '../../format';
 import type { EventItem } from '../../types';
@@ -21,6 +22,7 @@ export class SourcePage {
   readonly sourceId = input.required<string>();
 
   protected readonly data = inject(DataService);
+  protected readonly archive = inject(ArchiveService);
   private readonly sanitizer = inject(DomSanitizer);
 
   protected readonly ms = fmtMs;
@@ -56,6 +58,38 @@ export class SourcePage {
   });
 
   protected readonly showRawJson = signal(false);
+
+  /** Ścieżki w prywatnym archiwum; treść pobieralna tylko przez lokalny most. */
+  protected readonly archivePaths = computed(() => this.sourceRun()?.archive ?? []);
+
+  protected readonly openedPath = signal<string | null>(null);
+  protected readonly archiveBody = signal<string | null>(null);
+  protected readonly archiveLoading = signal(false);
+
+  /** raw/…/<sha>.json → "raw · sha 124c64…"; llm/…/0001-model.json → "llm · 0001-model" */
+  protected archiveLabel(path: string): string {
+    const [kind = ''] = path.split('/');
+    const file = path.split('/').pop() ?? path;
+    const name = file.replace(/\.json$/, '');
+    return kind === 'raw' ? `raw · ${name.slice(0, 12)}…` : `${kind} · ${name}`;
+  }
+
+  protected toggleArchive(path: string): void {
+    if (this.openedPath() === path) {
+      this.openedPath.set(null);
+      this.archiveBody.set(null);
+      return;
+    }
+    this.openedPath.set(path);
+    this.archiveBody.set(null);
+    this.archiveLoading.set(true);
+    this.archive.object(path).subscribe((text) => {
+      // ignoruj odpowiedź, jeśli w międzyczasie kliknięto inny obiekt
+      if (this.openedPath() !== path) return;
+      this.archiveBody.set(text);
+      this.archiveLoading.set(false);
+    });
+  }
 
   protected readonly showPreview = signal(localStorage.getItem(PREVIEW_KEY) !== '0');
 

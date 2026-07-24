@@ -30,6 +30,7 @@ src/discover.ts
 | `src/prompts.ts` | prompty PL dla obu etapów |
 | `src/pii.ts` | redakcja danych osobowych przed zapisem do publicznego repo (patrz niżej) |
 | `src/archive.ts` | prywatne archiwum treści (Supabase Storage): surowe strony, wejścia/wyjścia LLM, dane przed redakcją |
+| `src/archive-server.ts` | lokalny most do archiwum (`npm run archive-server`) — trzyma klucz `service_role` poza panelem |
 | `template.html` | frontend (wiek dziecka, tagi zagnieżdżone, weekend, mapa OSM); `daily.ts` wstrzykuje JSON |
 | `panel/` | panel observability (Angular 22 + Taiga UI): przegląd dnia → source runs → eventy + iframe podglądu; deploy na GH Pages pod `/panel/` przez `deploy-pages.yml` (Settings → Pages → Source: GitHub Actions) |
 
@@ -202,6 +203,26 @@ a błąd archiwum nigdy nie wywraca pipeline'u (to observability, nie produkt).
 
 Supabase nie ma lifecycle rules — retencję (`ARCHIVE_RETENTION_DAYS`, domyślnie 90 dni)
 trzeba egzekwować cyklicznym czyszczeniem starych prefiksów; **jeszcze niezaimplementowane**.
+
+### Podgląd archiwum w panelu (tylko lokalnie)
+
+`runs.json` niesie **ścieżki** obiektów (`SourceRun.archive`) — same ścieżki nie są wrażliwe,
+więc wdrożony panel pokazuje listę i informację, że treść jest prywatna. Do treści potrzebny
+jest lokalny most, bo klucz `service_role` nie może trafić do statycznego bundla:
+
+```bash
+# terminal 1 — most (klucz zostaje tutaj, nasłuch tylko na 127.0.0.1)
+SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... npm run archive-server
+
+# terminal 2 — panel z localhosta
+cd panel && npm start
+```
+
+Panel sam wykrywa most (`/health`) i odsłania przyciski do podglądu obiektów; bez mostu sekcja
+zostaje wyszarzona. CORS przepuszcza **wyłącznie** `localhost`/`127.0.0.1` — wdrożony panel na
+GH Pages nie dogada się z mostem nawet przy uruchomionym serwerze, więc żadna publiczna strona
+nie przeskanuje twojego localhosta. Most akceptuje tylko prefiksy `raw/`, `llm/`, `events/`
+(bez `..`), więc nie da się przez niego czytać dowolnych obiektów z projektu.
 
 ## Znane ograniczenia / TODO
 
