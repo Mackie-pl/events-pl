@@ -37,6 +37,9 @@ export interface ArchiveStats {
 const stats: ArchiveStats = { uploaded: 0, failed: 0, bytes: 0, skipped: 0 };
 let runId = "";
 let llmSeq = 0;
+/** Kontekst bieżącego źródła — pozwala przypiąć obiekty archiwum do SourceRun w runs.json. */
+let currentSourceId = "";
+let currentPaths: string[] = [];
 
 const cfg = (): { url: string; key: string } | null => {
   const url = process.env["SUPABASE_URL"];
@@ -54,6 +57,15 @@ export function beginRun(startedAt: string): void {
 }
 
 export const archiveStats = (): ArchiveStats => ({ ...stats });
+
+/** Otwiera kontekst źródła: kolejne obiekty trafią pod jego prefiks i do sourcePaths(). */
+export function beginSource(sourceId: string): void {
+  currentSourceId = sourceId;
+  currentPaths = [];
+}
+
+/** Ścieżki zarchiwizowane od ostatniego beginSource() — do zapisania w SourceRun. */
+export const sourcePaths = (): string[] => [...currentPaths];
 
 export const sha256 = (s: string): string => createHash("sha256").update(s).digest("hex");
 
@@ -83,6 +95,7 @@ export async function put(path: string, body: string, contentType = "application
     }
     stats.uploaded++;
     stats.bytes += Buffer.byteLength(body);
+    currentPaths.push(path);
     return true;
   } catch (e) {
     stats.failed++;
@@ -117,8 +130,8 @@ export async function archiveLlmCall(rec: LlmCallRecord): Promise<void> {
       );
   const seq = String(++llmSeq).padStart(4, "0");
   await put(
-    `llm/${day()}/${runId}/${seq}-${rec.model.replace(/\//g, "_")}.json`,
-    JSON.stringify({ ...rec, user, runId }, null, 1),
+    `llm/${day()}/${runId}/${currentSourceId || "_"}/${seq}-${rec.model.replace(/\//g, "_")}.json`,
+    JSON.stringify({ ...rec, user, runId, sourceId: currentSourceId || null }, null, 1),
   );
 }
 

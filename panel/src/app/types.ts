@@ -108,7 +108,8 @@ export type SourceStatus = 'ok' | 'unchanged' | 'error' | 'skipped-fb' | 'skippe
 export interface FollowupRun {
   url: string;
   kind: 'poster' | 'page';
-  outcome: 'ok' | 'error';
+  /** unchanged = treść identyczna (304 albo ten sam hash), wydarzenia odtworzone z cache */
+  outcome: 'ok' | 'error' | 'unchanged';
   events: number;
   err?: string;
 }
@@ -139,6 +140,12 @@ export interface SourceRun {
   err?: string;
   /** np. "HTTP 403 → headless fallback ok" */
   note?: string;
+  /** wydarzenia odtworzone z cache (bez wywołania LLM) */
+  cached?: number;
+  /** ścieżki obiektów w prywatnym archiwum; treść dostępna tylko przez lokalny serwer */
+  archive?: string[];
+  /** followupy sprawdzone mimo niezmienionej strony źródła */
+  followupsRechecked?: number;
 }
 
 export interface RunTotals extends LlmUsage {

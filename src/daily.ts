@@ -17,14 +17,15 @@ import { extractText, getDocumentProxy } from "unpdf";
 
 import {
   archiveEnabled, archiveEventsFull, archiveLlmCall, archiveRaw, archiveStats, beginRun,
+  beginSource, sourcePaths,
 } from "./archive.js";
 import { BROWSER_HEADERS, describeError, fetchUrl } from "./errors.js";
 import { MODEL_EXTRACT, chat, imagePart, resetUsage, setCallRecorder, snapshotUsage } from "./llm.js";
 import { type RedactionStats, redactEvents, redactText } from "./pii.js";
 import { DEDUPE_SYSTEM, POSTER_SYSTEM, extractionSystem } from "./prompts.js";
 import type {
-  EventItem, EventsFile, ExtractionResult, FollowupRun, PipelineError, PipelineState,
-  RunReport, RunTotals, Source, SourceRun, SourcesFile,
+  CachedExtraction, EventItem, EventsFile, ExtractionResult, FollowupRun, PipelineError,
+  PipelineState, RunReport, RunTotals, Source, SourceRun, SourcesFile,
 } from "./types.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -40,23 +41,48 @@ const MAX_INPUT_CHARS = 40_000; // ~10k tokenów
 
 // ---------------- fetch ----------------
 
-type Fetched = { kind: "html" | "pdf" | "skip"; text: string; httpStatus: number };
+type Fetched = {
+  kind: "html" | "pdf" | "skip" | "not-modified";
+  text: string;
+  httpStatus: number;
+  etag?: string;
+  lastModified?: string;
+};
+
+/**
+ * Nagłówki warunkowe z cache. Gdy serwer je obsługuje, odpowiada 304 i nie przesyła treści —
+ * najtańszy możliwy sposób stwierdzenia, że plakat/PDF się nie zmienił.
+ */
+function validators(c?: CachedExtraction): Record<string, string> {
+  const h: Record<string, string> = {};
+  if (c?.etag) h["If-None-Match"] = c.etag;
+  if (c?.lastModified) h["If-Modified-Since"] = c.lastModified;
+  return h;
+}
+
+const validatorsOf = (res: Response): { etag?: string; lastModified?: string } => {
+  const etag = res.headers.get("etag");
+  const lastModified = res.headers.get("last-modified");
+  return { ...(etag ? { etag } : {}), ...(lastModified ? { lastModified } : {}) };
+};
 
 /** Błąd HTTP niosący kod statusu, żeby raport mógł go pokazać nawet przy porażce. */
 function httpError(status: number, url: string): Error {
   return Object.assign(new Error(`HTTP ${status} ${url}`), { httpStatus: status });
 }
 
-async function fetchPlain(url: string): Promise<Fetched> {
-  const res = await fetchUrl(url, { headers: BROWSER_HEADERS }, 30_000);
+async function fetchPlain(url: string, extraHeaders: Record<string, string> = {}): Promise<Fetched> {
+  const res = await fetchUrl(url, { headers: { ...BROWSER_HEADERS, ...extraHeaders } }, 30_000);
+  if (res.status === 304) return { kind: "not-modified", text: "", httpStatus: 304 };
   if (!res.ok) throw httpError(res.status, url);
   const status = res.status;
+  const v = validatorsOf(res);
   const ct = res.headers.get("content-type") ?? "";
   if (ct.includes("pdf") || /\.pdf(\?|$)/i.test(url)) {
     const buf = new Uint8Array(await res.arrayBuffer());
     const pdf = await getDocumentProxy(buf);
     const { text } = await extractText(pdf, { mergePages: true });
-    return { kind: "pdf", text, httpStatus: status };
+    return { kind: "pdf", text, httpStatus: status, ...v };
   }
   const html = await res.text();
   const text = htmlToText(html, {
@@ -69,7 +95,7 @@ async function fetchPlain(url: string): Promise<Fetched> {
       { selector: "footer", format: "skip" },
     ],
   });
-  return { kind: "html", text, httpStatus: status };
+  return { kind: "html", text, httpStatus: status, ...v };
 }
 
 async function fetchHeadless(url: string): Promise<Fetched> {
@@ -93,15 +119,22 @@ async function fetchHeadless(url: string): Promise<Fetched> {
   }
 }
 
-/** Plakat JPG/PNG -> base64 dla modelu wizyjnego. */
-async function fetchImageB64(url: string): Promise<{ data: string; mediaType: "image/jpeg" | "image/png" } | null> {
-  const res = await fetchUrl(url, { headers: BROWSER_HEADERS }, 30_000);
+type FetchedImage =
+  | { notModified: true }
+  | { notModified: false; data: string; mediaType: "image/jpeg" | "image/png"; etag?: string; lastModified?: string };
+
+/** Plakat JPG/PNG -> base64 dla modelu wizyjnego. 304 = ten sam plakat, nie pobieramy bajtów. */
+async function fetchImageB64(url: string, extraHeaders: Record<string, string> = {}): Promise<FetchedImage | null> {
+  const res = await fetchUrl(url, { headers: { ...BROWSER_HEADERS, ...extraHeaders } }, 30_000);
+  if (res.status === 304) return { notModified: true };
   if (!res.ok) return null;
   const buf = Buffer.from(await res.arrayBuffer());
   if (buf.byteLength > 5_000_000) return null;
   return {
+    notModified: false,
     data: buf.toString("base64"),
     mediaType: /\.png(\?|$)/i.test(url) ? "image/png" : "image/jpeg",
+    ...validatorsOf(res),
   };
 }
 
@@ -198,10 +231,10 @@ function newSourceRun(src: Source, url: string, status: SourceRun["status"]): So
 }
 
 /** Fetch wg strategii źródła; 403/429 przy zwykłym fetchu to zwykle anty-bot — jedna próba przez headless. */
-async function fetchSource(src: Source, url: string, run: SourceRun): Promise<Fetched> {
+async function fetchSource(src: Source, url: string, run: SourceRun, extraHeaders: Record<string, string> = {}): Promise<Fetched> {
   if (src.fetch === "headless") return fetchHeadless(url);
   try {
-    return await fetchPlain(url);
+    return await fetchPlain(url, extraHeaders);
   } catch (e) {
     const hs = (e as { httpStatus?: number }).httpStatus;
     if (hs !== 403 && hs !== 429) throw e;
@@ -215,21 +248,91 @@ async function fetchSource(src: Source, url: string, run: SourceRun): Promise<Fe
   }
 }
 
+const sha256 = (s: string): string => createHash("sha256").update(s).digest("hex");
+
+/**
+ * Pobiera followup (podstrona / PDF / plakat) i zwraca jego wydarzenia.
+ * Treść identyczna (304 albo ten sam hash) → wydarzenia z cache, zero wywołań LLM.
+ */
+async function processFollowup(
+  url: string, src: Source, state: PipelineState, errors: PipelineError[],
+): Promise<FollowupRun> {
+  const isImg = /\.(jpe?g|png)(\?|$)/i.test(url);
+  const fr: FollowupRun = { url, kind: isImg ? "poster" : "page", outcome: "ok", events: 0 };
+  const cache = (state.extractions ??= {});
+  const cached = cache[url];
+
+  try {
+    let content: string | null = null;   // treść do zahashowania
+    let img: Extract<FetchedImage, { notModified: false }> | null = null;
+    let v: { etag?: string; lastModified?: string } = {};
+
+    if (isImg) {
+      const got = await fetchImageB64(url, validators(cached));
+      if (got === null) { fr.outcome = "error"; fr.err = "pobranie obrazu nieudane"; return fr; }
+      if (got.notModified) { fr.outcome = "unchanged"; fr.events = cached?.events.length ?? 0; return fr; }
+      img = got;
+      content = got.data;
+      v = { ...(got.etag ? { etag: got.etag } : {}), ...(got.lastModified ? { lastModified: got.lastModified } : {}) };
+    } else {
+      const sub = await fetchPlain(url, validators(cached));
+      if (sub.kind === "not-modified") { fr.outcome = "unchanged"; fr.events = cached?.events.length ?? 0; return fr; }
+      content = sub.text;
+      v = { ...(sub.etag ? { etag: sub.etag } : {}), ...(sub.lastModified ? { lastModified: sub.lastModified } : {}) };
+      await archiveRaw(`${src.id}__followup`, url, sub.text, sub.kind);
+    }
+
+    // serwer nie obsłużył warunkowego GET-a — porównujemy hash treści
+    const hash = sha256(content);
+    if (cached?.hash === hash) {
+      cache[url] = { ...cached, ...v, at: new Date().toISOString() };
+      fr.outcome = "unchanged";
+      fr.events = cached.events.length;
+      return fr;
+    }
+
+    const added = img
+      ? (await extractPoster({ data: img.data, mediaType: img.mediaType }, url)).events
+      : (await extractEvents(content, url)).events;
+
+    cache[url] = { hash, events: added, at: new Date().toISOString(), ...v };
+    fr.events = added.length;
+    return fr;
+  } catch (e) {
+    const err = describeError(e);
+    errors.push({ id: src.id, followup: url, err });
+    fr.outcome = "error";
+    fr.err = err;
+    return fr;
+  }
+}
+
+/** Wydarzenia followupa — z cache po przetworzeniu (processFollowup zapisuje wynik do state). */
+const followupEvents = (url: string, state: PipelineState): EventItem[] =>
+  state.extractions?.[url]?.events ?? [];
+
 async function processSource(src: Source, state: PipelineState, errors: PipelineError[]): Promise<{ events: EventItem[]; run: SourceRun }> {
   const t0 = performance.now();
   resetUsage();
+  beginSource(src.id);
   const url = src.url.replace("{page}", "1");
   const run = newSourceRun(src, url, "empty");
   const finalize = (events: EventItem[]): { events: EventItem[]; run: SourceRun } => {
     run.events = events.length;
     run.llm = snapshotUsage();
     run.ms = Math.round(performance.now() - t0);
+    // ścieżki do prywatnego archiwum — bez nich panel nie ma jak dotrzeć do treści
+    const paths = sourcePaths();
+    if (paths.length) run.archive = paths;
     return { events, run };
   };
 
+  const cache = (state.extractions ??= {});
+  const cached = cache[src.id];
+
   let fetched: Fetched;
   try {
-    fetched = await fetchSource(src, url, run);
+    fetched = await fetchSource(src, url, run, validators(cached));
   } catch (e) {
     const err = describeError(e);
     errors.push({ id: src.id, err });
@@ -240,56 +343,75 @@ async function processSource(src: Source, state: PipelineState, errors: Pipeline
     return finalize([]);
   }
   run.httpStatus = fetched.httpStatus;
-  run.kind = fetched.kind === "pdf" ? "pdf" : "html";
-  run.chars = fetched.text.length;
-  // surowe wejście modelu do prywatnego archiwum (no-op bez konfiguracji Supabase)
-  await archiveRaw(src.id, url, fetched.text, fetched.kind);
 
-  if (!fetched.text.trim()) { run.status = "empty"; return finalize([]); }
+  // --- strona źródła: 304 albo ten sam hash => wydarzenia z cache, bez wywołania LLM ---
+  let pageEvents: EventItem[];
+  let followupUrls: string[];
 
-  // diff: nie płacimy za niezmienione strony
-  const hash = createHash("sha256").update(fetched.text).digest("hex");
-  if (state.hashes[src.id] === hash) { run.status = "unchanged"; run.changed = false; return finalize([]); }
-  state.hashes[src.id] = hash;
-  run.changed = true;
+  if (fetched.kind === "not-modified" && cached) {
+    run.changed = false;
+    run.kind = "html";
+    pageEvents = cached.events;
+    followupUrls = state.followupsBySource?.[src.id] ?? [];
+  } else {
+    run.kind = fetched.kind === "pdf" ? "pdf" : "html";
+    run.chars = fetched.text.length;
+    await archiveRaw(src.id, url, fetched.text, fetched.kind);
+    if (!fetched.text.trim()) { run.status = "empty"; return finalize([]); }
 
-  const result = await extractEvents(fetched.text, url);
-  const events: EventItem[] = [...(result.events ?? [])];
+    const hash = sha256(fetched.text);
+    const v = {
+      ...(fetched.etag ? { etag: fetched.etag } : {}),
+      ...(fetched.lastModified ? { lastModified: fetched.lastModified } : {}),
+    };
 
-  // rozwijanie kontenerów: PDF-y programów, podstrony, plakaty (1 hop)
-  for (const fu of (result.followups ?? []).slice(0, MAX_FOLLOWUPS_PER_SOURCE)) {
-    const isImg = /\.(jpe?g|png)(\?|$)/i.test(fu.url);
-    const fr: FollowupRun = { url: fu.url, kind: isImg ? "poster" : "page", outcome: "ok", events: 0 };
-    try {
-      let added: EventItem[] = [];
-      if (isImg) {
-        const img = await fetchImageB64(fu.url);
-        if (img) added = (await extractPoster(img, fu.url)).events;
-      } else {
-        const sub = await fetchPlain(fu.url);
-        added = (await extractEvents(sub.text, fu.url)).events;
-      }
-      events.push(...added);
-      fr.events = added.length;
-    } catch (e) {
-      const err = describeError(e);
-      errors.push({ id: src.id, followup: fu.url, err });
-      fr.outcome = "error";
-      fr.err = err;
+    if (cached?.hash === hash) {
+      // treść bez zmian — odświeżamy tylko walidatory, wydarzenia zostają
+      cache[src.id] = { ...cached, ...v, at: new Date().toISOString() };
+      run.changed = false;
+      pageEvents = cached.events;
+      followupUrls = state.followupsBySource?.[src.id] ?? [];
+    } else {
+      run.changed = true;
+      const result = await extractEvents(fetched.text, url);
+      pageEvents = [...(result.events ?? [])];
+      cache[src.id] = { hash, events: pageEvents, at: new Date().toISOString(), ...v };
+      state.hashes[src.id] = hash; // legacy, dla zgodności ze starym state.json
+      followupUrls = (result.followups ?? []).slice(0, MAX_FOLLOWUPS_PER_SOURCE).map((f) => f.url);
+      (state.followupsBySource ??= {})[src.id] = followupUrls;
     }
+  }
+
+  // --- followupy: sprawdzane ZAWSZE, także gdy strona się nie zmieniła ---
+  // plakat/PDF potrafi się zmienić pod tym samym URL-em przy nietkniętym tekście strony
+  if (!run.changed && followupUrls.length) run.followupsRechecked = followupUrls.length;
+  const events: EventItem[] = [...pageEvents];
+  for (const fuUrl of followupUrls.slice(0, MAX_FOLLOWUPS_PER_SOURCE)) {
+    const fr = await processFollowup(fuUrl, src, state, errors);
     run.followups.push(fr);
+    if (fr.outcome !== "error") events.push(...followupEvents(fuUrl, state));
   }
 
   for (const ev of events) {
     ev.source_id = src.id;
     ev.town ??= src.town;
+    // geocode ma własny cache po "venue|town", więc wydarzenia z cache nie kosztują zapytań
     if (ev.venue) {
       const g = await geocode(ev.venue, ev.town ?? "", state.geo);
       ev.geo = g;
       if (g) run.geo.hits++; else run.geo.misses++;
     }
   }
-  run.status = events.length > 0 ? "ok" : "empty";
+
+  const anyFollowupChanged = run.followups.some((f) => f.outcome === "ok");
+  if (!run.changed && !anyFollowupChanged) {
+    // nic się nie zmieniło — ale wydarzenia wracają z cache zamiast zniknąć z serwisu
+    run.status = events.length > 0 ? "unchanged" : "empty";
+    run.cached = events.length;
+  } else {
+    run.status = events.length > 0 ? "ok" : "empty";
+    if (!run.changed) run.cached = pageEvents.length;
+  }
   return finalize(events);
 }
 
@@ -365,7 +487,10 @@ function writeStepSummary(report: RunReport): void {
   lines.push("| źródło | status | http | wyd. | followups | tokeny | ms |");
   lines.push("|---|---|--:|--:|:--:|--:|--:|");
   for (const s of report.sources) {
-    const fu = s.followups.length ? `${s.followups.filter((f) => f.outcome === "ok").length}/${s.followups.length}` : "";
+    const fu = s.followups.length
+      ? `${s.followups.filter((f) => f.outcome !== "error").length}/${s.followups.length}` +
+        (s.followupsRechecked ? " ↻" : "")
+      : "";
     const tok = s.llm.calls ? `${s.llm.promptTokens}+${s.llm.completionTokens}` : "";
     lines.push(
       `| ${s.id} | ${STATUS_ICON[s.status]} ${s.status} | ${s.httpStatus ?? ""} | ` +
@@ -424,6 +549,9 @@ async function run(): Promise<void> {
   // index.html, runs.json, job summary) trafia już wersja zredagowana. Komunikaty błędów też —
   // potrafią nieść fragment treści strony.
   const pii = redactEvents(allEvents);
+  // state.json też jest w repo — cache ekstrakcji trzyma wydarzenia, więc redagujemy i jego.
+  // Redakcja jest idempotentna, a część obiektów jest współdzielona z allEvents (to samo id w pamięci).
+  for (const entry of Object.values(state.extractions ?? {})) redactEvents(entry.events);
   for (const e of errors) e.err = redactText(e.err, pii);
   for (const sr of sourceRuns) {
     if (sr.err) sr.err = redactText(sr.err, pii);

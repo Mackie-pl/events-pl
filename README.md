@@ -6,8 +6,8 @@
 STAGE 1 (miesięcznie / nowe miasto)         STAGE 2 (codziennie)
 ─────────────────────────────────           ────────────────────────────────
 miasto + promień                            sources.json
-  → Overpass API (gminy w promieniu)          → fetch (plain/headless/pdf/api)
-  → wyszukiwarka (Brave, darmowy tier)        → diff (hash) — pomijamy niezmienione
+  → Overpass API (gminy w promieniu)          → fetch (ETag/304 + hash treści)
+  → wyszukiwarka (Brave, darmowy tier)        → bez zmian? wydarzenia z cache, 0 LLM
   → SONNET: triage kandydatów                 → HAIKU: ekstrakcja → JSON
   → sources.json                              → followups (1 hop): PDF-y programów,
   → weryfikacja URL-i (też --verify solo):      podstrony, plakaty JPG (vision)
@@ -118,6 +118,32 @@ Wiadomości: HTML, po jednej na sekcję (JUTRO / WEEKEND), auto-cięcie przy lim
 ([resend.com](https://resend.com) — 100 maili/dzień za darmo, wysyłka z `onboarding@resend.dev`) i `DIGEST_TO`.
 
 Wspólne: `DIGEST_CHILD_AGE=5` — filtr wg wieku dziecka. Bez żadnych kluczy `npm run digest` robi dry-run na stdout.
+
+## Cache ekstrakcji (state.json)
+
+Hash treści oszczędza wywołania LLM, ale **sam hash nie wystarczy**: gdy „niezmienione" znaczyło
+„zwróć zero wydarzeń", źródło znikało z `events.json` do czasu, aż jego strona się zmieni
+(w przebiegu z 2026-07-23 do serwisu trafiło 8 źródeł z 46 — reszta wypadła). Dlatego
+`state.extractions` trzyma **wynik ekstrakcji**, a nie tylko hash:
+
+```
+extractions: { "<source.id | URL followupa>": { hash, events, at, etag?, lastModified? } }
+followupsBySource: { "<source.id>": ["<URL plakatu/PDF-a>", …] }
+```
+
+- **Strona bez zmian** → wydarzenia wracają z cache, `status: unchanged`, zero wywołań LLM.
+- **Followupy sprawdzane zawsze**, także gdy strona się nie zmieniła — plakat czy `program.pdf`
+  potrafi zostać podmieniony pod tym samym URL-em przy nietkniętym tekście strony. Bez
+  `followupsBySource` nie wiedzielibyśmy, co sprawdzić (followupy pochodzą z ekstrakcji strony).
+- **Warunkowy GET** (`If-None-Match` / `If-Modified-Since`) — gdy serwer odpowie `304`,
+  plakat nie jest w ogóle pobierany. Gdy nie obsługuje walidatorów, decyduje hash treści.
+- `outcome: unchanged` przy followupie = treść identyczna, wydarzenia odtworzone z cache.
+
+⚠️ Pierwszy przebieg po tej zmianie **przeekstrahuje wszystkie źródła raz** (stary `state.json`
+ma `hashes`, ale nie ma zapisanych wydarzeń) — jednorazowo ok. pełnej stawki z tabeli kosztów.
+
+Cache jest w publicznym repo, więc trzymane w nim wydarzenia są **po** redakcji PII;
+pełna wersja z dnia ekstrakcji żyje w prywatnym archiwum.
 
 ## Dane osobowe (PII)
 

@@ -9,7 +9,9 @@
 import { describeError, fetchUrl } from "./errors.js";
 import type { LlmUsage } from "./types.js";
 
-const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
+// nadpisywalne: pozwala wpiąć proxy/gateway albo mock w testach integracyjnych
+const OPENROUTER_URL =
+  process.env["OPENROUTER_URL"] ?? "https://openrouter.ai/api/v1/chat/completions";
 
 export const MODEL_EXTRACT = process.env["MODEL_EXTRACT"] ?? "anthropic/claude-haiku-4.5";
 export const MODEL_DISCOVER = process.env["MODEL_DISCOVER"] ?? "anthropic/claude-sonnet-4.6";
