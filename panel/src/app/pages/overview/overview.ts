@@ -52,6 +52,8 @@ export class OverviewPage {
         return run.totals.errors;
       case 'skipped-fb':
         return run.totals.skippedFb;
+      case 'skipped-dead':
+        return run.totals.skippedDead ?? 0;
       case 'empty':
         return run.totals.empty;
     }

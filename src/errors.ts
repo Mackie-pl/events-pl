@@ -1,5 +1,13 @@
 /** Formatowanie błędów i fetch z kontekstem — wspólne dla całego pipeline'u. */
 
+// Nagłówki jak z przeglądarki — WAF-y części stron gminnych zwracają 403 dla UA botów.
+export const BROWSER_HEADERS = {
+  "User-Agent":
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+  Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+  "Accept-Language": "pl-PL,pl;q=0.9,en;q=0.8",
+};
+
 /**
  * `String(e)` gubi to, co najważniejsze: undici pakuje prawdziwą przyczynę
  * ("TypeError: fetch failed" -> ENOTFOUND / ECONNRESET / błąd certyfikatu)
@@ -16,7 +24,9 @@ export function describeError(e: unknown): string {
       break;
     }
     if (cur instanceof Error) {
-      parts.push(cur.name && cur.name !== "Error" ? `${cur.name}: ${cur.message}` : cur.message);
+      const label = cur.name && cur.name !== "Error" ? `${cur.name}: ${cur.message}` : cur.message;
+      // nie powielaj: wrapper z fetchUrl ma opis przyczyny już w treści
+      if (!parts.some((p) => p.includes(label))) parts.push(label);
       cur = cur.cause;
     } else {
       parts.push(String(cur));

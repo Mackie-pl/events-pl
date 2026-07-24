@@ -40,6 +40,7 @@ export const STATUS_META: Record<SourceStatus, StatusMeta> = {
   unchanged: { label: 'unchanged', appearance: 'neutral', icon: '@tui.minus' },
   error: { label: 'error', appearance: 'negative', icon: '@tui.triangle-alert' },
   'skipped-fb': { label: 'skipped fb', appearance: 'info', icon: '@tui.ban' },
+  'skipped-dead': { label: 'skipped dead', appearance: 'negative', icon: '@tui.skull' },
   empty: { label: 'empty', appearance: 'warning', icon: '@tui.circle-dashed' },
 };
 
@@ -48,5 +49,6 @@ export const ALL_STATUSES: readonly SourceStatus[] = [
   'unchanged',
   'error',
   'skipped-fb',
+  'skipped-dead',
   'empty',
 ];

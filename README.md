@@ -10,11 +10,12 @@ miasto + promień                            sources.json
   → wyszukiwarka (Brave, darmowy tier)        → diff (hash) — pomijamy niezmienione
   → SONNET: triage kandydatów                 → HAIKU: ekstrakcja → JSON
   → sources.json                              → followups (1 hop): PDF-y programów,
-                                                podstrony, plakaty JPG (vision)
-src/discover.ts                               → geocode (Nominatim, darmowe, cache)
-                                              → dedupe (heurystyka + LLM)
-                                              → events.json → index.html
-                                            src/daily.ts
+  → weryfikacja URL-i (też --verify solo):      podstrony, plakaty JPG (vision)
+    martwy URL → Brave + HAIKU → naprawa     → geocode (Nominatim, darmowe, cache)
+    (stary adres → previous_urls) albo        → dedupe (heurystyka + LLM)
+    dead:true (daily pomija)                  → events.json → index.html
+  → discover-runs.json (observability)      src/daily.ts → runs.json (observability)
+src/discover.ts
 ```
 
 ## Pliki
@@ -23,9 +24,11 @@ src/discover.ts                               → geocode (Nominatim, darmowe, c
 |---|---|
 | `sources.json` | rejestr źródeł Poznań +15 km (etap 1 wykonany ręcznie 2026-07-20; 46 źródeł, 13 gmin) |
 | `src/types.ts` | pełne typy: Source, EventItem (age/price/sub_slots/tags/conditional), State |
-| `src/discover.ts` | etap 1 (Sonnet + Brave Search + Overpass) |
+| `src/discover.ts` | etap 1 (Sonnet + Brave Search + Overpass) + weryfikacja/naprawa URL-i (`--verify`, cron miesięczny w `discover.yml`) |
+| `discover-runs.json` | observability etapu 1: każde zapytanie search + wyniki, geo (Overpass), tokeny/koszt LLM per miasto / źródło / typ zadania (discovery vs weryfikacja); ostatnie 24 przebiegi |
 | `src/daily.ts` | etap 2 (Haiku: ekstrakcja, kontenery, PDF przez `unpdf`, plakaty vision, geo, dedupe) |
 | `src/prompts.ts` | prompty PL dla obu etapów |
+| `src/pii.ts` | redakcja danych osobowych przed zapisem do publicznego repo (patrz niżej) |
 | `template.html` | frontend (wiek dziecka, tagi zagnieżdżone, weekend, mapa OSM); `daily.ts` wstrzykuje JSON |
 | `panel/` | panel observability (Angular 22 + Taiga UI): przegląd dnia → source runs → eventy + iframe podglądu; deploy na GH Pages pod `/panel/` przez `deploy-pages.yml` (Settings → Pages → Source: GitHub Actions) |
 
@@ -45,7 +48,8 @@ npm run daily                   # → events.json + index.html
 
 # raz w miesiącu / nowe miasto:
 export BRAVE_API_KEY=...        # darmowy tier: 2000 zapytań/mies
-npm run discover -- "Poznań" 15
+npm run discover -- "Poznań" 15 # pełne discovery + weryfikacja URL-i
+npm run discover -- --verify    # sama weryfikacja/naprawa URL-i (tanio: Haiku; cron w discover.yml)
 
 npm run typecheck               # tsc --noEmit (strict)
 ```
@@ -114,11 +118,35 @@ Wiadomości: HTML, po jednej na sekcję (JUTRO / WEEKEND), auto-cięcie przy lim
 
 Wspólne: `DIGEST_CHILD_AGE=5` — filtr wg wieku dziecka. Bez żadnych kluczy `npm run digest` robi dry-run na stdout.
 
+## Dane osobowe (PII)
+
+Repo jest **publiczne**, a strony instytucji podają numery kontaktowe osób prowadzących zapisy.
+`src/pii.ts` redaguje je tuż przed zapisem — `events.json`, `index.html`, `runs.json`
+i job summary zawierają już wersję oczyszczoną.
+
+| dane | decyzja | dlaczego |
+|---|---|---|
+| numer stacjonarny (kierunkowy, np. `61 …`) | **zostaje** | centrala instytucji publicznej, nie osoba; bez niego pole „zapisy" traci sens |
+| komórka (prefiks `50/51/60/66/72/…`) | **usuwana** → `[tel. w źródle]` | zwykle prywatny numer pracownika |
+| e-mail | **usuwany** → `[e-mail w źródle]` | j.w. |
+| 9-cyfrowy numer o nieznanym prefiksie | **usuwany** | fail closed |
+| URL-e (w tym `fb.me/e/…`) | nietknięte | nie są PII; wycinane z redakcji, żeby numeryczne id nie wyglądały jak telefon |
+
+Użytkownik ma zawsze `source_url` — instytucja publikuje kontakt u siebie, w kontekście.
+Ekstrakcja **nadal wyciąga** pełne dane (prompt bez zmian): redakcja jest warstwą na granicy
+publikacji, więc pełna wersja pojedzie do prywatnego archiwum (Supabase Storage) bez zmian w promptach.
+
+⚠️ **Historia gita**: redakcja działa od teraz. Numery zacommitowane wcześniej
+(`events.json`/`index.html` w commitach do 2026-07-23 włącznie) **nadal są w historii** repo na GitHubie —
+usunięcie ich wymaga `git filter-repo` + force push + zgłoszenia do GitHub Support o czyszczenie cache.
+
 ## Znane ograniczenia / TODO
 
 - FB: tylko publiczne strony przez scraper 3rd-party; grupy zamknięte poza zakresem (ban risk).
 - Dedupe: heurystyka tytuł+data; LLM-owy dedupe (`DEDUPE_SYSTEM`) gotowy w prompts.ts, niepodpięty.
-- `verified:false` w sources.json → pierwszy przebieg daily zweryfikuje URL-e (404 → flaga do re-discovery).
+- Weryfikacja URL-i: `discover --verify` (miesięczny cron `discover.yml`) sprawdza każdy URL, naprawia
+  przez search+LLM (historia w `previous_urls`), nienaprawialne znakuje `dead:true` (daily pomija jako
+  `skipped-dead` do następnej udanej naprawy).
 - Tagi zagnieżdżone (`dzieci:dmuchańce`, `warsztaty:ceramika`) generuje prompt — słownik warto ustabilizować po ~2 tyg. danych.
 - Powiadomienia: dodać `src/digest.ts` (czwartek 17:00, filtr wiek+weekend → mail/Telegram) — trywialne rozszerzenie.
 - Walidacja odpowiedzi LLM: typy są rzutowane (`as ExtractionResult`); produkcyjnie warto dodać `zod` schema → `EventItem`.

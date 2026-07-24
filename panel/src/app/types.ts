@@ -27,6 +27,12 @@ export interface Source {
   notes?: string;
   discovered?: string;
   confidence?: number;
+  /** data ostatniej weryfikacji URL (YYYY-MM-DD) — discover --verify */
+  checked?: string;
+  /** poprzednie, błędne adresy (historia napraw) */
+  previous_urls?: string[];
+  /** URL martwy — daily pomija (skipped-dead) do czasu naprawy */
+  dead?: boolean;
 }
 
 export interface SourcesFile {
@@ -97,7 +103,7 @@ export interface EventsFile {
 
 // ---------------- observability / run reporting ----------------
 
-export type SourceStatus = 'ok' | 'unchanged' | 'error' | 'skipped-fb' | 'empty';
+export type SourceStatus = 'ok' | 'unchanged' | 'error' | 'skipped-fb' | 'skipped-dead' | 'empty';
 
 export interface FollowupRun {
   url: string;
@@ -131,6 +137,8 @@ export interface SourceRun {
   llm: LlmUsage;
   ms: number;
   err?: string;
+  /** np. "HTTP 403 → headless fallback ok" */
+  note?: string;
 }
 
 export interface RunTotals extends LlmUsage {
@@ -139,11 +147,16 @@ export interface RunTotals extends LlmUsage {
   unchanged: number;
   errors: number;
   skippedFb: number;
+  /** opcjonalne — starsze przebiegi w runs.json nie mają tego pola */
+  skippedDead?: number;
   empty: number;
   events: number;
   followupsTried: number;
   geoHits: number;
   geoMisses: number;
+  /** opcjonalne — starsze przebiegi w runs.json nie mają tych pól */
+  redactedPhones?: number;
+  redactedEmails?: number;
 }
 
 export interface RunReport {

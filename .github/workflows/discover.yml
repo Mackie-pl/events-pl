@@ -1,0 +1,35 @@
+name: monthly-discover
+on:
+  schedule:
+    - cron: "0 3 1 * *" # 1. dzień miesiąca, 5:00 czasu PL (lato)
+  workflow_dispatch:
+    inputs:
+      args:
+        description: 'Argumenty discover (domyślnie "--verify"; pełne discovery np. "Poznań 15")'
+        required: false
+        default: "--verify"
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --omit=optional
+      - run: npm run discover -- ${{ inputs.args || '--verify' }}
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          BRAVE_API_KEY: ${{ secrets.BRAVE_API_KEY }}
+      - name: Commit results
+        run: |
+          git config user.name "events-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add sources.json discover-runs.json
+          git diff --cached --quiet || git commit -m "discover $(date +%F)"
+          git push

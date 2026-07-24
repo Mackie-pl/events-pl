@@ -24,6 +24,12 @@ export interface Source {
   notes?: string;
   discovered?: string;
   confidence?: number;
+  /** data ostatniej weryfikacji URL (YYYY-MM-DD) — discover --verify */
+  checked?: string;
+  /** poprzednie, błędne adresy (historia napraw) */
+  previous_urls?: string[];
+  /** URL martwy i nienaprawialny — daily pomija (skipped-dead) do czasu naprawy */
+  dead?: boolean;
 }
 
 export interface SourcesFile {
@@ -123,7 +129,7 @@ export interface SearchResult {
 
 // ---------------- observability / run reporting ----------------
 
-export type SourceStatus = "ok" | "unchanged" | "error" | "skipped-fb" | "empty";
+export type SourceStatus = "ok" | "unchanged" | "error" | "skipped-fb" | "skipped-dead" | "empty";
 
 export interface FollowupRun {
   url: string;
@@ -171,11 +177,15 @@ export interface RunTotals extends LlmUsage {
   unchanged: number;
   errors: number;
   skippedFb: number;
+  skippedDead: number;
   empty: number;
   events: number;
   followupsTried: number;
   geoHits: number;
   geoMisses: number;
+  /** ile numerów komórkowych / e-maili usunięto przed publikacją (pii.ts) */
+  redactedPhones: number;
+  redactedEmails: number;
 }
 
 export interface RunReport {
@@ -185,4 +195,89 @@ export interface RunReport {
   durationMs: number;
   totals: RunTotals;
   sources: SourceRun[];
+}
+
+// ---------------- observability: discover (miesięczny) ----------------
+
+/** Jedno zapytanie do wyszukiwarki (Brave) wraz z tym, co zwróciła. */
+export interface SearchCall {
+  query: string;
+  results: SearchResult[];
+  ms: number;
+  err?: string;
+}
+
+/** Zapytanie geo (Overpass): gminy w promieniu. */
+export interface GeoLookup {
+  query: string;
+  towns: string[];
+  ms: number;
+  err?: string;
+}
+
+/** Discovery jednego miasta/gminy: wyszukiwania -> LLM -> nowe źródła. */
+export interface TownDiscoveryRun {
+  town: string;
+  searches: SearchCall[];
+  /** źródła zaproponowane przez LLM */
+  proposed: number;
+  /** faktycznie dodane po merge (nowe URL-e, confidence >= 0.5) */
+  added: number;
+  addedIds: string[];
+  llm: LlmUsage;
+  ms: number;
+  err?: string;
+}
+
+/**
+ * Weryfikacja URL jednego źródła.
+ * ok: URL działa · fixed: naprawiony (stary w previous_urls) · dead: naprawa się nie udała,
+ * źródło oznaczone dead:true · error: URL padł, ale naprawy nie próbowano (np. brak BRAVE_API_KEY)
+ * — źródło nietknięte · skipped: nie weryfikujemy (fb).
+ */
+export interface SourceVerification {
+  id: string;
+  name: string;
+  town: string;
+  url: string;
+  outcome: "ok" | "fixed" | "dead" | "error" | "skipped";
+  httpStatus?: number;
+  err?: string;
+  searches: SearchCall[];
+  /** URL zaproponowany przez LLM przy naprawie */
+  candidate?: string;
+  /** nowy URL po udanej naprawie */
+  newUrl?: string;
+  llm: LlmUsage;
+  ms: number;
+}
+
+export interface DiscoverTotals extends LlmUsage {
+  towns: number;
+  /** liczba zapytań do Brave (limit darmowego tieru: 2000/mies.) */
+  searches: number;
+  sourcesAdded: number;
+  sourcesChecked: number;
+  ok: number;
+  fixed: number;
+  dead: number;
+  unrepaired: number;
+  skipped: number;
+  /** koszt LLM per typ zadania */
+  costDiscoveryUsd: number;
+  costVerifyUsd: number;
+}
+
+export interface DiscoverRunReport {
+  stage: "discover";
+  mode: "full" | "verify";
+  center?: string;
+  radiusKm?: number;
+  startedAt: string;
+  finishedAt: string;
+  durationMs: number;
+  geo?: GeoLookup;
+  towns: TownDiscoveryRun[];
+  verifications: SourceVerification[];
+  totals: DiscoverTotals;
 }

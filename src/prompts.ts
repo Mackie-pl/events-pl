@@ -23,6 +23,14 @@ export const DISCOVERY_QUERIES: readonly string[] = [
   "wydarzenia {town}",
 ];
 
+// ============ STAGE 1b: weryfikacja/naprawa URL-i (miesięcznie, tani model) ============
+
+export const REVERIFY_SYSTEM = `Instytucja kultury/sportu w Polsce ma martwy URL w naszym rejestrze źródeł wydarzeń.
+Dostajesz jej nazwę, miasto, stary URL i wyniki wyszukiwania. Wskaż aktualną OFICJALNĄ stronę tej instytucji
+(najlepiej podstronę z wydarzeniami/aktualnościami/kalendarzem). Odrzuć: agregatory biletowe, katalogi firm,
+portale ogłoszeniowe, media lokalne piszące O instytucji oraz strony innych instytucji o podobnej nazwie.
+Zwróć WYŁĄCZNIE JSON: {"url":"https://..."} albo {"url":null}, gdy żaden wynik nie jest jej oficjalną stroną.`;
+
 // ============ STAGE 2: ekstrakcja (codziennie, tani model) ============
 
 export const extractionSystem = (todayIso: string): string =>

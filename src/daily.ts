@@ -15,8 +15,9 @@ import { setTimeout as sleep } from "node:timers/promises";
 import { convert as htmlToText } from "html-to-text";
 import { extractText, getDocumentProxy } from "unpdf";
 
-import { describeError, fetchUrl } from "./errors.js";
+import { BROWSER_HEADERS, describeError, fetchUrl } from "./errors.js";
 import { MODEL_EXTRACT, chat, imagePart, resetUsage, snapshotUsage } from "./llm.js";
+import { type RedactionStats, redactEvents, redactText } from "./pii.js";
 import { DEDUPE_SYSTEM, POSTER_SYSTEM, extractionSystem } from "./prompts.js";
 import type {
   EventItem, EventsFile, ExtractionResult, FollowupRun, PipelineError, PipelineState,
@@ -29,13 +30,6 @@ const OUT_EVENTS = join(ROOT, "events.json");
 const RUNS_PATH = join(ROOT, "runs.json");
 const RUN_RETENTION_MS = 2 * 24 * 60 * 60 * 1000; // ostatnie ~2 dni
 const RUN_MIN_KEEP = 2; // zawsze zostaw min. tyle przebiegów, nawet po przerwie w cronie
-// Nagłówki jak z przeglądarki — WAF-y części stron gminnych zwracają 403 dla UA botów.
-const BROWSER_HEADERS = {
-  "User-Agent":
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
-  Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-  "Accept-Language": "pl-PL,pl;q=0.9,en;q=0.8",
-};
 // Nominatim wymaga UA identyfikującego aplikację (usage policy) — tu zostaje bot.
 const UA = { "User-Agent": "LocalEventsBot/0.3 (+kontakt: twoj@email)" };
 const MAX_FOLLOWUPS_PER_SOURCE = 5;
@@ -305,17 +299,19 @@ async function renderHtml(data: EventsFile, report: RunReport): Promise<void> {
 
 // ---------------- run report ----------------
 
-function buildReport(startedAt: string, t0: number, sources: SourceRun[]): RunReport {
+function buildReport(startedAt: string, t0: number, sources: SourceRun[], pii: RedactionStats): RunReport {
   const totals: RunTotals = {
-    sources: sources.length, ok: 0, unchanged: 0, errors: 0, skippedFb: 0, empty: 0,
+    sources: sources.length, ok: 0, unchanged: 0, errors: 0, skippedFb: 0, skippedDead: 0, empty: 0,
     events: 0, followupsTried: 0, geoHits: 0, geoMisses: 0,
     calls: 0, promptTokens: 0, completionTokens: 0, costUsd: 0,
+    redactedPhones: pii.phones, redactedEmails: pii.emails,
   };
   for (const s of sources) {
     if (s.status === "ok") totals.ok++;
     else if (s.status === "unchanged") totals.unchanged++;
     else if (s.status === "error") totals.errors++;
     else if (s.status === "skipped-fb") totals.skippedFb++;
+    else if (s.status === "skipped-dead") totals.skippedDead++;
     else totals.empty++;
     totals.events += s.events;
     totals.followupsTried += s.followups.length;
@@ -343,7 +339,7 @@ async function persistRun(report: RunReport): Promise<void> {
 }
 
 const STATUS_ICON: Record<SourceRun["status"], string> = {
-  ok: "✅", unchanged: "♻️", error: "⚠️", "skipped-fb": "⏭️", empty: "∅",
+  ok: "✅", unchanged: "♻️", error: "⚠️", "skipped-fb": "⏭️", "skipped-dead": "💀", empty: "∅",
 };
 
 /** Tabela statusu do GitHub Actions job summary (Markdown). */
@@ -355,9 +351,10 @@ function writeStepSummary(report: RunReport): void {
   lines.push(`## daily-events — ${report.startedAt}`, "");
   lines.push(
     `**${t.sources}** źródeł · ✅ ${t.ok} ok · ♻️ ${t.unchanged} bez zmian · ` +
-    `⚠️ ${t.errors} błędów · ⏭️ ${t.skippedFb} fb · ∅ ${t.empty} pusto · ` +
+    `⚠️ ${t.errors} błędów · ⏭️ ${t.skippedFb} fb · 💀 ${t.skippedDead} martwych · ∅ ${t.empty} pusto · ` +
     `**${t.events}** wydarzeń · ${t.calls} LLM (${t.promptTokens}+${t.completionTokens} tok, ` +
-    `$${t.costUsd.toFixed(4)}) · ${Math.round(report.durationMs / 1000)}s`,
+    `$${t.costUsd.toFixed(4)}) · 🔒 ${t.redactedPhones} tel. / ${t.redactedEmails} e-mail zredagowanych · ` +
+    `${Math.round(report.durationMs / 1000)}s`,
     "",
   );
   lines.push("| źródło | status | http | wyd. | followups | tokeny | ms |");
@@ -378,8 +375,8 @@ function summaryLine(r: RunReport): string {
   const t = r.totals;
   return (
     `OK: ${t.events} wydarzeń · ${t.ok} ok / ${t.unchanged} bez zmian / ${t.errors} błędów / ` +
-    `${t.skippedFb} fb / ${t.empty} pusto · ${t.calls} LLM $${t.costUsd.toFixed(4)} · ` +
-    `${Math.round(r.durationMs / 1000)}s`
+    `${t.skippedFb} fb / ${t.skippedDead} martwych / ${t.empty} pusto · ${t.calls} LLM $${t.costUsd.toFixed(4)} · ` +
+    `PII: −${t.redactedPhones} tel. −${t.redactedEmails} e-mail · ${Math.round(r.durationMs / 1000)}s`
   );
 }
 
@@ -398,14 +395,30 @@ async function run(): Promise<void> {
       sourceRuns.push(newSourceRun(src, src.url.replace("{page}", "1"), "skipped-fb"));
       continue;
     }
+    if (src.dead) {
+      // martwy URL wg discover --verify — nie marnujemy fetcha do następnej naprawy
+      sourceRuns.push(newSourceRun(src, src.url.replace("{page}", "1"), "skipped-dead"));
+      continue;
+    }
     const { events, run: sr } = await processSource(src, state, errors);
     sourceRuns.push(sr);
     allEvents.push(...events);
   }
 
   allEvents = dedupe(allEvents);
+
+  // PII wychodzi tuż przed zapisem: dedupe pracuje na pełnych danych, a do repo (events.json,
+  // index.html, runs.json, job summary) trafia już wersja zredagowana. Komunikaty błędów też —
+  // potrafią nieść fragment treści strony.
+  const pii = redactEvents(allEvents);
+  for (const e of errors) e.err = redactText(e.err, pii);
+  for (const sr of sourceRuns) {
+    if (sr.err) sr.err = redactText(sr.err, pii);
+    for (const fu of sr.followups) if (fu.err) fu.err = redactText(fu.err, pii);
+  }
+
   const out: EventsFile = { generated: new Date().toISOString().slice(0, 10), events: allEvents, errors };
-  const report = buildReport(startedAt, t0, sourceRuns);
+  const report = buildReport(startedAt, t0, sourceRuns, pii);
 
   await writeFile(OUT_EVENTS, JSON.stringify(out, null, 1), "utf-8");
   await writeFile(STATE_PATH, JSON.stringify(state), "utf-8");
