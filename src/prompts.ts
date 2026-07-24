@@ -20,6 +20,7 @@ export const DISCOVERY_QUERIES: readonly string[] = [
   "{town} kalendarz wydarzeń urząd",
   "{town} co robić z dzieckiem",
   "site:facebook.com {town} wydarzenia",
+  "wydarzenia {town}",
 ];
 
 // ============ STAGE 2: ekstrakcja (codziennie, tani model) ============

@@ -1,17 +1,20 @@
-/** Wspólne typy pipeline'u. */
+/**
+ * Mirrors ../../src/types.ts (pipeline types).
+ * Keep in sync when the pipeline schema changes.
+ */
 
-export type FetchStrategy = "plain" | "headless" | "pdf" | "api" | "fb" | "rss";
+export type FetchStrategy = 'plain' | 'headless' | 'pdf' | 'api' | 'fb' | 'rss';
 
 export type SourceType =
-  | "city_portal"
-  | "culture_center"
-  | "library"
-  | "sports"
-  | "venue"
-  | "fb_page"
-  | "rss"
-  | "api"
-  | "pdf_program";
+  | 'city_portal'
+  | 'culture_center'
+  | 'library'
+  | 'sports'
+  | 'venue'
+  | 'fb_page'
+  | 'rss'
+  | 'api'
+  | 'pdf_program';
 
 export interface Source {
   id: string;
@@ -43,7 +46,6 @@ export interface SourcesFile {
 export interface AgeRange {
   min: number | null;
   max: number | null;
-  /** oryginalny zapis, np. "4+", "roczniki 2015-2016", "dorośli" */
   label: string | null;
 }
 
@@ -61,52 +63,24 @@ export interface SubSlot {
 
 export interface EventItem {
   title: string;
-  /** YYYY-MM-DD */
   date_start: string;
   date_end: string | null;
-  /** HH:MM */
   time_start: string | null;
   time_end: string | null;
   venue: string | null;
   town: string | null;
   price: Price;
   age: AgeRange | null;
-  family_friendly: boolean | "maybe";
-  /** tagi zagnieżdżone, np. "dzieci:dmuchańce", "warsztaty:ceramika" */
+  family_friendly: boolean | 'maybe';
   tags: string[];
   registration: string | null;
   sub_slots: SubSlot[] | null;
-  /** np. "przy deszczu przeniesione na 26.07" */
   conditional: string | null;
-  /** nazwa wydarzenia-kontenera, z którego rozpakowano */
   container?: string;
   source_url: string;
   source_id?: string;
   is_noise: boolean;
   geo?: { lat: number; lon: number } | null;
-}
-
-export interface Followup {
-  url: string;
-  reason: "program PDF" | "szczegóły wydarzenia" | "plakat" | (string & {});
-}
-
-export interface ExtractionResult {
-  events: EventItem[];
-  followups?: Followup[];
-}
-
-export interface PipelineState {
-  /** sha256 treści per source.id — diff, żeby nie płacić za niezmienione strony */
-  hashes: Record<string, string>;
-  /** cache geokodera per "venue|town" */
-  geo: Record<string, { lat: number; lon: number } | null>;
-}
-
-export interface EventsFile {
-  generated: string;
-  events: EventItem[];
-  errors: PipelineError[];
 }
 
 export interface PipelineError {
@@ -115,25 +89,24 @@ export interface PipelineError {
   followup?: string;
 }
 
-export interface SearchResult {
-  title: string | null;
-  url: string | null;
-  desc: string | null;
+export interface EventsFile {
+  generated: string;
+  events: EventItem[];
+  errors: PipelineError[];
 }
 
 // ---------------- observability / run reporting ----------------
 
-export type SourceStatus = "ok" | "unchanged" | "error" | "skipped-fb" | "empty";
+export type SourceStatus = 'ok' | 'unchanged' | 'error' | 'skipped-fb' | 'empty';
 
 export interface FollowupRun {
   url: string;
-  kind: "poster" | "page";
-  outcome: "ok" | "error";
+  kind: 'poster' | 'page';
+  outcome: 'ok' | 'error';
   events: number;
   err?: string;
 }
 
-/** Zużycie LLM (tokeny + koszt) — akumulowane w llm.ts. */
 export interface LlmUsage {
   calls: number;
   promptTokens: number;
@@ -149,20 +122,15 @@ export interface SourceRun {
   fetch: FetchStrategy;
   status: SourceStatus;
   httpStatus?: number;
-  kind?: "html" | "pdf";
-  /** długość pobranego tekstu */
+  kind?: 'html' | 'pdf';
   chars?: number;
-  /** czy hash różnił się od stanu (zmiana treści) */
   changed?: boolean;
-  /** wydarzenia zachowane z tego źródła (łącznie z followupami) */
   events: number;
   followups: FollowupRun[];
   geo: { hits: number; misses: number };
   llm: LlmUsage;
   ms: number;
   err?: string;
-  /** np. "HTTP 403 → headless fallback ok" */
-  note?: string;
 }
 
 export interface RunTotals extends LlmUsage {
@@ -179,7 +147,7 @@ export interface RunTotals extends LlmUsage {
 }
 
 export interface RunReport {
-  stage: "daily" | "digest";
+  stage: 'daily' | 'digest';
   startedAt: string;
   finishedAt: string;
   durationMs: number;

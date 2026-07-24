@@ -18,6 +18,7 @@ import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
+import { fetchUrl } from "./errors.js";
 import type { EventItem, EventsFile } from "./types.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -252,7 +253,7 @@ async function sendTelegram(d: Digest): Promise<boolean> {
   const chatId = process.env["TELEGRAM_CHAT_ID"];
   if (!token || !chatId) return false;
   for (const text of d.tgMessages) {
-    const res = await fetch(
+    const res = await fetchUrl(
       `https://api.telegram.org/bot${token}/sendMessage`,
       {
         method: "POST",
@@ -263,8 +264,9 @@ async function sendTelegram(d: Digest): Promise<boolean> {
           parse_mode: "HTML",
           disable_web_page_preview: true,
         }),
-        signal: AbortSignal.timeout(30_000),
       },
+      30_000,
+      "Telegram sendMessage", // label: URL zawiera token bota — nie do logów
     );
     if (!res.ok) throw new Error(`Telegram ${res.status}: ${await res.text()}`);
   }
@@ -278,7 +280,7 @@ async function sendResend(d: Digest): Promise<boolean> {
   const key = process.env["RESEND_API_KEY"];
   const to = process.env["DIGEST_TO"];
   if (!key || !to) return false;
-  const res = await fetch("https://api.resend.com/emails", {
+  const res = await fetchUrl("https://api.resend.com/emails", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${key}`,
@@ -291,8 +293,7 @@ async function sendResend(d: Digest): Promise<boolean> {
       text: d.text,
       html: d.html,
     }),
-    signal: AbortSignal.timeout(30_000),
-  });
+  }, 30_000);
   if (!res.ok) throw new Error(`Resend ${res.status}: ${await res.text()}`);
   console.log(`Email: wysłano do ${to}: ${d.subject}`);
   return true;

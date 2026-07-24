@@ -15,6 +15,7 @@ import { setTimeout as sleep } from "node:timers/promises";
 import { convert as htmlToText } from "html-to-text";
 import { extractText, getDocumentProxy } from "unpdf";
 
+import { describeError, fetchUrl } from "./errors.js";
 import { MODEL_EXTRACT, chat, imagePart, resetUsage, snapshotUsage } from "./llm.js";
 import { DEDUPE_SYSTEM, POSTER_SYSTEM, extractionSystem } from "./prompts.js";
 import type {
@@ -28,6 +29,14 @@ const OUT_EVENTS = join(ROOT, "events.json");
 const RUNS_PATH = join(ROOT, "runs.json");
 const RUN_RETENTION_MS = 2 * 24 * 60 * 60 * 1000; // ostatnie ~2 dni
 const RUN_MIN_KEEP = 2; // zawsze zostaw min. tyle przebiegów, nawet po przerwie w cronie
+// Nagłówki jak z przeglądarki — WAF-y części stron gminnych zwracają 403 dla UA botów.
+const BROWSER_HEADERS = {
+  "User-Agent":
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+  Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+  "Accept-Language": "pl-PL,pl;q=0.9,en;q=0.8",
+};
+// Nominatim wymaga UA identyfikującego aplikację (usage policy) — tu zostaje bot.
 const UA = { "User-Agent": "LocalEventsBot/0.3 (+kontakt: twoj@email)" };
 const MAX_FOLLOWUPS_PER_SOURCE = 5;
 const MAX_INPUT_CHARS = 40_000; // ~10k tokenów
@@ -42,7 +51,7 @@ function httpError(status: number, url: string): Error {
 }
 
 async function fetchPlain(url: string): Promise<Fetched> {
-  const res = await fetch(url, { headers: UA, signal: AbortSignal.timeout(30_000) });
+  const res = await fetchUrl(url, { headers: BROWSER_HEADERS }, 30_000);
   if (!res.ok) throw httpError(res.status, url);
   const status = res.status;
   const ct = res.headers.get("content-type") ?? "";
@@ -89,7 +98,7 @@ async function fetchHeadless(url: string): Promise<Fetched> {
 
 /** Plakat JPG/PNG -> base64 dla modelu wizyjnego. */
 async function fetchImageB64(url: string): Promise<{ data: string; mediaType: "image/jpeg" | "image/png" } | null> {
-  const res = await fetch(url, { headers: UA, signal: AbortSignal.timeout(30_000) });
+  const res = await fetchUrl(url, { headers: BROWSER_HEADERS }, 30_000);
   if (!res.ok) return null;
   const buf = Buffer.from(await res.arrayBuffer());
   if (buf.byteLength > 5_000_000) return null;
@@ -138,14 +147,16 @@ async function geocode(venue: string, town: string, cache: PipelineState["geo"])
   if (key in cache) return cache[key] ?? null;
   const q = town ? `${venue}, ${town}, Poland` : `${venue}, Poland`;
   try {
-    const res = await fetch(
+    const res = await fetchUrl(
       `https://nominatim.openstreetmap.org/search?${new URLSearchParams({ q, format: "json", limit: "1" })}`,
-      { headers: UA, signal: AbortSignal.timeout(15_000) },
+      { headers: UA },
+      15_000,
     );
     const hits = (await res.json()) as Array<{ lat: string; lon: string }>;
     const hit = hits[0];
     cache[key] = hit ? { lat: Number(hit.lat), lon: Number(hit.lon) } : null;
-  } catch {
+  } catch (e) {
+    console.warn(`geocode "${q}": ${describeError(e)}`);
     cache[key] = null;
   }
   await sleep(1_100); // polityka Nominatim
@@ -189,6 +200,24 @@ function newSourceRun(src: Source, url: string, status: SourceRun["status"]): So
   };
 }
 
+/** Fetch wg strategii źródła; 403/429 przy zwykłym fetchu to zwykle anty-bot — jedna próba przez headless. */
+async function fetchSource(src: Source, url: string, run: SourceRun): Promise<Fetched> {
+  if (src.fetch === "headless") return fetchHeadless(url);
+  try {
+    return await fetchPlain(url);
+  } catch (e) {
+    const hs = (e as { httpStatus?: number }).httpStatus;
+    if (hs !== 403 && hs !== 429) throw e;
+    try {
+      const f = await fetchHeadless(url);
+      run.note = `HTTP ${hs} → headless fallback ok`;
+      return f;
+    } catch {
+      throw e; // brak playwrighta albo blokada również dla przeglądarki — raportuj pierwotny błąd
+    }
+  }
+}
+
 async function processSource(src: Source, state: PipelineState, errors: PipelineError[]): Promise<{ events: EventItem[]; run: SourceRun }> {
   const t0 = performance.now();
   resetUsage();
@@ -203,11 +232,12 @@ async function processSource(src: Source, state: PipelineState, errors: Pipeline
 
   let fetched: Fetched;
   try {
-    fetched = src.fetch === "headless" ? await fetchHeadless(url) : await fetchPlain(url);
+    fetched = await fetchSource(src, url, run);
   } catch (e) {
-    errors.push({ id: src.id, err: String(e) });
+    const err = describeError(e);
+    errors.push({ id: src.id, err });
     run.status = "error";
-    run.err = String(e);
+    run.err = err;
     const hs = (e as { httpStatus?: number }).httpStatus;
     if (typeof hs === "number") run.httpStatus = hs;
     return finalize([]);
@@ -243,9 +273,10 @@ async function processSource(src: Source, state: PipelineState, errors: Pipeline
       events.push(...added);
       fr.events = added.length;
     } catch (e) {
-      errors.push({ id: src.id, followup: fu.url, err: String(e) });
+      const err = describeError(e);
+      errors.push({ id: src.id, followup: fu.url, err });
       fr.outcome = "error";
-      fr.err = String(e);
+      fr.err = err;
     }
     run.followups.push(fr);
   }
