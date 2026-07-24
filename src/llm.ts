@@ -6,7 +6,7 @@
  *   MODEL_DISCOVER      default: anthropic/claude-sonnet-4.6  (mocny, miesięczne discovery)
  */
 
-import { fetchUrl } from "./errors.js";
+import { describeError, fetchUrl } from "./errors.js";
 import type { LlmUsage } from "./types.js";
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
@@ -44,17 +44,62 @@ export interface ChatOptions {
   temperature?: number;
 }
 
+/** Pełne wejście/wyjście jednego wywołania — do prywatnego archiwum (archive.ts). */
+export interface LlmCallRecord {
+  model: string;
+  system: string;
+  user: UserContent;
+  response: string;
+  usage: { promptTokens: number; completionTokens: number; costUsd: number };
+  ms: number;
+  ok: boolean;
+  err?: string;
+}
+
+/**
+ * Hook obserwacyjny. llm.ts nie wie nic o archiwum (brak zależności cyklicznej) —
+ * daily.ts podpina recorder tylko wtedy, gdy archiwum jest skonfigurowane.
+ * Recordery są wywoływane best-effort: ich błąd nie może wywrócić wywołania LLM.
+ */
+export type CallRecorder = (rec: LlmCallRecord) => void | Promise<void>;
+
+let recorder: CallRecorder | null = null;
+
+export function setCallRecorder(fn: CallRecorder | null): void {
+  recorder = fn;
+}
+
+async function record(rec: LlmCallRecord): Promise<void> {
+  if (!recorder) return;
+  try {
+    await recorder(rec);
+  } catch (e) {
+    console.warn(`recorder LLM: ${String(e)}`);
+  }
+}
+
 interface ChatCompletionResponse {
   choices?: Array<{ message?: { content?: string | null } }>;
   usage?: { prompt_tokens?: number; completion_tokens?: number; cost?: number };
   error?: { message?: string; code?: number };
 }
 
+const NO_USAGE = { promptTokens: 0, completionTokens: 0, costUsd: 0 };
+
 export async function chat(opts: ChatOptions): Promise<string> {
   const apiKey = process.env["OPENROUTER_API_KEY"];
   if (!apiKey) throw new Error("Brak OPENROUTER_API_KEY");
 
-  const res = await fetchUrl(OPENROUTER_URL, {
+  const t0 = performance.now();
+  const base = { model: opts.model, system: opts.system, user: opts.user };
+  const ms = (): number => Math.round(performance.now() - t0);
+  // nieudane wywołania archiwizujemy tak samo jak udane — to one wymagają debugowania
+  const failed = async (err: string): Promise<void> =>
+    record({ ...base, response: "", usage: NO_USAGE, ms: ms(), ok: false, err });
+
+  let res: Response;
+  try {
+    res = await fetchUrl(OPENROUTER_URL, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${apiKey}`,
@@ -74,7 +119,11 @@ export async function chat(opts: ChatOptions): Promise<string> {
         { role: "user", content: opts.user },
       ],
     }),
-  }, 120_000, `OpenRouter ${opts.model}`);
+    }, 120_000, `OpenRouter ${opts.model}`);
+  } catch (e) {
+    await failed(describeError(e));
+    throw e;
+  }
 
   const raw = await res.text();
   let json: ChatCompletionResponse;
@@ -82,16 +131,29 @@ export async function chat(opts: ChatOptions): Promise<string> {
     json = JSON.parse(raw) as ChatCompletionResponse;
   } catch {
     // np. strona błędu 502 od proxy zamiast JSON-a
-    throw new Error(`OpenRouter ${opts.model}: HTTP ${res.status}, nie-JSON: ${raw.slice(0, 200)}`);
+    const err = `OpenRouter ${opts.model}: HTTP ${res.status}, nie-JSON: ${raw.slice(0, 200)}`;
+    await failed(err);
+    throw new Error(err);
   }
   if (!res.ok || json.error) {
-    throw new Error(`OpenRouter ${opts.model}: HTTP ${res.status}: ${json.error?.message ?? "unknown error"}`);
+    const err = `OpenRouter ${opts.model}: HTTP ${res.status}: ${json.error?.message ?? "unknown error"}`;
+    await failed(err);
+    throw new Error(err);
   }
+
+  const usage = {
+    promptTokens: json.usage?.prompt_tokens ?? 0,
+    completionTokens: json.usage?.completion_tokens ?? 0,
+    costUsd: json.usage?.cost ?? 0,
+  };
   tally.calls += 1;
-  tally.promptTokens += json.usage?.prompt_tokens ?? 0;
-  tally.completionTokens += json.usage?.completion_tokens ?? 0;
-  tally.costUsd += json.usage?.cost ?? 0;
-  return json.choices?.[0]?.message?.content ?? "";
+  tally.promptTokens += usage.promptTokens;
+  tally.completionTokens += usage.completionTokens;
+  tally.costUsd += usage.costUsd;
+
+  const response = json.choices?.[0]?.message?.content ?? "";
+  await record({ ...base, response, usage, ms: ms(), ok: true });
+  return response;
 }
 
 /** Obraz (plakat) jako data-URL do części multimodalnej. */

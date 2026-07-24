@@ -29,6 +29,7 @@ src/discover.ts
 | `src/daily.ts` | etap 2 (Haiku: ekstrakcja, kontenery, PDF przez `unpdf`, plakaty vision, geo, dedupe) |
 | `src/prompts.ts` | prompty PL dla obu etapów |
 | `src/pii.ts` | redakcja danych osobowych przed zapisem do publicznego repo (patrz niżej) |
+| `src/archive.ts` | prywatne archiwum treści (Supabase Storage): surowe strony, wejścia/wyjścia LLM, dane przed redakcją |
 | `template.html` | frontend (wiek dziecka, tagi zagnieżdżone, weekend, mapa OSM); `daily.ts` wstrzykuje JSON |
 | `panel/` | panel observability (Angular 22 + Taiga UI): przegląd dnia → source runs → eventy + iframe podglądu; deploy na GH Pages pod `/panel/` przez `deploy-pages.yml` (Settings → Pages → Source: GitHub Actions) |
 
@@ -136,9 +137,45 @@ Użytkownik ma zawsze `source_url` — instytucja publikuje kontakt u siebie, w 
 Ekstrakcja **nadal wyciąga** pełne dane (prompt bez zmian): redakcja jest warstwą na granicy
 publikacji, więc pełna wersja pojedzie do prywatnego archiwum (Supabase Storage) bez zmian w promptach.
 
-⚠️ **Historia gita**: redakcja działa od teraz. Numery zacommitowane wcześniej
-(`events.json`/`index.html` w commitach do 2026-07-23 włącznie) **nadal są w historii** repo na GitHubie —
-usunięcie ich wymaga `git filter-repo` + force push + zgłoszenia do GitHub Support o czyszczenie cache.
+**Historia gita** została przepisana 2026-07-24 (`git filter-repo --replace-text`): numer zniknął
+ze wszystkich 13 commitów, a nieusunięta po merge'u gałąź `observability-run-report` (też go zawierała)
+została skasowana. Pozostaje jedno miejsce poza naszą kontrolą: **`refs/pull/1/head`** wciąż wskazuje
+stary commit `28dbd29` i jest osiągalny przez bezpośredni URL do SHA — refów PR-ów nie da się usunąć
+z zewnątrz, trzeba poprosić [GitHub Support](https://support.github.com/) o wyczyszczenie.
+
+## Prywatne archiwum (Supabase Storage)
+
+Publiczne repo trzyma dane **zredagowane** + metryki. To, czego nie wolno publikować, a bez czego
+nie da się debugować jakości ekstrakcji, idzie do prywatnego bucketa:
+
+| prefiks | zawartość | po co |
+|---|---|---|
+| `raw/<data>/<source>/<sha256>.json` | pobrany tekst strony/PDF-a 1:1 | „czemu to źródło dało 0 wydarzeń?" — widać, co model dostał (cookie banner? pusta strona?) |
+| `llm/<data>/<runId>/<nnnn>-<model>.json` | prompt + odpowiedź + tokeny/koszt/czas | odróżnia „model nie widział" od „model zwrócił zły JSON"; zapisywane **także dla wywołań nieudanych** |
+| `events/<data>/<runId>.json` | wydarzenia **przed** redakcją PII | pełne kontakty do digestu; źródło prawdy |
+
+Ścieżka `raw/` zawiera sha256 treści → niezmieniona strona nie zajmuje miejsca drugi raz.
+Obrazy (plakaty base64) **nie** trafiają do `llm/` — zostaje sam rozmiar, żeby nie zapychać bucketa.
+
+**Setup (5 min):**
+1. [supabase.com](https://supabase.com) → nowy projekt (darmowy tier ~1 GB storage).
+2. Storage → New bucket → nazwa `archive`, **Private** (nie zaznaczaj „Public bucket").
+3. Settings → API → skopiuj `Project URL` i klucz **`service_role`**.
+4. GitHub → Settings → Secrets and variables → Actions → dodaj `SUPABASE_URL` i `SUPABASE_SERVICE_ROLE_KEY`.
+
+```bash
+export SUPABASE_URL=https://xxxx.supabase.co
+export SUPABASE_SERVICE_ROLE_KEY=eyJ...      # service_role, NIE anon
+# opcjonalnie: SUPABASE_BUCKET=archive, ARCHIVE_RETENTION_DAYS=90
+npm run daily
+```
+
+⚠️ Klucz `service_role` omija RLS — wyłącznie backend/Actions, **nigdy** frontend ani panel.
+Bez tych zmiennych `archive.ts` jest cichym no-opem: `npm run daily` działa lokalnie bez konfiguracji,
+a błąd archiwum nigdy nie wywraca pipeline'u (to observability, nie produkt).
+
+Supabase nie ma lifecycle rules — retencję (`ARCHIVE_RETENTION_DAYS`, domyślnie 90 dni)
+trzeba egzekwować cyklicznym czyszczeniem starych prefiksów; **jeszcze niezaimplementowane**.
 
 ## Znane ograniczenia / TODO
 

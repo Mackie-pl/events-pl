@@ -15,8 +15,11 @@ import { setTimeout as sleep } from "node:timers/promises";
 import { convert as htmlToText } from "html-to-text";
 import { extractText, getDocumentProxy } from "unpdf";
 
+import {
+  archiveEnabled, archiveEventsFull, archiveLlmCall, archiveRaw, archiveStats, beginRun,
+} from "./archive.js";
 import { BROWSER_HEADERS, describeError, fetchUrl } from "./errors.js";
-import { MODEL_EXTRACT, chat, imagePart, resetUsage, snapshotUsage } from "./llm.js";
+import { MODEL_EXTRACT, chat, imagePart, resetUsage, setCallRecorder, snapshotUsage } from "./llm.js";
 import { type RedactionStats, redactEvents, redactText } from "./pii.js";
 import { DEDUPE_SYSTEM, POSTER_SYSTEM, extractionSystem } from "./prompts.js";
 import type {
@@ -239,6 +242,8 @@ async function processSource(src: Source, state: PipelineState, errors: Pipeline
   run.httpStatus = fetched.httpStatus;
   run.kind = fetched.kind === "pdf" ? "pdf" : "html";
   run.chars = fetched.text.length;
+  // surowe wejście modelu do prywatnego archiwum (no-op bez konfiguracji Supabase)
+  await archiveRaw(src.id, url, fetched.text, fetched.kind);
 
   if (!fetched.text.trim()) { run.status = "empty"; return finalize([]); }
 
@@ -383,6 +388,11 @@ function summaryLine(r: RunReport): string {
 async function run(): Promise<void> {
   const startedAt = new Date().toISOString();
   const t0 = performance.now();
+  beginRun(startedAt);
+  if (archiveEnabled()) {
+    setCallRecorder(archiveLlmCall);
+    console.log("archiwum: włączone (Supabase Storage)");
+  }
   const cfg = JSON.parse(await readFile(join(ROOT, "sources.json"), "utf-8")) as SourcesFile;
   const state = await loadJson<PipelineState>(STATE_PATH, { hashes: {}, geo: {} });
   const errors: PipelineError[] = [];
@@ -407,6 +417,9 @@ async function run(): Promise<void> {
 
   allEvents = dedupe(allEvents);
 
+  // pełna wersja (z kontaktami) do prywatnego archiwum — MUSI polecieć przed redakcją
+  await archiveEventsFull({ generated: new Date().toISOString().slice(0, 10), startedAt, events: allEvents, errors });
+
   // PII wychodzi tuż przed zapisem: dedupe pracuje na pełnych danych, a do repo (events.json,
   // index.html, runs.json, job summary) trafia już wersja zredagowana. Komunikaty błędów też —
   // potrafią nieść fragment treści strony.
@@ -426,6 +439,13 @@ async function run(): Promise<void> {
   await renderHtml(out, report);
   writeStepSummary(report);
   console.log(summaryLine(report));
+  if (archiveEnabled()) {
+    const a = archiveStats();
+    console.log(
+      `archiwum: ${a.uploaded} obiektów (${(a.bytes / 1024 / 1024).toFixed(2)} MB)` +
+      (a.failed ? `, ${a.failed} błędów` : ""),
+    );
+  }
 }
 
 run().catch((e) => {
