@@ -27,6 +27,7 @@ src/discover.ts                               → geocode (Nominatim, darmowe, c
 | `src/daily.ts` | etap 2 (Haiku: ekstrakcja, kontenery, PDF przez `unpdf`, plakaty vision, geo, dedupe) |
 | `src/prompts.ts` | prompty PL dla obu etapów |
 | `template.html` | frontend (wiek dziecka, tagi zagnieżdżone, weekend, mapa OSM); `daily.ts` wstrzykuje JSON |
+| `panel/` | panel observability (Angular 22 + Taiga UI): przegląd dnia → source runs → eventy + iframe podglądu; deploy na GH Pages pod `/panel/` przez `deploy-pages.yml` (Settings → Pages → Source: GitHub Actions) |
 
 ## Setup
 
@@ -67,7 +68,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: {node-version: 22}
-      - run: npm ci --omit=optional
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium   # źródła headless + fallback po 403
       - run: npm run daily
         env: {OPENROUTER_API_KEY: "${{ secrets.OPENROUTER_API_KEY }}"}
       - run: |                        # publikacja na GitHub Pages / do repo

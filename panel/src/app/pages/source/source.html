@@ -1,0 +1,272 @@
+@if (data.runs.isLoading() && !run()) {
+  <tui-loader size="xl" class="page-loader" />
+} @else if (sourceRun(); as s) {
+  <nav class="crumbs">
+    <a tuiLink routerLink="/">Overview</a>
+    <span class="muted">/</span>
+    <a tuiLink [routerLink]="['/run', runId()]">{{ dt(runId()) }}</a>
+    <span class="muted">/</span>
+    <span>{{ s.id }}</span>
+    <span class="spacer"></span>
+    <button tuiButton size="s" appearance="secondary" (click)="togglePreview()">
+      {{ showPreview() ? 'Hide preview' : 'Show preview' }}
+    </button>
+  </nav>
+
+  <div class="split" [class.no-preview]="!showPreview()">
+    <div class="left">
+      <header tuiTitle class="page-title">
+        <h1>
+          {{ s.name }}
+          <span tuiBadge [appearance]="statusMeta[s.status].appearance">
+            {{ statusMeta[s.status].label }}
+          </span>
+        </h1>
+        <div tuiSubtitle>
+          {{ s.town }} · <code>{{ s.fetch }}</code>
+          @if (sourceMeta(); as meta) {
+            · {{ meta.type }}
+            @if (!meta.verified) {
+              · <span class="warn">unverified</span>
+            }
+          }
+          · <a tuiLink [href]="s.url" target="_blank" rel="noopener">{{ s.url }}</a>
+        </div>
+      </header>
+
+      @if (s.err) {
+        <div class="error-box">
+          <tui-icon icon="@tui.triangle-alert" />
+          <span>{{ s.err }}</span>
+        </div>
+      }
+
+      <section class="facts">
+        <div class="fact">
+          <span>HTTP</span><strong>{{ s.httpStatus ?? '—' }}</strong>
+        </div>
+        <div class="fact">
+          <span>Kind</span><strong>{{ s.kind ?? '—' }}</strong>
+        </div>
+        <div class="fact">
+          <span>Chars</span><strong>{{ s.chars !== undefined ? num(s.chars) : '—' }}</strong>
+        </div>
+        <div class="fact">
+          <span>Changed</span
+          ><strong>{{ s.changed === true ? 'yes' : s.changed === false ? 'no' : '—' }}</strong>
+        </div>
+        <div class="fact">
+          <span>Events</span><strong>{{ s.events }}</strong>
+        </div>
+        <div class="fact">
+          <span>Geo</span><strong>{{ s.geo.hits }} / {{ s.geo.misses }}</strong>
+        </div>
+        <div class="fact">
+          <span>LLM calls</span><strong>{{ s.llm.calls }}</strong>
+        </div>
+        <div class="fact">
+          <span>Tokens</span
+          ><strong>{{ tok(s.llm.promptTokens) }} / {{ tok(s.llm.completionTokens) }}</strong>
+        </div>
+        <div class="fact">
+          <span>Cost</span><strong>{{ usd(s.llm.costUsd) }}</strong>
+        </div>
+        <div class="fact">
+          <span>Time</span><strong>{{ ms(s.ms) }}</strong>
+        </div>
+      </section>
+
+      @if (sourceMeta()?.notes; as notes) {
+        <p class="muted notes">{{ notes }}</p>
+      }
+
+      @if (s.followups.length) {
+        <section class="followups">
+          <h2>Followups ({{ s.followups.length }})</h2>
+          <ul>
+            @for (f of s.followups; track f.url) {
+              <li>
+                <span tuiBadge size="s" [appearance]="f.outcome === 'ok' ? 'positive' : 'negative'">
+                  {{ f.outcome }}
+                </span>
+                <code>{{ f.kind }}</code>
+                <a tuiLink [href]="f.url" target="_blank" rel="noopener">{{ f.url }}</a>
+                <span class="muted">→ {{ f.events }} events</span>
+                @if (f.err) {
+                  <span class="warn">{{ f.err }}</span>
+                }
+              </li>
+            }
+          </ul>
+        </section>
+      }
+
+      <section class="events">
+        <h2>
+          Event results ({{ events().length }})
+          @if (!isLatestRun()) {
+            <span class="warn hint">
+              from latest events.json ({{ data.events.value().generated }}) — per-run events aren't
+              stored
+            </span>
+          }
+        </h2>
+
+        @if (!events().length) {
+          <p class="muted">No events in events.json for this source.</p>
+        }
+
+        @for (e of events(); track e.title + e.date_start) {
+          <article class="event" [class.selected]="selected() === e" [class.noise]="e.is_noise">
+            <div
+              class="event-head"
+              role="button"
+              tabindex="0"
+              (click)="select(e)"
+              (keydown.enter)="select(e)"
+            >
+              <strong>{{ e.title }}</strong>
+              <span class="muted">
+                {{ e.date_start }}{{ e.date_end ? ' → ' + e.date_end : '' }} {{ e.time_start ?? ''
+                }}{{ e.time_end ? '–' + e.time_end : '' }}
+              </span>
+              @if (e.is_noise) {
+                <span tuiBadge size="s" appearance="warning">noise</span>
+              }
+              @if (e.family_friendly === true) {
+                <span tuiBadge size="s" appearance="positive">family</span>
+              } @else if (e.family_friendly === 'maybe') {
+                <span tuiBadge size="s" appearance="neutral">family?</span>
+              }
+            </div>
+
+            @if (selected() === e) {
+              <div class="event-detail">
+                <dl>
+                  <dt>Venue</dt>
+                  <dd>{{ e.venue ?? '—' }}{{ e.town ? ', ' + e.town : '' }}</dd>
+                  <dt>Price</dt>
+                  <dd>
+                    {{ price(e)
+                    }}{{ e.price.note && price(e) !== e.price.note ? ' · ' + e.price.note : '' }}
+                  </dd>
+                  <dt>Age</dt>
+                  <dd>{{ age(e) }}</dd>
+                  <dt>Registration</dt>
+                  <dd>{{ e.registration ?? '—' }}</dd>
+                  <dt>Conditional</dt>
+                  <dd>{{ e.conditional ?? '—' }}</dd>
+                  @if (e.container) {
+                    <dt>Container</dt>
+                    <dd>{{ e.container }}</dd>
+                  }
+                  <dt>Geo</dt>
+                  <dd>
+                    @if (e.geo) {
+                      <a
+                        tuiLink
+                        href="https://www.openstreetmap.org/?mlat={{ e.geo.lat }}&mlon={{
+                          e.geo.lon
+                        }}#map=16/{{ e.geo.lat }}/{{ e.geo.lon }}"
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        {{ e.geo.lat }}, {{ e.geo.lon }}
+                      </a>
+                    } @else {
+                      —
+                    }
+                  </dd>
+                  <dt>Source URL</dt>
+                  <dd>
+                    <a tuiLink [href]="e.source_url" target="_blank" rel="noopener">
+                      {{ e.source_url }}
+                    </a>
+                  </dd>
+                </dl>
+
+                @if (e.tags.length) {
+                  <div class="tags">
+                    @for (t of e.tags; track t) {
+                      <span tuiChip size="xs">{{ t }}</span>
+                    }
+                  </div>
+                }
+
+                @if (e.sub_slots?.length) {
+                  <table class="slots">
+                    <thead>
+                      <tr>
+                        <th>Time</th>
+                        <th>Label</th>
+                        <th>Age</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (slot of e.sub_slots; track slot.time + slot.label) {
+                        <tr>
+                          <td>{{ slot.time }}</td>
+                          <td>{{ slot.label }}</td>
+                          <td>{{ slot.age?.label ?? '—' }}</td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                }
+
+                <button
+                  tuiButton
+                  size="xs"
+                  appearance="flat"
+                  (click)="showRawJson.set(!showRawJson())"
+                >
+                  {{ showRawJson() ? 'Hide raw JSON' : 'Raw JSON' }}
+                </button>
+                @if (showRawJson()) {
+                  <pre class="raw">{{ json(e) }}</pre>
+                }
+              </div>
+            }
+          </article>
+        }
+      </section>
+    </div>
+
+    @if (showPreview()) {
+      <aside class="preview">
+        <div class="preview-bar">
+          <span class="preview-url" [title]="previewUrl()">{{ previewUrl() }}</span>
+          <a
+            tuiButton
+            size="xs"
+            appearance="secondary"
+            [href]="previewUrl()"
+            target="_blank"
+            rel="noopener"
+          >
+            Open
+          </a>
+        </div>
+        @if (safePreviewUrl(); as url) {
+          <iframe
+            class="frame"
+            [src]="url"
+            sandbox="allow-scripts allow-same-origin allow-popups"
+            referrerpolicy="no-referrer"
+            loading="lazy"
+          ></iframe>
+        }
+        <p class="muted preview-note">
+          Blank pane? The site sends X-Frame-Options / CSP and refuses to embed — use “Open”.
+        </p>
+      </aside>
+    }
+  </div>
+} @else {
+  <p class="muted">
+    Source not found in this run.
+    <a tuiLink [routerLink]="['/run', runId()]">Back to run</a>
+    <span class="muted">·</span>
+    <a tuiLink routerLink="/">Overview</a>
+  </p>
+}

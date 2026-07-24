@@ -1,0 +1,126 @@
+@if (data.runs.isLoading() && !run()) {
+  <tui-loader size="xl" class="page-loader" />
+} @else if (run(); as r) {
+  <nav class="crumbs">
+    <a tuiLink routerLink="/">Overview</a>
+    <span class="muted">/</span>
+    <span>{{ dt(r.startedAt) }}</span>
+  </nav>
+
+  <header tuiTitle class="page-title">
+    <h1>Source runs</h1>
+    <div tuiSubtitle>
+      {{ r.stage }} · {{ dt(r.startedAt) }} → {{ dt(r.finishedAt) }} · {{ ms(r.durationMs) }} ·
+      {{ num(r.totals.events) }} events · {{ usd(r.totals.costUsd) }} ({{ r.totals.calls }} LLM
+      calls, {{ tok(r.totals.promptTokens) }} in / {{ tok(r.totals.completionTokens) }} out)
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <div class="filters">
+      <button
+        tuiButton
+        size="s"
+        [appearance]="statusFilter() === 'all' ? 'primary' : 'secondary'"
+        (click)="statusFilter.set('all')"
+      >
+        All ({{ countFor('all') }})
+      </button>
+      @for (s of statuses; track s) {
+        <button
+          tuiButton
+          size="s"
+          [appearance]="statusFilter() === s ? 'primary' : 'secondary'"
+          (click)="statusFilter.set(s)"
+        >
+          {{ statusMeta[s].label }} ({{ countFor(s) }})
+        </button>
+      }
+    </div>
+    <input
+      class="search"
+      type="search"
+      placeholder="Filter by name, town, id, url…"
+      [value]="search()"
+      (input)="onSearch($event)"
+    />
+  </div>
+
+  <div class="table-wrap">
+    <table tuiTable class="sources-table">
+      <thead tuiThead>
+        <tr tuiThGroup>
+          <th tuiTh class="sortable" (click)="sortBy('status')">Status {{ sortIcon('status') }}</th>
+          <th tuiTh class="sortable" (click)="sortBy('name')">Source {{ sortIcon('name') }}</th>
+          <th tuiTh class="sortable" (click)="sortBy('town')">Town {{ sortIcon('town') }}</th>
+          <th tuiTh>Fetch</th>
+          <th tuiTh>HTTP</th>
+          <th tuiTh class="sortable" (click)="sortBy('chars')">Chars {{ sortIcon('chars') }}</th>
+          <th tuiTh>Changed</th>
+          <th tuiTh class="sortable" (click)="sortBy('events')">Events {{ sortIcon('events') }}</th>
+          <th tuiTh class="sortable" (click)="sortBy('followups')">
+            Followups {{ sortIcon('followups') }}
+          </th>
+          <th tuiTh>Geo h/m</th>
+          <th tuiTh>LLM calls</th>
+          <th tuiTh class="sortable" (click)="sortBy('costUsd')">Cost {{ sortIcon('costUsd') }}</th>
+          <th tuiTh class="sortable" (click)="sortBy('ms')">Time {{ sortIcon('ms') }}</th>
+          <th tuiTh>Error</th>
+        </tr>
+      </thead>
+      <tbody tuiTbody>
+        @for (s of rows(); track s.id) {
+          <tr tuiTr class="clickable" [routerLink]="['/run', r.startedAt, 'source', s.id]">
+            <td tuiTd>
+              <span tuiBadge size="s" [appearance]="statusMeta[s.status].appearance">
+                {{ statusMeta[s.status].label }}
+              </span>
+            </td>
+            <td tuiTd class="src">
+              <span class="src-name">{{ s.name }}</span>
+              <span class="muted src-id">{{ s.id }}</span>
+            </td>
+            <td tuiTd>{{ s.town }}</td>
+            <td tuiTd>
+              <code>{{ s.fetch }}</code>
+              @if (s.kind === 'pdf') {
+                <code class="muted">pdf</code>
+              }
+            </td>
+            <td tuiTd [class.negative]="(s.httpStatus ?? 200) >= 400">{{ s.httpStatus ?? '—' }}</td>
+            <td tuiTd>{{ s.chars !== undefined ? num(s.chars) : '—' }}</td>
+            <td tuiTd>
+              @if (s.changed === true) {
+                <tui-icon icon="@tui.check" class="positive" />
+              } @else if (s.changed === false) {
+                <span class="muted">—</span>
+              }
+            </td>
+            <td tuiTd [class.bold]="s.events > 0">{{ s.events }}</td>
+            <td tuiTd>{{ s.followups.length || '—' }}</td>
+            <td tuiTd>
+              @if (s.geo.hits || s.geo.misses) {
+                {{ s.geo.hits }}/{{ s.geo.misses }}
+              } @else {
+                <span class="muted">—</span>
+              }
+            </td>
+            <td tuiTd>{{ s.llm.calls || '—' }}</td>
+            <td tuiTd>{{ s.llm.costUsd ? usd(s.llm.costUsd) : '—' }}</td>
+            <td tuiTd>{{ ms(s.ms) }}</td>
+            <td tuiTd class="err-cell" [title]="s.err ?? ''">{{ s.err ?? '' }}</td>
+          </tr>
+        } @empty {
+          <tr tuiTr>
+            <td tuiTd colspan="14" class="muted">No sources match the current filter.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+} @else {
+  <p class="muted">
+    Run not found — runs.json only keeps ~2 days of history.
+    <a tuiLink routerLink="/">Back to overview</a>
+  </p>
+}

@@ -1,0 +1,114 @@
+.page-title {
+  margin-bottom: 1.25rem;
+}
+
+.page-loader {
+  margin: 4rem auto;
+}
+
+.error-box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: var(--tui-status-negative-pale);
+  color: var(--tui-status-negative);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 1rem 1.15rem;
+  border-radius: 0.9rem;
+  background: var(--tui-background-neutral-1);
+  border: 1px solid var(--tui-border-normal);
+  color: inherit;
+  text-decoration: none;
+
+  &.accent {
+    background: var(--tui-background-accent-1-pale, var(--tui-background-neutral-1));
+    border-color: var(--tui-border-focus);
+  }
+}
+
+.card-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--tui-text-secondary);
+}
+
+.card-value {
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.card-sub {
+  font-size: 0.8rem;
+  color: var(--tui-text-secondary);
+}
+
+.statuses {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+
+  .status-link {
+    text-decoration: none;
+  }
+}
+
+.errors {
+  margin-bottom: 1.5rem;
+
+  ul {
+    margin: 0.5rem 0 0;
+    padding-left: 1.25rem;
+  }
+
+  li {
+    margin-bottom: 0.35rem;
+  }
+
+  .err-text {
+    margin-left: 0.5rem;
+    color: var(--tui-status-negative);
+    word-break: break-word;
+  }
+
+  .muted {
+    margin-left: 0.5rem;
+  }
+}
+
+.runs-table {
+  width: 100%;
+}
+
+.clickable {
+  cursor: pointer;
+
+  &:hover td {
+    background: var(--tui-background-neutral-1-hover);
+  }
+}
+
+.positive {
+  color: var(--tui-status-positive);
+}
+
+.negative {
+  color: var(--tui-status-negative);
+  font-weight: 600;
+}

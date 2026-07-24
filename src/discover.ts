@@ -13,6 +13,7 @@ import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
+import { fetchUrl } from "./errors.js";
 import { MODEL_DISCOVER, chat } from "./llm.js";
 import { DISCOVERY_QUERIES, DISCOVERY_SYSTEM } from "./prompts.js";
 import type { SearchResult, Source, SourcesFile } from "./types.js";
@@ -26,11 +27,10 @@ async function townsInRadius(centerTown: string, radiusKm: number): Promise<stri
     area["name"="${centerTown}"]["boundary"="administrative"]->.c;
     ( relation["boundary"="administrative"]["admin_level"~"7|8"](around.c:${radiusKm * 1000}); );
     out tags center;`;
-  const res = await fetch("https://overpass-api.de/api/interpreter", {
+  const res = await fetchUrl("https://overpass-api.de/api/interpreter", {
     method: "POST",
     body: new URLSearchParams({ data: q }),
-    signal: AbortSignal.timeout(60_000),
-  });
+  }, 60_000);
   const json = (await res.json()) as { elements?: Array<{ tags?: Record<string, string> }> };
   const names = new Set<string>([centerTown]);
   for (const el of json.elements ?? []) {
@@ -43,9 +43,11 @@ async function townsInRadius(centerTown: string, radiusKm: number): Promise<stri
 async function webSearch(query: string): Promise<SearchResult[]> {
   const key = process.env["BRAVE_API_KEY"];
   if (!key) throw new Error("Brak BRAVE_API_KEY");
-  const res = await fetch(
+  const res = await fetchUrl(
     `https://api.search.brave.com/res/v1/web/search?${new URLSearchParams({ q: query, count: "8", country: "pl" })}`,
-    { headers: { "X-Subscription-Token": key }, signal: AbortSignal.timeout(20_000) },
+    { headers: { "X-Subscription-Token": key } },
+    20_000,
+    "Brave Search",
   );
   const json = (await res.json()) as { web?: { results?: Array<{ title?: string; url?: string; description?: string }> } };
   return (json.web?.results ?? []).map((w) => ({

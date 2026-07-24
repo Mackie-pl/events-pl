@@ -6,6 +6,7 @@
  *   MODEL_DISCOVER      default: anthropic/claude-sonnet-4.6  (mocny, miesięczne discovery)
  */
 
+import { fetchUrl } from "./errors.js";
 import type { LlmUsage } from "./types.js";
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
@@ -53,7 +54,7 @@ export async function chat(opts: ChatOptions): Promise<string> {
   const apiKey = process.env["OPENROUTER_API_KEY"];
   if (!apiKey) throw new Error("Brak OPENROUTER_API_KEY");
 
-  const res = await fetch(OPENROUTER_URL, {
+  const res = await fetchUrl(OPENROUTER_URL, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${apiKey}`,
@@ -73,12 +74,18 @@ export async function chat(opts: ChatOptions): Promise<string> {
         { role: "user", content: opts.user },
       ],
     }),
-    signal: AbortSignal.timeout(120_000),
-  });
+  }, 120_000, `OpenRouter ${opts.model}`);
 
-  const json = (await res.json()) as ChatCompletionResponse;
+  const raw = await res.text();
+  let json: ChatCompletionResponse;
+  try {
+    json = JSON.parse(raw) as ChatCompletionResponse;
+  } catch {
+    // np. strona błędu 502 od proxy zamiast JSON-a
+    throw new Error(`OpenRouter ${opts.model}: HTTP ${res.status}, nie-JSON: ${raw.slice(0, 200)}`);
+  }
   if (!res.ok || json.error) {
-    throw new Error(`OpenRouter ${res.status}: ${json.error?.message ?? "unknown error"}`);
+    throw new Error(`OpenRouter ${opts.model}: HTTP ${res.status}: ${json.error?.message ?? "unknown error"}`);
   }
   tally.calls += 1;
   tally.promptTokens += json.usage?.prompt_tokens ?? 0;

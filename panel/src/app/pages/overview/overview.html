@@ -1,0 +1,115 @@
+@if (data.runs.error(); as err) {
+  <div class="error-box">
+    <tui-icon icon="@tui.triangle-alert" />
+    Failed to load runs.json
+    <button tuiButton size="s" appearance="secondary" (click)="data.runs.reload()">Retry</button>
+  </div>
+} @else if (data.runs.isLoading() && !runs().length) {
+  <tui-loader size="xl" class="page-loader" />
+} @else if (latest(); as run) {
+  <header tuiTitle class="page-title">
+    <h1>Day overview</h1>
+    <div tuiSubtitle>
+      Latest {{ run.stage }} run · started {{ dt(run.startedAt) }} · took {{ ms(run.durationMs) }}
+    </div>
+  </header>
+
+  <section class="cards">
+    <a class="card accent" [routerLink]="['/run', run.startedAt]">
+      <span class="card-label">Events kept</span>
+      <span class="card-value">{{ num(run.totals.events) }}</span>
+      <span class="card-sub">from {{ run.totals.sources }} sources → details</span>
+    </a>
+    <div class="card">
+      <span class="card-label">LLM cost</span>
+      <span class="card-value">{{ usd(run.totals.costUsd) }}</span>
+      <span class="card-sub">{{ run.totals.calls }} calls</span>
+    </div>
+    <div class="card">
+      <span class="card-label">Tokens</span>
+      <span class="card-value">{{ tok(run.totals.promptTokens) }}</span>
+      <span class="card-sub">in · {{ tok(run.totals.completionTokens) }} out</span>
+    </div>
+    <div class="card">
+      <span class="card-label">Followups</span>
+      <span class="card-value">{{ run.totals.followupsTried }}</span>
+      <span class="card-sub">1-hop PDF / poster / page</span>
+    </div>
+    <div class="card">
+      <span class="card-label">Geocoding</span>
+      <span class="card-value">{{ run.totals.geoHits }}</span>
+      <span class="card-sub">hits · {{ run.totals.geoMisses }} misses</span>
+    </div>
+    <div class="card">
+      <span class="card-label">events.json</span>
+      <span class="card-value">{{ num(eventCount()) }}</span>
+      <span class="card-sub">generated {{ generated() }} · {{ noiseCount() }} noise</span>
+    </div>
+  </section>
+
+  <section class="statuses">
+    @for (s of statuses; track s) {
+      <a [routerLink]="['/run', run.startedAt]" [queryParams]="{ status: s }" class="status-link">
+        <span tuiBadge [appearance]="statusMeta[s].appearance">
+          <tui-icon [icon]="statusMeta[s].icon" />
+          {{ statusCount(run, s) }} {{ statusMeta[s].label }}
+        </span>
+      </a>
+    }
+  </section>
+
+  @if (errors().length) {
+    <section class="errors">
+      <h2>Pipeline errors ({{ errors().length }})</h2>
+      <ul>
+        @for (e of errors(); track $index) {
+          <li>
+            <a tuiLink [routerLink]="['/run', run.startedAt, 'source', e.id]">{{ e.id }}</a>
+            <span class="err-text">{{ e.err }}</span>
+            @if (e.followup) {
+              <span class="muted">followup: {{ e.followup }}</span>
+            }
+          </li>
+        }
+      </ul>
+    </section>
+  }
+
+  <section class="history">
+    <h2>
+      Run history <span class="muted">({{ runs().length }} kept, ~2 days)</span>
+    </h2>
+    <table tuiTable class="runs-table">
+      <thead tuiThead>
+        <tr tuiThGroup>
+          <th tuiTh>Started</th>
+          <th tuiTh>Stage</th>
+          <th tuiTh>Duration</th>
+          <th tuiTh>Sources</th>
+          <th tuiTh>OK</th>
+          <th tuiTh>Errors</th>
+          <th tuiTh>Events</th>
+          <th tuiTh>Cost</th>
+          <th tuiTh>Tokens in/out</th>
+        </tr>
+      </thead>
+      <tbody tuiTbody>
+        @for (r of runs(); track r.startedAt) {
+          <tr tuiTr class="clickable" [routerLink]="['/run', r.startedAt]">
+            <td tuiTd>{{ dt(r.startedAt) }}</td>
+            <td tuiTd>{{ r.stage }}</td>
+            <td tuiTd>{{ ms(r.durationMs) }}</td>
+            <td tuiTd>{{ r.totals.sources }}</td>
+            <td tuiTd class="positive">{{ r.totals.ok }}</td>
+            <td tuiTd [class.negative]="r.totals.errors > 0">{{ r.totals.errors }}</td>
+            <td tuiTd>{{ r.totals.events }}</td>
+            <td tuiTd>{{ usd(r.totals.costUsd) }}</td>
+            <td tuiTd>{{ tok(r.totals.promptTokens) }} / {{ tok(r.totals.completionTokens) }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+} @else {
+  <p class="muted">No runs found in runs.json.</p>
+}

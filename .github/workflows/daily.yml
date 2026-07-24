@@ -16,7 +16,9 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci --omit=optional
+      - run: npm ci
+      # przeglądarka dla źródeł fetch:headless i fallbacku po HTTP 403 (~1 min)
+      - run: npx playwright install --with-deps chromium
       - run: npm run daily
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}

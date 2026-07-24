@@ -1,0 +1,43 @@
+{
+  "name": "panel",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "lint": "ng lint",
+    "format": "prettier --write \"src/**/*.{ts,html,less}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,html,less}\""
+  },
+  "private": true,
+  "packageManager": "npm@10.9.8",
+  "dependencies": {
+    "@angular/common": "^22.0.0",
+    "@angular/compiler": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@angular/forms": "^22.0.0",
+    "@angular/platform-browser": "^22.0.0",
+    "@angular/router": "^22.0.0",
+    "@taiga-ui/addon-table": "^5.16.0",
+    "@taiga-ui/cdk": "^5.16.0",
+    "@taiga-ui/core": "^5.16.0",
+    "@taiga-ui/icons": "^5.16.0",
+    "@taiga-ui/kit": "^5.16.0",
+    "@taiga-ui/layout": "^5.16.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^22.0.8",
+    "@angular/cli": "^22.0.8",
+    "@angular/compiler-cli": "^22.0.0",
+    "@eslint/js": "^10.0.1",
+    "angular-eslint": "22.1.0",
+    "eslint": "^10.6.0",
+    "less": "^4.2.0",
+    "prettier": "^3.8.1",
+    "typescript": "~6.0.2",
+    "typescript-eslint": "8.62.1"
+  }
+}
