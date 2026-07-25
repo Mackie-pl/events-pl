@@ -2,29 +2,35 @@
  * Lokalny most do prywatnego archiwum (Supabase Storage) — wyłącznie na własnym PC.
  *
  * Panel jest statyczną stroną na GitHub Pages: wszystko, co potrafi przeczytać bez logowania,
- * przeczyta też każdy inny odwiedzający. Dlatego klucz `service_role` NIGDY nie trafia do panelu —
+ * przeczyta też każdy inny odwiedzający. Dlatego klucz sekretny NIGDY nie trafia do panelu —
  * zostaje tutaj, w procesie node'owym na localhoście, a panel pyta ten serwer.
  *
  * Wdrożony panel odpytuje 127.0.0.1, nie dostaje odpowiedzi i po prostu chowa sekcję archiwum.
- * Żeby zobaczyć treści: uruchom `npm run archive-server` obok panelu.
- *
- *   SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... npm run archive-server
+ * Żeby zobaczyć treści: uzupełnij .env i uruchom `npm run archive-server` obok panelu.
  *
  * Nasłuch tylko na 127.0.0.1 (nie 0.0.0.0) — usługa nie wychodzi poza tę maszynę.
  */
 import { createServer } from "node:http";
 
+import { keyLooksPublic, supabaseKey } from "./archive.js";
 import { describeError, fetchUrl } from "./errors.js";
 
 const PORT = Number(process.env["ARCHIVE_PORT"] ?? 8787);
 const BUCKET = process.env["SUPABASE_BUCKET"] ?? "archive";
 const SUPABASE_URL = (process.env["SUPABASE_URL"] ?? "").replace(/\/+$/, "");
-const KEY = process.env["SUPABASE_SERVICE_ROLE_KEY"] ?? "";
+const KEY = supabaseKey();
 
 if (!SUPABASE_URL || !KEY) {
   console.error(
-    "Brak SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY.\n" +
-    "Ustaw je w powłoce przed startem — klucz service_role zostaje tylko tutaj, nigdy w panelu.",
+    "Brak SUPABASE_URL lub klucza (SUPABASE_SECRET_KEY / SUPABASE_SERVICE_ROLE_KEY).\n" +
+    "Uzupełnij .env — klucz zostaje tylko tutaj, nigdy w panelu.",
+  );
+  process.exit(1);
+}
+if (keyLooksPublic(KEY)) {
+  console.error(
+    "To klucz publiczny (publishable/anon) — prywatnego bucketa nie odczyta.\n" +
+    "Supabase → Settings → API Keys → **Secret key** (sb_secret_…).",
   );
   process.exit(1);
 }
@@ -69,7 +75,7 @@ const server = createServer((req, res) => {
       try {
         const r = await fetchUrl(
           `${SUPABASE_URL}/storage/v1/object/${BUCKET}/${path}`,
-          { headers: { Authorization: `Bearer ${KEY}` } },
+          { headers: { apikey: KEY, Authorization: `Bearer ${KEY}` } },
           30_000,
           `Supabase ${BUCKET}/${path}`,
         );

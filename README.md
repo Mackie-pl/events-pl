@@ -30,7 +30,7 @@ src/discover.ts
 | `src/prompts.ts` | prompty PL dla obu etapów |
 | `src/pii.ts` | redakcja danych osobowych przed zapisem do publicznego repo (patrz niżej) |
 | `src/archive.ts` | prywatne archiwum treści (Supabase Storage): surowe strony, wejścia/wyjścia LLM, dane przed redakcją |
-| `src/archive-server.ts` | lokalny most do archiwum (`npm run archive-server`) — trzyma klucz `service_role` poza panelem |
+| `src/archive-server.ts` | lokalny most do archiwum (`npm run archive-server`) — trzyma klucz sekretny poza panelem |
 | `template.html` | frontend (wiek dziecka, tagi zagnieżdżone, weekend, mapa OSM); `daily.ts` wstrzykuje JSON |
 | `panel/` | panel observability (Angular 22 + Taiga UI): przegląd dnia → source runs → eventy + iframe podglądu; deploy na GH Pages pod `/panel/` przez `deploy-pages.yml` (Settings → Pages → Source: GitHub Actions) |
 
@@ -198,18 +198,22 @@ Obrazy (plakaty base64) **nie** trafiają do `llm/` — zostaje sam rozmiar, że
 **Setup (5 min):**
 1. [supabase.com](https://supabase.com) → nowy projekt (darmowy tier ~1 GB storage).
 2. Storage → New bucket → nazwa `archive`, **Private** (nie zaznaczaj „Public bucket").
-3. Settings → API → skopiuj `Project URL` i klucz **`service_role`**.
-4. GitHub → Settings → Secrets and variables → Actions → dodaj `SUPABASE_URL` i `SUPABASE_SERVICE_ROLE_KEY`.
+3. Settings → API Keys → skopiuj `Project URL` i **Secret key** (`sb_secret_…`).
+   Supabase przemianował klucze: **Secret** = dawny `service_role`, **Publishable** = dawny `anon`.
+   Publishable/anon **nie** odczyta prywatnego bucketa — kod ostrzega i odmawia startu, jeśli go podasz.
+   Starsze projekty pokazują jeszcze klucze JWT (`eyJ…`); obie nazwy zmiennej działają.
+4. GitHub → Settings → Secrets and variables → Actions → dodaj `SUPABASE_URL`
+   i `SUPABASE_SECRET_KEY` (albo `SUPABASE_SERVICE_ROLE_KEY` przy starym kluczu).
 
 Lokalnie wystarczy uzupełnić `.env` (patrz `.env.example`) — żadnych zmiennych w powłoce:
 
 ```ini
 SUPABASE_URL=https://xxxx.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=eyJ...      # service_role, NIE anon
+SUPABASE_SECRET_KEY=sb_secret_...     # Secret key, NIE Publishable
 # opcjonalnie: SUPABASE_BUCKET=archive, ARCHIVE_RETENTION_DAYS=90
 ```
 
-⚠️ Klucz `service_role` omija RLS — wyłącznie backend/Actions, **nigdy** frontend ani panel.
+⚠️ Klucz sekretny (Secret / service_role) omija RLS — wyłącznie backend/Actions/lokalny most, **nigdy** frontend ani panel.
 Bez tych zmiennych `archive.ts` jest cichym no-opem: `npm run daily` działa lokalnie bez konfiguracji,
 a błąd archiwum nigdy nie wywraca pipeline'u (to observability, nie produkt).
 
@@ -220,7 +224,7 @@ trzeba egzekwować cyklicznym czyszczeniem starych prefiksów; **jeszcze niezaim
 
 `runs.json` niesie **ścieżki** obiektów (`SourceRun.archive`) — same ścieżki nie są wrażliwe,
 więc wdrożony panel pokazuje listę i informację, że treść jest prywatna. Do treści potrzebny
-jest lokalny most, bo klucz `service_role` nie może trafić do statycznego bundla:
+jest lokalny most, bo klucz sekretny nie może trafić do statycznego bundla:
 
 ```bash
 # terminal 1 — most (klucz czytany z .env, nasłuch tylko na 127.0.0.1)

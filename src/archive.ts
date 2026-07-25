@@ -41,9 +41,36 @@ let llmSeq = 0;
 let currentSourceId = "";
 let currentPaths: string[] = [];
 
+/**
+ * Supabase przemianował klucze API: `service_role` → **Secret key** (`sb_secret_…`),
+ * `anon` → Publishable key (`sb_publishable_…`). Stare klucze JWT działają do końca 2026,
+ * więc przyjmujemy obie nazwy zmiennej — zależnie od tego, co pokazuje panel Supabase.
+ *
+ * Celowo `||`, nie `??`: GitHub Actions wstawia nieustawiony sekret jako PUSTY STRING,
+ * a nie undefined — przy `??` pusty SUPABASE_SECRET_KEY zjadłby fallback i cicho
+ * wyłączył archiwum mimo poprawnie ustawionego SUPABASE_SERVICE_ROLE_KEY.
+ */
+export const supabaseKey = (): string =>
+  process.env["SUPABASE_SECRET_KEY"] || process.env["SUPABASE_SERVICE_ROLE_KEY"] || "";
+
+/**
+ * Wczesne ostrzeżenie przed najczęstszą pomyłką: klucz publiczny (publishable/anon)
+ * nie odczyta prywatnego bucketa, a Supabase odpowie na to mało czytelnym błędem.
+ */
+export function keyLooksPublic(key: string): boolean {
+  if (key.startsWith("sb_publishable_")) return true;
+  const payload = key.split(".")[1]; // legacy: JWT z rolą "anon"
+  if (!payload) return false;
+  try {
+    return (JSON.parse(Buffer.from(payload, "base64url").toString()) as { role?: string }).role === "anon";
+  } catch {
+    return false;
+  }
+}
+
 const cfg = (): { url: string; key: string } | null => {
   const url = process.env["SUPABASE_URL"];
-  const key = process.env["SUPABASE_SERVICE_ROLE_KEY"];
+  const key = supabaseKey();
   return url && key ? { url: url.replace(/\/+$/, ""), key } : null;
 };
 
@@ -54,6 +81,12 @@ export function beginRun(startedAt: string): void {
   runId = startedAt.replace(/[:.]/g, "-");
   llmSeq = 0;
   stats.uploaded = stats.failed = stats.bytes = stats.skipped = 0;
+  if (archiveEnabled() && keyLooksPublic(supabaseKey())) {
+    console.warn(
+      "archiwum: podany klucz wygląda na publiczny (publishable/anon) — prywatny bucket go odrzuci.\n" +
+      "  Supabase → Settings → API Keys → skopiuj **Secret key** (sb_secret_…), nie Publishable.",
+    );
+  }
 }
 
 export const archiveStats = (): ArchiveStats => ({ ...stats });
@@ -79,6 +112,8 @@ export async function put(path: string, body: string, contentType = "application
       {
         method: "POST",
         headers: {
+          // apikey + Authorization: tak robi oficjalny klient; działa i dla JWT, i dla sb_secret_…
+          apikey: c.key,
           Authorization: `Bearer ${c.key}`,
           "Content-Type": contentType,
           "x-upsert": "true", // ta sama treść = ta sama ścieżka, nadpisujemy zamiast duplikować

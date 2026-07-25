@@ -22,8 +22,10 @@ jobs:
       - run: npm run daily
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-          # prywatne archiwum treści (opcjonalne — bez tych sekretów pipeline działa bez zmian)
+          # prywatne archiwum treści (opcjonalne — bez tych sekretów pipeline działa bez zmian).
+          # Ustaw JEDEN z kluczy: SECRET (nowe projekty, sb_secret_…) albo SERVICE_ROLE (starsze, JWT).
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           # opcjonalna ewaluacja modeli:
           # MODEL_EXTRACT: anthropic/claude-haiku-4.5
