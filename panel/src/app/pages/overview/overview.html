@@ -20,11 +20,11 @@
       <span class="card-value">{{ num(run.totals.events) }}</span>
       <span class="card-sub">from {{ run.totals.sources }} sources → details</span>
     </a>
-    <div class="card">
+    <a class="card" routerLink="/costs">
       <span class="card-label">LLM cost</span>
       <span class="card-value">{{ usd(run.totals.costUsd) }}</span>
-      <span class="card-sub">{{ run.totals.calls }} calls</span>
-    </div>
+      <span class="card-sub">{{ run.totals.calls }} calls → spend per day</span>
+    </a>
     <div class="card">
       <span class="card-label">Tokens</span>
       <span class="card-value">{{ tok(run.totals.promptTokens) }}</span>
@@ -77,7 +77,7 @@
 
   <section class="history">
     <h2>
-      Run history <span class="muted">({{ runs().length }} kept, ~2 days)</span>
+      Run history <span class="muted">({{ runs().length }} kept, 7 days)</span>
     </h2>
     <table tuiTable class="runs-table">
       <thead tuiThead>

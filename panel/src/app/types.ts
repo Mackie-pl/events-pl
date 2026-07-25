@@ -3,7 +3,8 @@
  * Keep in sync when the pipeline schema changes.
  */
 
-export type FetchStrategy = 'plain' | 'headless' | 'pdf' | 'api' | 'fb' | 'fb_group' | 'fb_event' | 'rss';
+export type FetchStrategy =
+  'plain' | 'headless' | 'pdf' | 'api' | 'fb' | 'fb_group' | 'fb_event' | 'rss';
 
 export type SourceType =
   | 'city_portal'
@@ -34,6 +35,40 @@ export interface Source {
   previous_urls?: string[];
   /** URL martwy — daily pomija (skipped-dead) do czasu naprawy */
   dead?: boolean;
+  /** skąd się tu wzięło: zapytanie → wynik wyszukiwarki → decyzja modelu → pierwszy fetch */
+  provenance?: SourceProvenance;
+}
+
+export interface SearchResult {
+  title: string | null;
+  url: string | null;
+  desc: string | null;
+}
+
+/** Wynik jednego żądania HTTP — status, przekierowanie, typ i rozmiar odpowiedzi. */
+export interface FetchProbe {
+  at: string;
+  url: string;
+  ok: boolean;
+  httpStatus?: number;
+  finalUrl?: string;
+  contentType?: string;
+  chars?: number;
+  ms: number;
+  err?: string;
+}
+
+/** Pełna ścieżka trafienia źródła do rejestru (kopia żyje przy źródle w sources.json). */
+export interface SourceProvenance {
+  run: string;
+  town: string;
+  model: string;
+  query?: string;
+  hit?: SearchResult;
+  confidence?: number;
+  why?: string;
+  firstFetch?: FetchProbe;
+  archive?: string[];
 }
 
 export interface SourcesFile {
@@ -122,6 +157,23 @@ export interface LlmUsage {
   costUsd: number;
 }
 
+/** Rodzaj zadania LLM — rozdziela tekst od plakatów, których model nie odróżnia w rachunku. */
+export type LlmTask = 'extract' | 'poster' | 'discover' | 'verify';
+
+export type TaskUsage = Partial<Record<LlmTask, LlmUsage>>;
+
+/** Zużycie Bright Data (rozliczenie per-rekord). */
+export interface BdUsage {
+  triggers: number;
+  inputs: number;
+  polls: number;
+  records: number;
+  errors: number;
+  snapshots: string[];
+  /** rekordy per dataset (fb_events / fb_group_posts) */
+  byDataset?: Record<string, number>;
+}
+
 export interface SourceRun {
   id: string;
   name: string;
@@ -137,6 +189,10 @@ export interface SourceRun {
   followups: FollowupRun[];
   geo: { hits: number; misses: number };
   llm: LlmUsage;
+  /** ten sam koszt w rozbiciu na zadania; brak w przebiegach sprzed podziału */
+  llmByTask?: TaskUsage;
+  /** zużycie Bright Data przypisane temu źródłu (grupa FB / zbiorcze wydarzenia) */
+  bd?: BdUsage;
   ms: number;
   err?: string;
   /** np. "HTTP 403 → headless fallback ok" */
@@ -174,4 +230,184 @@ export interface RunReport {
   durationMs: number;
   totals: RunTotals;
   sources: SourceRun[];
+  /** zużycie Bright Data w tym przebiegu (brak = wyłączone) */
+  brightdata?: BdUsage;
+  /** koszt przebiegu w rozbiciu na kategorie — kopia wpisów z costs.json */
+  costs?: CostEntry[];
+}
+
+// ---------------- koszty ----------------
+
+export type CostCategory =
+  | 'llm-extract'
+  | 'llm-vision'
+  | 'llm-discover'
+  | 'llm-verify'
+  | 'fb'
+  | 'search'
+  | 'scrape'
+  | 'geo'
+  | 'storage';
+
+export type CostUnit = 'calls' | 'records' | 'queries' | 'fetches' | 'lookups' | 'MB';
+
+export interface CostDriver {
+  id: string;
+  usd: number;
+  units: number;
+}
+
+export interface CostEntry {
+  /** YYYY-MM-DD (UTC) */
+  day: string;
+  at: string;
+  stage: 'daily' | 'discover' | 'digest';
+  /** startedAt przebiegu — klucz do runs.json / discover-runs.json */
+  run: string;
+  category: CostCategory;
+  usd: number;
+  /** true = wolumen × stawka (nasz szacunek), false = kwota od dostawcy */
+  estimated: boolean;
+  units: number;
+  unit: CostUnit;
+  tokensIn?: number;
+  tokensOut?: number;
+  top?: CostDriver[];
+  /** kategoria odtworzona ze starego raportu (backfill), nie zmierzona przy wywołaniu */
+  inferred?: boolean;
+}
+
+export interface CostRates {
+  bdPerRecord: number;
+  bravePerQuery: number;
+  storagePerGbMonth: number;
+  scrapePerFetch: number;
+  monthlyBudgetUsd: number;
+}
+
+export interface CostLedger {
+  updated: string;
+  rates: CostRates;
+  retentionDays: number;
+  entries: CostEntry[];
+}
+
+// ---------------- observability: discover (miesięczny) ----------------
+
+export interface SearchCall {
+  query: string;
+  results: SearchResult[];
+  ms: number;
+  err?: string;
+  httpStatus?: number;
+  /** zapytanie niewysłane (wyczerpany budżet / wyłączona wyszukiwarka) */
+  skipped?: boolean;
+  /** wyniki usunięte przy przycinaniu starego przebiegu */
+  trimmed?: number;
+}
+
+export interface GeoLookup {
+  query: string;
+  towns: string[];
+  ms: number;
+  err?: string;
+  /** Overpass padł — discovery objęło tylko miasto centralne */
+  fallback?: boolean;
+}
+
+export type ProposalDecision = 'added' | 'duplicate' | 'low-confidence' | 'invalid';
+
+export interface SourceProposal {
+  id: string;
+  name: string;
+  url: string;
+  town: string;
+  type?: SourceType;
+  fetch?: FetchStrategy;
+  confidence?: number;
+  why?: string;
+  decision: ProposalDecision;
+  reason?: string;
+  query?: string;
+  hit?: SearchResult;
+}
+
+export interface TownDiscoveryRun {
+  town: string;
+  searches: SearchCall[];
+  proposed: number;
+  added: number;
+  addedIds: string[];
+  /** brak w przebiegach sprzed ledgeru propozycji */
+  proposals?: SourceProposal[];
+  parse?: 'ok' | 'no-json' | 'bad-json' | 'no-sources';
+  responseChars?: number;
+  llm: LlmUsage;
+  ms: number;
+  err?: string;
+  archive?: string[];
+}
+
+export type VerificationOutcome = 'ok' | 'fixed' | 'dead' | 'error' | 'skipped';
+
+export interface SourceVerification {
+  id: string;
+  name: string;
+  town: string;
+  url: string;
+  outcome: VerificationOutcome;
+  httpStatus?: number;
+  err?: string;
+  searches: SearchCall[];
+  candidate?: string;
+  newUrl?: string;
+  llm: LlmUsage;
+  ms: number;
+  isNew?: boolean;
+  probe?: FetchProbe;
+  candidateProbe?: FetchProbe;
+  note?: string;
+  archive?: string[];
+}
+
+export interface DiscoverTotals extends LlmUsage {
+  towns: number;
+  searches: number;
+  /** pola opcjonalne — starsze przebiegi ich nie mają */
+  searchErrors?: number;
+  searchesSkipped?: number;
+  sourcesAdded: number;
+  proposalsRejected?: number;
+  sourcesChecked: number;
+  ok: number;
+  fixed: number;
+  dead: number;
+  unrepaired: number;
+  skipped: number;
+  costDiscoveryUsd: number;
+  costVerifyUsd: number;
+  redactedPhones?: number;
+  redactedEmails?: number;
+}
+
+export interface DiscoverRunReport {
+  stage: 'discover';
+  mode: 'full' | 'verify';
+  center?: string;
+  radiusKm?: number;
+  startedAt: string;
+  finishedAt: string;
+  durationMs: number;
+  geo?: GeoLookup;
+  towns: TownDiscoveryRun[];
+  verifications: SourceVerification[];
+  totals: DiscoverTotals;
+  argv?: string[];
+  err?: string;
+  partial?: boolean;
+  archiveEnabled?: boolean;
+  /** szczegóły (wyniki search, dopasowane trafienia) usunięte przy przycinaniu historii */
+  slimmed?: boolean;
+  /** koszt przebiegu w rozbiciu na kategorie — kopia wpisów z costs.json */
+  costs?: CostEntry[];
 }

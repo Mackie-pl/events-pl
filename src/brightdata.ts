@@ -33,7 +33,37 @@ export const BD_DATASETS = {
 export type BdRecord = Record<string, unknown>;
 
 /** Współdzielony licznik zużycia w ramach jednego przebiegu. */
-export const bdUsage: BdUsage = { triggers: 0, inputs: 0, polls: 0, records: 0, errors: 0, snapshots: [] };
+export const bdUsage: BdUsage = { triggers: 0, inputs: 0, polls: 0, records: 0, errors: 0, snapshots: [], byDataset: {} };
+
+/** Nazwa datasetu do rozbicia kosztu; nieznane id (nadpisane env-em) zostaje samo sobą. */
+const datasetName = (id: string): string =>
+  Object.entries(BD_DATASETS).find(([, v]) => v === id)?.[0] ?? id;
+
+/**
+ * Kopia licznika „na teraz". Rozliczenie BD jest per-rekord, więc żeby powiedzieć
+ * „ta jedna grupa kosztowała 300 rekordów", trzeba zmierzyć różnicę wokół wywołania —
+ * sam licznik zbiorczy pokazuje tylko, że przebieg był drogi.
+ */
+export const bdSnapshot = (): BdUsage => ({ ...bdUsage, snapshots: [...bdUsage.snapshots], byDataset: { ...bdUsage.byDataset } });
+
+/** Przyrost względem migawki. `null` = nic nie zużyto (pole `bd` nie pojawia się w raporcie). */
+export function bdDelta(before: BdUsage): BdUsage | null {
+  const byDataset: Record<string, number> = {};
+  for (const [k, v] of Object.entries(bdUsage.byDataset ?? {})) {
+    const d = v - (before.byDataset?.[k] ?? 0);
+    if (d) byDataset[k] = d;
+  }
+  const delta: BdUsage = {
+    triggers: bdUsage.triggers - before.triggers,
+    inputs: bdUsage.inputs - before.inputs,
+    polls: bdUsage.polls - before.polls,
+    records: bdUsage.records - before.records,
+    errors: bdUsage.errors - before.errors,
+    snapshots: bdUsage.snapshots.slice(before.snapshots.length),
+    byDataset,
+  };
+  return delta.triggers || delta.records || delta.errors ? delta : null;
+}
 
 export function bdEnabled(): boolean {
   return Boolean(process.env["BRIGHTDATA_API_KEY"]);
@@ -118,5 +148,7 @@ export async function collect(datasetId: string, urls: string[]): Promise<BdReco
 
   const rows = await download(snapshotId);
   bdUsage.records += rows.length;
+  const name = datasetName(datasetId);
+  bdUsage.byDataset = { ...bdUsage.byDataset, [name]: (bdUsage.byDataset?.[name] ?? 0) + rows.length };
   return rows;
 }

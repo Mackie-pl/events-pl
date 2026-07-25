@@ -41,7 +41,7 @@ jobs:
       - name: Assemble site
         run: |
           mkdir -p _site/panel
-          cp index.html events.json runs.json sources.json state.json _site/ 2>/dev/null || true
+          cp index.html events.json runs.json sources.json state.json discover-runs.json costs.json _site/ 2>/dev/null || true
           cp -r panel/dist/panel/browser/. _site/panel/
       - uses: actions/upload-pages-artifact@v3
         with:

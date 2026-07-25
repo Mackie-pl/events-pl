@@ -1,0 +1,360 @@
+/**
+ * Paleta kategorialna: sloty 1–6 w stałej kolejności (blue, orange, aqua, yellow, magenta,
+ * green). Kolejność jest mechanizmem bezpieczeństwa dla daltonizmu, nie kosmetyką — sąsiednie
+ * pary przechodzą progi ΔE dla protanopii i deuteranopii w obu trybach. Wersja ciemna to te
+ * same barwy przestrojone pod ciemne tło, nie automatyczne odwrócenie.
+ */
+:host {
+  --surface-1: #fcfcfb;
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --series-4: #eda100;
+  --series-5: #e87ba4;
+  --series-6: #008300;
+  --chart-grid: #e1e0d9;
+  --chart-axis: #c3c2b7;
+  --chart-muted: #898781;
+}
+
+// Angular enkapsuluje style komponentu, więc warunek na przodku zapisujemy przez
+// :host-context — `:root[…] :host` nie jest tu poprawnym selektorem.
+.dark-tokens() {
+  --surface-1: #1a1a19;
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --series-4: #c98500;
+  --series-5: #d55181;
+  --series-6: #008300;
+  --chart-grid: #2c2c2a;
+  --chart-axis: #383835;
+}
+
+@media (prefers-color-scheme: dark) {
+  :host-context(html:not([data-theme='light'])) {
+    .dark-tokens();
+  }
+}
+
+// przełącznik motywu musi wygrać z ustawieniem systemu w obie strony
+:host-context([data-theme='dark']) {
+  .dark-tokens();
+}
+
+.page-title {
+  margin-bottom: 1.25rem;
+}
+
+.page-loader {
+  margin: 4rem auto;
+}
+
+.error-box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: var(--tui-status-negative-pale);
+  color: var(--tui-status-negative);
+}
+
+.empty {
+  padding: 2rem;
+  border-radius: 0.9rem;
+  border: 1px dashed var(--tui-border-normal);
+  color: var(--tui-text-secondary);
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.filter-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--tui-text-secondary);
+  margin-right: 0.25rem;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 1rem 1.15rem;
+  border-radius: 0.9rem;
+  background: var(--tui-background-neutral-1);
+  border: 1px solid var(--tui-border-normal);
+
+  &.hero {
+    grid-column: span 2;
+  }
+
+  &.alert {
+    background: var(--tui-status-negative-pale);
+    border-color: var(--tui-status-negative);
+  }
+}
+
+.card-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--tui-text-secondary);
+}
+
+.card-value {
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.2;
+
+  &.big {
+    font-size: 3rem;
+  }
+}
+
+.card-sub {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--tui-text-secondary);
+}
+
+.swatch {
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 0.2rem;
+  flex: none;
+}
+
+// ---------------- wykres ----------------
+
+.chart-card {
+  padding: 1.15rem 1.25rem 1rem;
+  border-radius: 0.9rem;
+  background: var(--tui-background-neutral-1);
+  border: 1px solid var(--tui-border-normal);
+  margin-bottom: 1.5rem;
+}
+
+.chart-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+
+  h2 {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.75rem 0 0.5rem;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--tui-border-normal);
+  background: var(--tui-background-base);
+  color: var(--tui-text-primary);
+  font-size: 0.82rem;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--tui-background-neutral-1-hover);
+  }
+
+  &.off {
+    opacity: 0.45;
+    text-decoration: line-through;
+  }
+}
+
+.legend-usd {
+  color: var(--tui-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.chart-wrap {
+  position: relative;
+}
+
+.chart {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.grid {
+  stroke: var(--chart-grid);
+  stroke-width: 1;
+}
+
+.axis {
+  stroke: var(--chart-axis);
+  stroke-width: 1;
+}
+
+.budget {
+  stroke: var(--chart-muted);
+  stroke-width: 1;
+}
+
+.budget-label,
+.tick {
+  fill: var(--chart-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.seg {
+  cursor: pointer;
+  transition: opacity 0.12s ease;
+  outline: none;
+
+  &.dim {
+    opacity: 0.45;
+  }
+
+  &:focus-visible {
+    stroke: var(--tui-text-primary);
+    stroke-width: 2;
+  }
+}
+
+.tooltip {
+  position: absolute;
+  transform: translate(-50%, calc(-100% - 0.5rem));
+  min-width: 11rem;
+  max-width: min(18rem, 70vw);
+  padding: 0.5rem 0.65rem;
+  border-radius: 0.6rem;
+  background: var(--tui-background-base);
+  border: 1px solid var(--tui-border-normal);
+  box-shadow: var(--tui-shadow-medium, 0 4px 16px rgb(0 0 0 / 15%));
+  font-size: 0.82rem;
+  pointer-events: none;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.tip-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+
+  b {
+    margin-left: auto;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.tip-sub {
+  color: var(--tui-text-secondary);
+  font-size: 0.75rem;
+}
+
+// ---------------- tabele ----------------
+
+.split {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.panel {
+  padding: 1.15rem 1.25rem;
+  border-radius: 0.9rem;
+  background: var(--tui-background-neutral-1);
+  border: 1px solid var(--tui-border-normal);
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+
+  h2 {
+    margin: 0 0 0.35rem;
+    font-size: 1.05rem;
+  }
+}
+
+.tbl {
+  width: 100%;
+  font-variant-numeric: tabular-nums;
+
+  .right {
+    text-align: right;
+  }
+
+  .money {
+    font-weight: 600;
+  }
+
+  code {
+    font-size: 0.85em;
+  }
+
+  a + a {
+    margin-left: 0.5rem;
+  }
+}
+
+.what {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--tui-text-secondary);
+}
+
+.muted {
+  color: var(--tui-text-secondary);
+  font-size: 0.85rem;
+}
+
+.notes {
+  ul {
+    margin: 0.5rem 0 0;
+    padding-left: 1.25rem;
+    color: var(--tui-text-secondary);
+  }
+
+  li {
+    margin-bottom: 0.35rem;
+  }
+
+  h2 {
+    font-size: 1.05rem;
+    margin: 0;
+  }
+}

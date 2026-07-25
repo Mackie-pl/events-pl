@@ -1,0 +1,326 @@
+@if (data.discoverRuns.isLoading() && !run()) {
+  <tui-loader size="xl" class="page-loader" />
+} @else if (run(); as r) {
+  <nav class="crumbs">
+    <a tuiLink routerLink="/">Overview</a>
+    <span class="muted">/</span>
+    <a tuiLink routerLink="/discovery">Discovery</a>
+    <span class="muted">/</span>
+    <span>{{ dt(r.startedAt) }}</span>
+  </nav>
+
+  <header tuiTitle class="page-title">
+    <h1>Discover run · {{ r.mode }}</h1>
+    <div tuiSubtitle>
+      {{ dt(r.startedAt) }} → {{ dt(r.finishedAt) }} · {{ ms(r.durationMs) }}
+      @if (r.center) {
+        · {{ r.center }} +{{ r.radiusKm }} km
+      }
+      · {{ r.totals.sourcesAdded }} added · {{ r.totals.sourcesChecked }} checked ·
+      {{ usd(r.totals.costUsd) }} ({{ r.totals.calls }} LLM calls,
+      {{ tok(r.totals.promptTokens) }} in / {{ tok(r.totals.completionTokens) }} out)
+      @if (r.argv; as argv) {
+        · <code>discover {{ argv.join(' ') }}</code>
+      }
+    </div>
+  </header>
+
+  @if (r.partial) {
+    <div class="warn-box">
+      <tui-icon icon="@tui.triangle-alert" />
+      Run interrupted — totals are partial. {{ r.err }}
+    </div>
+  }
+  @if (r.slimmed) {
+    <div class="info-box">
+      <tui-icon icon="@tui.info" />
+      Older run: search results and matched hits were trimmed to keep the public file small.
+      Per-source provenance survives in
+      <a tuiLink routerLink="/discovery">the registry</a>.
+    </div>
+  }
+  @if (r.archiveEnabled === false) {
+    <div class="info-box">
+      <tui-icon icon="@tui.info" />
+      Private archive was off for this run — the model's prompts and answers are not reproducible.
+    </div>
+  }
+
+  @if (r.geo; as g) {
+    <section class="geo">
+      <h2>Towns in radius</h2>
+      <p class="muted mono">{{ g.query }} · {{ ms(g.ms) }}</p>
+      @if (g.err) {
+        <p class="negative">{{ g.err }}{{ g.fallback ? ' → centre town only' : '' }}</p>
+      }
+      <p>{{ g.towns.join(', ') }}</p>
+    </section>
+  }
+
+  @if (r.towns.length) {
+    <section class="towns">
+      <h2>Search + model, per town</h2>
+      <table tuiTable class="towns-table">
+        <thead tuiThead>
+          <tr tuiThGroup>
+            <th tuiTh></th>
+            <th tuiTh>Town</th>
+            <th tuiTh>Queries</th>
+            <th tuiTh>Results</th>
+            <th tuiTh>Model answer</th>
+            <th tuiTh>Proposed</th>
+            <th tuiTh>Added</th>
+            <th tuiTh>Tokens</th>
+            <th tuiTh>Cost</th>
+            <th tuiTh>Time</th>
+          </tr>
+        </thead>
+        <tbody tuiTbody>
+          @for (t of r.towns; track t.town) {
+            <tr tuiTr class="clickable" (click)="toggleTown(t.town)">
+              <td tuiTd>
+                <tui-icon
+                  [icon]="expandedTown() === t.town ? '@tui.chevron-down' : '@tui.chevron-right'"
+                />
+              </td>
+              <td tuiTd>{{ t.town }}</td>
+              <td tuiTd>
+                {{ sentCount(t.searches) }}
+                @if (t.searches.length > sentCount(t.searches)) {
+                  <span class="muted">
+                    (+{{ t.searches.length - sentCount(t.searches) }} skipped)
+                  </span>
+                }
+              </td>
+              <td tuiTd>{{ resultCount(t.searches) }}</td>
+              <td tuiTd [class.negative]="t.parse === 'no-json' || t.parse === 'bad-json'">
+                {{ t.parse ?? '—' }}
+                @if (t.err) {
+                  <span class="muted">· {{ t.err }}</span>
+                }
+              </td>
+              <td tuiTd>{{ t.proposed }}</td>
+              <td tuiTd [class.bold]="t.added > 0">{{ t.added }}</td>
+              <td tuiTd>{{ tok(t.llm.promptTokens) }}/{{ tok(t.llm.completionTokens) }}</td>
+              <td tuiTd>{{ usd(t.llm.costUsd) }}</td>
+              <td tuiTd>{{ ms(t.ms) }}</td>
+            </tr>
+            @if (expandedTown() === t.town) {
+              <tr tuiTr class="detail-row">
+                <td tuiTd colspan="10">
+                  <div class="queries">
+                    @for (s of t.searches; track $index) {
+                      <div class="query-block">
+                        <div class="query-head">
+                          <code>{{ s.query }}</code>
+                          <span class="muted">
+                            {{ s.results.length || s.trimmed || 0 }} results · {{ ms(s.ms) }}
+                          </span>
+                          @if (s.skipped) {
+                            <span tuiBadge size="s" appearance="neutral">skipped</span>
+                          }
+                          @if (s.err) {
+                            <span tuiBadge size="s" appearance="negative">
+                              {{ s.httpStatus ? 'HTTP ' + s.httpStatus : 'error' }}
+                            </span>
+                          }
+                        </div>
+                        @if (s.err) {
+                          <div class="negative">{{ s.err }}</div>
+                        }
+                        @if (s.trimmed) {
+                          <div class="muted">{{ s.trimmed }} results trimmed from history</div>
+                        }
+                        <ol class="results">
+                          @for (res of s.results; track $index) {
+                            <li>
+                              <div>{{ res.title }}</div>
+                              @if (res.url) {
+                                <a tuiLink class="mono" [href]="res.url" target="_blank" rel="noopener">
+                                  {{ res.url }}
+                                </a>
+                              }
+                              <div class="muted">{{ res.desc }}</div>
+                            </li>
+                          }
+                        </ol>
+                      </div>
+                    }
+                    @if (t.archive?.length) {
+                      <div class="query-block">
+                        <div class="query-head"><strong>Private archive</strong></div>
+                        @for (path of t.archive; track path) {
+                          <div class="mono">{{ path }}</div>
+                        }
+                      </div>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </section>
+
+    <section class="proposals">
+      <h2>What the model proposed</h2>
+      <div class="filters">
+        <button
+          tuiButton
+          size="s"
+          [appearance]="decisionFilter() === 'all' ? 'primary' : 'secondary'"
+          (click)="decisionFilter.set('all')"
+        >
+          All ({{ proposalCount('all') }})
+        </button>
+        @for (d of decisions; track d) {
+          <button
+            tuiButton
+            size="s"
+            [appearance]="decisionFilter() === d ? 'primary' : 'secondary'"
+            (click)="decisionFilter.set(d)"
+          >
+            {{ decisionMeta[d].label }} ({{ proposalCount(d) }})
+          </button>
+        }
+      </div>
+      <div class="table-wrap">
+        <table tuiTable class="proposals-table">
+          <thead tuiThead>
+            <tr tuiThGroup>
+              <th tuiTh>Decision</th>
+              <th tuiTh>Proposed source</th>
+              <th tuiTh>Town</th>
+              <th tuiTh>Conf.</th>
+              <th tuiTh>From query</th>
+              <th tuiTh>Model rationale</th>
+              <th tuiTh>Reason / normalisation</th>
+            </tr>
+          </thead>
+          <tbody tuiTbody>
+            @for (row of proposals(); track $index) {
+              <tr tuiTr>
+                <td tuiTd>
+                  <span tuiBadge size="s" [appearance]="decisionMeta[row.p.decision].appearance">
+                    {{ decisionMeta[row.p.decision].label }}
+                  </span>
+                </td>
+                <td tuiTd class="src">
+                  <span class="src-name">{{ row.p.name }}</span>
+                  <a
+                    tuiLink
+                    class="mono src-id"
+                    [href]="row.p.url"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    {{ row.p.url }}
+                  </a>
+                </td>
+                <td tuiTd>{{ row.town }}</td>
+                <td tuiTd>{{ row.p.confidence ?? '—' }}</td>
+                <td tuiTd class="mono small">{{ row.p.query ?? '—' }}</td>
+                <td tuiTd class="why">{{ row.p.why ?? '—' }}</td>
+                <td tuiTd class="why">{{ row.p.reason ?? '—' }}</td>
+              </tr>
+            } @empty {
+              <tr tuiTr>
+                <td tuiTd colspan="7" class="muted">
+                  No proposals recorded (verify-only run, or a run from before the proposal ledger).
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+
+  <section class="verifications">
+    <h2>URL verification</h2>
+    <div class="filters">
+      <button
+        tuiButton
+        size="s"
+        [appearance]="outcomeFilter() === 'all' ? 'primary' : 'secondary'"
+        (click)="outcomeFilter.set('all')"
+      >
+        All ({{ verificationCount('all') }})
+      </button>
+      @for (o of outcomes; track o) {
+        <button
+          tuiButton
+          size="s"
+          [appearance]="outcomeFilter() === o ? 'primary' : 'secondary'"
+          (click)="outcomeFilter.set(o)"
+        >
+          {{ outcomeMeta[o].label }} ({{ verificationCount(o) }})
+        </button>
+      }
+    </div>
+    <div class="table-wrap">
+      <table tuiTable class="verify-table">
+        <thead tuiThead>
+          <tr tuiThGroup>
+            <th tuiTh>Outcome</th>
+            <th tuiTh>Source</th>
+            <th tuiTh>Town</th>
+            <th tuiTh>Response</th>
+            <th tuiTh>Redirect</th>
+            <th tuiTh>Details</th>
+            <th tuiTh>Cost</th>
+            <th tuiTh>Time</th>
+          </tr>
+        </thead>
+        <tbody tuiTbody>
+          @for (v of verifications(); track v.id) {
+            <tr tuiTr>
+              <td tuiTd>
+                <span tuiBadge size="s" [appearance]="outcomeMeta[v.outcome].appearance">
+                  {{ outcomeMeta[v.outcome].label }}
+                </span>
+                @if (v.isNew) {
+                  <span tuiBadge size="s" appearance="info" title="first fetch of a new source">
+                    new
+                  </span>
+                }
+              </td>
+              <td tuiTd class="src">
+                <span class="src-name">{{ v.name }}</span>
+                <span class="muted src-id">{{ v.id }}</span>
+              </td>
+              <td tuiTd>{{ v.town }}</td>
+              <td tuiTd [class.negative]="v.probe && !v.probe.ok">
+                {{ v.probe ? probe(v.probe) : v.httpStatus ? 'HTTP ' + v.httpStatus : '—' }}
+              </td>
+              <td tuiTd class="mono small">{{ v.probe?.finalUrl ?? '—' }}</td>
+              <td tuiTd class="why">
+                @if (v.newUrl) {
+                  <span class="positive">→ {{ v.newUrl }}</span>
+                } @else if (v.err) {
+                  {{ v.err }}
+                } @else if (v.note) {
+                  <span class="muted">{{ v.note }}</span>
+                } @else {
+                  —
+                }
+              </td>
+              <td tuiTd>{{ v.llm.costUsd ? usd(v.llm.costUsd) : '—' }}</td>
+              <td tuiTd>{{ ms(v.ms) }}</td>
+            </tr>
+          } @empty {
+            <tr tuiTr>
+              <td tuiTd colspan="8" class="muted">No verifications match the current filter.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+} @else {
+  <p class="muted">
+    Run not found — discover-runs.json keeps the last 24 runs.
+    <a tuiLink routerLink="/discovery">Back to discovery</a>
+  </p>
+}

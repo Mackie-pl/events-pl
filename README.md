@@ -9,30 +9,33 @@ miasto + promień                            sources.json
   → Overpass API (gminy w promieniu)          → fetch (ETag/304 + hash treści)
   → wyszukiwarka (Brave, darmowy tier)        → bez zmian? wydarzenia z cache, 0 LLM
   → SONNET: triage kandydatów                 → HAIKU: ekstrakcja → JSON
-  → sources.json                              → followups (1 hop): PDF-y programów,
+  → sources.json (+ provenance przy źródle)   → followups (1 hop): PDF-y programów,
   → weryfikacja URL-i (też --verify solo):      podstrony, plakaty JPG (vision)
     martwy URL → Brave + HAIKU → naprawa     → geocode (Nominatim, darmowe, cache)
     (stary adres → previous_urls) albo        → dedupe (heurystyka + LLM)
     dead:true (daily pomija)                  → events.json → index.html
   → discover-runs.json (observability)      src/daily.ts → runs.json (observability)
-src/discover.ts
+src/discover.ts  ·  --why <id> = skąd to źródło
 ```
 
 ## Pliki
 
 | plik | rola |
 |---|---|
-| `sources.json` | rejestr źródeł Poznań +15 km (etap 1 wykonany ręcznie 2026-07-20; 46 źródeł, 13 gmin) |
+| `sources.json` | rejestr źródeł Poznań +15 km (etap 1 wykonany ręcznie 2026-07-20; 46 źródeł, 13 gmin) + `provenance` przy każdym źródle dodanym automatycznie |
 | `src/types.ts` | pełne typy: Source, EventItem (age/price/sub_slots/tags/conditional), State |
-| `src/discover.ts` | etap 1 (Sonnet + Brave Search + Overpass) + weryfikacja/naprawa URL-i (`--verify`, cron miesięczny w `discover.yml`) |
-| `discover-runs.json` | observability etapu 1: każde zapytanie search + wyniki, geo (Overpass), tokeny/koszt LLM per miasto / źródło / typ zadania (discovery vs weryfikacja); ostatnie 24 przebiegi |
+| `src/discover.ts` | etap 1 (Sonnet + Brave Search + Overpass) + weryfikacja/naprawa URL-i (`--verify`, cron miesięczny w `discover.yml`) + `--why` |
+| `discover-runs.json` | observability etapu 1: każde zapytanie search + wyniki, **każda propozycja modelu wraz z decyzją** (także odrzucenia), geo (Overpass), tokeny/koszt LLM per gmina / źródło / typ zadania (discovery vs weryfikacja); ostatnie 24 przebiegi (szczegóły dla 4 najnowszych) |
 | `src/daily.ts` | etap 2 (Haiku: ekstrakcja, kontenery, PDF przez `unpdf`, plakaty vision, geo, dedupe) |
+| `runs.json` | observability etapu 2: przebieg źródło po źródle (status, HTTP, followupy, tokeny/koszt per zadanie, rekordy Bright Data, ścieżki archiwum); **ostatnie 7 dni** (min. 2, maks. 30 przebiegów) |
+| `costs.json` | księga wydatków obu etapów: linia na (przebieg × kategoria) z wolumenem, stawką i najdroższymi pozycjami; 90 dni. Zasila zakładkę **Money** |
+| `src/cost.ts` · `src/backfill-costs.ts` | zapis księgi + odtworzenie jej z raportów, które już leżą w repo |
 | `src/prompts.ts` | prompty PL dla obu etapów |
 | `src/pii.ts` | redakcja danych osobowych przed zapisem do publicznego repo (patrz niżej) |
 | `src/archive.ts` | prywatne archiwum treści (Supabase Storage): surowe strony, wejścia/wyjścia LLM, dane przed redakcją |
 | `src/archive-server.ts` | lokalny most do archiwum (`npm run archive-server`) — trzyma klucz sekretny poza panelem |
 | `template.html` | frontend (wiek dziecka, tagi zagnieżdżone, weekend, mapa OSM); `daily.ts` wstrzykuje JSON |
-| `panel/` | panel observability (Angular 22 + Taiga UI): przegląd dnia → source runs → eventy + iframe podglądu; deploy na GH Pages pod `/panel/` przez `deploy-pages.yml` (Settings → Pages → Source: GitHub Actions) |
+| `panel/` | panel observability (Angular 22 + Taiga UI): **Day** (przegląd dnia → source runs → eventy + iframe podglądu), **Discovery** (proweniencja rejestru → przebiegi discover) i **Money** (wydatki dzień po dniu wg kategorii); deploy na GH Pages pod `/panel/` przez `deploy-pages.yml` (Settings → Pages → Source: GitHub Actions) |
 
 ## Setup
 
@@ -47,6 +50,7 @@ npm run daily                   # → events.json + index.html
 # raz w miesiącu / nowe miasto (wymaga BRAVE_API_KEY w .env):
 npm run discover -- "Poznań" 15 # pełne discovery + weryfikacja URL-i
 npm run discover -- --verify    # sama weryfikacja/naprawa URL-i (tanio: Haiku; cron w discover.yml)
+npm run discover -- --why lubon-ok   # skąd to źródło się wzięło (nie kosztuje nic, nie rusza sieci)
 
 npm run typecheck               # tsc --noEmit (strict)
 ```
@@ -95,7 +99,52 @@ jobs:
           git commit -m "daily $(date +%F)" && git push
 ```
 
-## Koszty (ceny 07.2026: Haiku 4.5 $1/$5, Sonnet $3/$15 za MTok; batch −50%, cache −90%)
+## Koszty: księga `costs.json` + zakładka **Money** w panelu
+
+Szacunek z tabeli niżej to plan. **Rachunek to co innego** — dlatego każdy przebieg dopisuje
+do `costs.json` po jednej linii na kategorię wydatku, a panel rysuje z tego wydatki dzień po
+dniu. Pytanie „czemu drożej niż zakładałem" ma trzy warstwy odpowiedzi, bo trzy różne rzeczy
+mogą pójść nie tak:
+
+| warstwa | gdzie | odpowiada na |
+|---|---|---|
+| **kwota dzienna** | wykres w zakładce Money | *kiedy* zaczęło być drożej |
+| **kategoria** | serie wykresu (tekst / plakaty / discovery / verify / FB / infra) | *co* podrożało — plakat i tekst to ten sam Haiku w rachunku, ale rosną z innych powodów |
+| **pozycja** | tabela „najdroższe pozycje" (`top` przy wpisie) | *gdzie* — konkretne źródło albo gmina |
+
+**Kategorie i skąd biorą się kwoty:**
+
+| kategoria | co kupujemy | kwota |
+|---|---|---|
+| `llm-extract` | Haiku: treść stron i PDF-ów | od OpenRoutera (`usage.cost` przy każdym wywołaniu) |
+| `llm-vision` | Haiku multimodal: plakaty JPG/PNG | j.w. |
+| `llm-discover` | Sonnet: triage kandydatów (etap 1) | j.w. |
+| `llm-verify` | Haiku: naprawa martwych URL-i | j.w. |
+| `fb` | Bright Data: rekordy wydarzeń i postów grup | **szacunek**: `rekordy × BD_COST_PER_RECORD` |
+| `search` | Brave: zapytania | **szacunek** (darmowy tier 2000/mies. → stawka 0) |
+| `scrape` · `geo` · `storage` | pobrania HTTP, Nominatim, Supabase Storage | **szacunek** (dziś 0) |
+
+Kategorie o stawce zero **też są zapisywane**, z wolumenem. Darmowy tier to koszt zero
+*do limitu*: bez zapisanego wolumenu pierwszy rachunek za przekroczenie (albo pierwszy ban
+od Nominatima) nie ma z czym się skonfrontować. Panel rysuje je łącznie jako „infra"
+i rozbija w tabeli. Szacunki są w panelu i w logach znaczone `~` — **stawka razy wolumen
+nigdy nie awansuje po cichu na kwotę od dostawcy**.
+
+```bash
+npm run backfill-costs          # odtworzenie księgi z runs.json / discover-runs.json
+npm run backfill-costs -- --force   # także dla przebiegów już policzonych
+```
+
+Backfill ma jedno ograniczenie zapisane wprost w danych: przebiegi sprzed podziału na
+zadania nie wiedzą, ile kosztowały plakaty — ich koszt ląduje w całości w `llm-extract`
+z flagą `inferred`, a panel to zaznacza, zamiast udawać pomiar.
+
+Stawki i budżet ustawiasz w `.env` (`COST_MONTHLY_BUDGET_USD`, `BD_COST_PER_RECORD`, …);
+księga zapisuje stawkę obowiązującą w momencie przebiegu, więc zmiana cennika nie
+przepisuje historii. **Poza księgą zostaje jedno**: minuty GitHub Actions — publiczne repo
+ma je bez limitu, więc cron i Pages nie generują pozycji (panel mówi to wprost).
+
+## Szacunek (ceny 07.2026: Haiku 4.5 $1/$5, Sonnet $3/$15 za MTok; batch −50%, cache −90%)
 
 **Dziennie (etap 2, 46 źródeł):**
 
@@ -164,6 +213,50 @@ Wiadomości: HTML, po jednej na sekcję (JUTRO / WEEKEND), auto-cięcie przy lim
 
 Wspólne: `DIGEST_CHILD_AGE=5` — filtr wg wieku dziecka. Bez żadnych kluczy `npm run digest` robi dry-run na stdout.
 
+## Observability etapu 1: dlaczego ten adres jest na liście?
+
+Rejestr źródeł buduje model na podstawie wyników wyszukiwarki, więc po miesiącach nikt nie pamięta,
+skąd wziął się konkretny adres i czy w ogóle kiedykolwiek odpowiedział. Odpowiedź składa się z trzech
+warstw, celowo rozdzielonych — każda przeżywa co innego:
+
+| warstwa | gdzie | co odpowiada | żywotność |
+|---|---|---|---|
+| **proweniencja** | `sources.json` → `source.provenance` | zapytanie → wynik wyszukiwarki (tytuł/URL/opis) → model + confidence + jednozdaniowe uzasadnienie → **wynik pierwszego pobrania** | póki źródło jest w rejestrze |
+| **ledger propozycji** | `discover-runs.json` → `towns[].proposals[]` | co model zaproponował i co z tym zrobiliśmy: `added` / `duplicate` / `low-confidence` / `invalid` + powód | 24 przebiegi (szczegóły: 4 najnowsze) |
+| **prompt i odpowiedź** | prywatne archiwum (Supabase) | co dokładnie model dostał i co zwrócił, 1:1 | `ARCHIVE_RETENTION_DAYS` |
+
+Ledger jest tu równie ważny jak proweniencja: **„model tego nie zaproponował" i „zaproponował, a my
+odrzuciliśmy przy progu confidence" wymagają zupełnie różnych napraw**, a bez zapisu odrzuceń wyglądają
+identycznie (jedna liczba `proposed`).
+
+```bash
+npm run discover -- --why lubon-ok        # id, fragment URL-a albo fragment nazwy
+```
+
+wypisuje wpis rejestru, proweniencję (zapytanie + trafienie + uzasadnienie modelu), wynik pierwszego
+pobrania (`HTTP 200 · text/html · 12 340 zn. · 240 ms`), całą historię weryfikacji URL-a z przebiegów
+oraz — jeśli adresu w rejestrze **nie ma** — wszystkie propozycje z nim związane wraz z powodem
+odrzucenia. To samo w panelu: zakładka **Discovery** (rejestr z kolumną „why", rozwijane szczegóły
+i przejście do przebiegu).
+
+⚠️ 46 źródeł z ręcznego etapu 1 (2026-07-20) proweniencji nie ma i mieć nie będzie — panel i `--why`
+mówią to wprost zamiast udawać. Zapisywana jest od pierwszego automatycznego `discover`.
+
+**Twardość przebiegu** (etap 1 kosztuje realne pieniądze, więc awaria nie może kasować wyniku):
+
+- raport i zmiany w `sources.json` zapisują się **także po wyjątku** (`partial: true` + `err` w raporcie);
+  wyjątek przy naprawie jednego źródła nie przerywa weryfikacji pozostałych,
+- Brave: 429/401 wyłącza wyszukiwarkę na resztę przebiegu (wcześniej limit wyglądał jak „brak wyników"),
+  a `DISCOVER_MAX_SEARCHES` (domyślnie 300) pilnuje darmowego tieru 2000/mies.,
+- padnięty Overpass → discovery samego miasta centralnego zamiast utraty całego przebiegu,
+- odpowiedź modelu jest **walidowana**, nie rzutowana: rekord bez URL-a odpada, nieznane `type`/`fetch`
+  są normalizowane, a kolizja `id` dostaje sufiks — `id` jest kluczem cache ekstrakcji w `state.json`,
+  więc duplikat cicho scalałby dwa różne źródła,
+- adresy FB (`fb`, `fb_group`, `fb_event`) są pomijane w weryfikacji URL-i: login wall potrafił
+  wypchnąć żywą grupę w `dead:true`, po czym daily przestawało ją odpytywać,
+- `discover-runs.json` przechodzi przez redakcję PII (`src/pii.ts`) tak samo jak `runs.json` — opisy
+  wyników dla zapytań `site:facebook.com/groups` potrafią zawierać numery i e-maile mieszkańców.
+
 ## Cache ekstrakcji (state.json)
 
 Hash treści oszczędza wywołania LLM, ale **sam hash nie wystarczy**: gdy „niezmienione" znaczyło
@@ -222,6 +315,7 @@ nie da się debugować jakości ekstrakcji, idzie do prywatnego bucketa:
 | prefiks | zawartość | po co |
 |---|---|---|
 | `raw/<data>/<source>/<sha256>.json` | pobrany tekst strony/PDF-a 1:1 | „czemu to źródło dało 0 wydarzeń?" — widać, co model dostał (cookie banner? pusta strona?) |
+| `raw/<data>/discover-<gmina>/…` | komplet wyników wyszukiwarki dla gminy | „czemu model przeoczył ten dom kultury?" — czy w ogóle był w wynikach |
 | `llm/<data>/<runId>/<nnnn>-<model>.json` | prompt + odpowiedź + tokeny/koszt/czas | odróżnia „model nie widział" od „model zwrócił zły JSON"; zapisywane **także dla wywołań nieudanych** |
 | `events/<data>/<runId>.json` | wydarzenia **przed** redakcją PII | pełne kontakty do digestu; źródło prawdy |
 
@@ -280,7 +374,11 @@ nie przeskanuje twojego localhosta. Most akceptuje tylko prefiksy `raw/`, `llm/`
 - Dedupe: heurystyka tytuł+data; LLM-owy dedupe (`DEDUPE_SYSTEM`) gotowy w prompts.ts, niepodpięty.
 - Weryfikacja URL-i: `discover --verify` (miesięczny cron `discover.yml`) sprawdza każdy URL, naprawia
   przez search+LLM (historia w `previous_urls`), nienaprawialne znakuje `dead:true` (daily pomija jako
-  `skipped-dead` do następnej udanej naprawy).
+  `skipped-dead` do następnej udanej naprawy). Adresy FB są pomijane (login wall ≠ martwy URL),
+  więc grupy z Bright Data weryfikuje dopiero daily.
+- Proweniencja: 46 źródeł z ręcznego etapu 1 nie ma `provenance` (patrz sekcja observability etapu 1).
+  Backfill jest możliwy tylko przez ponowne discovery — świadomie niezrobiony, bo kosztowałby
+  pełny przebieg Sonneta dla danych, które i tak nie odtworzą wyników wyszukiwarki sprzed miesięcy.
 - Tagi zagnieżdżone (`dzieci:dmuchańce`, `warsztaty:ceramika`) generuje prompt — słownik warto ustabilizować po ~2 tyg. danych.
 - Powiadomienia: dodać `src/digest.ts` (czwartek 17:00, filtr wiek+weekend → mail/Telegram) — trywialne rozszerzenie.
 - Walidacja odpowiedzi LLM: typy są rzutowane (`as ExtractionResult`); produkcyjnie warto dodać `zod` schema → `EventItem`.

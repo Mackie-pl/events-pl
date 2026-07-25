@@ -15,8 +15,11 @@ Rozpoznawanie FB po URL:
 - facebook.com/groups/<...>  → fetch:"fb_group", type:"fb_group"; URL skróć do korzenia grupy
   (https://www.facebook.com/groups/<id-lub-slug>, bez /posts/… ani parametrów)
 - facebook.com/<fanpage>      → fetch:"fb", type:"fb_page"
-Zwróć JSON: {"sources":[{"id","name","type","url","town","fetch":"plain|headless|pdf|api|fb|fb_group","confidence":0-1,"notes"}]}
-Typy: city_portal, culture_center, library, sports, venue, fb_page, fb_group, rss, api, pdf_program.`;
+Zwróć JSON: {"sources":[{"id","name","type","url","town","fetch":"plain|headless|pdf|api|fb|fb_group","confidence":0-1,"why","notes"}]}
+Typy: city_portal, culture_center, library, sports, venue, fb_page, fb_group, rss, api, pdf_program.
+"why": JEDNO zdanie po polsku — co w wyniku wyszukiwania przekonało cię, że ta strona publikuje wydarzenia
+(np. "kalendarz imprez GOK w opisie wyniku"). To pole trafia do rejestru i po miesiącach jest jedyną
+odpowiedzią na pytanie „czemu ten adres tu jest?". Nie powtarzaj nazwy instytucji, nie pisz ogólników.`;
 
 export const DISCOVERY_QUERIES: readonly string[] = [
   "{town} dom kultury wydarzenia",

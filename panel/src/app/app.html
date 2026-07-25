@@ -6,6 +6,13 @@
         <strong>events-pl</strong>
         <span class="muted">observability</span>
       </a>
+      <nav class="nav">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          Day
+        </a>
+        <a routerLink="/discovery" routerLinkActive="active">Discovery</a>
+        <a routerLink="/costs" routerLinkActive="active">Money</a>
+      </nav>
       <span class="spacer"></span>
       @if (data.sources.value(); as s) {
         <span class="muted region">{{ s.region.name }} · {{ s.sources.length }} sources</span>

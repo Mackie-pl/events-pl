@@ -7,7 +7,7 @@
  */
 
 import { describeError, fetchUrl } from "./errors.js";
-import type { LlmUsage } from "./types.js";
+import type { LlmTask, LlmUsage, TaskUsage } from "./types.js";
 
 // nadpisywalne: pozwala wpiąć proxy/gateway albo mock w testach integracyjnych
 const OPENROUTER_URL =
@@ -22,16 +22,39 @@ export const MODEL_DISCOVER = process.env["MODEL_DISCOVER"] ?? "anthropic/claude
  * i snapshotUsage() po, żeby przypisać tokeny/koszt do konkretnego źródła.
  */
 const tally: LlmUsage = { calls: 0, promptTokens: 0, completionTokens: 0, costUsd: 0 };
+/**
+ * Ten sam licznik z podziałem na rodzaj zadania. Rachunek OpenRoutera zna tylko model,
+ * a „Haiku" to zarówno tekst strony, jak i plakat (wejście multimodalne) — dwie pozycje
+ * o różnych stawkach za wejście i o zupełnie różnych przyczynach wzrostu.
+ */
+const byTask = new Map<LlmTask, LlmUsage>();
 
 export function resetUsage(): void {
   tally.calls = 0;
   tally.promptTokens = 0;
   tally.completionTokens = 0;
   tally.costUsd = 0;
+  byTask.clear();
 }
 
 export function snapshotUsage(): LlmUsage {
   return { ...tally };
+}
+
+/** Zużycie w rozbiciu na zadania — tylko te, które w tym oknie wystąpiły. */
+export function snapshotTasks(): TaskUsage {
+  const out: TaskUsage = {};
+  for (const [task, usage] of byTask) out[task] = { ...usage };
+  return out;
+}
+
+function addTask(task: LlmTask, usage: { promptTokens: number; completionTokens: number; costUsd: number }): void {
+  const cur = byTask.get(task) ?? { calls: 0, promptTokens: 0, completionTokens: 0, costUsd: 0 };
+  cur.calls += 1;
+  cur.promptTokens += usage.promptTokens;
+  cur.completionTokens += usage.completionTokens;
+  cur.costUsd += usage.costUsd;
+  byTask.set(task, cur);
 }
 
 type TextPart = { type: "text"; text: string };
@@ -40,6 +63,8 @@ export type UserContent = string | Array<TextPart | ImagePart>;
 
 export interface ChatOptions {
   model: string;
+  /** rodzaj zadania — nośnik podziału kosztów (costs.json), nie da się go odtworzyć z modelu */
+  task: LlmTask;
   system: string;
   user: UserContent;
   maxTokens?: number;
@@ -49,6 +74,7 @@ export interface ChatOptions {
 /** Pełne wejście/wyjście jednego wywołania — do prywatnego archiwum (archive.ts). */
 export interface LlmCallRecord {
   model: string;
+  task: LlmTask;
   system: string;
   user: UserContent;
   response: string;
@@ -93,7 +119,7 @@ export async function chat(opts: ChatOptions): Promise<string> {
   if (!apiKey) throw new Error("Brak OPENROUTER_API_KEY");
 
   const t0 = performance.now();
-  const base = { model: opts.model, system: opts.system, user: opts.user };
+  const base = { model: opts.model, task: opts.task, system: opts.system, user: opts.user };
   const ms = (): number => Math.round(performance.now() - t0);
   // nieudane wywołania archiwizujemy tak samo jak udane — to one wymagają debugowania
   const failed = async (err: string): Promise<void> =>
@@ -152,6 +178,7 @@ export async function chat(opts: ChatOptions): Promise<string> {
   tally.promptTokens += usage.promptTokens;
   tally.completionTokens += usage.completionTokens;
   tally.costUsd += usage.costUsd;
+  addTask(opts.task, usage);
 
   const response = json.choices?.[0]?.message?.content ?? "";
   await record({ ...base, response, usage, ms: ms(), ok: true });

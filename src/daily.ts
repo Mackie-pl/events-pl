@@ -16,26 +16,36 @@ import { convert as htmlToText } from "html-to-text";
 import { extractText, getDocumentProxy } from "unpdf";
 
 import {
-  archiveEnabled, archiveEventsFull, archiveLlmCall, archiveRaw, archiveStats, beginRun,
-  beginSource, sourcePaths,
+  RETENTION_DAYS as ARCHIVE_RETENTION_DAYS, archiveEnabled, archiveEventsFull, archiveLlmCall,
+  archiveRaw, archiveStats, beginRun, beginSource, sourcePaths,
 } from "./archive.js";
-import { BD_DATASETS, bdEnabled, bdUsage, collect as bdCollect } from "./brightdata.js";
+import { BD_DATASETS, bdDelta, bdEnabled, bdSnapshot, bdUsage, collect as bdCollect } from "./brightdata.js";
+import { type CostInput, costEntries, costLine, costRates, recordCosts } from "./cost.js";
 import { BROWSER_HEADERS, describeError, fetchUrl } from "./errors.js";
 import { fbEventToItem, fbGroupPostsToText, harvestEventUrls, isEventUrl } from "./facebook.js";
-import { MODEL_EXTRACT, chat, imagePart, resetUsage, setCallRecorder, snapshotUsage } from "./llm.js";
+import { MODEL_EXTRACT, chat, imagePart, resetUsage, setCallRecorder, snapshotTasks, snapshotUsage } from "./llm.js";
 import { type RedactionStats, redactEvents, redactText } from "./pii.js";
 import { DEDUPE_SYSTEM, POSTER_SYSTEM, extractionSystem } from "./prompts.js";
 import type {
-  CachedExtraction, EventItem, EventsFile, ExtractionResult, FollowupRun, PipelineError,
-  PipelineState, RunReport, RunTotals, Source, SourceRun, SourcesFile,
+  CachedExtraction, CostDriver, CostEntry, EventItem, EventsFile, ExtractionResult, FollowupRun,
+  LlmTask, PipelineError, PipelineState, RunReport, RunTotals, Source, SourceRun, SourcesFile,
 } from "./types.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const STATE_PATH = join(ROOT, "state.json");
 const OUT_EVENTS = join(ROOT, "events.json");
 const RUNS_PATH = join(ROOT, "runs.json");
-const RUN_RETENTION_MS = 2 * 24 * 60 * 60 * 1000; // ostatnie ~2 dni
+/**
+ * Ile historii przebiegów zostaje w publicznym repo. Dane są zredagowane (pii.ts),
+ * więc ogranicza nas tylko rozmiar pliku: ~25 kB na przebieg × 1 przebieg/dzień.
+ * Tydzień to okno, w którym „od kiedy to źródło zwraca zero?" da się jeszcze zamknąć
+ * bez sięgania do historii gita. Trend kosztów żyje osobno w costs.json (90 dni),
+ * bo jest o dwa rzędy wielkości mniejszy.
+ */
+const RUN_RETENTION_MS = 7 * 24 * 60 * 60 * 1000;
 const RUN_MIN_KEEP = 2; // zawsze zostaw min. tyle przebiegów, nawet po przerwie w cronie
+/** Sufit na wypadek ręcznych przebiegów: 7 dni × kilka dziennie nie może rozdąć pliku. */
+const RUN_MAX_KEEP = 30;
 // Nominatim wymaga UA identyfikującego aplikację (usage policy) — tu zostaje bot.
 const UA = { "User-Agent": "LocalEventsBot/0.3 (+kontakt: twoj@email)" };
 const MAX_FOLLOWUPS_PER_SOURCE = 5;
@@ -46,6 +56,14 @@ const BD_USAGE_LOG = join(ROOT, "brightdata-usage.jsonl");
 const MAX_FB_EVENTS_PER_RUN = Number(process.env["BD_MAX_FB_EVENTS"] ?? 40);
 
 // ---------------- fetch ----------------
+
+/**
+ * Wolumen sieciowy przebiegu. Pobrania i geokodowanie są dziś darmowe (GH Actions dla repo
+ * publicznego, Nominatim), ale „darmowe" znaczy „zero do limitu" — bez zapisanego wolumenu
+ * pierwszy rachunek za przekroczenie albo pierwszy ban od Nominatima są niespodzianką.
+ * Liczy tylko żądania, które faktycznie poszły w sieć (304 też, cache — nie).
+ */
+const netUsage = { fetches: 0, geoLookups: 0 };
 
 type Fetched = {
   kind: "html" | "pdf" | "skip" | "not-modified";
@@ -78,6 +96,7 @@ function httpError(status: number, url: string): Error {
 }
 
 async function fetchPlain(url: string, extraHeaders: Record<string, string> = {}): Promise<Fetched> {
+  netUsage.fetches += 1;
   const res = await fetchUrl(url, { headers: { ...BROWSER_HEADERS, ...extraHeaders } }, 30_000);
   if (res.status === 304) return { kind: "not-modified", text: "", httpStatus: 304 };
   if (!res.ok) throw httpError(res.status, url);
@@ -111,6 +130,7 @@ async function fetchHeadless(url: string): Promise<Fetched> {
   interface MinimalPage { goto(u: string, o: { waitUntil: string; timeout: number }): Promise<MinimalResponse | null>; content(): Promise<string> }
   interface MinimalBrowser { newPage(): Promise<MinimalPage>; close(): Promise<void> }
   const modName = "playwright";
+  netUsage.fetches += 1;
   const { chromium } = (await import(modName)) as { chromium: { launch(): Promise<MinimalBrowser> } };
   const browser = await chromium.launch();
   try {
@@ -131,6 +151,7 @@ type FetchedImage =
 
 /** Plakat JPG/PNG -> base64 dla modelu wizyjnego. 304 = ten sam plakat, nie pobieramy bajtów. */
 async function fetchImageB64(url: string, extraHeaders: Record<string, string> = {}): Promise<FetchedImage | null> {
+  netUsage.fetches += 1;
   const res = await fetchUrl(url, { headers: { ...BROWSER_HEADERS, ...extraHeaders } }, 30_000);
   if (res.status === 304) return { notModified: true };
   if (!res.ok) return null;
@@ -159,6 +180,7 @@ function parseJson(s: string): ExtractionResult {
 async function extractEvents(text: string, sourceUrl: string): Promise<ExtractionResult> {
   const out = await chat({
     model: MODEL_EXTRACT,
+    task: "extract",
     system: extractionSystem(new Date().toISOString().slice(0, 10)),
     user: `ŹRÓDŁO: ${sourceUrl}\n\n${text.slice(0, MAX_INPUT_CHARS)}`,
     maxTokens: 4000,
@@ -169,6 +191,7 @@ async function extractEvents(text: string, sourceUrl: string): Promise<Extractio
 async function extractPoster(img: { data: string; mediaType: "image/jpeg" | "image/png" }, sourceUrl: string): Promise<ExtractionResult> {
   const out = await chat({
     model: MODEL_EXTRACT,
+    task: "poster",
     system: POSTER_SYSTEM,
     user: [imagePart(img.data, img.mediaType), { type: "text", text: `ŹRÓDŁO: ${sourceUrl}` }],
     maxTokens: 2000,
@@ -182,6 +205,7 @@ async function geocode(venue: string, town: string, cache: PipelineState["geo"])
   const key = `${venue}|${town}`;
   if (key in cache) return cache[key] ?? null;
   const q = town ? `${venue}, ${town}, Poland` : `${venue}, Poland`;
+  netUsage.geoLookups += 1;
   try {
     const res = await fetchUrl(
       `https://nominatim.openstreetmap.org/search?${new URLSearchParams({ q, format: "json", limit: "1" })}`,
@@ -334,11 +358,17 @@ async function processSource(
   const t0 = performance.now();
   resetUsage();
   beginSource(src.id);
+  const bdBefore = bdSnapshot();
   const url = src.url.replace("{page}", "1");
   const run = newSourceRun(src, url, "empty");
   const finalize = (events: EventItem[]): { events: EventItem[]; run: SourceRun } => {
     run.events = events.length;
     run.llm = snapshotUsage();
+    const tasks = snapshotTasks();
+    if (Object.keys(tasks).length) run.llmByTask = tasks;
+    // grupa FB: rekordy Bright Data przypisane właśnie temu źródłu (rozliczenie per-rekord)
+    const bd = bdDelta(bdBefore);
+    if (bd) run.bd = bd;
     run.ms = Math.round(performance.now() - t0);
     // ścieżki do prywatnego archiwum — bez nich panel nie ma jak dotrzeć do treści
     const paths = sourcePaths();
@@ -469,6 +499,7 @@ async function resolveFbEvents(
   const t0 = performance.now();
   resetUsage();
   beginSource("fb-events");
+  const bdBefore = bdSnapshot();
   const run: SourceRun = {
     id: "fb-events", name: "Wydarzenia FB (linki)", town: "", url: "https://www.facebook.com/events/",
     fetch: "fb_event", status: "empty", events: 0, followups: [], geo: { hits: 0, misses: 0 },
@@ -535,6 +566,8 @@ async function resolveFbEvents(
   run.cached = fromCache;
   if (run.status !== "error") run.status = events.length ? (capped.length ? "ok" : "unchanged") : "empty";
   run.llm = snapshotUsage();
+  const bd = bdDelta(bdBefore);
+  if (bd) run.bd = bd;
   run.ms = Math.round(performance.now() - t0);
   const paths = sourcePaths();
   if (paths.length) run.archive = paths;
@@ -582,14 +615,93 @@ function buildReport(startedAt: string, t0: number, sources: SourceRun[], pii: R
   };
 }
 
-/** Dopisz przebieg do runs.json, przycinając do ostatnich ~2 dni (min. RUN_MIN_KEEP). */
+// ---------------- koszty ----------------
+
+/** Zużycie jednego rodzaju zadania LLM w całym przebiegu + najdroższe źródła. */
+function taskCost(sources: SourceRun[], task: LlmTask): CostInput | null {
+  let calls = 0, tokensIn = 0, tokensOut = 0, usd = 0;
+  const drivers: CostDriver[] = [];
+  for (const s of sources) {
+    const u = s.llmByTask?.[task];
+    if (!u?.calls) continue;
+    calls += u.calls;
+    tokensIn += u.promptTokens;
+    tokensOut += u.completionTokens;
+    usd += u.costUsd;
+    drivers.push({ id: s.id, usd: u.costUsd, units: u.calls });
+  }
+  if (!calls) return null;
+  return {
+    category: task === "poster" ? "llm-vision" : "llm-extract",
+    // OpenRouter zwraca `cost` przy każdym wywołaniu — to kwota, nie nasz szacunek
+    usd, estimated: false, units: calls, unit: "calls", tokensIn, tokensOut, drivers,
+  };
+}
+
+/**
+ * Koszt przebiegu w rozbiciu na kategorie. Zapisujemy też pozycje o stawce zero
+ * (fetch, geo, storage): darmowy tier to koszt zero **do limitu**, a bez zapisanego
+ * wolumenu pierwszy rachunek za przekroczenie nie ma z czym się skonfrontować.
+ */
+function buildCosts(report: RunReport, archiveBytes: number): CostEntry[] {
+  const rates = costRates();
+  const inputs: CostInput[] = [];
+  for (const task of ["extract", "poster"] as const) {
+    const c = taskCost(report.sources, task);
+    if (c) inputs.push(c);
+  }
+
+  const bd = report.brightdata;
+  if (bd?.records || bd?.triggers) {
+    inputs.push({
+      category: "fb",
+      // Bright Data rozlicza per-rekord i nie zwraca kwoty — to iloczyn wolumenu i stawki
+      usd: bd.records * rates.bdPerRecord,
+      estimated: true,
+      units: bd.records,
+      unit: "records",
+      drivers: report.sources
+        .filter((s) => s.bd?.records)
+        .map((s) => ({ id: s.id, usd: (s.bd?.records ?? 0) * rates.bdPerRecord, units: s.bd?.records ?? 0 })),
+    });
+  }
+
+  inputs.push({
+    category: "scrape",
+    usd: netUsage.fetches * rates.scrapePerFetch,
+    estimated: true,
+    units: netUsage.fetches,
+    unit: "fetches",
+  });
+  inputs.push({
+    category: "geo",
+    usd: 0, // Nominatim jest darmowy; ograniczeniem jest 1 req/s, nie cena
+    estimated: true,
+    units: netUsage.geoLookups,
+    unit: "lookups",
+  });
+  if (archiveBytes) {
+    const gb = archiveBytes / 1024 ** 3;
+    inputs.push({
+      category: "storage",
+      // obiekty z tego przebiegu zajmują miejsce przez ARCHIVE_RETENTION_DAYS
+      usd: gb * rates.storagePerGbMonth * (ARCHIVE_RETENTION_DAYS / 30),
+      estimated: true,
+      units: archiveBytes / 1024 ** 2,
+      unit: "MB",
+    });
+  }
+  return costEntries("daily", report.startedAt, inputs);
+}
+
+/** Dopisz przebieg do runs.json, przycinając do ostatnich 7 dni (min. RUN_MIN_KEEP, maks. RUN_MAX_KEEP). */
 async function persistRun(report: RunReport): Promise<void> {
   const prev = await loadJson<RunReport[]>(RUNS_PATH, []);
   const all = [...prev, report];
   const cutoff = Date.now() - RUN_RETENTION_MS;
   const recent = all.filter((r) => Date.parse(r.startedAt) >= cutoff);
   const kept = recent.length >= RUN_MIN_KEEP ? recent : all.slice(-RUN_MIN_KEEP);
-  await writeFile(RUNS_PATH, JSON.stringify(kept, null, 1), "utf-8");
+  await writeFile(RUNS_PATH, JSON.stringify(kept.slice(-RUN_MAX_KEEP), null, 1), "utf-8");
 }
 
 const STATUS_ICON: Record<SourceRun["status"], string> = {
@@ -606,11 +718,23 @@ function writeStepSummary(report: RunReport): void {
   lines.push(
     `**${t.sources}** źródeł · ✅ ${t.ok} ok · ♻️ ${t.unchanged} bez zmian · ` +
     `⚠️ ${t.errors} błędów · ⏭️ ${t.skippedFb} fb · 💀 ${t.skippedDead} martwych · ∅ ${t.empty} pusto · ` +
-    `**${t.events}** wydarzeń · ${t.calls} LLM (${t.promptTokens}+${t.completionTokens} tok, ` +
-    `$${t.costUsd.toFixed(4)}) · 🔒 ${t.redactedPhones} tel. / ${t.redactedEmails} e-mail zredagowanych · ` +
+    `**${t.events}** wydarzeń · ${t.calls} LLM (${t.promptTokens}+${t.completionTokens} tok) · ` +
+    `🔒 ${t.redactedPhones} tel. / ${t.redactedEmails} e-mail zredagowanych · ` +
     `${Math.round(report.durationMs / 1000)}s`,
     "",
   );
+  if (report.costs?.length) {
+    // rozpiska kosztu w summary: „droższy niż zwykle" widać wtedy w logu Actions,
+    // bez wchodzenia do panelu
+    lines.push(`**Koszt:** ${costLine(report.costs)} · \`~\` = szacunek ze stawki, nie kwota od dostawcy`, "");
+    lines.push("| kategoria | koszt | wolumen | tokeny |");
+    lines.push("|---|--:|--:|--:|");
+    for (const c of [...report.costs].sort((a, b) => b.usd - a.usd)) {
+      const tok = c.tokensIn ? `${c.tokensIn}+${c.tokensOut ?? 0}` : "";
+      lines.push(`| ${c.category}${c.estimated ? " ~" : ""} | $${c.usd.toFixed(4)} | ${c.units} ${c.unit} | ${tok} |`);
+    }
+    lines.push("");
+  }
   lines.push("| źródło | status | http | wyd. | followups | tokeny | ms |");
   lines.push("|---|---|--:|--:|:--:|--:|--:|");
   for (const s of report.sources) {
@@ -632,7 +756,8 @@ function summaryLine(r: RunReport): string {
   const t = r.totals;
   return (
     `OK: ${t.events} wydarzeń · ${t.ok} ok / ${t.unchanged} bez zmian / ${t.errors} błędów / ` +
-    `${t.skippedFb} fb / ${t.skippedDead} martwych / ${t.empty} pusto · ${t.calls} LLM $${t.costUsd.toFixed(4)} · ` +
+    `${t.skippedFb} fb / ${t.skippedDead} martwych / ${t.empty} pusto · ${t.calls} LLM · ` +
+    `koszt ${costLine(r.costs ?? [])} · ` +
     `PII: −${t.redactedPhones} tel. −${t.redactedEmails} e-mail · ${Math.round(r.durationMs / 1000)}s`
   );
 }
@@ -705,10 +830,15 @@ async function run(): Promise<void> {
   const out: EventsFile = { generated: new Date().toISOString().slice(0, 10), events: allEvents, errors };
   if (bdEnabled()) out.brightdata = bdUsage;
   const report = buildReport(startedAt, t0, sourceRuns, pii);
+  if (bdEnabled()) report.brightdata = bdUsage;
+  // koszt liczymy po zbudowaniu raportu (ma już wszystkie źródła) i przed zapisem,
+  // żeby ta sama rozpiska poszła do runs.json, costs.json i na stdout
+  report.costs = buildCosts(report, archiveStats().bytes);
 
   await writeFile(OUT_EVENTS, JSON.stringify(out, null, 1), "utf-8");
   await writeFile(STATE_PATH, JSON.stringify(state), "utf-8");
   await persistRun(report);
+  await recordCosts(report.costs);
   await renderHtml(out, report);
   writeStepSummary(report);
   console.log(summaryLine(report));

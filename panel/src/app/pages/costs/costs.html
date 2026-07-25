@@ -1,0 +1,366 @@
+@if (data.costs.error()) {
+  <div class="error-box">
+    <tui-icon icon="@tui.triangle-alert" />
+    Nie udało się wczytać costs.json
+    <button tuiButton size="s" appearance="secondary" (click)="data.costs.reload()">Ponów</button>
+  </div>
+} @else if (data.costs.isLoading() && !ledger().entries.length) {
+  <tui-loader size="xl" class="page-loader" />
+} @else {
+  <header tuiTitle class="page-title">
+    <h1>Pieniądze</h1>
+    <div tuiSubtitle>
+      Każda pozycja obu etapów, dzień po dniu. Księga trzyma
+      {{ ledger().retentionDays }} dni
+      @if (ledger().updated) {
+        · ostatni zapis {{ dt(ledger().updated) }}
+      }
+    </div>
+  </header>
+
+  @if (!ledger().entries.length) {
+    <section class="empty">
+      <p>
+        Księga jest pusta. Powstaje przy każdym przebiegu — historię z raportów, które już leżą w
+        repo, dopisuje <code>npm run backfill-costs</code>.
+      </p>
+    </section>
+  } @else {
+    <!-- filtry: jeden rząd nad wykresem -->
+    <section class="filters">
+      <span class="filter-label">Zakres</span>
+      @for (r of ranges; track r) {
+        <button
+          tuiButton
+          size="s"
+          [appearance]="range() === r ? 'primary' : 'secondary'"
+          (click)="range.set(r)"
+        >
+          {{ r }} dni
+        </button>
+      }
+      <span class="spacer"></span>
+      @if (estimatedUsd() > 0) {
+        <span tuiBadge appearance="warning">
+          <tui-icon icon="@tui.circle-help" />
+          {{ usd(estimatedUsd()) }} z szacunku ze stawki
+        </span>
+      }
+      @if (hasInferred()) {
+        <span tuiBadge appearance="neutral">
+          <tui-icon icon="@tui.history" />
+          część okna odtworzona ze starych raportów
+        </span>
+      }
+    </section>
+
+    <section class="cards">
+      <div class="card hero">
+        <span class="card-label">Wydane · {{ range() }} dni</span>
+        <span class="card-value big">{{ usd(total()) }}</span>
+        <span class="card-sub">
+          {{ usd(perDay()) }} / dzień z przebiegiem ({{ activeDays() }} z {{ range() }})
+        </span>
+      </div>
+      <div class="card">
+        <span class="card-label">Ten miesiąc</span>
+        <span class="card-value">{{ usd(monthToDate()) }}</span>
+        <span class="card-sub">z budżetu {{ usd(rates().monthlyBudgetUsd) }}</span>
+      </div>
+      <div class="card" [class.alert]="overBudget()">
+        <span class="card-label">Prognoza na koniec miesiąca</span>
+        <span class="card-value">{{ usd(projected()) }}</span>
+        <span class="card-sub">
+          @if (overBudget()) {
+            <tui-icon icon="@tui.triangle-alert" />
+            {{ usd(projected() - rates().monthlyBudgetUsd) }} ponad budżet
+          } @else {
+            {{ usd(rates().monthlyBudgetUsd - projected()) }} zapasu
+          }
+        </span>
+      </div>
+      @for (s of series; track s) {
+        @if (seriesTotals()[s] > 0) {
+          <div class="card">
+            <span class="card-label">
+              <span class="swatch" [style.background]="seriesColor(s)"></span>
+              {{ seriesLabel(s) }}
+            </span>
+            <span class="card-value">{{ usd(seriesTotals()[s]) }}</span>
+            <span class="card-sub">
+              {{ ((seriesTotals()[s] / total()) * 100).toFixed(0) }}% wydatków okna
+            </span>
+          </div>
+        }
+      }
+    </section>
+
+    <!-- wykres -->
+    <section class="chart-card">
+      <div class="chart-head">
+        <h2>Wydatki dzienne</h2>
+        <span class="muted">
+          słupek = jeden dzień · linia = budżet dzienny ({{ usd(budgetPerDay()) }})
+        </span>
+      </div>
+
+      <div class="legend">
+        @for (s of series; track s) {
+          <button
+            type="button"
+            class="legend-item"
+            [class.off]="isHidden(s)"
+            (click)="toggle(s)"
+            [attr.aria-pressed]="!isHidden(s)"
+          >
+            <span class="swatch" [style.background]="seriesColor(s)"></span>
+            {{ seriesLabel(s) }}
+            <span class="legend-usd">{{ usd(seriesTotals()[s]) }}</span>
+          </button>
+        }
+      </div>
+
+      <div class="chart-wrap">
+        <svg
+          [attr.viewBox]="viewBox"
+          class="chart"
+          role="img"
+          aria-label="Wydatki dzienne wg kategorii"
+        >
+          <!-- siatka + oś Y -->
+          @for (t of yTicks(); track t.y) {
+            <line
+              class="grid"
+              [attr.x1]="plot.left"
+              [attr.x2]="plot.left + plot.w"
+              [attr.y1]="t.y"
+              [attr.y2]="t.y"
+            />
+            <text class="tick" [attr.x]="plot.left - 8" [attr.y]="t.y + 4" text-anchor="end">
+              {{ usdTick(t.value) }}
+            </text>
+          }
+          <line
+            class="axis"
+            [attr.x1]="plot.left"
+            [attr.x2]="plot.left + plot.w"
+            [attr.y1]="plot.bottom"
+            [attr.y2]="plot.bottom"
+          />
+
+          <!-- budżet dzienny -->
+          @if (budgetPerDay() > 0) {
+            <line
+              class="budget"
+              [attr.x1]="budgetLine().x1"
+              [attr.x2]="budgetLine().x2"
+              [attr.y1]="budgetLine().y"
+              [attr.y2]="budgetLine().y"
+            />
+            <text
+              class="budget-label"
+              [attr.x]="budgetLine().x2"
+              [attr.y]="budgetLine().y - 5"
+              text-anchor="end"
+            >
+              budżet
+            </text>
+          }
+
+          @for (seg of segments(); track seg.day + seg.series) {
+            <path
+              [attr.d]="seg.path"
+              [attr.fill]="seg.color"
+              class="seg"
+              [class.dim]="isDim(seg)"
+              (mouseenter)="hover.set(seg)"
+              (mouseleave)="hover.set(null)"
+              (focus)="hover.set(seg)"
+              (blur)="hover.set(null)"
+              tabindex="0"
+              role="graphics-symbol"
+              [attr.aria-label]="seg.day + ' ' + seg.label + ' ' + usd(seg.usd)"
+            />
+          }
+
+          @for (l of xLabels(); track l.x) {
+            <text class="tick" [attr.x]="l.x" [attr.y]="l.y" text-anchor="middle">
+              {{ l.text }}
+            </text>
+          }
+        </svg>
+
+        @if (hover(); as h) {
+          <div class="tooltip" [style.left.%]="h.tipX" [style.top.%]="h.tipY">
+            <strong>{{ h.day }}</strong>
+            <span class="tip-row">
+              <span class="swatch" [style.background]="h.color"></span>
+              {{ h.label }}
+              <b>{{ usd(h.usd) }}{{ h.estimated ? '~' : '' }}</b>
+            </span>
+            @if (h.volume) {
+              <span class="tip-sub">{{ h.volume }}</span>
+            }
+            @if (h.estimated) {
+              <span class="tip-sub">~ wolumen × stawka, nie kwota od dostawcy</span>
+            }
+            @if (h.inferred) {
+              <span class="tip-sub">odtworzone ze starego raportu (bez podziału na zadania)</span>
+            }
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- „dlaczego tyle": pozycje, nie sumy -->
+    <section class="split">
+      <div class="panel">
+        <h2>Najdroższe pozycje ({{ range() }} dni)</h2>
+        <p class="muted">
+          Suma dzienna mówi, że drożej. To mówi, gdzie — źródło albo gmina, w której siedzą
+          pieniądze.
+        </p>
+        @if (drivers().length) {
+          <table tuiTable class="tbl">
+            <thead>
+              <tr>
+                <th tuiTh>pozycja</th>
+                <th tuiTh>kategoria</th>
+                <th tuiTh class="right">koszt</th>
+                <th tuiTh class="right">wywołań</th>
+                <th tuiTh class="right">dni</th>
+              </tr>
+            </thead>
+            <tbody tuiTbody>
+              @for (d of drivers(); track d.category + d.id) {
+                <tr tuiTr>
+                  <td tuiTd>
+                    <code>{{ d.id }}</code>
+                  </td>
+                  <td tuiTd>
+                    <span
+                      class="swatch"
+                      [style.background]="'var(--series-' + meta[d.category].slot + ')'"
+                    ></span>
+                    {{ meta[d.category].label }}
+                  </td>
+                  <td tuiTd class="right money">{{ usd(d.usd) }}</td>
+                  <td tuiTd class="right">{{ num(d.units) }}</td>
+                  <td tuiTd class="right">{{ d.dayCount }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        } @else {
+          <p class="muted">Brak rozbicia na pozycje w tym oknie.</p>
+        }
+      </div>
+
+      <div class="panel">
+        <h2>Wolumen wg kategorii</h2>
+        <p class="muted">
+          Darmowy tier to koszt zero <em>do limitu</em> — wolumen jest tu po to, żeby przekroczenie
+          nie było pierwszą wiadomością z rachunku.
+        </p>
+        <table tuiTable class="tbl">
+          <thead>
+            <tr>
+              <th tuiTh>kategoria</th>
+              <th tuiTh class="right">koszt</th>
+              <th tuiTh class="right">wolumen</th>
+              <th tuiTh class="right">tokeny</th>
+            </tr>
+          </thead>
+          <tbody tuiTbody>
+            @for (v of volumes(); track v.category) {
+              <tr tuiTr>
+                <td tuiTd>
+                  <span
+                    class="swatch"
+                    [style.background]="'var(--series-' + meta[v.category].slot + ')'"
+                  ></span>
+                  {{ meta[v.category].label }}
+                  <span class="what">{{ meta[v.category].what }}</span>
+                </td>
+                <td tuiTd class="right money">
+                  {{ usd(v.usd) }}<span class="muted">{{ v.estimated ? '~' : '' }}</span>
+                </td>
+                <td tuiTd class="right">{{ units(v.units, v.unit) }}</td>
+                <td tuiTd class="right">
+                  @if (v.tokensIn) {
+                    {{ tok(v.tokensIn) }} + {{ tok(v.tokensOut) }}
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- widok tabelaryczny wykresu (dostępność + kolory poniżej 3:1 na jasnym tle) -->
+    <section class="panel">
+      <h2>Dzień po dniu</h2>
+      <table tuiTable class="tbl">
+        <thead>
+          <tr>
+            <th tuiTh>dzień</th>
+            @for (s of series; track s) {
+              <th tuiTh class="right">
+                <span class="swatch" [style.background]="seriesColor(s)"></span>
+                {{ seriesLabel(s) }}
+              </th>
+            }
+            <th tuiTh class="right">razem</th>
+            <th tuiTh>przebiegi</th>
+          </tr>
+        </thead>
+        <tbody tuiTbody>
+          @for (c of columns(); track c.day) {
+            @if (c.entries.length) {
+              <tr tuiTr>
+                <td tuiTd>{{ c.day }}</td>
+                @for (s of series; track s) {
+                  <td tuiTd class="right">
+                    @if (c.bySeries[s] > 0) {
+                      {{ usd(c.bySeries[s]) }}
+                    } @else {
+                      <span class="muted">—</span>
+                    }
+                  </td>
+                }
+                <td tuiTd class="right money">{{ usd(c.total) }}</td>
+                <td tuiTd>
+                  @for (r of c.runs; track r.run) {
+                    <a tuiLink [routerLink]="runLink(r)">{{ r.stage }}</a>
+                  }
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </section>
+
+    <section class="notes">
+      <h2>Czego tu nie ma</h2>
+      <ul>
+        <li>
+          <strong>GitHub Actions</strong> — publiczne repo ma nielimitowane minuty, więc cron i
+          hosting Pages nie generują pozycji.
+        </li>
+        <li>
+          <strong>Stawki szacunków</strong> (<code>~</code>): Bright Data
+          {{ usd(rates().bdPerRecord) }} / rekord · Brave {{ usd(rates().bravePerQuery) }} /
+          zapytanie · Supabase {{ usd(rates().storagePerGbMonth) }} / GB-miesiąc · pobranie
+          {{ usd(rates().scrapePerFetch) }}. Zmieniasz je w <code>.env</code>; księga zapisuje
+          stawkę użytą w danym momencie.
+        </li>
+        <li>
+          Kwoty LLM przychodzą z OpenRoutera przy każdym wywołaniu — to jedyna kategoria, w której
+          nic nie szacujemy.
+        </li>
+      </ul>
+    </section>
+  }
+}

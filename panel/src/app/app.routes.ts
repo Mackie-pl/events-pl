@@ -16,5 +16,20 @@ export const routes: Routes = [
     title: 'Source · events-pl',
     loadComponent: () => import('./pages/source/source').then((m) => m.SourcePage),
   },
+  {
+    path: 'costs',
+    title: 'Pieniądze · events-pl',
+    loadComponent: () => import('./pages/costs/costs').then((m) => m.CostsPage),
+  },
+  {
+    path: 'discovery',
+    title: 'Discovery · events-pl',
+    loadComponent: () => import('./pages/discovery/discovery').then((m) => m.DiscoveryPage),
+  },
+  {
+    path: 'discovery/:runId',
+    title: 'Discover run · events-pl',
+    loadComponent: () => import('./pages/discover-run/discover-run').then((m) => m.DiscoverRunPage),
+  },
   { path: '**', redirectTo: '' },
 ];

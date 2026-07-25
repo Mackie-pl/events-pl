@@ -1,4 +1,10 @@
-import type { SourceStatus } from './types';
+import type {
+  CostCategory,
+  FetchProbe,
+  ProposalDecision,
+  SourceStatus,
+  VerificationOutcome,
+} from './types';
 
 export function fmtMs(ms: number): string {
   if (ms < 1000) return `${ms} ms`;
@@ -11,6 +17,12 @@ export function fmtMs(ms: number): string {
 export function fmtUsd(v: number): string {
   if (v === 0) return '$0';
   return `$${v.toFixed(v < 0.01 ? 4 : v < 1 ? 3 : 2)}`;
+}
+
+/** Jak fmtUsd, ale bez zer na końcu — oś ma nieść okrągłe liczby ($0.5), nie „$0.500". */
+export function fmtUsdTick(v: number): string {
+  if (v === 0) return '$0';
+  return `$${Number(v.toFixed(v < 0.01 ? 4 : v < 1 ? 3 : 2))}`;
 }
 
 export function fmtTokens(n: number): string {
@@ -52,3 +64,117 @@ export const ALL_STATUSES: readonly SourceStatus[] = [
   'skipped-dead',
   'empty',
 ];
+
+// ---------------- discovery (stage 1) ----------------
+
+/** Co model zaproponował i co się z tym stało. Odrzucenia są tu równie ważne jak dodania. */
+export const DECISION_META: Record<ProposalDecision, StatusMeta> = {
+  added: { label: 'added', appearance: 'positive', icon: '@tui.plus' },
+  duplicate: { label: 'duplicate', appearance: 'neutral', icon: '@tui.copy' },
+  'low-confidence': { label: 'low confidence', appearance: 'warning', icon: '@tui.gauge' },
+  invalid: { label: 'invalid', appearance: 'negative', icon: '@tui.ban' },
+};
+
+export const ALL_DECISIONS: readonly ProposalDecision[] = [
+  'added',
+  'duplicate',
+  'low-confidence',
+  'invalid',
+];
+
+export const OUTCOME_META: Record<VerificationOutcome, StatusMeta> = {
+  ok: { label: 'ok', appearance: 'positive', icon: '@tui.check' },
+  fixed: { label: 'fixed', appearance: 'info', icon: '@tui.wrench' },
+  dead: { label: 'dead', appearance: 'negative', icon: '@tui.skull' },
+  error: { label: 'error', appearance: 'warning', icon: '@tui.triangle-alert' },
+  skipped: { label: 'skipped', appearance: 'neutral', icon: '@tui.ban' },
+};
+
+export const ALL_OUTCOMES: readonly VerificationOutcome[] = [
+  'ok',
+  'fixed',
+  'dead',
+  'error',
+  'skipped',
+];
+
+// ---------------- koszty ----------------
+
+export interface CategoryMeta {
+  label: string;
+  /** co dokładnie kupujemy w tej kategorii — bez tego „scrape $0" nic nie znaczy */
+  what: string;
+  /** slot palety kategorialnej (1–6); kolor bierze się z CSS `--series-N` */
+  slot: number;
+}
+
+/**
+ * Kolejność jest **stała** i wyznacza kolor: slot 1 zawsze blue, slot 2 orange itd.
+ * Gdyby kolor szedł za rankingiem, filtr zmieniający liczbę kategorii przemalowywałby
+ * te, które zostały — i „ta pomarańczowa pozycja urosła" przestałoby cokolwiek znaczyć.
+ * Darmowe pozycje (search/scrape/geo/storage) dzielą jeden slot: rysujemy je razem jako
+ * „infra", a rozbicie zostaje w tabeli — inaczej sześć zerowych serii zaśmieca legendę.
+ */
+export const CATEGORY_META: Record<CostCategory, CategoryMeta> = {
+  'llm-extract': { label: 'LLM · tekst', what: 'Haiku: treść stron i PDF-ów (etap 2)', slot: 1 },
+  'llm-vision': {
+    label: 'LLM · plakaty',
+    what: 'Haiku multimodal: plakaty JPG/PNG (etap 2)',
+    slot: 2,
+  },
+  'llm-discover': {
+    label: 'LLM · discovery',
+    what: 'Sonnet: triage kandydatów na źródła (etap 1)',
+    slot: 3,
+  },
+  'llm-verify': { label: 'LLM · verify', what: 'Haiku: naprawa martwych URL-i (etap 1)', slot: 4 },
+  fb: { label: 'Facebook', what: 'Bright Data: rekordy wydarzeń i postów grup', slot: 5 },
+  search: { label: 'Search', what: 'Brave Search: zapytania (darmowy tier 2000/mies.)', slot: 6 },
+  scrape: {
+    label: 'Scraping',
+    what: 'pobrania HTTP + headless (GH Actions: 0 zł dla repo publicznego)',
+    slot: 6,
+  },
+  geo: {
+    label: 'Geokodowanie',
+    what: 'Nominatim: zapytania sieciowe (darmowe, limit 1/s)',
+    slot: 6,
+  },
+  storage: {
+    label: 'Archiwum',
+    what: 'Supabase Storage: wysłane obiekty (darmowy tier ~1 GB)',
+    slot: 6,
+  },
+};
+
+/** Kategorie ze stawką zero — rysowane łącznie jako „infra", rozbite w tabeli. */
+export const FREE_CATEGORIES: readonly CostCategory[] = ['search', 'scrape', 'geo', 'storage'];
+
+/** Serie wykresu w stałej kolejności slotów palety. */
+export const CHART_CATEGORIES: readonly CostCategory[] = [
+  'llm-extract',
+  'llm-vision',
+  'llm-discover',
+  'llm-verify',
+  'fb',
+];
+
+export const ALL_CATEGORIES: readonly CostCategory[] = [...CHART_CATEGORIES, ...FREE_CATEGORIES];
+
+/** „12 345 calls" — wolumen kategorii; MB z jednym miejscem po przecinku. */
+export function fmtUnits(units: number, unit: string): string {
+  const n = unit === 'MB' ? units.toFixed(1) : fmtNum(Math.round(units));
+  return `${n} ${unit}`;
+}
+
+/** „HTTP 200 · text/html · 12 345 zn. · 340 ms" — jedna linia zamiast pięciu kolumn. */
+export function fmtProbe(p: FetchProbe | undefined): string {
+  if (!p) return '—';
+  const parts = [
+    p.httpStatus !== undefined ? `HTTP ${p.httpStatus}` : 'brak odpowiedzi',
+    p.contentType,
+    p.chars !== undefined ? `${fmtNum(p.chars)} chars` : undefined,
+    fmtMs(p.ms),
+  ].filter(Boolean);
+  return parts.join(' · ');
+}

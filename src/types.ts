@@ -39,6 +39,53 @@ export interface Source {
   previous_urls?: string[];
   /** URL martwy i nienaprawialny — daily pomija (skipped-dead) do czasu naprawy */
   dead?: boolean;
+  /** skąd się tu wzięło: zapytanie → wynik wyszukiwarki → decyzja modelu → pierwszy fetch */
+  provenance?: SourceProvenance;
+}
+
+/**
+ * Wynik jednego żądania HTTP — „co odpowiedział serwer, gdy pytaliśmy go pierwszy raz".
+ * Sam kod statusu nie wystarcza do diagnozy: 200 z 300 bajtami to zwykle strona-zaślepka,
+ * a 200 pod innym adresem niż pytany oznacza przekierowanie (np. na stronę główną).
+ */
+export interface FetchProbe {
+  at: string;
+  /** adres, o który pytaliśmy */
+  url: string;
+  ok: boolean;
+  httpStatus?: number;
+  /** adres po przekierowaniach — obecny tylko, gdy różny od `url` */
+  finalUrl?: string;
+  contentType?: string;
+  /** długość odpowiedzi w znakach */
+  chars?: number;
+  ms: number;
+  err?: string;
+}
+
+/**
+ * Pełna ścieżka trafienia źródła do rejestru. Odpowiada na „dlaczego ten adres jest na liście?"
+ * bez sięgania do przebiegów: kopia ląduje w sources.json obok samego źródła, więc przeżywa
+ * przycinanie discover-runs.json.
+ */
+export interface SourceProvenance {
+  /** startedAt przebiegu discover, który dodał źródło (klucz do discover-runs.json) */
+  run: string;
+  /** gmina, dla której leciało discovery */
+  town: string;
+  /** model, który zaproponował źródło */
+  model: string;
+  /** zapytanie, w którego wynikach znalazł się ten URL (dopasowanie po adresie) */
+  query?: string;
+  /** dopasowany wynik wyszukiwarki — dokładnie to, co model o tym adresie widział */
+  hit?: SearchResult;
+  confidence?: number;
+  /** jednozdaniowe uzasadnienie modelu */
+  why?: string;
+  /** wynik pierwszego pobrania URL-a (weryfikacja tuż po dodaniu) */
+  firstFetch?: FetchProbe;
+  /** ścieżki w prywatnym archiwum: surowe wyniki search + prompt/odpowiedź modelu */
+  archive?: string[];
 }
 
 export interface SourcesFile {
@@ -167,6 +214,12 @@ export interface BdUsage {
   errors: number;
   /** snapshot_id każdego triggera — BD trzyma snapshoty ~30 dni, ponowny download jest darmowy */
   snapshots: string[];
+  /**
+   * Rekordy per dataset (`fb_events` / `fb_group_posts`). Rachunek przychodzi łączny,
+   * a to dwa różne mechanizmy wzrostu: linków do wydarzeń przybywa wolno, natomiast
+   * jedna gadatliwa grupa potrafi w jednym przebiegu dołożyć setki postów.
+   */
+  byDataset?: Record<string, number>;
 }
 
 export interface EventsFile {
@@ -209,6 +262,17 @@ export interface LlmUsage {
   costUsd: number;
 }
 
+/**
+ * Rodzaj zadania LLM. Rozdziela to, co w rachunku wygląda identycznie („Haiku, $0.04"),
+ * a psuje się z zupełnie różnych powodów: tekst strony rośnie razem z serwisem,
+ * a plakaty (`poster`, wejście multimodalne) potrafią kosztować kilka razy tyle
+ * co tekst przy tej samej liczbie wywołań.
+ */
+export type LlmTask = "extract" | "poster" | "discover" | "verify";
+
+/** Zużycie LLM w rozbiciu na zadania; obecne tylko dla zadań, które faktycznie wystąpiły. */
+export type TaskUsage = Partial<Record<LlmTask, LlmUsage>>;
+
 export interface SourceRun {
   id: string;
   name: string;
@@ -227,6 +291,10 @@ export interface SourceRun {
   followups: FollowupRun[];
   geo: { hits: number; misses: number };
   llm: LlmUsage;
+  /** ten sam koszt w rozbiciu na zadania — bez tego plakat i tekst są nieodróżnialne */
+  llmByTask?: TaskUsage;
+  /** zużycie Bright Data przypisane temu źródłu (grupa FB); brak = nie dotykało BD */
+  bd?: BdUsage;
   ms: number;
   err?: string;
   /** np. "HTTP 403 → headless fallback ok" */
@@ -263,6 +331,96 @@ export interface RunReport {
   durationMs: number;
   totals: RunTotals;
   sources: SourceRun[];
+  /** zużycie Bright Data w tym przebiegu (brak = wyłączone) */
+  brightdata?: BdUsage;
+  /** koszt przebiegu w rozbiciu na kategorie — to samo, co trafiło do costs.json */
+  costs?: CostEntry[];
+}
+
+// ---------------- koszty ----------------
+
+/**
+ * Kategoria wydatku. Podział przebiega po tym, **co się psuje osobno**, a nie po
+ * dostawcy: „Haiku" w rachunku OpenRoutera to i tekst stron, i plakaty, ale rosną
+ * z zupełnie innych powodów i naprawia się je inaczej.
+ *
+ * Kategorie z zerową stawką (`search`, `scrape`, `geo`, `storage`) też są zapisywane:
+ * darmowy tier to nie brak kosztu, tylko koszt zero **do limitu** — bez zapisanego
+ * wolumenu pierwszy rachunek za przekroczenie jest niespodzianką.
+ */
+export type CostCategory =
+  | "llm-extract" // Haiku: tekst strony/PDF-a (etap 2)
+  | "llm-vision" // Haiku multimodal: plakaty JPG/PNG (etap 2)
+  | "llm-discover" // Sonnet: triage kandydatów (etap 1)
+  | "llm-verify" // Haiku: naprawa martwych URL-i (etap 1)
+  | "fb" // Bright Data: rekordy (wydarzenia FB + posty grup)
+  | "search" // Brave Search: zapytania (darmowy tier 2000/mies.)
+  | "scrape" // pobrania HTTP + headless (własna maszyna / Actions)
+  | "geo" // Nominatim: zapytania sieciowe (darmowe, 1 req/s)
+  | "storage"; // Supabase Storage: wysłane obiekty (darmowy tier ~1 GB)
+
+export type CostUnit = "calls" | "records" | "queries" | "fetches" | "lookups" | "MB";
+
+/** Najdroższa pozycja w kategorii — „$0.41 na ekstrakcji" bez tego nie mówi, gdzie szukać. */
+export interface CostDriver {
+  /** id źródła / gminy — klucz do przebiegu w panelu */
+  id: string;
+  usd: number;
+  units: number;
+}
+
+export interface CostEntry {
+  /** YYYY-MM-DD (UTC) — oś wykresu */
+  day: string;
+  at: string;
+  stage: "daily" | "discover" | "digest";
+  /** startedAt przebiegu — klucz do runs.json / discover-runs.json */
+  run: string;
+  category: CostCategory;
+  usd: number;
+  /**
+   * false = kwota od dostawcy (OpenRouter zwraca `cost` przy każdym wywołaniu),
+   * true = iloczyn wolumenu i stawki z `CostRates` (Bright Data, storage).
+   * Bez tego rozróżnienia szacunek po cichu awansuje na fakt.
+   */
+  estimated: boolean;
+  units: number;
+  unit: CostUnit;
+  tokensIn?: number;
+  tokensOut?: number;
+  /** kilka najdroższych pozycji (źródła / gminy) — reszta zostaje w raporcie przebiegu */
+  top?: CostDriver[];
+  /**
+   * Kategoria odtworzona ze starego raportu, nie zmierzona przy wywołaniu (backfill).
+   * Kwota jest prawdziwa, ale np. plakaty siedzą wtedy w `llm-extract` — przebiegi
+   * sprzed podziału na zadania nie miały czym ich odróżnić.
+   */
+  inferred?: boolean;
+}
+
+/**
+ * Stawki użyte przy szacunkach. Zapisywane w costs.json razem z wpisami: po zmianie
+ * cennika stare wpisy muszą dać się wytłumaczyć stawką, która wtedy obowiązywała.
+ */
+export interface CostRates {
+  /** $ za rekord Bright Data (rząd $1–1.5/1000; potwierdź w panelu BD) */
+  bdPerRecord: number;
+  /** $ za zapytanie Brave ponad darmowy tier (2000/mies.) */
+  bravePerQuery: number;
+  /** $ za GB-miesiąc Supabase Storage (darmowy tier ~1 GB) */
+  storagePerGbMonth: number;
+  /** $ za jedno pobranie HTTP (własny hosting/proxy; GH Actions dla repo publicznego: 0) */
+  scrapePerFetch: number;
+  /** budżet miesięczny — linia odniesienia w panelu, nie limit twardy */
+  monthlyBudgetUsd: number;
+}
+
+export interface CostLedger {
+  updated: string;
+  rates: CostRates;
+  /** po ilu dniach wpisy są przycinane */
+  retentionDays: number;
+  entries: CostEntry[];
 }
 
 // ---------------- observability: discover (miesięczny) ----------------
@@ -273,6 +431,12 @@ export interface SearchCall {
   results: SearchResult[];
   ms: number;
   err?: string;
+  /** kod odpowiedzi Brave przy błędzie (429 = limit, 401 = klucz) */
+  httpStatus?: number;
+  /** zapytanie niewysłane (wyczerpany budżet albo wyłączona wyszukiwarka) */
+  skipped?: boolean;
+  /** ile wyników usunięto przy przycinaniu starego przebiegu (patrz DiscoverRunReport.slimmed) */
+  trimmed?: number;
 }
 
 /** Zapytanie geo (Overpass): gminy w promieniu. */
@@ -281,6 +445,32 @@ export interface GeoLookup {
   towns: string[];
   ms: number;
   err?: string;
+  /** Overpass padł — discovery poleciało tylko dla miasta centralnego */
+  fallback?: boolean;
+}
+
+/**
+ * Jedna propozycja modelu wraz z tym, co się z nią stało. Odrzucone zostają w raporcie
+ * celowo: „model tego nie zaproponował" i „zaproponował, ale odrzuciliśmy przy progu
+ * confidence" to zupełnie różne diagnozy, a bez ledgeru są nie do odróżnienia.
+ */
+export interface SourceProposal {
+  id: string;
+  name: string;
+  url: string;
+  town: string;
+  type?: SourceType;
+  fetch?: FetchStrategy;
+  confidence?: number;
+  /** jednozdaniowe uzasadnienie modelu */
+  why?: string;
+  decision: "added" | "duplicate" | "low-confidence" | "invalid";
+  /** powód odrzucenia albo opis normalizacji (np. "id zajęte → gok-lubon-2") */
+  reason?: string;
+  /** zapytanie, w którego wynikach był ten URL */
+  query?: string;
+  /** dopasowany wynik wyszukiwarki */
+  hit?: SearchResult;
 }
 
 /** Discovery jednego miasta/gminy: wyszukiwania -> LLM -> nowe źródła. */
@@ -292,9 +482,20 @@ export interface TownDiscoveryRun {
   /** faktycznie dodane po merge (nowe URL-e, confidence >= 0.5) */
   added: number;
   addedIds: string[];
+  /** co model zaproponował i co z tym zrobiliśmy (także odrzucenia) */
+  proposals: SourceProposal[];
+  /**
+   * Czy dało się odczytać odpowiedź modelu. `no-json`/`bad-json` to awaria ekstrakcji,
+   * nie „brak źródeł w gminie" — bez tego pola jedno wygląda dokładnie jak drugie.
+   */
+  parse?: "ok" | "no-json" | "bad-json" | "no-sources";
+  /** długość odpowiedzi modelu w znakach */
+  responseChars?: number;
   llm: LlmUsage;
   ms: number;
   err?: string;
+  /** ścieżki w prywatnym archiwum (wyniki search + prompt/odpowiedź modelu) */
+  archive?: string[];
 }
 
 /**
@@ -318,13 +519,29 @@ export interface SourceVerification {
   newUrl?: string;
   llm: LlmUsage;
   ms: number;
+  /** źródło dodane w TYM przebiegu — `probe` jest wtedy jego pierwszym w życiu fetchem */
+  isNew?: boolean;
+  /** pełny wynik żądania (status, przekierowanie, content-type, rozmiar) */
+  probe?: FetchProbe;
+  /** wynik sprawdzenia URL-a zaproponowanego przy naprawie */
+  candidateProbe?: FetchProbe;
+  /** powód pominięcia (outcome: "skipped") */
+  note?: string;
+  /** ścieżki w prywatnym archiwum (prompt/odpowiedź modelu przy naprawie) */
+  archive?: string[];
 }
 
 export interface DiscoverTotals extends LlmUsage {
   towns: number;
   /** liczba zapytań do Brave (limit darmowego tieru: 2000/mies.) */
   searches: number;
+  /** zapytania zakończone błędem (429/401/timeout) — puste wyniki, nie „brak trafień" */
+  searchErrors: number;
+  /** zapytania niewysłane po wyczerpaniu budżetu DISCOVER_MAX_SEARCHES */
+  searchesSkipped: number;
   sourcesAdded: number;
+  /** propozycje modelu odrzucone (duplikat / niska pewność / niepoprawny rekord) */
+  proposalsRejected: number;
   sourcesChecked: number;
   ok: number;
   fixed: number;
@@ -334,6 +551,9 @@ export interface DiscoverTotals extends LlmUsage {
   /** koszt LLM per typ zadania */
   costDiscoveryUsd: number;
   costVerifyUsd: number;
+  /** ile numerów komórkowych / e-maili usunięto przed zapisem do publicznego repo */
+  redactedPhones: number;
+  redactedEmails: number;
 }
 
 export interface DiscoverRunReport {
@@ -348,4 +568,16 @@ export interface DiscoverRunReport {
   towns: TownDiscoveryRun[];
   verifications: SourceVerification[];
   totals: DiscoverTotals;
+  /** argumenty wywołania — bez nich nie wiadomo, czy pusty przebieg to tryb, czy awaria */
+  argv?: string[];
+  /** błąd, który przerwał przebieg; raport i tak jest zapisany (patrz persistRun) */
+  err?: string;
+  /** true = przebieg nie dobiegł końca, liczby są cząstkowe */
+  partial?: boolean;
+  /** false = prywatne archiwum wyłączone, więc promptów modelu nie da się odtworzyć */
+  archiveEnabled?: boolean;
+  /** koszt przebiegu w rozbiciu na kategorie — to samo, co trafiło do costs.json */
+  costs?: CostEntry[];
+  /** szczegóły (wyniki search, propozycje) usunięte przy przycinaniu pliku */
+  slimmed?: boolean;
 }

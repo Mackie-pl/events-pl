@@ -1,0 +1,160 @@
+.page-loader {
+  margin: 4rem auto;
+}
+
+.crumbs {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.page-title {
+  margin-bottom: 1rem;
+}
+
+.warn-box,
+.info-box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.75rem;
+  margin-bottom: 1rem;
+  background: var(--tui-status-warning-pale);
+  color: var(--tui-status-warning);
+}
+
+.info-box {
+  background: var(--tui-background-neutral-1);
+  color: var(--tui-text-secondary);
+}
+
+.geo,
+.towns,
+.proposals,
+.verifications {
+  margin-bottom: 2rem;
+
+  h2 {
+    margin-bottom: 0.5rem;
+  }
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.towns-table,
+.proposals-table,
+.verify-table {
+  width: 100%;
+}
+
+.proposals-table,
+.verify-table {
+  min-width: 68rem;
+}
+
+.clickable {
+  cursor: pointer;
+
+  &:hover td {
+    background: var(--tui-background-neutral-1-hover);
+  }
+}
+
+.detail-row td {
+  background: var(--tui-background-neutral-1);
+}
+
+.queries {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(26rem, 1fr));
+  gap: 1rem;
+  padding: 0.75rem 0.25rem 1rem;
+}
+
+.query-block {
+  border: 1px solid var(--tui-border-normal);
+  border-radius: 0.6rem;
+  padding: 0.6rem 0.75rem;
+  background: var(--tui-background-base);
+}
+
+.query-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.results {
+  margin: 0;
+  padding-left: 1.1rem;
+
+  li {
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+  }
+}
+
+.src {
+  max-width: 22rem;
+}
+
+.src-name {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.src-id {
+  display: block;
+  font-size: 0.75rem;
+}
+
+.why {
+  max-width: 22rem;
+  word-break: break-word;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  word-break: break-all;
+}
+
+.small {
+  font-size: 0.78rem;
+  max-width: 14rem;
+}
+
+code {
+  font-size: 0.78rem;
+  padding: 0.05rem 0.3rem;
+  border-radius: 0.3rem;
+  background: var(--tui-background-neutral-1);
+}
+
+.positive {
+  color: var(--tui-status-positive);
+}
+
+.negative {
+  color: var(--tui-status-negative);
+  font-weight: 600;
+}
+
+.bold {
+  font-weight: 700;
+}
