@@ -37,24 +37,35 @@ src/discover.ts
 ## Setup
 
 ```bash
-npm install                     # Node >= 20; playwright jest opcjonalny
+npm install                     # Node >= 22; playwright jest opcjonalny
 # strony JS-only (CK Zamek itp.):
 npm install playwright && npx playwright install chromium
 
-export OPENROUTER_API_KEY=sk-or-...
-# opcjonalnie — ewaluacja innych modeli bez zmian w kodzie:
-# export MODEL_EXTRACT=anthropic/claude-haiku-4.5      (default)
-# export MODEL_DISCOVER=anthropic/claude-sonnet-4.6    (default)
-# np. MODEL_EXTRACT=google/gemini-flash-... / openai/gpt-...-mini / mistralai/...
+cp .env.example .env            # (PowerShell: copy .env.example .env) → uzupełnij klucze
 npm run daily                   # → events.json + index.html
 
-# raz w miesiącu / nowe miasto:
-export BRAVE_API_KEY=...        # darmowy tier: 2000 zapytań/mies
+# raz w miesiącu / nowe miasto (wymaga BRAVE_API_KEY w .env):
 npm run discover -- "Poznań" 15 # pełne discovery + weryfikacja URL-i
 npm run discover -- --verify    # sama weryfikacja/naprawa URL-i (tanio: Haiku; cron w discover.yml)
 
 npm run typecheck               # tsc --noEmit (strict)
 ```
+
+**Konfiguracja idzie przez `.env`** (wzór w `.env.example`, plik jest w `.gitignore`).
+Skrypty `npm run …` wczytują go same — `node --env-file-if-exists`, bez `dotenv` i bez
+zależności od powłoki. To istotne na Windowsie: `VAR=... npm run x` i `export VAR=...`
+to składnia bash-a, **w PowerShellu nie działa** (`... is not recognized as a name of a cmdlet`).
+Gdybyś jednak chciał ustawić zmienną doraźnie, bez `.env`:
+
+```powershell
+$env:OPENROUTER_API_KEY = "sk-or-..."   # PowerShell
+```
+```bash
+export OPENROUTER_API_KEY=sk-or-...     # bash / zsh
+```
+
+Na GitHub Actions `.env` nie istnieje — te same nazwy przychodzą z repo secrets, dlatego
+flaga to `--env-file-if-exists`, a nie `--env-file` (ta wywaliłaby się przy braku pliku).
 
 Wymagania dla MODEL_EXTRACT: obsługa obrazów (plakaty) + solidny JSON po polsku. Struktura `src/llm.ts`
 to czysty fetch do OpenRouter chat completions — zero vendor lock-in.
@@ -190,11 +201,12 @@ Obrazy (plakaty base64) **nie** trafiają do `llm/` — zostaje sam rozmiar, że
 3. Settings → API → skopiuj `Project URL` i klucz **`service_role`**.
 4. GitHub → Settings → Secrets and variables → Actions → dodaj `SUPABASE_URL` i `SUPABASE_SERVICE_ROLE_KEY`.
 
-```bash
-export SUPABASE_URL=https://xxxx.supabase.co
-export SUPABASE_SERVICE_ROLE_KEY=eyJ...      # service_role, NIE anon
+Lokalnie wystarczy uzupełnić `.env` (patrz `.env.example`) — żadnych zmiennych w powłoce:
+
+```ini
+SUPABASE_URL=https://xxxx.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=eyJ...      # service_role, NIE anon
 # opcjonalnie: SUPABASE_BUCKET=archive, ARCHIVE_RETENTION_DAYS=90
-npm run daily
 ```
 
 ⚠️ Klucz `service_role` omija RLS — wyłącznie backend/Actions, **nigdy** frontend ani panel.
@@ -211,8 +223,8 @@ więc wdrożony panel pokazuje listę i informację, że treść jest prywatna. 
 jest lokalny most, bo klucz `service_role` nie może trafić do statycznego bundla:
 
 ```bash
-# terminal 1 — most (klucz zostaje tutaj, nasłuch tylko na 127.0.0.1)
-SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... npm run archive-server
+# terminal 1 — most (klucz czytany z .env, nasłuch tylko na 127.0.0.1)
+npm run archive-server
 
 # terminal 2 — panel z localhosta
 cd panel && npm start

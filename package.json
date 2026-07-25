@@ -8,12 +8,12 @@
     "node": ">=20"
   },
   "scripts": {
-    "daily": "tsx src/daily.ts",
-    "digest": "tsx src/digest.ts",
-    "discover": "tsx src/discover.ts",
+    "daily": "tsx --env-file-if-exists=.env src/daily.ts",
+    "digest": "tsx --env-file-if-exists=.env src/digest.ts",
+    "discover": "tsx --env-file-if-exists=.env src/discover.ts",
     "typecheck": "tsc --noEmit",
     "build": "tsc",
-    "archive-server": "tsx src/archive-server.ts"
+    "archive-server": "tsx --env-file-if-exists=.env src/archive-server.ts"
   },
   "dependencies": {
     "html-to-text": "^9.0.5",
