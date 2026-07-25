@@ -109,9 +109,42 @@ jobs:
 
 **Pozostałe:** geocoding Nominatim 0 zł (cache + 1 req/s), hosting GH Pages 0 zł, cron GH Actions 0 zł.
 Plakaty JPG: ~10/dzień × ~1.5k tok obrazu ≈ $0.02/dzień.
-Opcjonalnie FB (Apify facebook-events-scraper): ~$5–10/mies.
+Opcjonalnie FB przez Bright Data (sekcja niżej): rozliczenie per-rekord, rząd ~$1–1.5/1000 rekordów → ~$5–10/mies.
 
 ### Suma: **~$6–15/mies** (bez FB ~$6, z FB ~$15). Discovery wliczone.
+
+## Facebook przez Bright Data (opcjonalne)
+
+Włączane sekretem `BRIGHTDATA_API_KEY` (GitHub → Settings → Secrets albo `.env` lokalnie). Bez niego
+cały pipeline działa jak dotąd, a źródła FB są raportowane jako `skipped-fb` (tryb zero-cost).
+Dwie funkcje (`src/brightdata.ts` + `src/facebook.ts`):
+
+1. **Rozwiązywanie linków do wydarzeń FB** — `facebook.com/events/<id>` znalezione na stronach źródeł,
+   w followupach ekstraktora i w postach grup są zbierane i zbiorczo zamieniane w `EventItem`
+   (Bright Data *Facebook Events*, dataset `gd_m14sd0to1jz48ppm51`; mapowanie strukturalne, bez LLM).
+   Wynik per-link trafia do cache w `state.json` (`fb-event:<url>`, TTL 7 dni) — znany link nie kosztuje
+   rekordu drugi raz, a wpisy po zakończonych wydarzeniach są usuwane. Przy 304 strony źródłowej linki
+   wracają ze stanu (`fbUrlsBySource`), więc wydarzenia nie znikają. Limit na przebieg:
+   `BD_MAX_FB_EVENTS` (domyślnie 40) — bezpiecznik kosztów.
+2. **Otwarte grupy FB jako źródła** — `fetch:"fb_group"` (`type:"fb_group"`): posty grupy pobierane
+   przez Bright Data (*Facebook Posts by group*, dataset `gd_lz11l67o2cb3r0lkj3`), spłaszczane do
+   tekstu i dalej traktowane jak zwykła strona: diff po hashu, cache ekstrakcji, followupy, wiersz
+   w raporcie przebiegu. Surowe posty lądują wyłącznie w prywatnym archiwum (`archiveRaw`), nie w repo —
+   to treści z danymi osobowymi. Linki do wydarzeń z postów zasilają pulę z pkt 1.
+
+**Discovery (etap 1)** dokłada zapytania `site:facebook.com/groups {town}` i `{town} grupa facebook
+wydarzenia lokalne`; model triage'u zwraca otwarte grupy jako `fb_group`. Zamknięte grupy /
+kupię-sprzedam są odrzucane.
+
+**Przełączniki env** (wszystkie opcjonalne): `BD_DATASET_FB_EVENTS`, `BD_DATASET_FB_GROUP_POSTS`
+(nadpisanie ID datasetu), `BD_POLL_MS` (10000), `BD_TIMEOUT_MS` (480000), `BD_MAX_FB_EVENTS` (40).
+
+**Liczenie kosztu.** Bright Data rozlicza per-rekord. Każdy przebieg z FB dopisuje linię do
+`brightdata-usage.jsonl` (commitowany) i loguje na stdout: `triggers · inputs (URL) · records · polls ·
+errors`; pole `brightdata` trafia też do `events.json`. Linia zawiera `snapshots` (snapshot_id każdego
+triggera) — Bright Data trzyma snapshoty ~30 dni, a ponowne pobranie jest darmowe, więc surowe dane
+każdego przebiegu da się odtworzyć bez płacenia. Koszt ≈ `records × stawka_za_rekord` (potwierdź
+w panelu Bright Data). Przykład analizy: `cat brightdata-usage.jsonl | jq`.
 
 ## Digest (17:00): Telegram (aktywny) / email (w zapasie)
 
@@ -242,7 +275,8 @@ nie przeskanuje twojego localhosta. Most akceptuje tylko prefiksy `raw/`, `llm/`
 
 ## Znane ograniczenia / TODO
 
-- FB: tylko publiczne strony przez scraper 3rd-party; grupy zamknięte poza zakresem (ban risk).
+- FB: linki do wydarzeń + otwarte grupy przez Bright Data (sekcja wyżej). Fanpage (`fetch:"fb"`)
+  wciąż pomijane w daily — inny dataset; grupy zamknięte świadomie poza zakresem (ban risk).
 - Dedupe: heurystyka tytuł+data; LLM-owy dedupe (`DEDUPE_SYSTEM`) gotowy w prompts.ts, niepodpięty.
 - Weryfikacja URL-i: `discover --verify` (miesięczny cron `discover.yml`) sprawdza każdy URL, naprawia
   przez search+LLM (historia w `previous_urls`), nienaprawialne znakuje `dead:true` (daily pomija jako

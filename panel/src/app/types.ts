@@ -3,7 +3,7 @@
  * Keep in sync when the pipeline schema changes.
  */
 
-export type FetchStrategy = 'plain' | 'headless' | 'pdf' | 'api' | 'fb' | 'rss';
+export type FetchStrategy = 'plain' | 'headless' | 'pdf' | 'api' | 'fb' | 'fb_group' | 'fb_event' | 'rss';
 
 export type SourceType =
   | 'city_portal'
@@ -12,6 +12,7 @@ export type SourceType =
   | 'sports'
   | 'venue'
   | 'fb_page'
+  | 'fb_group'
   | 'rss'
   | 'api'
   | 'pdf_program';

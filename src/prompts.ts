@@ -8,9 +8,15 @@ Dostajesz wyniki wyszukiwania dla miasta/gminy. Wybierz strony, które PUBLIKUJ�
 - ośrodki/domy kultury (uwaga: duże miasta mają DK w każdej dzielnicy — szukaj wszystkich)
 - biblioteki, OSiR-y, muzea, teatry, galerie
 - publiczne strony/fanpage FB instytucji i miejsc (plaże miejskie, parki, kawiarnie z eventami)
-Odrzuć: agregatory biletowe, katalogi firm, strony martwe/archiwalne.
-Zwróć JSON: {"sources":[{"id","name","type","url","town","fetch":"plain|headless|pdf|api|fb","confidence":0-1,"notes"}]}
-Typy: city_portal, culture_center, library, sports, venue, fb_page, rss, api, pdf_program.`;
+- OTWARTE grupy FB o życiu lokalnym ("Co słychać w …", "Wydarzenia …", "Mamy z …",
+  "Ogłoszenia …") — mieszkańcy wrzucają tam plakaty i wydarzenia. Tylko publiczne/otwarte grupy.
+Odrzuć: agregatory biletowe, katalogi firm, strony martwe/archiwalne, grupy zamknięte/kupię-sprzedam/prywatne.
+Rozpoznawanie FB po URL:
+- facebook.com/groups/<...>  → fetch:"fb_group", type:"fb_group"; URL skróć do korzenia grupy
+  (https://www.facebook.com/groups/<id-lub-slug>, bez /posts/… ani parametrów)
+- facebook.com/<fanpage>      → fetch:"fb", type:"fb_page"
+Zwróć JSON: {"sources":[{"id","name","type","url","town","fetch":"plain|headless|pdf|api|fb|fb_group","confidence":0-1,"notes"}]}
+Typy: city_portal, culture_center, library, sports, venue, fb_page, fb_group, rss, api, pdf_program.`;
 
 export const DISCOVERY_QUERIES: readonly string[] = [
   "{town} dom kultury wydarzenia",
@@ -20,6 +26,8 @@ export const DISCOVERY_QUERIES: readonly string[] = [
   "{town} kalendarz wydarzeń urząd",
   "{town} co robić z dzieckiem",
   "site:facebook.com {town} wydarzenia",
+  "site:facebook.com/groups {town}",
+  "{town} grupa facebook wydarzenia lokalne",
   "wydarzenia {town}",
 ];
 

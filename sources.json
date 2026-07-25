@@ -462,7 +462,7 @@
    "verified": false
   }
  ],
- "fb_note": "Źródła fetch:fb wymagają scrapera third-party (np. Apify facebook-events-scraper, ~5-10 USD/mies przy tej skali) LUB pominięcia w wersji zero-cost. Grupy zamknięte: świadomie poza zakresem.",
+ "fb_note": "FB przez Bright Data (BRIGHTDATA_API_KEY): fetch:fb_group → posty otwartej grupy scrapowane i przepuszczane przez ekstraktor; linki facebook.com/events/… (na stronach, w followupach, w postach grup) rozwiązywane zbiorczo w EventItem z cache per-link. fetch:fb (fanpage) nadal pomijane w daily (inny dataset). Bez klucza: FB pomijane, tryb zero-cost. Grupy zamknięte: świadomie poza zakresem. Rozliczenie per-rekord → brightdata-usage.jsonl.",
  "todo_next_discovery": [
   "parafie (festyny)",
   "kawiarnie/księgarnie z eventami (Poznań: ~20 miejsc)",

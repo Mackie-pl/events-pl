@@ -1,6 +1,14 @@
 /** Wspólne typy pipeline'u. */
 
-export type FetchStrategy = "plain" | "headless" | "pdf" | "api" | "fb" | "rss";
+export type FetchStrategy =
+  | "plain"
+  | "headless"
+  | "pdf"
+  | "api"
+  | "fb" // fanpage/strona FB — poza zakresem daily (osobny dataset)
+  | "fb_group" // otwarta grupa FB — posty przez Bright Data → ekstrakcja LLM
+  | "fb_event" // pojedyncze wydarzenie FB — rozwiązywane zbiorczo przez Bright Data (link → EventItem)
+  | "rss";
 
 export type SourceType =
   | "city_portal"
@@ -9,6 +17,7 @@ export type SourceType =
   | "sports"
   | "venue"
   | "fb_page"
+  | "fb_group"
   | "rss"
   | "api"
   | "pdf_program";
@@ -136,12 +145,35 @@ export interface PipelineState {
    * się zmienić pod tym samym URL-em przy nietkniętym tekście strony.
    */
   followupsBySource?: Record<string, string[]>;
+  /**
+   * Linki facebook.com/events/… ostatnio wyłuskane z treści danego źródła — analogicznie
+   * do followupsBySource: przy 304 nie mamy tekstu, a rozwiązane wydarzenia FB nie mogą
+   * przez to znikać z serwisu.
+   */
+  fbUrlsBySource?: Record<string, string[]>;
+}
+
+/** Zużycie Bright Data w przebiegu — podstawa do policzenia kosztu (rozliczenie per-rekord). */
+export interface BdUsage {
+  /** liczba wywołań /trigger */
+  triggers: number;
+  /** liczba URL-i wysłanych do scrapowania */
+  inputs: number;
+  /** liczba wywołań /progress (polling) */
+  polls: number;
+  /** liczba zwróconych rekordów — główny czynnik kosztu */
+  records: number;
+  /** liczba nieudanych zbiorów */
+  errors: number;
+  /** snapshot_id każdego triggera — BD trzyma snapshoty ~30 dni, ponowny download jest darmowy */
+  snapshots: string[];
 }
 
 export interface EventsFile {
   generated: string;
   events: EventItem[];
   errors: PipelineError[];
+  brightdata?: BdUsage;
 }
 
 export interface PipelineError {

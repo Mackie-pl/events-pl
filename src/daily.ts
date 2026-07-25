@@ -6,7 +6,7 @@
  * Uruchomienie: ANTHROPIC_API_KEY=... npm run daily
  */
 import { createHash } from "node:crypto";
-import { readFile, writeFile } from "node:fs/promises";
+import { appendFile, readFile, writeFile } from "node:fs/promises";
 import { appendFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
@@ -19,7 +19,9 @@ import {
   archiveEnabled, archiveEventsFull, archiveLlmCall, archiveRaw, archiveStats, beginRun,
   beginSource, sourcePaths,
 } from "./archive.js";
+import { BD_DATASETS, bdEnabled, bdUsage, collect as bdCollect } from "./brightdata.js";
 import { BROWSER_HEADERS, describeError, fetchUrl } from "./errors.js";
+import { fbEventToItem, fbGroupPostsToText, harvestEventUrls, isEventUrl } from "./facebook.js";
 import { MODEL_EXTRACT, chat, imagePart, resetUsage, setCallRecorder, snapshotUsage } from "./llm.js";
 import { type RedactionStats, redactEvents, redactText } from "./pii.js";
 import { DEDUPE_SYSTEM, POSTER_SYSTEM, extractionSystem } from "./prompts.js";
@@ -38,6 +40,10 @@ const RUN_MIN_KEEP = 2; // zawsze zostaw min. tyle przebiegów, nawet po przerwi
 const UA = { "User-Agent": "LocalEventsBot/0.3 (+kontakt: twoj@email)" };
 const MAX_FOLLOWUPS_PER_SOURCE = 5;
 const MAX_INPUT_CHARS = 40_000; // ~10k tokenów
+// log zużycia Bright Data per przebieg (rozliczenie per-rekord) — commitowany, do liczenia kosztu
+const BD_USAGE_LOG = join(ROOT, "brightdata-usage.jsonl");
+/** Górny limit rozwiązywanych linków do wydarzeń FB na przebieg — bezpiecznik kosztów Bright Data. */
+const MAX_FB_EVENTS_PER_RUN = Number(process.env["BD_MAX_FB_EVENTS"] ?? 40);
 
 // ---------------- fetch ----------------
 
@@ -232,6 +238,17 @@ function newSourceRun(src: Source, url: string, status: SourceRun["status"]): So
 
 /** Fetch wg strategii źródła; 403/429 przy zwykłym fetchu to zwykle anty-bot — jedna próba przez headless. */
 async function fetchSource(src: Source, url: string, run: SourceRun, extraHeaders: Record<string, string> = {}): Promise<Fetched> {
+  if (src.fetch === "fb_group") {
+    // posty otwartej grupy przez Bright Data (FB blokuje zwykły fetch); BD zawsze zwraca
+    // pełną treść — brak 304, diff załatwia standardowe porównanie hashy w processSource
+    try {
+      const records = await bdCollect(BD_DATASETS.fbGroupPosts, [url]);
+      return { kind: "html", text: fbGroupPostsToText(records), httpStatus: 200 };
+    } catch (e) {
+      bdUsage.errors += 1;
+      throw e;
+    }
+  }
   if (src.fetch === "headless") return fetchHeadless(url);
   try {
     return await fetchPlain(url, extraHeaders);
@@ -311,7 +328,9 @@ async function processFollowup(
 const followupEvents = (url: string, state: PipelineState): EventItem[] =>
   state.extractions?.[url]?.events ?? [];
 
-async function processSource(src: Source, state: PipelineState, errors: PipelineError[]): Promise<{ events: EventItem[]; run: SourceRun }> {
+async function processSource(
+  src: Source, state: PipelineState, errors: PipelineError[], fbEventUrls: Set<string>,
+): Promise<{ events: EventItem[]; run: SourceRun }> {
   const t0 = performance.now();
   resetUsage();
   beginSource(src.id);
@@ -353,11 +372,20 @@ async function processSource(src: Source, state: PipelineState, errors: Pipeline
     run.kind = "html";
     pageEvents = cached.events;
     followupUrls = state.followupsBySource?.[src.id] ?? [];
+    // 304 = brak treści do przeszukania — linki do wydarzeń FB wracają ze stanu
+    if (bdEnabled()) for (const u of state.fbUrlsBySource?.[src.id] ?? []) fbEventUrls.add(u);
   } else {
     run.kind = fetched.kind === "pdf" ? "pdf" : "html";
     run.chars = fetched.text.length;
     await archiveRaw(src.id, url, fetched.text, fetched.kind);
     if (!fetched.text.trim()) { run.status = "empty"; return finalize([]); }
+
+    // linki facebook.com/events/… w treści — rozwiązywane zbiorczo na końcu przebiegu
+    if (bdEnabled()) {
+      const found = harvestEventUrls(fetched.text);
+      (state.fbUrlsBySource ??= {})[src.id] = found;
+      for (const u of found) fbEventUrls.add(u);
+    }
 
     const hash = sha256(fetched.text);
     const v = {
@@ -387,6 +415,11 @@ async function processSource(src: Source, state: PipelineState, errors: Pipeline
   if (!run.changed && followupUrls.length) run.followupsRechecked = followupUrls.length;
   const events: EventItem[] = [...pageEvents];
   for (const fuUrl of followupUrls.slice(0, MAX_FOLLOWUPS_PER_SOURCE)) {
+    if (isEventUrl(fuUrl)) {
+      // wydarzenia FB nie do pobrania HTTP-em — dołączają do zbiorczego rozwiązania przez Bright Data
+      if (bdEnabled()) for (const u of harvestEventUrls(fuUrl)) fbEventUrls.add(u);
+      continue;
+    }
     const fr = await processFollowup(fuUrl, src, state, errors);
     run.followups.push(fr);
     if (fr.outcome !== "error") events.push(...followupEvents(fuUrl, state));
@@ -413,6 +446,100 @@ async function processSource(src: Source, state: PipelineState, errors: Pipeline
     if (!run.changed) run.cached = pageEvents.length;
   }
   return finalize(events);
+}
+
+// ---------------- wydarzenia FB (Bright Data, zbiorczo) ----------------
+
+const FB_EVENT_CACHE_PREFIX = "fb-event:";
+/** Po tylu dniach rozwiązujemy link ponownie — data/miejsce wydarzenia potrafią się zmienić. */
+const FB_EVENT_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
+/** id z https://www.facebook.com/events/123… — do sparowania rekordu BD z żądanym URL-em. */
+const fbEventId = (url: string): string | null => url.match(/events\/(\d+)/i)?.[1] ?? null;
+
+/**
+ * Zbiorcze rozwiązanie zebranych linków do wydarzeń FB (link → EventItem, mapowanie
+ * strukturalne bez LLM). Wynik per-link żyje w state.extractions pod "fb-event:<url>":
+ * znany link nie kosztuje rekordu Bright Data przez FB_EVENT_TTL_MS, a wpisy po
+ * zakończonych wydarzeniach (i nieudane próby starsze niż TTL) są usuwane.
+ */
+async function resolveFbEvents(
+  urls: string[], state: PipelineState, errors: PipelineError[],
+): Promise<{ events: EventItem[]; run: SourceRun }> {
+  const t0 = performance.now();
+  resetUsage();
+  beginSource("fb-events");
+  const run: SourceRun = {
+    id: "fb-events", name: "Wydarzenia FB (linki)", town: "", url: "https://www.facebook.com/events/",
+    fetch: "fb_event", status: "empty", events: 0, followups: [], geo: { hits: 0, misses: 0 },
+    llm: { calls: 0, promptTokens: 0, completionTokens: 0, costUsd: 0 }, ms: 0,
+  };
+  const today = new Date().toISOString().slice(0, 10);
+  const cache = (state.extractions ??= {});
+
+  for (const [key, entry] of Object.entries(cache)) {
+    if (!key.startsWith(FB_EVENT_CACHE_PREFIX)) continue;
+    const stale = entry.events.length
+      ? entry.events.every((ev) => (ev.date_end ?? ev.date_start) < today) // zakończone
+      : Date.now() - Date.parse(entry.at) > FB_EVENT_TTL_MS; // nierozwiązane — po TTL wolno spróbować znowu
+    if (stale) delete cache[key];
+  }
+
+  const events: EventItem[] = [];
+  const toResolve: string[] = [];
+  for (const url of urls) {
+    const entry = cache[FB_EVENT_CACHE_PREFIX + url];
+    if (entry && Date.now() - Date.parse(entry.at) <= FB_EVENT_TTL_MS) events.push(...entry.events);
+    else toResolve.push(url);
+  }
+  const fromCache = events.length;
+
+  const capped = toResolve.slice(0, MAX_FB_EVENTS_PER_RUN);
+  if (toResolve.length > capped.length) {
+    run.note = `limit ${MAX_FB_EVENTS_PER_RUN}/przebieg — pominięto ${toResolve.length - capped.length} linków`;
+  }
+
+  if (capped.length) {
+    try {
+      const records = await bdCollect(BD_DATASETS.fbEvents, capped);
+      await archiveRaw("fb-events", "https://www.facebook.com/events/ (zbiorczo)", JSON.stringify(records, null, 1), "fb_event");
+      const byId = new Map<string, EventItem[]>();
+      for (const rec of records) {
+        const ev = fbEventToItem(rec, today);
+        if (!ev) continue;
+        ev.source_id = "fb-event";
+        if (ev.venue) {
+          const g = await geocode(ev.venue, ev.town ?? "", state.geo);
+          ev.geo = g;
+          if (g) run.geo.hits++; else run.geo.misses++;
+        }
+        const id = fbEventId(ev.source_url);
+        if (id) byId.set(id, [...(byId.get(id) ?? []), ev]);
+        events.push(ev);
+      }
+      // wynik per żądany link do cache — także pusty (nie ponawiamy nieudanych przed TTL)
+      for (const url of capped) {
+        const id = fbEventId(url);
+        cache[FB_EVENT_CACHE_PREFIX + url] = { hash: url, events: (id ? byId.get(id) : undefined) ?? [], at: new Date().toISOString() };
+      }
+    } catch (e) {
+      bdUsage.errors += 1;
+      const err = describeError(e);
+      errors.push({ id: "fb-events", err });
+      run.status = "error";
+      run.err = err;
+    }
+  }
+
+  run.events = events.length;
+  run.cached = fromCache;
+  if (run.status !== "error") run.status = events.length ? (capped.length ? "ok" : "unchanged") : "empty";
+  run.llm = snapshotUsage();
+  run.ms = Math.round(performance.now() - t0);
+  const paths = sourcePaths();
+  if (paths.length) run.archive = paths;
+  console.log(`FB: ${events.length} wydarzeń z linków (${fromCache} z cache, ${capped.length} wysłanych do Bright Data)`);
+  return { events, run };
 }
 
 async function renderHtml(data: EventsFile, report: RunReport): Promise<void> {
@@ -523,11 +650,22 @@ async function run(): Promise<void> {
   const errors: PipelineError[] = [];
   const sourceRuns: SourceRun[] = [];
   let allEvents: EventItem[] = [];
+  // linki do wydarzeń FB zebrane po drodze (treści stron, followupy, posty grup) — rozwiązywane zbiorczo na końcu
+  const fbEventUrls = new Set<string>();
 
   for (const src of cfg.sources) {
-    if (src.fetch === "fb") {
-      // wymaga zewn. scrapera (Apify/BrightData) — patrz README; odnotuj jako świadomą lukę
+    if (src.fetch === "fb" || ((src.fetch === "fb_group" || src.fetch === "fb_event") && !bdEnabled())) {
+      // fanpage: osobny dataset Bright Data, poza zakresem daily; fb_group/fb_event bez klucza → tryb zero-cost
+      if (bdEnabled() && isEventUrl(src.url)) for (const u of harvestEventUrls(src.url)) fbEventUrls.add(u);
       sourceRuns.push(newSourceRun(src, src.url.replace("{page}", "1"), "skipped-fb"));
+      continue;
+    }
+    if (src.fetch === "fb_event") {
+      // pojedynczy link do wydarzenia — dołącza do zbiorczego rozwiązania
+      for (const u of harvestEventUrls(src.url)) fbEventUrls.add(u);
+      const sr = newSourceRun(src, src.url, "skipped-fb");
+      sr.note = "rozwiązywane zbiorczo — patrz wiersz fb-events";
+      sourceRuns.push(sr);
       continue;
     }
     if (src.dead) {
@@ -535,8 +673,14 @@ async function run(): Promise<void> {
       sourceRuns.push(newSourceRun(src, src.url.replace("{page}", "1"), "skipped-dead"));
       continue;
     }
-    const { events, run: sr } = await processSource(src, state, errors);
+    const { events, run: sr } = await processSource(src, state, errors, fbEventUrls);
     sourceRuns.push(sr);
+    allEvents.push(...events);
+  }
+
+  if (bdEnabled() && fbEventUrls.size) {
+    const { events, run: fbRun } = await resolveFbEvents([...fbEventUrls], state, errors);
+    sourceRuns.push(fbRun);
     allEvents.push(...events);
   }
 
@@ -559,6 +703,7 @@ async function run(): Promise<void> {
   }
 
   const out: EventsFile = { generated: new Date().toISOString().slice(0, 10), events: allEvents, errors };
+  if (bdEnabled()) out.brightdata = bdUsage;
   const report = buildReport(startedAt, t0, sourceRuns, pii);
 
   await writeFile(OUT_EVENTS, JSON.stringify(out, null, 1), "utf-8");
@@ -567,6 +712,14 @@ async function run(): Promise<void> {
   await renderHtml(out, report);
   writeStepSummary(report);
   console.log(summaryLine(report));
+  if (bdEnabled()) {
+    // log zużycia per przebieg → policzenie kosztu (snapshot_id pozwala ponownie pobrać dane z BD za darmo)
+    await appendFile(BD_USAGE_LOG, `${JSON.stringify({ date: out.generated, at: new Date().toISOString(), ...bdUsage })}\n`, "utf-8");
+    console.log(
+      `Bright Data: ${bdUsage.triggers} trigger · ${bdUsage.inputs} URL · ${bdUsage.records} rekordów · ` +
+      `${bdUsage.polls} polls · ${bdUsage.errors} błędów`,
+    );
+  }
   if (archiveEnabled()) {
     const a = archiveStats();
     console.log(
