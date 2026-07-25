@@ -78,6 +78,9 @@ function redactSegment(s: string, stats?: RedactionStats): string {
  * Tekst dzielimy na fragmenty wokół URL-i, więc nie ma placeholderów ani zmian w białych znakach.
  */
 export function redactText(text: string, stats?: RedactionStats): string {
+  // Wejście pochodzi z JSON-a od LLM rzutowanego przez `as ExtractionResult` — typ mówi "string",
+  // ale model potrafi zwrócić null i wywrócić cały przebieg tuż przed zapisem. Nie ufamy typom.
+  if (typeof text !== "string") return text;
   const parts: string[] = [];
   let last = 0;
   for (const m of text.matchAll(URL)) {
@@ -94,17 +97,18 @@ const red = <T extends string | null | undefined>(v: T, stats: RedactionStats): 
 
 /** Redaguje wolnotekstowe pola wydarzenia w miejscu. Pola strukturalne (daty, geo, URL) nietknięte. */
 export function redactEvent(ev: EventItem, stats: RedactionStats): void {
-  ev.title = redactText(ev.title, stats);
+  // wszędzie red(): jest odporne na null/undefined, których typy nie obiecują, a LLM dostarcza
+  ev.title = red(ev.title, stats);
   ev.registration = red(ev.registration, stats);
   ev.conditional = red(ev.conditional, stats);
   ev.venue = red(ev.venue, stats);
   ev.town = red(ev.town, stats);
-  if (ev.container !== undefined) ev.container = redactText(ev.container, stats);
-  if (ev.price?.note) ev.price.note = redactText(ev.price.note, stats);
-  if (ev.age?.label) ev.age.label = redactText(ev.age.label, stats);
+  if (typeof ev.container === "string") ev.container = redactText(ev.container, stats);
+  if (ev.price) ev.price.note = red(ev.price.note, stats);
+  if (ev.age) ev.age.label = red(ev.age.label, stats);
   for (const slot of ev.sub_slots ?? []) {
-    slot.label = redactText(slot.label, stats);
-    if (slot.age?.label) slot.age.label = redactText(slot.age.label, stats);
+    slot.label = red(slot.label, stats);
+    if (slot.age) slot.age.label = red(slot.age.label, stats);
   }
 }
 

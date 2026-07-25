@@ -12,7 +12,7 @@
  */
 import { createServer } from "node:http";
 
-import { keyLooksPublic, supabaseKey } from "./archive.js";
+import { authHeaders, keyLooksPublic, supabaseKey } from "./archive.js";
 import { describeError, fetchUrl } from "./errors.js";
 
 const PORT = Number(process.env["ARCHIVE_PORT"] ?? 8787);
@@ -75,7 +75,7 @@ const server = createServer((req, res) => {
       try {
         const r = await fetchUrl(
           `${SUPABASE_URL}/storage/v1/object/${BUCKET}/${path}`,
-          { headers: { apikey: KEY, Authorization: `Bearer ${KEY}` } },
+          { headers: authHeaders(KEY) },
           30_000,
           `Supabase ${BUCKET}/${path}`,
         );

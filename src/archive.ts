@@ -40,6 +40,8 @@ let llmSeq = 0;
 /** Kontekst bieżącego źródła — pozwala przypiąć obiekty archiwum do SourceRun w runs.json. */
 let currentSourceId = "";
 let currentPaths: string[] = [];
+/** Klucz odrzucony — nie próbujemy dalej w tym przebiegu (patrz put()). */
+let authBroken = false;
 
 /**
  * Supabase przemianował klucze API: `service_role` → **Secret key** (`sb_secret_…`),
@@ -57,6 +59,17 @@ export const supabaseKey = (): string =>
  * Wczesne ostrzeżenie przed najczęstszą pomyłką: klucz publiczny (publishable/anon)
  * nie odczyta prywatnego bucketa, a Supabase odpowie na to mało czytelnym błędem.
  */
+/**
+ * Nowe klucze (`sb_secret_…`) NIE są JWT — wysłane w `Authorization: Bearer` powodują
+ * `403 Invalid Compact JWS`, bo gateway próbuje je sparsować jako token. Idą więc wyłącznie
+ * w nagłówku `apikey`. Klucze legacy (JWT `eyJ…`) działają w obu nagłówkach naraz.
+ */
+export function authHeaders(key: string): Record<string, string> {
+  return key.startsWith("sb_")
+    ? { apikey: key }
+    : { apikey: key, Authorization: `Bearer ${key}` };
+}
+
 export function keyLooksPublic(key: string): boolean {
   if (key.startsWith("sb_publishable_")) return true;
   const payload = key.split(".")[1]; // legacy: JWT z rolą "anon"
@@ -80,6 +93,7 @@ export const archiveEnabled = (): boolean => cfg() !== null;
 export function beginRun(startedAt: string): void {
   runId = startedAt.replace(/[:.]/g, "-");
   llmSeq = 0;
+  authBroken = false;
   stats.uploaded = stats.failed = stats.bytes = stats.skipped = 0;
   if (archiveEnabled() && keyLooksPublic(supabaseKey())) {
     console.warn(
@@ -102,19 +116,22 @@ export const sourcePaths = (): string[] => [...currentPaths];
 
 export const sha256 = (s: string): string => createHash("sha256").update(s).digest("hex");
 
-/** Upload jednego obiektu. Zwraca false przy błędzie — nigdy nie rzuca. */
+/**
+ * Upload jednego obiektu. Zwraca false przy błędzie — nigdy nie rzuca.
+ * Po odrzuceniu klucza przestajemy próbować do końca przebiegu: przy 46 źródłach
+ * daje to ~60 skazanych żądań i tyle samo linii w logu, które zasłaniają prawdziwy błąd.
+ */
 export async function put(path: string, body: string, contentType = "application/json"): Promise<boolean> {
   const c = cfg();
   if (!c) { stats.skipped++; return false; }
+  if (authBroken) { stats.skipped++; return false; }
   try {
     const res = await fetchUrl(
       `${c.url}/storage/v1/object/${BUCKET}/${path}`,
       {
         method: "POST",
         headers: {
-          // apikey + Authorization: tak robi oficjalny klient; działa i dla JWT, i dla sb_secret_…
-          apikey: c.key,
-          Authorization: `Bearer ${c.key}`,
+          ...authHeaders(c.key),
           "Content-Type": contentType,
           "x-upsert": "true", // ta sama treść = ta sama ścieżka, nadpisujemy zamiast duplikować
         },
@@ -125,7 +142,18 @@ export async function put(path: string, body: string, contentType = "application
     );
     if (!res.ok) {
       stats.failed++;
-      console.warn(`archiwum: ${path} → HTTP ${res.status} ${(await res.text()).slice(0, 200)}`);
+      const detail = (await res.text()).slice(0, 200);
+      if (res.status === 401 || res.status === 403 || detail.includes("Invalid Compact JWS")) {
+        authBroken = true;
+        console.warn(
+          `archiwum: klucz odrzucony przez Supabase (HTTP ${res.status}: ${detail}).\n` +
+          "  Reszta przebiegu bez archiwizacji — pipeline leci dalej, dane publiczne bez zmian.\n" +
+          "  \"Invalid Compact JWS\" = klucz nie jest JWT: to nowy format sb_secret_…, który idzie\n" +
+          "  w nagłówku apikey, nie w Authorization. Sprawdź też, czy bucket istnieje i jest prywatny.",
+        );
+      } else {
+        console.warn(`archiwum: ${path} → HTTP ${res.status} ${detail}`);
+      }
       return false;
     }
     stats.uploaded++;
