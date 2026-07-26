@@ -15,13 +15,11 @@
  * Uruchomienie: npm run digest
  */
 import { readFile } from "node:fs/promises";
-import { fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
 
 import { fetchUrl } from "./errors.js";
+import { EVENTS_PATH } from "./shared/paths.js";
 import type { EventItem, EventsFile } from "./types/index.js";
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const TZ = "Europe/Warsaw";
 
 // ---------------- daty ----------------
@@ -301,7 +299,7 @@ async function sendResend(d: Digest): Promise<boolean> {
 
 async function main(): Promise<void> {
   const data = JSON.parse(
-    await readFile(join(ROOT, "events.json"), "utf-8"),
+    await readFile(EVENTS_PATH, "utf-8"),
   ) as EventsFile;
   const ageEnv = process.env["DIGEST_CHILD_AGE"];
   const childAge = ageEnv ? Number.parseInt(ageEnv, 10) : null;

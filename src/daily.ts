@@ -8,8 +8,6 @@
 import { createHash } from "node:crypto";
 import { appendFile, readFile, writeFile } from "node:fs/promises";
 import { appendFileSync, existsSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 
 import { convert as htmlToText } from "html-to-text";
@@ -26,15 +24,14 @@ import { fbEventToItem, fbGroupPostsToText, harvestEventUrls, isEventUrl } from 
 import { MODEL_EXTRACT, chat, imagePart, resetUsage, setCallRecorder, snapshotTasks, snapshotUsage } from "./llm.js";
 import { type RedactionStats, redactEvents, redactText } from "./pii.js";
 import { DEDUPE_SYSTEM, POSTER_SYSTEM, extractionSystem } from "./prompts.js";
+import {
+  BD_USAGE_LOG, EVENTS_PATH, INDEX_HTML, RUNS_PATH, SOURCES_PATH, STATE_PATH, TEMPLATE_HTML,
+} from "./shared/paths.js";
 import type {
   CachedExtraction, CostDriver, CostEntry, EventItem, EventsFile, ExtractionResult, FollowupRun,
   LlmTask, PipelineError, PipelineState, RunReport, RunTotals, Source, SourceRun, SourcesFile,
 } from "./types/index.js";
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const STATE_PATH = join(ROOT, "state.json");
-const OUT_EVENTS = join(ROOT, "events.json");
-const RUNS_PATH = join(ROOT, "runs.json");
 /**
  * Ile historii przebiegów zostaje w publicznym repo. Dane są zredagowane (pii.ts),
  * więc ogranicza nas tylko rozmiar pliku: ~25 kB na przebieg × 1 przebieg/dzień.
@@ -51,7 +48,6 @@ const UA = { "User-Agent": "LocalEventsBot/0.3 (+kontakt: twoj@email)" };
 const MAX_FOLLOWUPS_PER_SOURCE = 5;
 const MAX_INPUT_CHARS = 40_000; // ~10k tokenów
 // log zużycia Bright Data per przebieg (rozliczenie per-rekord) — commitowany, do liczenia kosztu
-const BD_USAGE_LOG = join(ROOT, "brightdata-usage.jsonl");
 /** Górny limit rozwiązywanych linków do wydarzeń FB na przebieg — bezpiecznik kosztów Bright Data. */
 const MAX_FB_EVENTS_PER_RUN = Number(process.env["BD_MAX_FB_EVENTS"] ?? 40);
 
@@ -579,12 +575,12 @@ async function resolveFbEvents(
 }
 
 async function renderHtml(data: EventsFile, report: RunReport): Promise<void> {
-  const tpl = await readFile(join(ROOT, "template.html"), "utf-8");
+  const tpl = await readFile(TEMPLATE_HTML, "utf-8");
   const runView = { startedAt: report.startedAt, totals: report.totals };
   const html = tpl
     .replace("/*__EVENTS__*/", JSON.stringify(data))
     .replace("/*__RUN__*/", JSON.stringify(runView));
-  await writeFile(join(ROOT, "index.html"), html, "utf-8");
+  await writeFile(INDEX_HTML, html, "utf-8");
 }
 
 // ---------------- run report ----------------
@@ -773,7 +769,7 @@ async function run(): Promise<void> {
     setCallRecorder(archiveLlmCall);
     console.log("archiwum: włączone (Supabase Storage)");
   }
-  const cfg = JSON.parse(await readFile(join(ROOT, "sources.json"), "utf-8")) as SourcesFile;
+  const cfg = JSON.parse(await readFile(SOURCES_PATH, "utf-8")) as SourcesFile;
   const state = await loadJson<PipelineState>(STATE_PATH, { hashes: {}, geo: {} });
   const errors: PipelineError[] = [];
   const sourceRuns: SourceRun[] = [];
@@ -838,7 +834,7 @@ async function run(): Promise<void> {
   // żeby ta sama rozpiska poszła do runs.json, costs.json i na stdout
   report.costs = buildCosts(report, archiveStats().bytes);
 
-  await writeFile(OUT_EVENTS, JSON.stringify(out, null, 1), "utf-8");
+  await writeFile(EVENTS_PATH, JSON.stringify(out, null, 1), "utf-8");
   await writeFile(STATE_PATH, JSON.stringify(state), "utf-8");
   await persistRun(report);
   await recordCosts(report.costs);

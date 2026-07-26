@@ -14,13 +14,11 @@
  */
 import { readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
+import { join } from "node:path";
 
 import { type CostInput, costEntries, costLine, costRates, loadCostEntries, recordCosts } from "./cost.js";
+import { ROOT } from "./shared/paths.js";
 import type { CostDriver, CostEntry, DiscoverRunReport, RunReport } from "./types/index.js";
-
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 async function loadJson<T>(name: string, fallback: T): Promise<T> {
   const path = join(ROOT, name);

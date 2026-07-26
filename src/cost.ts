@@ -21,14 +21,10 @@
  */
 import { readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
 
 import { describeError } from "./errors.js";
+import { COSTS_PATH } from "./shared/paths.js";
 import type { CostCategory, CostDriver, CostEntry, CostLedger, CostRates, CostUnit } from "./types/index.js";
-
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-export const COSTS_PATH = join(ROOT, "costs.json");
 
 const num = (name: string, fallback: number): number => {
   const raw = process.env[name];

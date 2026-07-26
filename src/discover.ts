@@ -24,8 +24,6 @@
  */
 import { readFile, writeFile } from "node:fs/promises";
 import { appendFileSync, existsSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 
 import {
@@ -36,15 +34,13 @@ import { BROWSER_HEADERS, describeError, fetchUrl } from "./errors.js";
 import { MODEL_DISCOVER, MODEL_EXTRACT, chat, resetUsage, setCallRecorder, snapshotUsage } from "./llm.js";
 import { type RedactionStats, newStats, redactText } from "./pii.js";
 import { DISCOVERY_QUERIES, DISCOVERY_SYSTEM, REVERIFY_SYSTEM } from "./prompts.js";
+import { DISCOVER_RUNS_PATH, SOURCES_PATH } from "./shared/paths.js";
 import type {
   CostEntry, DiscoverRunReport, DiscoverTotals, FetchProbe, FetchStrategy, GeoLookup, LlmUsage,
   SearchCall, SearchResult, Source, SourceProposal, SourceProvenance, SourceType,
   SourceVerification, SourcesFile, TownDiscoveryRun,
 } from "./types/index.js";
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const SOURCES_PATH = join(ROOT, "sources.json");
-const DISCOVER_RUNS_PATH = join(ROOT, "discover-runs.json");
 const DISCOVER_RUNS_KEEP = 24; // ~2 lata miesięcznych przebiegów
 /**
  * Pełne szczegóły (wyniki wyszukiwarki, dopasowane trafienia) trzymamy tylko dla najnowszych
