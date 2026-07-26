@@ -32,6 +32,9 @@ import { type CostInput, costEntries, costLine, costRates, recordCosts } from ".
 import { webSearch, searchState } from "./adapters/brave.js";
 import { BROWSER_HEADERS, fetchUrl } from "./adapters/http.js";
 import { townsInRadius } from "./adapters/overpass.js";
+import { MIN_CONFIDENCE, matchHit } from "./pipeline/discover/proposal-match.js";
+import { type Registry, buildRegistry, uniqueId } from "./pipeline/discover/registry.js";
+import { toSource } from "./pipeline/discover/to-source.js";
 import { describeError } from "./shared/errors.js";
 import {
   MODEL_DISCOVER, MODEL_EXTRACT, chat, resetUsage, setCallRecorder, snapshotUsage,
@@ -41,10 +44,10 @@ import { DISCOVERY_QUERIES, DISCOVERY_SYSTEM, REVERIFY_SYSTEM } from "./pipeline
 import { DISCOVER_RUNS_PATH, SOURCES_PATH } from "./shared/paths.js";
 import { todayIso } from "./shared/dates.js";
 import { slug, str, trim } from "./shared/text.js";
-import { host, isFbFetch, normalizeFbGroupUrl, urlKey } from "./shared/url.js";
+import { isFbFetch, urlKey } from "./shared/url.js";
 import type {
-  CostEntry, DiscoverRunReport, DiscoverTotals, FetchProbe, FetchStrategy, LlmUsage,
-  SearchCall, SearchResult, Source, SourceProposal, SourceProvenance, SourceType,
+  CostEntry, DiscoverRunReport, DiscoverTotals, FetchProbe, LlmUsage,
+  SearchCall, SearchResult, Source, SourceProposal, SourceProvenance,
   SourceVerification, SourcesFile, TownDiscoveryRun,
 } from "./types/index.js";
 
@@ -58,133 +61,9 @@ const DISCOVER_RUNS_KEEP = 24; // ~2 lata miesięcznych przebiegów
 const DISCOVER_RUNS_DETAILED = 4;
 /** Poniżej tego progu odpowiedź traktujemy jako zaślepkę/błąd, nie treść. */
 const MIN_BODY_CHARS = 500;
-/** Próg pewności modelu, poniżej którego propozycja nie trafia do rejestru. */
-const MIN_CONFIDENCE = 0.5;
 
 /** Pobrania HTTP przy weryfikacji URL-i (każde źródło + kandydaci przy naprawie) — wolumen do costs.json. */
 let verifyFetches = 0;
-
-// ---------------- propozycje modelu: walidacja + dopasowanie do wyniku search ----------------
-
-const SOURCE_TYPES = new Set<string>([
-  "city_portal", "culture_center", "library", "sports", "venue", "fb_page", "fb_group", "rss", "api", "pdf_program",
-]);
-const FETCH_STRATEGIES = new Set<string>(["plain", "headless", "pdf", "api", "fb", "fb_group", "fb_event", "rss"]);
-
-/** Wynik wyszukiwarki, z którego pochodzi ten adres — dowód „skąd model to wziął". */
-function matchHit(url: string, hits: Array<{ query: string; result: SearchResult }>): { query: string; hit: SearchResult } | null {
-  const key = urlKey(url);
-  const h = host(url);
-  const exact = hits.find((x) => x.result.url && urlKey(x.result.url) === key);
-  const prefix = hits.find((x) => x.result.url && (urlKey(x.result.url).startsWith(key) || key.startsWith(urlKey(x.result.url))));
-  const sameHost = h ? hits.find((x) => x.result.url && host(x.result.url) === h) : undefined;
-  const found = exact ?? prefix ?? sameHost;
-  return found ? { query: found.query, hit: found.result } : null;
-}
-
-
-/**
- * Rekord od LLM → Source. Odpowiedź modelu jest rzutowana, nie walidowana (`as Source[]`
- * w poprzedniej wersji), a wchodzi wprost do rejestru czytanego codziennie przez daily.ts.
- * Brak `id` albo dwa źródła o tym samym `id` cicho scalają cache ekstrakcji w state.json.
- */
-function toSource(raw: unknown, town: string): { src: Source; fixes: string[] } | { err: string } {
-  if (typeof raw !== "object" || raw === null) return { err: "rekord nie jest obiektem" };
-  const r = raw as Record<string, unknown>;
-  const fixes: string[] = [];
-
-  let url = str(r["url"]);
-  if (!url) return { err: "brak pola url" };
-  if (!/^https?:\/\//i.test(url)) {
-    if (/^[\w.-]+\.[a-z]{2,}/i.test(url)) {
-      url = `https://${url}`;
-      fixes.push("dodano schemat https://");
-    } else {
-      return { err: `url nie jest adresem http(s): ${trim(url, 80)}` };
-    }
-  }
-  try {
-    new URL(url.replace("{page}", "1"));
-  } catch {
-    return { err: `url nie do sparsowania: ${trim(url, 80)}` };
-  }
-
-  const name = str(r["name"]);
-  if (!name) return { err: "brak pola name" };
-
-  let fetchStrategy = str(r["fetch"]) ?? "";
-  let type = str(r["type"]) ?? "";
-  if (/facebook\.com\/groups\//i.test(url)) {
-    const rooted = normalizeFbGroupUrl(url);
-    if (rooted !== url) { url = rooted; fixes.push("URL grupy skrócony do korzenia"); }
-    if (fetchStrategy !== "fb_group") { fetchStrategy = "fb_group"; fixes.push('fetch → "fb_group" (URL grupy FB)'); }
-    if (type !== "fb_group") { type = "fb_group"; fixes.push('type → "fb_group"'); }
-  } else if (/^https?:\/\/(?:www\.)?facebook\.com\//i.test(url) && fetchStrategy !== "fb") {
-    fetchStrategy = "fb";
-    fixes.push('fetch → "fb" (adres facebook.com)');
-  }
-  if (!FETCH_STRATEGIES.has(fetchStrategy)) {
-    fixes.push(`nieznane fetch "${trim(fetchStrategy, 30)}" → "plain"`);
-    fetchStrategy = "plain";
-  }
-  if (!SOURCE_TYPES.has(type)) {
-    fixes.push(`nieznany type "${trim(type, 30)}" → "venue"`);
-    type = "venue";
-  }
-
-  const confidence = typeof r["confidence"] === "number" && Number.isFinite(r["confidence"])
-    ? Math.max(0, Math.min(1, r["confidence"]))
-    : undefined;
-
-  const id = slug(str(r["id"]) ?? `${town}-${name}`);
-  if (!id) return { err: "nie da się zbudować id" };
-
-  const notes = str(r["notes"]);
-  const src: Source = {
-    id,
-    name,
-    type: type as SourceType,
-    url,
-    town: str(r["town"]) ?? town,
-    fetch: fetchStrategy as FetchStrategy,
-    verified: false,
-    discovered: "auto",
-    ...(confidence !== undefined ? { confidence } : {}),
-    ...(notes !== undefined ? { notes } : {}),
-  };
-  return { src, fixes };
-}
-
-// ---------------- rejestr (merge propozycji) ----------------
-
-interface Registry {
-  cfg: SourcesFile;
-  /** urlKey wszystkich znanych adresów */
-  urls: Map<string, string>; // urlKey -> id źródła
-  ids: Set<string>;
-  /** id dodane w TYM przebiegu — ich weryfikacja to pierwszy fetch w życiu źródła */
-  fresh: Set<string>;
-}
-
-function buildRegistry(cfg: SourcesFile): Registry {
-  const urls = new Map<string, string>();
-  const ids = new Set<string>();
-  for (const s of cfg.sources) {
-    urls.set(urlKey(s.url), s.id);
-    ids.add(s.id);
-  }
-  return { cfg, urls, ids, fresh: new Set() };
-}
-
-/** Wolne id o tym samym rdzeniu — kolizja scaliłaby cache ekstrakcji dwóch różnych stron. */
-function uniqueId(base: string, taken: Set<string>): string {
-  if (!taken.has(base)) return base;
-  for (let i = 2; i < 100; i++) {
-    const candidate = `${base}-${i}`;
-    if (!taken.has(candidate)) return candidate;
-  }
-  return `${base}-${Date.now().toString(36)}`;
-}
 
 // ---------------- discovery ----------------
 
