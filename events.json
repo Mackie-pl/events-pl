@@ -1,14 +1,45 @@
 {
- "generated": "2026-07-23",
+ "generated": "2026-07-26",
  "events": [
   {
-   "title": "Planowe wyłączenie prądu - Puszczykowo",
-   "date_start": "2026-07-23",
+   "title": "Koncert - Śpiewające Brzdące: Lisek i Przyjaciele",
+   "date_start": "2026-09-12",
    "date_end": null,
-   "time_start": "08:00",
-   "time_end": "13:00",
-   "venue": null,
-   "town": "Puszczykowo",
+   "time_start": null,
+   "time_end": null,
+   "venue": "Aula Artis (Collegium Da Vinci), ul. gen. Tadeusza Kutrzeby 10",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": "maybe",
+   "tags": [
+    "muzyka:koncert",
+    "dzieci"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://www.poznan.pl/mim/events/koncert-spiewajace-brzdace-lisek-i-przyjaciele-aula-artis-collegium-da-vinci-ul-gen-tadeusza-kutrzeby-10-poznan,178854.html",
+   "is_noise": false,
+   "source_id": "poznan-kultura-rss",
+   "geo": null
+  },
+  {
+   "title": "Mica Millar - koncert",
+   "date_start": "2026-10-18",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": "Blue Note, ul. Kościuszki 79",
+   "town": "Poznań",
    "price": {
     "free": null,
     "amount_pln": null,
@@ -20,52 +51,25 @@
     "label": null
    },
    "family_friendly": false,
-   "tags": [],
-   "registration": null,
-   "sub_slots": null,
-   "conditional": null,
-   "source_url": "https://puszczykowo.pl/wydarzenia/planowe-wylaczenie-pradu-puszczykowo-8",
-   "is_noise": true,
-   "source_id": "puszczykowo-city"
-  },
-  {
-   "title": "Joga na świeżym powietrzu – bezpłatne zajęcia",
-   "date_start": "2026-07-23",
-   "date_end": null,
-   "time_start": "18:00",
-   "time_end": "19:00",
-   "venue": null,
-   "town": "Puszczykowo",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": {
-    "min": null,
-    "max": null,
-    "label": null
-   },
-   "family_friendly": "maybe",
    "tags": [
-    "sport:joga",
-    "zajęcia"
+    "muzyka:koncert"
    ],
    "registration": null,
    "sub_slots": null,
    "conditional": null,
-   "source_url": "https://puszczykowo.pl/wydarzenia/joga-na-swiezym-powietrzu-bezplatne-zajecia-5",
+   "source_url": "https://www.poznan.pl/mim/events/mica-millar-koncert-blue-note-ul-kosciuszki-79,179755.html",
    "is_noise": false,
-   "source_id": "puszczykowo-city"
+   "source_id": "poznan-kultura-rss",
+   "geo": null
   },
   {
-   "title": "Tai Chi – zajęcia dla początkujących i zaawansowanych",
-   "date_start": "2026-07-23",
+   "title": "Koncert - Coldplay, Imagine Dragons & The Weeknd - Klasycznie przy świecach",
+   "date_start": "2026-10-28",
    "date_end": null,
-   "time_start": "19:00",
-   "time_end": "20:00",
-   "venue": null,
-   "town": "Puszczykowo",
+   "time_start": null,
+   "time_end": null,
+   "venue": "Bazar Poznański, ul. Ignacego Paderewskiego 8",
+   "town": "Poznań",
    "price": {
     "free": null,
     "amount_pln": null,
@@ -76,218 +80,26 @@
     "max": null,
     "label": null
    },
-   "family_friendly": "maybe",
-   "tags": [
-    "sport:tai-chi",
-    "zajęcia"
-   ],
-   "registration": null,
-   "sub_slots": null,
-   "conditional": null,
-   "source_url": "https://puszczykowo.pl/wydarzenia/tai-chi-zajecia-dla-poczatkujacych-i-zaawansowanych-7",
-   "is_noise": false,
-   "source_id": "puszczykowo-city"
-  },
-  {
-   "title": "Bohemian Rhapsody (2018 – Wielka Brytania / USA) - Kino Letnie w Dworze Skrzynki",
-   "date_start": "2026-07-24",
-   "date_end": null,
-   "time_start": "20:30",
-   "time_end": "22:00",
-   "venue": "Dwór Skrzynki",
-   "town": "Puszczykowo",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": "wstęp wolny"
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "film:plener"
-   ],
-   "registration": null,
-   "sub_slots": null,
-   "conditional": null,
-   "source_url": "https://puszczykowo.pl/wydarzenia/bohemian-rhapsody-2018-wielka-brytania-usa-kino-letnie-w-dworze-skrzynki-wstep-wolny",
-   "is_noise": false,
-   "source_id": "puszczykowo-city",
-   "geo": null
-  },
-  {
-   "title": "W Dworze Skrzynki wybrzmi: Ocalić od zapomnienia – piosenki Marka Grechuty",
-   "date_start": "2026-07-25",
-   "date_end": null,
-   "time_start": "19:00",
-   "time_end": "21:00",
-   "venue": "Dwór Skrzynki",
-   "town": "Puszczykowo",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
+   "family_friendly": false,
    "tags": [
     "muzyka:koncert"
    ],
    "registration": null,
    "sub_slots": null,
    "conditional": null,
-   "source_url": "https://puszczykowo.pl/wydarzenia/w-dworze-skrzynki-wybrzmi-ocalic-od-zapomnienia-piosenki-marka-grechuty",
+   "source_url": "https://www.poznan.pl/mim/events/koncert-coldplay-imagine-dragons-the-weeknd-klasycznie-przy-swiecach-bazar-poznanski-ul-ignacego-paderewskiego-8,179678.html",
    "is_noise": false,
-   "source_id": "puszczykowo-city",
+   "source_id": "poznan-kultura-rss",
    "geo": null
   },
   {
-   "title": "PUFA Sofa Sessions - Mamidło",
-   "date_start": "2026-07-25",
-   "date_end": null,
-   "time_start": "20:00",
-   "time_end": "22:00",
-   "venue": null,
-   "town": "Puszczykowo",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "muzyka:post-rock"
-   ],
-   "registration": null,
-   "sub_slots": null,
-   "conditional": null,
-   "source_url": "https://puszczykowo.pl/wydarzenia/mamidlo-na-scenie-pufa-sofa-sessions-wieczor-dla-milosnikow-post-rocka",
-   "is_noise": false,
-   "source_id": "puszczykowo-city"
-  },
-  {
-   "title": "W Dworze Skrzynki koncert - Hallelujah. Tribute to Leonard Cohen",
-   "date_start": "2026-08-01",
-   "date_end": null,
-   "time_start": "19:00",
-   "time_end": "21:00",
-   "venue": "Dwór Skrzynki",
-   "town": "Puszczykowo",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "muzyka:koncert"
-   ],
-   "registration": null,
-   "sub_slots": null,
-   "conditional": null,
-   "source_url": "https://puszczykowo.pl/wydarzenia/w-dworze-skrzynki-koncert-hallelujah-tribute-leonard-cohen",
-   "is_noise": false,
-   "source_id": "puszczykowo-city",
-   "geo": null
-  },
-  {
-   "title": "XIV Letnie Koncerty Organowe w Wielkopolskim Parku Narodowym",
-   "date_start": "2026-08-02",
-   "date_end": null,
-   "time_start": "19:00",
-   "time_end": "21:00",
-   "venue": "Wielkopolski Park Narodowy",
-   "town": "Puszczykowo",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "muzyka:koncert"
-   ],
-   "registration": null,
-   "sub_slots": null,
-   "conditional": null,
-   "source_url": "https://puszczykowo.pl/wydarzenia/xiv-letnie-koncerte-organowe-w-wielkopolskim-parku-narodowym",
-   "is_noise": false,
-   "source_id": "puszczykowo-city",
-   "geo": {
-    "lat": 52.287946,
-    "lon": 16.8525753
-   }
-  },
-  {
-   "title": "Koncert Mis i Gongów w Willi Mimoza",
-   "date_start": "2026-08-07",
-   "date_end": null,
-   "time_start": "18:00",
-   "time_end": "19:30",
-   "venue": "Willa Mimoza",
-   "town": "Puszczykowo",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "muzyka:koncert"
-   ],
-   "registration": null,
-   "sub_slots": null,
-   "conditional": null,
-   "source_url": "https://puszczykowo.pl/wydarzenia/koncert-mis-i-gongow-w-willi-mimoza-1",
-   "is_noise": false,
-   "source_id": "puszczykowo-city",
-   "geo": {
-    "lat": 52.29304,
-    "lon": 16.8615086
-   }
-  },
-  {
-   "title": "Akcja Lato z Biblioteką",
-   "date_start": "2026-07-01",
-   "date_end": "2026-08-31",
-   "time_start": null,
-   "time_end": null,
-   "venue": "Mosińska Biblioteka Publiczna, ul. Dworcowa 4",
-   "town": "Mosina",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": {
-    "min": null,
-    "max": null,
-    "label": "dzieci"
-   },
-   "family_friendly": true,
-   "tags": [
-    "biblioteka:akcja",
-    "dzieci:lato"
-   ],
-   "registration": null,
-   "sub_slots": null,
-   "conditional": "CZAPURY: 20.07-14.08 nieczynna; KROSINKO: 20.07-31.07 nieczynna; DASZEWICE: 29.07-14.08 nieczynna",
-   "source_url": "http://bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/akcja-lato-z-biblioteka",
-   "is_noise": false,
-   "source_id": "mosina-biblioteka",
-   "geo": null
-  },
-  {
-   "title": "Spektakl \"Klaudek i Klaudynka\" w bibliotece",
-   "date_start": null,
+   "title": "Spektakl Very Very Hamlet",
+   "date_start": "2026-10-28",
    "date_end": null,
    "time_start": null,
    "time_end": null,
-   "venue": "Mosińska Biblioteka Publiczna, ul. Dworcowa 4",
-   "town": "Mosina",
+   "venue": "Teatr Polski, Malarnia, ul. 27 Grudnia 8/10",
+   "town": "Poznań",
    "price": {
     "free": null,
     "amount_pln": null,
@@ -296,7 +108,37 @@
    "age": {
     "min": null,
     "max": null,
-    "label": "dzieci"
+    "label": null
+   },
+   "family_friendly": false,
+   "tags": [
+    "teatr:spektakl"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://www.poznan.pl/mim/events/spektakl-very-very-hamlet-teatr-polski-malarnia-ul-27-grudnia-8-10-poznan,185021.html",
+   "is_noise": false,
+   "source_id": "poznan-kultura-rss",
+   "geo": null
+  },
+  {
+   "title": "Alicja w Krainie Czarów - spektakl",
+   "date_start": "2026-11-16",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": "Teatr Cortiqué Anny Niedźwiedź, ul. P. Mansfelda 4",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
    },
    "family_friendly": true,
    "tags": [
@@ -306,10 +148,741 @@
    "registration": null,
    "sub_slots": null,
    "conditional": null,
-   "source_url": "http://bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/spektakl-klaudek-i-klaudynka-w-bibliotece",
+   "source_url": "https://www.poznan.pl/mim/events/alicja-w-krainie-czarow-spektakl-teatr-cortiqu-233-anny-niedzwiedz-ul-p-mansfelda-4,183530.html",
    "is_noise": false,
-   "source_id": "mosina-biblioteka",
+   "source_id": "poznan-kultura-rss",
    "geo": null
+  },
+  {
+   "title": "Królowa Śniegu - spektakl",
+   "date_start": "2026-12-06",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": "Teatr Cortiqué Anny Niedźwiedź, ul. P. Mansfelda 4",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "teatr:spektakl",
+    "dzieci"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://www.poznan.pl/mim/events/krolowa-sniegu-spektakl-teatr-cortiqu-233-anny-niedzwiedz-ul-p-mansfelda-4,172247.html",
+   "is_noise": false,
+   "source_id": "poznan-kultura-rss",
+   "geo": null
+  },
+  {
+   "title": "Festiwal Moniuszki 04 - Conrad - Premiera baletowa!",
+   "date_start": "2026-12-14",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": "Teatr Wielki, ul. Fredry 9",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": false,
+   "tags": [
+    "teatr:balet",
+    "festiwal"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://www.poznan.pl/mim/events/festiwal-moniuszki-04-conrad-premiera-baletowa-teatr-wielki-ul-fredry-9-poznan,184507.html",
+   "is_noise": false,
+   "source_id": "poznan-kultura-rss",
+   "geo": null
+  },
+  {
+   "title": "Spektakl baletowy - Dziadek do orzechów",
+   "date_start": "2026-12-19",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": "Teatr Wielki, ul. Fredry 9",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "teatr:balet",
+    "dzieci"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://www.poznan.pl/mim/events/spektakl-baletowy-dziadek-do-orzechow-teatr-wielki-ul-fredry-9-poznan,184656.html",
+   "is_noise": false,
+   "source_id": "poznan-kultura-rss",
+   "geo": null
+  },
+  {
+   "title": "Spektakl gościnny - Prywatna klinika",
+   "date_start": "2026-08-29",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": "Kino Teatr Apollo, ul. Franciszka Ratajczaka 18",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": false,
+   "tags": [
+    "teatr:spektakl"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://www.poznan.pl/mim/events/spektakl-goscinny-prywatna-klinika-kino-teatr-apollo-ul-franciszka-ratajczaka-18,183436.html",
+   "is_noise": false,
+   "source_id": "poznan-kultura-rss",
+   "geo": null
+  },
+  {
+   "title": "Występ zespołu Raz Dwa Trzy w koncercie Ważne Piosenki",
+   "date_start": "2026-11-23",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": "Teatr Wielki im. Stanisława Moniuszki w Poznaniu, ul. Aleksandra Fredry 9",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": "maybe",
+   "tags": [
+    "muzyka:koncert"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://www.poznan.pl/mim/events/wystep-zespolu-raz-dwa-trzy-w-koncercie-wazne-piosenki-teatr-wielki-im-stanislawa-moniuszki-w-poznaniu-ul-aleksandra-fredry-9,185144.html",
+   "is_noise": false,
+   "source_id": "poznan-kultura-rss",
+   "geo": null
+  },
+  {
+   "title": "JESZCZE BARDZIEJ DZIKA – SZTUKA, KTÓRA ROZKWITA WŚRÓD EGZOTYCZNEJ ROŚLINNOŚCI",
+   "date_start": "2026-07-17",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": "Palmiarnia Poznańska, ul. Matejki 18",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": "Wstęp do Palmiarni"
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "sztuka:wystawa",
+    "natura:rośliny"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://palmiarnia.poznan.pl/jeszcze-bardziej-dzika-sztuka-ktora-rozkwita-wsrod-egzotycznej-roslinnosci/",
+   "is_noise": false,
+   "source_id": "palmiarnia",
+   "geo": null
+  },
+  {
+   "title": "SPACERY DLA SENIORÓW – LATO 2026",
+   "date_start": "2026-06-17",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": "Palmiarnia Poznańska, ul. Matejki 18",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": 60,
+    "max": null,
+    "label": "seniorzy"
+   },
+   "family_friendly": false,
+   "tags": [
+    "spacer",
+    "seniorzy"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://palmiarnia.poznan.pl/spacery-dla-seniorow-lato-2026/",
+   "is_noise": false,
+   "source_id": "palmiarnia",
+   "geo": null
+  },
+  {
+   "title": "XXVI Światowy Przegląd Folkloru INTEGRACJE – koncert",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": "Park Wilsona, Muszla Koncertowa, ul. Matejki 18",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": "szczegóły wkrótce"
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": "maybe",
+   "tags": [
+    "muzyka:koncert",
+    "kultura:folklor"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://palmiarnia.poznan.pl/park-wilsona/harmonogram-wydarzen-w-muszli-koncertowej/",
+   "is_noise": false,
+   "source_id": "palmiarnia",
+   "geo": null
+  },
+  {
+   "title": "DOGFEST – festyn",
+   "date_start": "2026-08-23",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": "Park Wilsona, Muszla Koncertowa, ul. Matejki 18",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": "szczegóły wkrótce"
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "festyn",
+    "zwierzęta:psy"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://palmiarnia.poznan.pl/park-wilsona/harmonogram-wydarzen-w-muszli-koncertowej/",
+   "is_noise": false,
+   "source_id": "palmiarnia",
+   "geo": null
+  },
+  {
+   "title": "SIŁY SPECJALNE – koncert",
+   "date_start": "2026-08-28",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": "Park Wilsona, Muszla Koncertowa, ul. Matejki 18",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": "szczegóły wkrótce"
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": "maybe",
+   "tags": [
+    "muzyka:koncert"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://palmiarnia.poznan.pl/park-wilsona/harmonogram-wydarzen-w-muszli-koncertowej/",
+   "is_noise": false,
+   "source_id": "palmiarnia",
+   "geo": null
+  },
+  {
+   "title": "Cykliczne warsztaty samoobrony dla mieszkańców Poznania Bezpieczny Poznaniak",
+   "date_start": "2026-06-06",
+   "date_end": "2026-10-10",
+   "time_start": null,
+   "time_end": null,
+   "venue": "Park Wilsona, ul. Matejki 18",
+   "town": "Poznań",
+   "price": {
+    "free": true,
+    "amount_pln": null,
+    "note": "Bezpłatne warsztaty"
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": "mieszkańcy Poznania"
+   },
+   "family_friendly": false,
+   "tags": [
+    "warsztaty:samoobrona",
+    "psychologia:konflikt"
+   ],
+   "registration": "https://wingtsun.pl/bezpieczny-poznaniak/",
+   "sub_slots": [
+    {
+     "time": null,
+     "label": "06.06",
+     "age": null
+    },
+    {
+     "time": null,
+     "label": "13.06",
+     "age": null
+    },
+    {
+     "time": null,
+     "label": "04.07",
+     "age": null
+    },
+    {
+     "time": null,
+     "label": "11.07",
+     "age": null
+    },
+    {
+     "time": null,
+     "label": "18.07",
+     "age": null
+    },
+    {
+     "time": null,
+     "label": "25.07",
+     "age": null
+    },
+    {
+     "time": null,
+     "label": "01.08",
+     "age": null
+    },
+    {
+     "time": null,
+     "label": "08.08",
+     "age": null
+    },
+    {
+     "time": null,
+     "label": "15.08",
+     "age": null
+    },
+    {
+     "time": null,
+     "label": "22.08",
+     "age": null
+    },
+    {
+     "time": null,
+     "label": "05.09",
+     "age": null
+    },
+    {
+     "time": null,
+     "label": "12.09",
+     "age": null
+    },
+    {
+     "time": null,
+     "label": "26.09",
+     "age": null
+    },
+    {
+     "time": null,
+     "label": "10.10",
+     "age": null
+    },
+    {
+     "time": null,
+     "label": "21.11",
+     "age": null
+    }
+   ],
+   "conditional": null,
+   "source_url": "https://palmiarnia.poznan.pl/park-wilsona/harmonogram-wydarzen-w-muszli-koncertowej/",
+   "is_noise": false,
+   "source_id": "palmiarnia",
+   "geo": null
+  },
+  {
+   "title": "VII Poznańskie Dni Sukulentów. Kaktusy Meksyku",
+   "date_start": null,
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": "Palmiarnia Poznańska, ul. Matejki 18",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": "Wstęp zgodnie z cennikiem Palmiarni"
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "rośliny:sukulenty",
+    "rośliny:kaktusy",
+    "wystawy:botanika",
+    "kiermasz"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://palmiarnia.poznan.pl/vii-poznanskie-dni-sukulentow-kaktusy-meksyku/",
+   "is_noise": false,
+   "source_id": "palmiarnia",
+   "geo": null
+  },
+  {
+   "title": "Bezpłatna mammografia w Luboniu",
+   "date_start": "2026-07-31",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": null,
+   "town": "Luboń",
+   "price": {
+    "free": true,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "zdrowie:mammografia"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://lubon.pl/news/content/5269",
+   "is_noise": false,
+   "source_id": "lubon-city"
+  },
+  {
+   "title": "Eko Piknik w Wiśniowym Sadzie",
+   "date_start": "2026-07-07",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": "Wiśniowy Sad",
+   "town": "Luboń",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": "maybe",
+   "tags": [
+    "piknik",
+    "ekologia"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://lubon.pl/news/content/5264",
+   "is_noise": false,
+   "source_id": "lubon-city",
+   "geo": {
+    "lat": 52.3408551,
+    "lon": 16.8832994
+   }
+  },
+  {
+   "title": "Letnie półkolonie",
+   "date_start": null,
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": "Ośrodek Kultury w Luboniu, ul. Jana III Sobieskiego 97",
+   "town": "Luboń",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "dzieci:półkolonie"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://www.oklubon.pl/wydarzenia/letnie-polkolonie",
+   "is_noise": false,
+   "source_id": "lubon-ok",
+   "geo": null
+  },
+  {
+   "title": "Wycieczka do Leszna",
+   "date_start": null,
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": null,
+   "town": "Leszno",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "wycieczka",
+    "edukacja"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://www.oklubon.pl/wydarzenia/wycieczka-do-leszna",
+   "is_noise": false,
+   "source_id": "lubon-ok"
+  },
+  {
+   "title": "Wystawa plastyczna",
+   "date_start": null,
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": "Ośrodek Kultury w Luboniu, ul. Jana III Sobieskiego 97",
+   "town": "Luboń",
+   "price": {
+    "free": true,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "sztuka:plastyka",
+    "wystawa"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://www.oklubon.pl/wydarzenia/wystawa-plastyczna",
+   "is_noise": false,
+   "source_id": "lubon-ok",
+   "geo": null
+  },
+  {
+   "title": "Letnie Półkolonie - Turnus I",
+   "date_start": "2026-07-13",
+   "date_end": "2026-07-17",
+   "time_start": null,
+   "time_end": null,
+   "venue": "Ośrodek Kultury w Luboniu",
+   "town": "Luboń",
+   "price": {
+    "free": false,
+    "amount_pln": 440,
+    "note": "za osobę"
+   },
+   "age": {
+    "min": 7,
+    "max": 11,
+    "label": "7-11 lat (ukończone 7 lat)"
+   },
+   "family_friendly": true,
+   "tags": [
+    "dzieci:półkolonie",
+    "wakacje:lato"
+   ],
+   "registration": "Zapisy osobiste w Ośrodku Kultury od 11 czerwca 2026 r. od godziny 17:00",
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://www.oklubon.pl/wydarzenia/letnie-polkolonie",
+   "is_noise": false,
+   "container": "Letnie Półkolonie 2026",
+   "source_id": "lubon-ok",
+   "geo": {
+    "lat": 52.3273631,
+    "lon": 16.8787772
+   }
+  },
+  {
+   "title": "Letnie Półkolonie - Turnus II",
+   "date_start": "2026-07-20",
+   "date_end": "2026-07-24",
+   "time_start": null,
+   "time_end": null,
+   "venue": "Ośrodek Kultury w Luboniu",
+   "town": "Luboń",
+   "price": {
+    "free": false,
+    "amount_pln": 440,
+    "note": "za osobę"
+   },
+   "age": {
+    "min": 7,
+    "max": 11,
+    "label": "7-11 lat (ukończone 7 lat)"
+   },
+   "family_friendly": true,
+   "tags": [
+    "dzieci:półkolonie",
+    "wakacje:lato"
+   ],
+   "registration": "Zapisy osobiste w Ośrodku Kultury od 11 czerwca 2026 r. od godziny 17:00",
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://www.oklubon.pl/wydarzenia/letnie-polkolonie",
+   "is_noise": false,
+   "container": "Letnie Półkolonie 2026",
+   "source_id": "lubon-ok",
+   "geo": {
+    "lat": 52.3273631,
+    "lon": 16.8787772
+   }
+  },
+  {
+   "title": "Wycieczka do Leszna",
+   "date_start": "2026-07-02",
+   "date_end": null,
+   "time_start": "08:30",
+   "time_end": "15:30",
+   "venue": "Lotnisko w Lesznie",
+   "town": "Leszna",
+   "price": {
+    "free": false,
+    "amount_pln": 250,
+    "note": "od osoby"
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": "dzieci szkolne wyłącznie pod opieką dorosłego"
+   },
+   "family_friendly": true,
+   "tags": [
+    "wycieczka",
+    "lotnictwo",
+    "tunel aerodynamiczny",
+    "drony",
+    "edukacja"
+   ],
+   "registration": "618130072",
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://www.oklubon.pl/wydarzenia/wycieczka-do-leszna",
+   "is_noise": false,
+   "source_id": "lubon-ok",
+   "geo": null
+  },
+  {
+   "title": "Wystawa plastyczna",
+   "date_start": "2026-06-25",
+   "date_end": "2026-06-25",
+   "time_start": "17:00",
+   "time_end": null,
+   "venue": "Ośrodek Kultury Luboń",
+   "town": "Luboń",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "sztuka:wystawa",
+    "dzieci:prace plastyczne"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://www.oklubon.pl/wydarzenia/wystawa-plastyczna",
+   "is_noise": false,
+   "source_id": "lubon-ok",
+   "geo": {
+    "lat": 52.3274838,
+    "lon": 16.8782268
+   }
   },
   {
    "title": "Moliki w Ptasim Parku – literackie spotkania dla najmłodszych",
@@ -338,8 +911,8 @@
    "sub_slots": null,
    "conditional": null,
    "source_url": "http://bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/akcja-lato-z-biblioteka",
-   "is_noise": false,
    "container": "Akcja Lato z Biblioteką",
+   "is_noise": false,
    "source_id": "mosina-biblioteka",
    "geo": null
   },
@@ -365,14 +938,14 @@
    "tags": [
     "dzieci:warsztaty",
     "warsztaty:plastyka",
-    "warsztaty:zajęcia sensoryczne"
+    "warsztaty:sensoryczne"
    ],
    "registration": "61 8 132 332 lub [tel. w źródle]",
    "sub_slots": null,
    "conditional": null,
    "source_url": "http://bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/akcja-lato-z-biblioteka",
-   "is_noise": false,
    "container": "Akcja Lato z Biblioteką",
+   "is_noise": false,
    "source_id": "mosina-biblioteka",
    "geo": null
   },
@@ -404,8 +977,8 @@
    "sub_slots": null,
    "conditional": null,
    "source_url": "http://bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/akcja-lato-z-biblioteka",
-   "is_noise": false,
    "container": "Akcja Lato z Biblioteką",
+   "is_noise": false,
    "source_id": "mosina-biblioteka",
    "geo": null
   },
@@ -430,14 +1003,15 @@
    "family_friendly": true,
    "tags": [
     "dzieci:warsztaty",
-    "warsztaty:podróże"
+    "warsztaty:podróże",
+    "edukacja:geografia"
    ],
    "registration": "61 8 132 332 lub [tel. w źródle]",
    "sub_slots": null,
    "conditional": null,
    "source_url": "http://bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/akcja-lato-z-biblioteka",
-   "is_noise": false,
    "container": "Akcja Lato z Biblioteką",
+   "is_noise": false,
    "source_id": "mosina-biblioteka",
    "geo": null
   },
@@ -468,8 +1042,8 @@
    "sub_slots": null,
    "conditional": null,
    "source_url": "http://bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/akcja-lato-z-biblioteka",
-   "is_noise": false,
    "container": "Akcja Lato z Biblioteką",
+   "is_noise": false,
    "source_id": "mosina-biblioteka",
    "geo": null
   },
@@ -479,7 +1053,7 @@
    "date_end": "2026-07-30",
    "time_start": "10:00",
    "time_end": null,
-   "venue": "Dom Kultury \"Remiza\" w Plewiskach",
+   "venue": "Dom Kultury Remiza w Plewiskach",
    "town": "Plewiska",
    "price": {
     "free": null,
@@ -493,8 +1067,7 @@
    },
    "family_friendly": "maybe",
    "tags": [
-    "warsztaty:papier",
-    "dzieci"
+    "warsztaty:papier"
    ],
    "registration": null,
    "sub_slots": null,
@@ -510,7 +1083,7 @@
    "date_end": null,
    "time_start": "17:00",
    "time_end": null,
-   "venue": "Dom Kultury w Rosnówku",
+   "venue": "Dom Kultury Rosnówko",
    "town": "Rosnówko",
    "price": {
     "free": null,
@@ -520,12 +1093,11 @@
    "age": {
     "min": 18,
     "max": null,
-    "label": "dorośli"
+    "label": "dla dorosłych"
    },
    "family_friendly": false,
    "tags": [
-    "warsztaty:kwiaty",
-    "dorosli"
+    "warsztaty:kwiaty"
    ],
    "registration": null,
    "sub_slots": null,
@@ -533,7 +1105,10 @@
    "source_url": "https://gokkomorniki.pl/kalendarz-wydarzen/warsztaty-kwiaty-xxl-w-rosnowku.html",
    "is_noise": false,
    "source_id": "komorniki-city",
-   "geo": null
+   "geo": {
+    "lat": 52.3020792,
+    "lon": 16.7649647
+   }
   },
   {
    "title": "Kreatywne warsztaty letnie w Głuchowie",
@@ -555,8 +1130,7 @@
    },
    "family_friendly": "maybe",
    "tags": [
-    "warsztaty:kreatywne",
-    "lato"
+    "warsztaty:kreatywne"
    ],
    "registration": null,
    "sub_slots": null,
@@ -585,8 +1159,7 @@
    },
    "family_friendly": "maybe",
    "tags": [
-    "literatura:poezja",
-    "kultura"
+    "kultura:poezja"
    ],
    "registration": null,
    "sub_slots": null,
@@ -596,7 +1169,7 @@
    "source_id": "komorniki-city"
   },
   {
-   "title": "Komorniki Jazz Club No. 7 – Dixie Company, Patrycja Kubale",
+   "title": "Komorniki Jazz Club No. 7 – Dixie Company & Patrycja Kubale",
    "date_start": "2026-08-22",
    "date_end": null,
    "time_start": null,
@@ -615,76 +1188,12 @@
    },
    "family_friendly": "maybe",
    "tags": [
-    "muzyka:jazz",
-    "koncert"
+    "muzyka:jazz"
    ],
    "registration": null,
    "sub_slots": null,
    "conditional": null,
    "source_url": "https://gokkomorniki.pl/aktualnosci/komorniki-jazz-club-no-7-dixie-company-patrycja-kubale.html",
-   "is_noise": false,
-   "source_id": "komorniki-city"
-  },
-  {
-   "title": "14.08.2026 | Rosnówko - Karaoke dla dzieci",
-   "date_start": "2026-08-14",
-   "date_end": null,
-   "time_start": null,
-   "time_end": null,
-   "venue": "Dom Kultury w Rosnówku",
-   "town": "Rosnówko",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": {
-    "min": null,
-    "max": 17,
-    "label": "dzieci"
-   },
-   "family_friendly": true,
-   "tags": [
-    "muzyka:karaoke",
-    "dzieci",
-    "piątek kulturalny"
-   ],
-   "registration": null,
-   "sub_slots": null,
-   "conditional": null,
-   "source_url": "https://gokkomorniki.pl/aktualnosci/14082026-rosnowko-karaoke-dla-dzieci.html",
-   "is_noise": false,
-   "source_id": "komorniki-city",
-   "geo": null
-  },
-  {
-   "title": "Święto Plonów 2026",
-   "date_start": "2026-09-05",
-   "date_end": null,
-   "time_start": null,
-   "time_end": null,
-   "venue": null,
-   "town": "Szreniawa",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": {
-    "min": null,
-    "max": null,
-    "label": null
-   },
-   "family_friendly": true,
-   "tags": [
-    "festyn",
-    "tradycja",
-    "plony"
-   ],
-   "registration": null,
-   "sub_slots": null,
-   "conditional": null,
-   "source_url": "https://gokkomorniki.pl/aktualnosci/05092026-szreniawa-swieto-plonow-2026.html",
    "is_noise": false,
    "source_id": "komorniki-city"
   },
@@ -708,8 +1217,7 @@
    },
    "family_friendly": "maybe",
    "tags": [
-    "film:plener",
-    "kino"
+    "film:plener"
    ],
    "registration": null,
    "sub_slots": null,
@@ -717,6 +1225,40 @@
    "source_url": "https://gokkomorniki.pl/aktualnosci/grupa-mocarta-w-komornikach.html",
    "is_noise": false,
    "source_id": "komorniki-city"
+  },
+  {
+   "title": "Święto Plonów 2026",
+   "date_start": "2026-09-05",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": "Szreniawa",
+   "town": "Szreniawa",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "imprezy:festyn",
+    "imprezy:święto"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://gokkomorniki.pl/aktualnosci/05092026-szreniawa-swieto-plonow-2026.html",
+   "is_noise": false,
+   "source_id": "komorniki-gok",
+   "geo": {
+    "lat": 52.3177702,
+    "lon": 16.8008807
+   }
   },
   {
    "title": "Komorniki Jazz Club No. 8 – Basia Małecka",
@@ -738,65 +1280,12 @@
    },
    "family_friendly": "maybe",
    "tags": [
-    "muzyka:jazz",
-    "koncert"
+    "muzyka:jazz"
    ],
    "registration": null,
    "sub_slots": null,
    "conditional": null,
    "source_url": "https://gokkomorniki.pl/aktualnosci/komorniki-jazz-club-no-8-basia-malecka.html",
-   "is_noise": false,
-   "source_id": "komorniki-city"
-  },
-  {
-   "title": "Letnia Akademia JOGI-Wiry",
-   "date_start": "2026-07-23",
-   "date_end": null,
-   "time_start": "18:00",
-   "time_end": null,
-   "venue": null,
-   "town": "Wiry",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": "bezpłatne zajęcia"
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "fitness:joga",
-    "wakacje"
-   ],
-   "registration": null,
-   "sub_slots": null,
-   "conditional": null,
-   "source_url": "https://gosirkomorniki.pl/",
-   "is_noise": false,
-   "source_id": "komorniki-city"
-  },
-  {
-   "title": "Letnia Akademia ZUMBY",
-   "date_start": "2026-07-23",
-   "date_end": null,
-   "time_start": "18:30",
-   "time_end": null,
-   "venue": null,
-   "town": "Komorniki",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": "bezpłatne zajęcia"
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "fitness:zumba",
-    "wakacje"
-   ],
-   "registration": null,
-   "sub_slots": null,
-   "conditional": null,
-   "source_url": "https://gosirkomorniki.pl/",
    "is_noise": false,
    "source_id": "komorniki-city"
   },
@@ -813,8 +1302,12 @@
     "amount_pln": null,
     "note": "bezpłatne zajęcia"
    },
-   "age": null,
-   "family_friendly": "maybe",
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
    "tags": [
     "fitness:joga",
     "wakacje"
@@ -839,10 +1332,74 @@
     "amount_pln": null,
     "note": "bezpłatne zajęcia"
    },
-   "age": null,
-   "family_friendly": "maybe",
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
    "tags": [
     "fitness:joga",
+    "wakacje"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://gosirkomorniki.pl/",
+   "is_noise": false,
+   "source_id": "komorniki-city"
+  },
+  {
+   "title": "Letnia Akademia ZUMBY-Plewiska",
+   "date_start": "2026-07-28",
+   "date_end": null,
+   "time_start": "18:30",
+   "time_end": null,
+   "venue": null,
+   "town": "Plewiska",
+   "price": {
+    "free": true,
+    "amount_pln": null,
+    "note": "bezpłatne zajęcia"
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "fitness:zumba",
+    "wakacje"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://gosirkomorniki.pl/",
+   "is_noise": false,
+   "source_id": "komorniki-city"
+  },
+  {
+   "title": "Letnia Akademia ZUMBY-Chomęcice",
+   "date_start": "2026-07-29",
+   "date_end": null,
+   "time_start": "18:30",
+   "time_end": null,
+   "venue": null,
+   "town": "Chomęcice",
+   "price": {
+    "free": true,
+    "amount_pln": null,
+    "note": "bezpłatne zajęcia"
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "fitness:zumba",
     "wakacje"
    ],
    "registration": null,
@@ -955,13 +1512,13 @@
    }
   },
   {
-   "title": "Ćwiczenia – ALARM2026",
-   "date_start": "2026-07-21",
-   "date_end": "2026-07-22",
+   "title": "Wakacyjne warsztaty z tworzenia rolek",
+   "date_start": "2026-07-20",
+   "date_end": null,
    "time_start": null,
    "time_end": null,
    "venue": null,
-   "town": "Tarnowo Podgórne",
+   "town": "Komorniki",
    "price": {
     "free": null,
     "amount_pln": null,
@@ -972,25 +1529,26 @@
     "max": null,
     "label": null
    },
-   "family_friendly": false,
+   "family_friendly": "maybe",
    "tags": [
-    "bezpieczeństwo:ćwiczenia"
+    "warsztaty:multimedia",
+    "warsztaty:tworzenie treści"
    ],
    "registration": null,
    "sub_slots": null,
    "conditional": null,
-   "source_url": "https://www.tarnowo-podgorne.pl/aktualnosci/cwiczenia-alarm2026/",
-   "is_noise": true,
-   "source_id": "tarnowo-city"
+   "source_url": "https://gokkomorniki.pl/aktualnosci/wakacyjne-warsztaty-z-tworzenia-rolek.html",
+   "is_noise": false,
+   "source_id": "komorniki-gok"
   },
   {
-   "title": "Wakacje 2026 w Gminie Tarnowo Podgórne – sierpień",
-   "date_start": "2026-08-01",
-   "date_end": "2026-08-31",
+   "title": "Karaoke dla dzieci",
+   "date_start": "2026-08-14",
+   "date_end": null,
    "time_start": null,
    "time_end": null,
-   "venue": null,
-   "town": "Tarnowo Podgórne",
+   "venue": "Dom Kultury \"Klub\" w Rosnówku",
+   "town": "Rosnówko",
    "price": {
     "free": null,
     "amount_pln": null,
@@ -998,82 +1556,929 @@
    },
    "age": {
     "min": null,
-    "max": null,
-    "label": null
+    "max": 17,
+    "label": "dzieci"
    },
    "family_friendly": true,
    "tags": [
-    "dzieci:wakacje",
-    "imprezy:program"
+    "muzyka:karaoke",
+    "dzieci"
    ],
    "registration": null,
    "sub_slots": null,
    "conditional": null,
-   "source_url": "https://www.tarnowo-podgorne.pl/aktualnosci/wakacje-2026-w-gminie-tarnowo-podgorne-sierpien/",
+   "source_url": "https://gokkomorniki.pl/aktualnosci/14082026-rosnowko-karaoke-dla-dzieci.html",
    "is_noise": false,
-   "source_id": "tarnowo-city"
+   "source_id": "komorniki-gok",
+   "geo": null
   },
   {
-   "title": "Kino Sezamu dla dzieci: \"Toy Story 5\"",
-   "date_start": "2026-07-23",
+   "title": "Warsztaty Kwiaty XXL",
+   "date_start": "2026-07-31",
    "date_end": null,
-   "time_start": "17:00",
+   "time_start": null,
    "time_end": null,
-   "venue": "CK Przeźmierowo",
-   "town": "Tarnowo Podgórne",
+   "venue": "Dom Kultury \"Klub\" w Rosnówku",
+   "town": "Rosnówko",
    "price": {
-    "free": false,
-    "amount_pln": 15,
-    "note": null
-   },
-   "age": {
-    "min": null,
-    "max": null,
-    "label": "dla dzieci"
-   },
-   "family_friendly": true,
-   "tags": [
-    "film:kino",
-    "film:dla dzieci"
-   ],
-   "registration": "https://biletyna.pl/",
-   "sub_slots": null,
-   "conditional": null,
-   "source_url": "https://goksezam.pl/",
-   "is_noise": false,
-   "source_id": "tarnowo-gok",
-   "geo": {
-    "lat": 52.432383,
-    "lon": 16.7767789
-   }
-  },
-  {
-   "title": "Kino Sezamu: \"Backrooms. Bez wyjścia\"",
-   "date_start": "2026-07-24",
-   "date_end": null,
-   "time_start": "19:00",
-   "time_end": null,
-   "venue": "CK Przeźmierowo",
-   "town": "Tarnowo Podgórne",
-   "price": {
-    "free": false,
-    "amount_pln": 18,
+    "free": null,
+    "amount_pln": null,
     "note": null
    },
    "age": {
     "min": 18,
     "max": null,
-    "label": "dla dorosłych"
+    "label": "dorośli"
    },
    "family_friendly": false,
    "tags": [
-    "film:kino",
-    "film:dla dorosłych"
+    "warsztaty:florystyka",
+    "warsztaty:kreatywne"
    ],
-   "registration": "https://biletyna.pl/",
+   "registration": null,
    "sub_slots": null,
    "conditional": null,
-   "source_url": "https://goksezam.pl/",
+   "source_url": "https://gokkomorniki.pl/aktualnosci/31072026-rosnowko-warsztaty-kwiaty-xxl.html",
+   "is_noise": false,
+   "source_id": "komorniki-gok",
+   "geo": null
+  },
+  {
+   "title": "Projekt \"Wyspa Minionków\" - Warsztaty",
+   "date_start": "2026-07-20",
+   "date_end": "2026-07-23",
+   "time_start": null,
+   "time_end": null,
+   "venue": "Dom Kultury \"Remiza\" w Plewiskach",
+   "town": "Plewiska",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "warsztaty:kreatywne",
+    "dzieci"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://gokkomorniki.pl/aktualnosci/20-23072026-plewiska-projekt-wyspa-minionkow-warsztaty.html",
+   "is_noise": false,
+   "source_id": "komorniki-gok",
+   "geo": null
+  },
+  {
+   "title": "Projekt \"Papier i nożyczki\"",
+   "date_start": "2026-07-27",
+   "date_end": "2026-07-30",
+   "time_start": null,
+   "time_end": null,
+   "venue": "Dom Kultury \"Remiza\" w Plewiskach",
+   "town": "Plewiska",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "warsztaty:kreatywne",
+    "warsztaty:papieroplastyka"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://gokkomorniki.pl/aktualnosci/27-30072026-plewiska-projekt-papier-i-nozyczki.html",
+   "is_noise": false,
+   "source_id": "komorniki-gok",
+   "geo": null
+  },
+  {
+   "title": "Kreatywne warsztaty letnie",
+   "date_start": "2026-08-03",
+   "date_end": "2026-08-06",
+   "time_start": null,
+   "time_end": null,
+   "venue": "Dom Kultury \"Dworek\" w Głuchowie",
+   "town": "Głuchowo",
+   "price": {
+    "free": true,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "warsztaty:kreatywne"
+   ],
+   "registration": "mailowa",
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://gokkomorniki.pl/aktualnosci/03-06082026-gluchowo-kreatywne-warsztaty-letnie.html",
+   "is_noise": false,
+   "source_id": "komorniki-gok",
+   "geo": null
+  },
+  {
+   "title": "Dźwięki skrzypiec w zieleni",
+   "date_start": "2026-08-20",
+   "date_end": null,
+   "time_start": "17:00",
+   "time_end": "18:00",
+   "venue": "Dom Kultury \"Nad Wirynką\" w Łęczycy",
+   "town": "Łęczyca",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": "maybe",
+   "tags": [
+    "muzyka:koncert",
+    "muzyka:skrzypce"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://gokkomorniki.pl/aktualnosci/20082026-leczyca-dzwieki-skrzypiec-w-zieleni.html",
+   "is_noise": false,
+   "source_id": "komorniki-gok",
+   "geo": null
+  },
+  {
+   "title": "Wieczór poezji przy ognisku",
+   "date_start": "2026-08-13",
+   "date_end": null,
+   "time_start": "17:00",
+   "time_end": null,
+   "venue": "Dom Kultury \"Nad Wirynką\" w Łęczycy",
+   "town": "Łęczyca",
+   "price": {
+    "free": true,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": "maybe",
+   "tags": [
+    "literatura:poezja",
+    "imprezy:wieczór"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://gokkomorniki.pl/aktualnosci/13082026-leczyca-wieczor-poezji-przy-ognisku.html",
+   "is_noise": false,
+   "source_id": "komorniki-gok",
+   "geo": null
+  },
+  {
+   "title": "\"Lato nad Stawami\" - Festyn",
+   "date_start": "2026-07-18",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": "Dom Kultury \"Remiza\" w Plewiskach",
+   "town": "Plewiska",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "imprezy:festyn",
+    "imprezy:pirackie"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://gokkomorniki.pl/aktualnosci/18072026-plewiska-lato-nad-stawami-w-dk-remiza.html",
+   "is_noise": false,
+   "source_id": "komorniki-gok",
+   "geo": null
+  },
+  {
+   "title": "Wakacyjne warsztaty komiksowe w CTiK",
+   "date_start": "2026-07-20",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": "Centrum Twórczości i Innowacji Komorniki (CTiK)",
+   "town": "Komorniki",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "warsztaty:komiks",
+    "warsztaty:kreatywne"
+   ],
+   "registration": "zapisy wymagane",
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://gokkomorniki.pl/aktualnosci/wakacyjne-warsztaty-komiksowe-w-ctik.html",
+   "is_noise": false,
+   "source_id": "komorniki-gok",
+   "geo": null
+  },
+  {
+   "title": "Warsztaty dla dorosłych - kwiaty XXL",
+   "date_start": "2026-07-04",
+   "date_end": null,
+   "time_start": "16:00",
+   "time_end": null,
+   "venue": null,
+   "town": "Szreniawa",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": 18,
+    "max": null,
+    "label": "dorośli"
+   },
+   "family_friendly": false,
+   "tags": [
+    "warsztaty:kwiaty"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://gokkomorniki.pl/kalendarz-wydarzen/",
+   "is_noise": false,
+   "source_id": "komorniki-gok"
+  },
+  {
+   "title": "Kurs tańca towarzyskiego - Wiry",
+   "date_start": "2026-07-10",
+   "date_end": null,
+   "time_start": "17:00",
+   "time_end": null,
+   "venue": null,
+   "town": "Wiry",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": false,
+   "tags": [
+    "taniec:towarzyski"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://gokkomorniki.pl/kalendarz-wydarzen/",
+   "is_noise": false,
+   "source_id": "komorniki-gok"
+  },
+  {
+   "title": "Festyn tropikalny w Szreniawie",
+   "date_start": "2026-07-11",
+   "date_end": null,
+   "time_start": "17:00",
+   "time_end": null,
+   "venue": null,
+   "town": "Szreniawa",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "festyn:rodzinny"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://gokkomorniki.pl/kalendarz-wydarzen/",
+   "is_noise": false,
+   "source_id": "komorniki-gok"
+  },
+  {
+   "title": "Wieniawski w blasku młodych talentów - Koncert",
+   "date_start": "2026-07-12",
+   "date_end": null,
+   "time_start": "17:00",
+   "time_end": null,
+   "venue": "Centrum Tradycji i Kultury w Komornikach",
+   "town": "Komorniki",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "muzyka:koncert"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://gokkomorniki.pl/kalendarz-wydarzen/",
+   "is_noise": false,
+   "source_id": "komorniki-gok",
+   "geo": null
+  },
+  {
+   "title": "Warsztaty dla dorosłych - Dworek",
+   "date_start": "2026-07-13",
+   "date_end": null,
+   "time_start": "18:00",
+   "time_end": null,
+   "venue": null,
+   "town": "Dworek",
+   "price": {
+    "free": true,
+    "amount_pln": null,
+    "note": "bezpłatne"
+   },
+   "age": {
+    "min": 18,
+    "max": null,
+    "label": "dorośli"
+   },
+   "family_friendly": false,
+   "tags": [
+    "warsztaty:kreatywne",
+    "warsztaty:gips"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://gokkomorniki.pl/kalendarz-wydarzen/",
+   "is_noise": false,
+   "source_id": "komorniki-gok"
+  },
+  {
+   "title": "Warsztaty z tworzenia obrazów z kawy, herbaty i przypraw dla dorosłych",
+   "date_start": "2026-07-15",
+   "date_end": null,
+   "time_start": "17:00",
+   "time_end": null,
+   "venue": "Dom Kultury \"Nad Wirynką\" w Łęczycy",
+   "town": "Łęczyce",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": 18,
+    "max": null,
+    "label": "dorośli"
+   },
+   "family_friendly": false,
+   "tags": [
+    "warsztaty:kreatywne"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://gokkomorniki.pl/kalendarz-wydarzen/",
+   "is_noise": false,
+   "source_id": "komorniki-gok",
+   "geo": null
+  },
+  {
+   "title": "Warsztaty decoupage - Wiry",
+   "date_start": "2026-07-17",
+   "date_end": null,
+   "time_start": "17:00",
+   "time_end": null,
+   "venue": null,
+   "town": "Wiry",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": false,
+   "tags": [
+    "warsztaty:decoupage"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://gokkomorniki.pl/kalendarz-wydarzen/",
+   "is_noise": false,
+   "source_id": "komorniki-gok"
+  },
+  {
+   "title": "Lato nad stawami - Plewiska",
+   "date_start": "2026-07-18",
+   "date_end": null,
+   "time_start": "11:00",
+   "time_end": null,
+   "venue": "Dom Kultury Remiza w Plewiskach",
+   "town": "Plewiska",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "festyn:rodzinny"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://gokkomorniki.pl/kalendarz-wydarzen/",
+   "is_noise": false,
+   "source_id": "komorniki-gok",
+   "geo": null
+  },
+  {
+   "title": "Projekt \"Wyspa Minionków\" Warsztaty w Plewiskach",
+   "date_start": "2026-07-20",
+   "date_end": "2026-07-23",
+   "time_start": "10:00",
+   "time_end": null,
+   "venue": "Dom Kultury \"Remiza\" w Plewiskach",
+   "town": "Plewiska",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "warsztaty:dzieci"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://gokkomorniki.pl/kalendarz-wydarzen/",
+   "is_noise": false,
+   "source_id": "komorniki-gok",
+   "geo": null
+  },
+  {
+   "title": "Owocowe Psoty",
+   "date_start": "2026-07-26",
+   "date_end": null,
+   "time_start": "12:00",
+   "time_end": null,
+   "venue": null,
+   "town": "Dopiewo",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": "maybe",
+   "tags": [
+    "dzieci:zabawy",
+    "kultura:impreza"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://dopiewo.pl/wydarzenia/2026-06-29/owocowe-psoty-1",
+   "is_noise": false,
+   "source_id": "dopiewo-city"
+  },
+  {
+   "title": "Owocowy Chillout",
+   "date_start": "2026-07-26",
+   "date_end": null,
+   "time_start": "17:00",
+   "time_end": null,
+   "venue": null,
+   "town": "Dopiewo",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": "maybe",
+   "tags": [
+    "kultura:impreza",
+    "muzyka"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://dopiewo.pl/wydarzenia/2026-06-29/owocowy-chillout-1",
+   "is_noise": false,
+   "source_id": "dopiewo-city"
+  },
+  {
+   "title": "Ulepione z gliny - warsztaty ceramiczne",
+   "date_start": "2026-07-27",
+   "date_end": null,
+   "time_start": "16:30",
+   "time_end": null,
+   "venue": null,
+   "town": "Dopiewo",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": "maybe",
+   "tags": [
+    "warsztaty:ceramika",
+    "dzieci:zabawy"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://dopiewo.pl/wydarzenia/2026-07-10/ulepione-z-gliny-warsztaty-ceramiczne-0",
+   "is_noise": false,
+   "source_id": "dopiewo-city"
+  },
+  {
+   "title": "Parkowe Spotkania z Kulturą",
+   "date_start": "2026-07-25",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": "Park w Dąbrówce",
+   "town": "Dąbrówka",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "kultura:impreza",
+    "muzyka",
+    "spektakl"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://dopiewo.pl/aktualnosci/2026-07-20/parkowe-spotkania-z-kultura",
+   "is_noise": false,
+   "source_id": "dopiewo-city",
+   "geo": {
+    "lat": 50.2777889,
+    "lon": 19.0711472
+   }
+  },
+  {
+   "title": "Sportowo-kulturalne Półkolonie Letnie",
+   "date_start": "2026-08-24",
+   "date_end": "2026-08-28",
+   "time_start": null,
+   "time_end": null,
+   "venue": "Gminny Ośrodek Sportu i Rekreacji w Dopiewie",
+   "town": "Dopiewo",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": "dzieci"
+   },
+   "family_friendly": true,
+   "tags": [
+    "sport:zajęcia",
+    "kultura:warsztaty",
+    "dzieci:półkolonie"
+   ],
+   "registration": "https://gosir.dopiewo.pl",
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://dopiewo.pl/aktualnosci/2026-07-21/sportowo-kulturalne-polkolonie-letnie",
+   "is_noise": false,
+   "source_id": "dopiewo-city",
+   "geo": null
+  },
+  {
+   "title": "Sportowo-Kulturalne Półkolonie Letnie z GOSiR w Dopiewie",
+   "date_start": "2026-08-24",
+   "date_end": "2026-08-28",
+   "time_start": null,
+   "time_end": null,
+   "venue": "Gminny Ośrodek Sportu i Rekreacji w Dopiewie, ul. Polna 1a",
+   "town": "Dopiewo",
+   "price": {
+    "free": false,
+    "amount_pln": 400,
+    "note": "400 zł od osoby"
+   },
+   "age": {
+    "min": 6,
+    "max": 14,
+    "label": "uczniowie klas 1-4 i 5-8 w roku szkolnym 2025/26"
+   },
+   "family_friendly": true,
+   "tags": [
+    "dzieci:półkolonie",
+    "sport:wielodyscyplinowy",
+    "kultura"
+   ],
+   "registration": "+48 61 814 82 62, [e-mail w źródle]",
+   "sub_slots": [
+    {
+     "time": null,
+     "label": "Grupa I - uczniowie klas 1-4",
+     "age": {
+      "min": 6,
+      "max": 10,
+      "label": null
+     }
+    },
+    {
+     "time": null,
+     "label": "Grupa II - uczniowie klas 5-8",
+     "age": {
+      "min": 11,
+      "max": 14,
+      "label": null
+     }
+    }
+   ],
+   "conditional": "max. 30 uczestników, decyduje kolejność zgłoszeń",
+   "source_url": "https://gosir.dopiewo.pl/aktualnosci/sportowo-kulturalne-polkolonie-letnie-z-gosir-w-dopiewie",
+   "is_noise": false,
+   "source_id": "dopiewo-gosir",
+   "geo": null
+  },
+  {
+   "title": "Owocowy Turniej Siatkówki Plażowej - Zborowo na Sportowo",
+   "date_start": "2026-08-02",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": "Owocowa Plaża w Zborowie",
+   "town": "Zborów",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "sport:siatkówka",
+    "sport:plaża",
+    "turniej"
+   ],
+   "registration": "61-814-82-62 lub [e-mail w źródle]",
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://gosir.dopiewo.pl/aktualnosci/mamy-komplet-druzyn-na-owocowy-turniej-siatkowki-plazowej",
+   "is_noise": false,
+   "source_id": "dopiewo-gosir",
+   "geo": null
+  },
+  {
+   "title": "Koszykarski Aktywny Orlik w Gminie Dopiewo",
+   "date_start": "2026-07-25",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": "Kompleks Boisk Orlik 2012, Dopiewo",
+   "town": "Dopiewo",
+   "price": {
+    "free": true,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "sport:koszykówka",
+    "gry zespołowe",
+    "projekt:Aktywny Orlik"
+   ],
+   "registration": "61-814-82-62 lub [e-mail w źródle]",
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://gosir.dopiewo.pl/aktualnosci/koszykarski-aktywny-orlik-w-gminie-dopiewo-25-lipca",
+   "is_noise": false,
+   "source_id": "dopiewo-gosir",
+   "geo": null
+  },
+  {
+   "title": "Zborowo na Sportowo - II edycja",
+   "date_start": "2026-08-02",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": "Owocowa Plaża w Zborowie",
+   "town": "Zborów",
+   "price": {
+    "free": true,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "sport:wielodyscyplinowy",
+    "turnieje",
+    "plaża"
+   ],
+   "registration": "61-814-82-62 lub [e-mail w źródle]",
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://gosir.dopiewo.pl/aktualnosci/w-pierwsza-niedziele-sierpnia-zapraszamy-na-ii-edycje-zborowo-na-sportowo",
+   "is_noise": false,
+   "source_id": "dopiewo-gosir",
+   "geo": null
+  },
+  {
+   "title": "Sportowe Soboty - Lato 2026",
+   "date_start": "2026-06-27",
+   "date_end": "2026-08-31",
+   "time_start": null,
+   "time_end": null,
+   "venue": "Gminny Ośrodek Sportu i Rekreacji w Dopiewie",
+   "town": "Dopiewo",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": "całe rodziny"
+   },
+   "family_friendly": true,
+   "tags": [
+    "sport:wielodyscyplinowy",
+    "rodzina",
+    "projekt:Sportowe Soboty"
+   ],
+   "registration": "61-814-82-62 lub [e-mail w źródle]",
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://gosir.dopiewo.pl/aktualnosci/sportowe-soboty-lato-2026",
+   "is_noise": false,
+   "source_id": "dopiewo-gosir",
+   "geo": null
+  },
+  {
+   "title": "Owocowy Chillout na Owocowej Plaży",
+   "date_start": "2026-06-27",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": "Owocowa Plaża w Zborowie",
+   "town": "Zborów",
+   "price": {
+    "free": true,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "plaża",
+    "rekreacja",
+    "projekt:Owocowy Chillout"
+   ],
+   "registration": "61-814-82-62 lub [e-mail w źródle]",
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://gosir.dopiewo.pl/aktualnosci/owocowy-chillout-wraca-na-owocowa-plaze-w-zborowie",
+   "is_noise": false,
+   "source_id": "dopiewo-gosir",
+   "geo": null
+  },
+  {
+   "title": "Plastyka \"powietrzna więź\" - wystawa",
+   "date_start": "2026-06-02",
+   "date_end": "2026-08-31",
+   "time_start": null,
+   "time_end": null,
+   "venue": "CK Przeźmierowo",
+   "town": "Tarnowo Podgórne",
+   "price": {
+    "free": true,
+    "amount_pln": null,
+    "note": "wstęp wolny"
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": "maybe",
+   "tags": [
+    "plastyka:wystawa"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://goksezam.pl/wydarzenie-830-powietrzna_wiez_wystawa-szczegoly-7281.html",
    "is_noise": false,
    "source_id": "tarnowo-gok",
    "geo": {
@@ -1103,10 +2508,10 @@
    "tags": [
     "plastyka:wystawa"
    ],
-   "registration": "https://biletyna.pl/",
+   "registration": null,
    "sub_slots": null,
    "conditional": null,
-   "source_url": "https://goksezam.pl/",
+   "source_url": "https://goksezam.pl/wydarzenie-810-przenikania_dwa_spojrzenia_wystawa-szczegoly-7248.html",
    "is_noise": false,
    "source_id": "tarnowo-gok"
   },
@@ -1132,10 +2537,10 @@
    "tags": [
     "muzyka:koncert"
    ],
-   "registration": "https://biletyna.pl/",
+   "registration": null,
    "sub_slots": null,
    "conditional": null,
-   "source_url": "https://goksezam.pl/",
+   "source_url": "https://goksezam.pl/wydarzenie-819-lsm_poznan_group_ensemble-szczegoly-7277.html",
    "is_noise": false,
    "source_id": "tarnowo-gok",
    "geo": null
@@ -1147,7 +2552,7 @@
    "time_start": "17:00",
    "time_end": null,
    "venue": "CK Przeźmierowo",
-   "town": "Tarnowo Podgórne",
+   "town": "Przeźmierowo",
    "price": {
     "free": false,
     "amount_pln": 15,
@@ -1161,12 +2566,12 @@
    "family_friendly": true,
    "tags": [
     "film:kino",
-    "film:dla dzieci"
+    "dzieci:film"
    ],
-   "registration": "https://biletyna.pl/",
+   "registration": null,
    "sub_slots": null,
    "conditional": null,
-   "source_url": "https://goksezam.pl/",
+   "source_url": "https://goksezam.pl/wydarzenie-824-kino_sezamu_dla_dzieci_wyschnieci-szczegoly-7267.html",
    "is_noise": false,
    "source_id": "tarnowo-gok",
    "geo": {
@@ -1194,13 +2599,12 @@
    },
    "family_friendly": false,
    "tags": [
-    "film:kino",
-    "film:dla dorosłych"
+    "film:kino"
    ],
-   "registration": "https://biletyna.pl/",
+   "registration": null,
    "sub_slots": null,
    "conditional": null,
-   "source_url": "https://goksezam.pl/",
+   "source_url": "https://goksezam.pl/wydarzenie-825-kino_sezamu_o_czym_sobie_nie_mowimy-szczegoly-7268.html",
    "is_noise": false,
    "source_id": "tarnowo-gok",
    "geo": {
@@ -1230,10 +2634,10 @@
    "tags": [
     "muzyka:festiwal"
    ],
-   "registration": "https://biletyna.pl/",
+   "registration": null,
    "sub_slots": null,
    "conditional": null,
-   "source_url": "https://goksezam.pl/",
+   "source_url": "https://goksezam.pl/wydarzenie-822-festiwal_blusowo-szczegoly-7276.html",
    "is_noise": false,
    "source_id": "tarnowo-gok"
   },
@@ -1258,12 +2662,12 @@
    "family_friendly": true,
    "tags": [
     "film:kino",
-    "film:dla dzieci"
+    "dzieci"
    ],
-   "registration": "https://biletyna.pl/",
+   "registration": null,
    "sub_slots": null,
    "conditional": null,
-   "source_url": "https://goksezam.pl/",
+   "source_url": "https://goksezam.pl/gebeurtenenie-828-kino_sezamu_dla_dzieci_vaiana-szczegoly-7273.html",
    "is_noise": false,
    "source_id": "tarnowo-gok",
    "geo": {
@@ -1272,61 +2676,46 @@
    }
   },
   {
-   "title": "Zebranie wiejskie Sołectwa Napachanie-Dalekie",
-   "date_start": "2026-07-08",
+   "title": "Kino Sezamu: \"Młody Waszyngton\"",
+   "date_start": "2026-08-14",
    "date_end": null,
-   "time_start": "18:00",
+   "time_start": "19:00",
    "time_end": null,
-   "venue": "Świetlica wiejska w Napachaniu",
-   "town": "Napachanie",
+   "venue": "CK Przeźmierowo",
+   "town": "Tarnowo Podgórne",
    "price": {
-    "free": true,
-    "amount_pln": null,
+    "free": false,
+    "amount_pln": 18,
     "note": null
    },
-   "age": null,
-   "family_friendly": false,
-   "tags": [],
-   "registration": null,
-   "sub_slots": null,
-   "conditional": "Drugi termin o godz. 18:15 w tym samym dniu i miejscu, jeśli nie uzyska się kworum",
-   "source_url": "https://rokietnica.pl/kalendarz-wydarzen/",
-   "is_noise": true,
-   "source_id": "rokietnica-city",
-   "geo": null
-  },
-  {
-   "title": "Zebranie wiejskie Sołectwa Przybroda",
-   "date_start": "2026-07-10",
-   "date_end": null,
-   "time_start": "18:00",
-   "time_end": null,
-   "venue": "Świetlica wiejska w Przybrodzie",
-   "town": "Przybroda",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": null
+   "age": {
+    "min": 18,
+    "max": null,
+    "label": "dla dorosłych"
    },
-   "age": null,
    "family_friendly": false,
-   "tags": [],
+   "tags": [
+    "film:kino"
+   ],
    "registration": null,
    "sub_slots": null,
-   "conditional": "Drugi termin o godz. 18:15 w tym samym dniu i miejscu, jeśli nie uzyska się kworum",
-   "source_url": "https://rokietnica.pl/kalendarz-wydarzen/",
-   "is_noise": true,
-   "source_id": "rokietnica-city",
-   "geo": null
+   "conditional": null,
+   "source_url": "https://goksezam.pl/wydarzenie-826-kino_sezamu_mlody_waszyngton-szczegoly-7269.html",
+   "is_noise": false,
+   "source_id": "tarnowo-gok",
+   "geo": {
+    "lat": 52.432383,
+    "lon": 16.7767789
+   }
   },
   {
-   "title": "Komisja Rewizyjna",
-   "date_start": "2026-07-20",
+   "title": "Teatr \"Skok na księżyc\" - rodzinny spektakl plenerowy",
+   "date_start": "2026-08-21",
    "date_end": null,
-   "time_start": null,
+   "time_start": "17:00",
    "time_end": null,
-   "venue": null,
-   "town": "Rokietnica",
+   "venue": "DK w Tarnowie Podgórnym",
+   "town": "Tarnów Podgórny",
    "price": {
     "free": null,
     "amount_pln": null,
@@ -1335,31 +2724,33 @@
    "age": {
     "min": null,
     "max": null,
-    "label": null
+    "label": "rodzinny"
    },
-   "family_friendly": false,
+   "family_friendly": true,
    "tags": [
-    "administracja:komisja"
+    "teatr:spektakl",
+    "film:plener"
    ],
    "registration": null,
    "sub_slots": null,
    "conditional": null,
-   "source_url": "https://rokietnica.pl/kalendarz-wydarzen/358-komisja-rewizyjna.html",
-   "is_noise": true,
-   "source_id": "rokietnica-city"
+   "source_url": "https://goksezam.pl/wydarzenie-820-skok_na_ksiezyc_rodzinny_spektakl-szczegoly-7278.html",
+   "is_noise": false,
+   "source_id": "tarnowo-gok",
+   "geo": null
   },
   {
-   "title": "SKEJTUJĘ Z GŁOWĄ W RAMACH AKTYWNEGO LATA W CZERWONAKU",
-   "date_start": "2026-07-23",
+   "title": "Warsztaty \"Na folkową nutę z Lusowiakami\"",
+   "date_start": "2026-08-28",
    "date_end": null,
-   "time_start": null,
+   "time_start": "18:00",
    "time_end": null,
    "venue": null,
-   "town": "Czerwonak",
+   "town": "Lusów",
    "price": {
-    "free": null,
+    "free": true,
     "amount_pln": null,
-    "note": null
+    "note": "wstęp wolny"
    },
    "age": {
     "min": null,
@@ -1368,58 +2759,28 @@
    },
    "family_friendly": "maybe",
    "tags": [
-    "sport:skateboarding",
-    "aktywne lato"
+    "warsztaty:muzyka",
+    "muzyka:folk"
    ],
    "registration": null,
    "sub_slots": null,
    "conditional": null,
-   "source_url": "https://www.czerwonak.pl/mieszkaniec/k-kalendarz/2026/lipca/sport/skejtuje-z-glowa-w-ramach-aktywnego-lata-w-czerwonaku/10458",
+   "source_url": "https://goksezam.pl/gebeurtenenie-827-na_folkowa_nute_z_lusowiakami-szczegoly-7270.html",
    "is_noise": false,
-   "source_id": "czerwonak-city"
+   "source_id": "tarnowo-gok"
   },
   {
-   "title": "ZUMBA",
-   "date_start": "2026-07-23",
+   "title": "Wieczornik - otwarty koncert plenerowy",
+   "date_start": "2026-08-28",
    "date_end": null,
-   "time_start": null,
+   "time_start": "20:00",
    "time_end": null,
-   "venue": null,
-   "town": "Czerwonak",
+   "venue": "CK Przeźmierowo",
+   "town": "Przeźmierowo",
    "price": {
-    "free": null,
+    "free": true,
     "amount_pln": null,
-    "note": null
-   },
-   "age": {
-    "min": null,
-    "max": null,
-    "label": null
-   },
-   "family_friendly": "maybe",
-   "tags": [
-    "sport:taniec",
-    "fitness"
-   ],
-   "registration": null,
-   "sub_slots": null,
-   "conditional": null,
-   "source_url": "https://www.czerwonak.pl/mieszkaniec/k-kalendarz/2026/lipca/sport/zumba/10502",
-   "is_noise": false,
-   "source_id": "czerwonak-city"
-  },
-  {
-   "title": "MOBILNA KULTURA - CYKL KONCERTÓW LETNICH",
-   "date_start": "2026-07-23",
-   "date_end": null,
-   "time_start": null,
-   "time_end": null,
-   "venue": null,
-   "town": "Czerwonak",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
+    "note": "wstęp wolny"
    },
    "age": {
     "min": null,
@@ -1429,12 +2790,170 @@
    "family_friendly": "maybe",
    "tags": [
     "muzyka:koncert",
-    "kultura"
+    "film:plener"
    ],
    "registration": null,
    "sub_slots": null,
    "conditional": null,
-   "source_url": "https://www.czerwonak.pl/mieszkaniec/k-kalendarz/2026/lipca/kultura/mobilna-kultura-cykl-koncertow-letnich/10366",
+   "source_url": "https://goksezam.pl/wydarzenie-823-wieczornik_otwarty_koncert_plenerowy-szczegoly-7279.html",
+   "is_noise": false,
+   "source_id": "tarnowo-gok",
+   "geo": {
+    "lat": 52.432383,
+    "lon": 16.7767789
+   }
+  },
+  {
+   "title": "Emocjonujący finał lata. Pokaz cyrkowy",
+   "date_start": "2026-08-30",
+   "date_end": null,
+   "time_start": "15:00",
+   "time_end": null,
+   "venue": "CK Przeźmierowo",
+   "town": "Przeźmierowo",
+   "price": {
+    "free": true,
+    "amount_pln": null,
+    "note": "wstęp wolny"
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "cyrk:pokaz"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://goksezam.pl/wydarzenie-821-emocjonujacy_final_lata_pokaz_cyrkowy-szczegoly-7261.html",
+   "is_noise": false,
+   "source_id": "tarnowo-gok",
+   "geo": {
+    "lat": 52.432383,
+    "lon": 16.7767789
+   }
+  },
+  {
+   "title": "Daria ze Śląska w CK Przeźmierowo!",
+   "date_start": "2026-09-19",
+   "date_end": null,
+   "time_start": "18:00",
+   "time_end": null,
+   "venue": "CK Przeźmierowo",
+   "town": "Przeźmierowo",
+   "price": {
+    "free": false,
+    "amount_pln": 109,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": "maybe",
+   "tags": [
+    "muzyka:koncert"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://goksezam.pl/wydarzenie-799-daria_ze_slaska_w_ck_przezmierowo-szczegoly-7275.html",
+   "is_noise": false,
+   "source_id": "tarnowo-gok",
+   "geo": {
+    "lat": 52.432383,
+    "lon": 16.7767789
+   }
+  },
+  {
+   "title": "Spacer historyczny",
+   "date_start": "2026-07-27",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": null,
+   "town": "Czerwonak",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": "maybe",
+   "tags": [
+    "kultura:spacer"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://www.czerwonak.pl/mieszkaniec/k-kalendarz/2026/lipca/kultura/spacer-historyczny/10350",
+   "is_noise": false,
+   "source_id": "czerwonak-city"
+  },
+  {
+   "title": "Rejs edukacyjny po Warcie",
+   "date_start": "2026-07-29",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": null,
+   "town": "Czerwonak",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "dzieci:edukacja",
+    "przyroda:rejs"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://www.czerwonak.pl/mieszkaniec/k-kalendarz/2026/lipca/dzieci/rejs-edukacyjny-po-warcie/10493",
+   "is_noise": false,
+   "source_id": "czerwonak-city"
+  },
+  {
+   "title": "Rozwiń swoje skrzydła w gminie Czerwonak - warsztaty",
+   "date_start": "2026-07-31",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": null,
+   "town": "Czerwonak",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": "maybe",
+   "tags": [
+    "warsztaty:społeczne"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://www.czerwonak.pl/mieszkaniec/k-kalendarz/2026/lipca/spoleczne/rozwin-swoje-skrzydla-w-gminie-czerwonak-warsztaty/10411",
    "is_noise": false,
    "source_id": "czerwonak-city"
   },
@@ -1489,8 +3008,7 @@
    "family_friendly": true,
    "tags": [
     "warsztaty",
-    "kultura",
-    "dzieci"
+    "kultura"
    ],
    "registration": "https://fb.me/e/jPKetw09R",
    "sub_slots": null,
@@ -1524,8 +3042,7 @@
    "family_friendly": true,
    "tags": [
     "sport:kajaki",
-    "sport:woda",
-    "turystyka"
+    "sport:woda"
    ],
    "registration": "https://fb.me/e/4tifa8csj",
    "sub_slots": null,
@@ -1599,97 +3116,6 @@
    }
   },
   {
-   "title": "Kwiaty moje życie – wystawa gobelinów i malarstwa Marii Gostylli-Pachuckiej",
-   "date_start": "2026-07-22",
-   "date_end": null,
-   "time_start": null,
-   "time_end": null,
-   "venue": null,
-   "town": "Swarzędz",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": {
-    "min": null,
-    "max": null,
-    "label": null
-   },
-   "family_friendly": "maybe",
-   "tags": [
-    "sztuka:gobeliny",
-    "sztuka:malarstwo",
-    "wystawy"
-   ],
-   "registration": null,
-   "sub_slots": null,
-   "conditional": null,
-   "source_url": "https://www.swarzedz.pl/",
-   "is_noise": false,
-   "source_id": "swarzedz-city"
-  },
-  {
-   "title": "Dyskoteka dla seniorów",
-   "date_start": "2026-07-22",
-   "date_end": null,
-   "time_start": null,
-   "time_end": null,
-   "venue": null,
-   "town": "Swarzędz",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": {
-    "min": 60,
-    "max": null,
-    "label": "seniorzy"
-   },
-   "family_friendly": false,
-   "tags": [
-    "muzyka:dyskoteka",
-    "seniorzy"
-   ],
-   "registration": null,
-   "sub_slots": null,
-   "conditional": null,
-   "source_url": "https://www.swarzedz.pl/",
-   "is_noise": false,
-   "source_id": "swarzedz-city"
-  },
-  {
-   "title": "Swarzędzkie kino letnie",
-   "date_start": "2026-07-24",
-   "date_end": null,
-   "time_start": null,
-   "time_end": null,
-   "venue": null,
-   "town": "Swarzędz",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": {
-    "min": null,
-    "max": null,
-    "label": null
-   },
-   "family_friendly": true,
-   "tags": [
-    "film:plener",
-    "kino"
-   ],
-   "registration": null,
-   "sub_slots": null,
-   "conditional": null,
-   "source_url": "https://www.swarzedz.pl/",
-   "is_noise": false,
-   "source_id": "swarzedz-city"
-  },
-  {
    "title": "Miodowe Lato w Skansenie",
    "date_start": "2026-07-26",
    "date_end": null,
@@ -1710,14 +3136,15 @@
    "family_friendly": true,
    "tags": [
     "festyn",
-    "rodzinne",
+    "muzeum",
     "pszczelnictwo"
    ],
    "registration": null,
    "sub_slots": null,
    "conditional": null,
-   "source_url": "https://www.swarzedz.pl/",
+   "source_url": "https://www.swarzedz.pl/index.php?id=49&no_cache=1&tx_ttnews%5Btt_news%5D=24237&tx_ttnews%5BbackPid%5D=10&cHash=63e8d3024ba74e3e3aec3013900faaa2",
    "is_noise": false,
+   "container": null,
    "source_id": "swarzedz-city",
    "geo": null
   },
@@ -1747,8 +3174,9 @@
    "registration": null,
    "sub_slots": null,
    "conditional": null,
-   "source_url": "https://www.swarzedz.pl/",
+   "source_url": "https://www.swarzedz.pl/index.php?id=374",
    "is_noise": false,
+   "container": null,
    "source_id": "swarzedz-city"
   },
   {
@@ -1778,8 +3206,103 @@
    "registration": null,
    "sub_slots": null,
    "conditional": null,
-   "source_url": "https://www.swarzedz.pl/",
+   "source_url": "https://www.swarzedz.pl/index.php?id=374",
    "is_noise": false,
+   "container": null,
+   "source_id": "swarzedz-city"
+  },
+  {
+   "title": "Swarzędzkie kino letnie",
+   "date_start": "2026-07-24",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": null,
+   "town": "Swarzędz",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "film:plener",
+    "kino"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://www.swarzedz.pl/index.php?id=374",
+   "is_noise": false,
+   "container": null,
+   "source_id": "swarzedz-city"
+  },
+  {
+   "title": "Dyskoteka dla seniorów",
+   "date_start": "2026-07-22",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": null,
+   "town": "Swarzędz",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": 60,
+    "max": null,
+    "label": "seniorzy"
+   },
+   "family_friendly": false,
+   "tags": [
+    "muzyka",
+    "seniorzy"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://www.swarzedz.pl/index.php?id=374",
+   "is_noise": false,
+   "container": null,
+   "source_id": "swarzedz-city"
+  },
+  {
+   "title": "\"Kwiaty moje życie\" – wystawa gobelinów i malarstwa Marii Gostylli-Pachuckiej",
+   "date_start": "2026-07-22",
+   "date_end": null,
+   "time_start": null,
+   "time_end": null,
+   "venue": null,
+   "town": "Swarzędz",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "sztuka:gobeliny",
+    "sztuka:malarstwo",
+    "wystawa"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "source_url": "https://www.swarzedz.pl/index.php?id=374",
+   "is_noise": false,
+   "container": null,
    "source_id": "swarzedz-city"
   },
   {
@@ -1788,7 +3311,7 @@
    "date_end": null,
    "time_start": null,
    "time_end": null,
-   "venue": "Pływalnia Wodny Park, Swarzędz",
+   "venue": "Pływalnia \"Wodny Świat\" w Swarzędzu",
    "town": "Swarzędz",
    "price": {
     "free": true,
@@ -1802,63 +3325,100 @@
    },
    "family_friendly": false,
    "tags": [
-    "zdrowie:badania",
-    "seniorzy"
+    "zdrowie",
+    "badania medyczne"
    ],
    "registration": null,
    "sub_slots": null,
    "conditional": null,
-   "source_url": "https://www.swarzedz.pl/",
+   "source_url": "https://www.swarzedz.pl/index.php?id=49&no_cache=1&tx_ttnews%5Btt_news%5D=24232&tx_ttnews%5BbackPid%5D=10&cHash=8c02d0a860d8690794dbe80d0cd76942",
    "is_noise": false,
+   "container": null,
    "source_id": "swarzedz-city",
    "geo": null
   },
   {
-   "title": "Józefinki 2026 - Święto miasta Swarzędza",
-   "date_start": "2026-05-01",
+   "title": "19. Międzynarodowy Festiwal Sztuki Ludowej",
+   "date_start": "2026-08-16",
    "date_end": null,
-   "time_start": null,
+   "time_start": "19:00",
    "time_end": null,
-   "venue": "Swarzędz, nad jeziorem",
+   "venue": "Scena nad Jeziorem",
    "town": "Swarzędz",
    "price": {
     "free": true,
     "amount_pln": null,
-    "note": "Wiele atrakcji bezpłatnych, w tym dmuchańce dla dzieci"
+    "note": "Wstęp wolny"
    },
    "age": {
     "min": null,
     "max": null,
-    "label": "Dla całych rodzin"
+    "label": null
    },
    "family_friendly": true,
    "tags": [
-    "festyn:rodzinny",
     "muzyka:koncert",
+    "taniec",
+    "folklor",
+    "kultura:międzynarodowa"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "container": null,
+   "source_url": "https://ok-swarzedz.pl/miedzynarodowy-festiwal-sztuki-ludowej/",
+   "is_noise": false,
+   "source_id": "swarzedz-city",
+   "geo": {
+    "lat": 52.4127307,
+    "lon": 17.0703981
+   }
+  },
+  {
+   "title": "Józefinki 2026",
+   "date_start": "2026-05-03",
+   "date_end": null,
+   "time_start": "15:00",
+   "time_end": null,
+   "venue": "nad jeziorem w Swarzędzu",
+   "town": "Swarzędz",
+   "price": {
+    "free": true,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "muzyka:koncert",
+    "festyn:rodzinny",
     "kultura:tradycja",
-    "dzieci:dmuchańce",
-    "gra:mebloberek"
+    "dzieci:dmuchańce"
    ],
    "registration": null,
    "sub_slots": [
     {
-     "time": "11:00",
-     "label": "Mebloberek - start 1",
-     "age": null
-    },
-    {
-     "time": "11:40",
-     "label": "Mebloberek - start 2",
-     "age": null
-    },
-    {
-     "time": "12:20",
-     "label": "Mebloberek - start 3",
+     "time": "15:00",
+     "label": "Sekcja folkloru Ośrodka Kultury Mały Swarzędz",
      "age": null
     },
     {
      "time": "15:00",
-     "label": "Festyn rodzinny - muzyka i atrakcje nad jeziorem",
+     "label": "Zespół Regionalny Olszyna",
+     "age": null
+    },
+    {
+     "time": "15:00",
+     "label": "Don Vasyl i Cygańskie Gwiazdy",
+     "age": null
+    },
+    {
+     "time": "15:00",
+     "label": "Zespół Żobuzy",
      "age": null
     }
    ],
@@ -1871,7 +3431,7 @@
   },
   {
    "title": "Spotkanie Józefów - Tradycja, która łączy",
-   "date_start": "2026-05-01",
+   "date_start": "2026-05-03",
    "date_end": null,
    "time_start": null,
    "time_end": null,
@@ -1880,7 +3440,7 @@
    "price": {
     "free": true,
     "amount_pln": null,
-    "note": "Wszyscy uczestnicy otrzymują pamiątkowe upominki"
+    "note": null
    },
    "age": {
     "min": null,
@@ -1906,31 +3466,47 @@
   },
   {
    "title": "Mebloberek - Gra Miejska",
-   "date_start": "2026-05-01",
+   "date_start": "2026-05-03",
    "date_end": null,
    "time_start": "11:00",
    "time_end": null,
-   "venue": "Za pływalnią \"Wodny Raj\" (przy kawiarence), Swarzędz",
+   "venue": "Za pływalnią Wodny Raj (przy kawiarence), Swarzędz",
    "town": "Swarzędz",
    "price": {
     "free": true,
     "amount_pln": null,
-    "note": "Bezpłatny udział, atrakcyjne nagrody dla zwycięzców"
+    "note": null
    },
    "age": {
     "min": null,
     "max": null,
-    "label": "Rodziny i grupy przyjaciół"
+    "label": null
    },
    "family_friendly": true,
    "tags": [
     "gra:miejska",
-    "sport:aktywność",
-    "warsztaty:zagadki"
+    "rodzina:aktywność",
+    "zagadki:wyzwania"
    ],
    "registration": "https://jozefinki.swarzedz.pl/mebloberek",
-   "sub_slots": null,
-   "conditional": "Rejestracja do 29 kwietnia 2026 lub do wyczerpania miejsc",
+   "sub_slots": [
+    {
+     "time": "11:00",
+     "label": "Start I",
+     "age": null
+    },
+    {
+     "time": "11:40",
+     "label": "Start II",
+     "age": null
+    },
+    {
+     "time": "12:20",
+     "label": "Start III",
+     "age": null
+    }
+   ],
+   "conditional": null,
    "source_url": "https://www.swarzedz.pl/index.php?id=615",
    "is_noise": false,
    "container": "Józefinki 2026",
@@ -1938,189 +3514,235 @@
    "geo": null
   },
   {
-   "title": "Koncert zespołu Małego Swarzędza i Olszyny",
-   "date_start": "2026-05-01",
+   "title": "XI Festyn Ekologiczny",
+   "date_start": "2026-09-19",
    "date_end": null,
-   "time_start": "15:00",
+   "time_start": null,
    "time_end": null,
-   "venue": "Nad jeziorem, Swarzędz",
-   "town": "Swarzędz",
+   "venue": "Rynek w Kórniku",
+   "town": "Kórnik",
    "price": {
-    "free": true,
+    "free": null,
     "amount_pln": null,
-    "note": null
+    "note": "Bony na odbiór roślin"
    },
    "age": {
     "min": null,
     "max": null,
-    "label": "Dla całych rodzin"
+    "label": null
    },
    "family_friendly": true,
    "tags": [
-    "muzyka:koncert",
-    "kultura:folklor",
-    "dzieci:taniec"
+    "ekologia:festyn"
    ],
    "registration": null,
    "sub_slots": null,
    "conditional": null,
-   "source_url": "https://www.swarzedz.pl/index.php?id=615",
+   "source_url": "https://www.kornik.pl/aktualnosci/wazna-zmiana-podczas-xi-festynu-ekologicznego",
    "is_noise": false,
-   "container": "Józefinki 2026",
-   "source_id": "swarzedz-city",
-   "geo": {
-    "lat": 52.4166045,
-    "lon": 17.0751065
-   }
+   "source_id": "kornik-city",
+   "geo": null
   },
   {
-   "title": "Koncert Don Vasyla i Cyganskich Gwiazd",
-   "date_start": "2026-05-01",
+   "title": "Kórnik Triathlon 2026",
+   "date_start": "2026-07-26",
    "date_end": null,
-   "time_start": "15:00",
+   "time_start": null,
    "time_end": null,
-   "venue": "Nad jeziorem, Swarzędz",
-   "town": "Swarzędz",
+   "venue": null,
+   "town": "Kórnik",
    "price": {
-    "free": true,
+    "free": null,
     "amount_pln": null,
     "note": null
    },
    "age": {
     "min": null,
     "max": null,
-    "label": "Dla całych rodzin"
+    "label": null
    },
-   "family_friendly": true,
+   "family_friendly": false,
    "tags": [
-    "muzyka:koncert",
-    "kultura:romska",
-    "taniec"
+    "sport:triathlon"
    ],
    "registration": null,
    "sub_slots": null,
-   "conditional": null,
-   "source_url": "https://www.swarzedz.pl/index.php?id=615",
+   "conditional": "Czasowe zmiany w organizacji ruchu, zamknięcia dróg",
+   "source_url": "https://www.kornik.pl/aktualnosci/utrudnienia-w-ruchu-kornik-triathlon-2026",
    "is_noise": false,
-   "container": "Józefinki 2026",
-   "source_id": "swarzedz-city",
-   "geo": {
-    "lat": 52.4166045,
-    "lon": 17.0751065
-   }
+   "source_id": "kornik-city"
   },
   {
-   "title": "Koncert zespołu Żobuzy",
-   "date_start": "2026-05-01",
+   "title": "Dożynki Miasta i Gminy Kórnik",
+   "date_start": "2026-08-22",
    "date_end": null,
-   "time_start": "15:00",
+   "time_start": null,
    "time_end": null,
-   "venue": "Nad jeziorem, Swarzędz",
-   "town": "Swarzędz",
+   "venue": null,
+   "town": "Kórnik",
    "price": {
-    "free": true,
+    "free": null,
     "amount_pln": null,
     "note": null
    },
    "age": {
     "min": null,
     "max": null,
-    "label": "Dla całych rodzin"
+    "label": null
    },
    "family_friendly": true,
    "tags": [
-    "muzyka:koncert",
-    "muzyka:disco-polo",
-    "taniec"
+    "tradycja:dożynki"
    ],
    "registration": null,
    "sub_slots": null,
    "conditional": null,
-   "source_url": "https://www.swarzedz.pl/index.php?id=615",
+   "source_url": "https://www.kornik.pl/kalendarium/dozynki-miasta-i-gminy-kornik-0",
    "is_noise": false,
-   "container": "Józefinki 2026",
-   "source_id": "swarzedz-city",
-   "geo": {
-    "lat": 52.4166045,
-    "lon": 17.0751065
-   }
+   "source_id": "kornik-city"
+  },
+  {
+   "title": "LETNI FESTIWAL MUZYKA Z KÓRNIKA 2026",
+   "date_start": "2026-07-05",
+   "date_end": "2026-08-02",
+   "time_start": "20:00",
+   "time_end": "20:00",
+   "venue": "Kórnicki Ośrodek Kultury ul. Prowent 6, 62-035 Kórnik, Arboretum Kórnickie",
+   "town": "Kórnik",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": "maybe",
+   "tags": [
+    "muzyka:koncert",
+    "festiwal"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "container": "Letni Festiwal Muzyka z Kórnika 2026",
+   "source_url": "https://www.kornik.pl/kalendarium/letni-festiwal-muzyka-z-kornika-2026",
+   "is_noise": false,
+   "source_id": "kornik-city",
+   "geo": null
+  },
+  {
+   "title": "LETNIE KINO PLENEROWE KOK 2026",
+   "date_start": "2026-07-03",
+   "date_end": "2026-08-07",
+   "time_start": "20:30",
+   "time_end": "22:15",
+   "venue": "Kórnicki Ośrodek Kultury, OAZA- Błonie, Arboretum Kórnickie",
+   "town": "Kórnik",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": "maybe",
+   "tags": [
+    "film:plener"
+   ],
+   "registration": null,
+   "sub_slots": null,
+   "conditional": null,
+   "container": "Letnie Kino Plenerowe KOK 2026",
+   "source_url": "https://www.kornik.pl/kalendarium/letnie-kino-plenerowe-kok-2026",
+   "is_noise": false,
+   "source_id": "kornik-city",
+   "geo": null
   }
  ],
  "errors": [
   {
    "id": "ck-zamek",
-   "err": "Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'playwright' imported from /home/runner/work/events-pl/events-pl/src/daily.ts"
+   "err": "HTTP 404 https://ckzamek.pl/wydarzenia/"
   },
   {
    "id": "brama-poznania",
-   "err": "Error: HTTP 404 https://bramapoznania.pl/wydarzenia"
+   "err": "HTTP 404 https://bramapoznania.pl/wydarzenia"
   },
   {
    "id": "biblraczynskich",
-   "err": "Error: HTTP 404 https://bracz.edu.pl/wydarzenia/"
+   "err": "HTTP 404 https://bracz.edu.pl/wydarzenia/"
+  },
+  {
+   "id": "nowe-zoo",
+   "err": "GET https://zoo.poznan.pl/: TypeError: fetch failed ← ConnectTimeoutError: Connect Timeout Error (attempted address: zoo.poznan.pl:443, timeout: 10000ms)"
   },
   {
    "id": "dk-pod-lipami",
-   "err": "TypeError: fetch failed"
+   "err": "GET https://www.psm-winogrady.pl/domy-kultury/: TypeError: fetch failed ← getaddrinfo ENOTFOUND www.psm-winogrady.pl"
   },
   {
    "id": "dk-orbita",
-   "err": "TypeError: fetch failed"
+   "err": "GET https://www.psm-winogrady.pl/domy-kultury/: TypeError: fetch failed ← getaddrinfo ENOTFOUND www.psm-winogrady.pl"
   },
   {
    "id": "lubon-biblioteka",
-   "err": "TypeError: fetch failed"
+   "err": "GET https://biblub.com.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND biblub.com.pl"
   },
   {
    "id": "puszczykowo-bmcak",
-   "err": "TypeError: fetch failed"
+   "err": "GET https://www.biblioteka.puszczykowo.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND www.biblioteka.puszczykowo.pl"
+  },
+  {
+   "id": "mosina-city",
+   "err": "GET https://www.mosina.pl/wydarzenia?page=1: TypeError: fetch failed ← ConnectTimeoutError: Connect Timeout Error (attempted address: www.mosina.pl:443, timeout: 10000ms)"
   },
   {
    "id": "mosina-osir",
-   "err": "Error: HTTP 404 https://osirmosina.pl/wydarzenia"
+   "err": "HTTP 404 https://osirmosina.pl/wydarzenia"
   },
   {
    "id": "mosina-biblioteka",
    "followup": "http://bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/spektakl-klaudek-i-klaudynka-w-bibliotece",
-   "err": "TimeoutError: The operation was aborted due to timeout"
+   "err": "GET http://bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/spektakl-klaudek-i-klaudynka-w-bibliotece: timeout po 30s ← TimeoutError: The operation was aborted due to timeout"
   },
   {
    "id": "rokietnica-gok",
-   "err": "TypeError: fetch failed"
+   "err": "GET https://kultura.rokietnica.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND kultura.rokietnica.pl"
   },
   {
    "id": "suchylas-city",
-   "err": "Error: HTTP 403 https://www.suchylas.pl/"
+   "err": "HTTP 403 https://www.suchylas.pl/"
   },
   {
    "id": "czerwonak-gok",
-   "err": "TypeError: fetch failed"
-  },
-  {
-   "id": "swarzedz-city",
-   "followup": "https://ok-swarzedz.pl/summer-swaj-party-noc-z-muzyka-klubowa-2026/",
-   "err": "Error: HTTP 403 https://ok-swarzedz.pl/summer-swaj-party-noc-z-muzyka-klubowa-2026/"
-  },
-  {
-   "id": "swarzedz-city",
-   "followup": "https://ok-swarzedz.pl/miedzynarodowy-festiwal-sztuki-ludowej/",
-   "err": "Error: HTTP 403 https://ok-swarzedz.pl/miedzynarodowy-festiwal-sztuki-ludowej/"
-  },
-  {
-   "id": "swarzedz-ok",
-   "err": "Error: HTTP 403 https://www.ok-swarzedz.pl/"
+   "err": "GET https://goksokol.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND goksokol.pl"
   },
   {
    "id": "kornik-kok",
-   "err": "TypeError: fetch failed"
+   "err": "GET https://kok.kornik.pl/: TypeError: fetch failed ← certificate has expired"
   },
   {
    "id": "kornik-arboretum",
-   "err": "Error: HTTP 500 https://www.idpan.poznan.pl/arboretum/"
+   "err": "HTTP 500 https://www.idpan.poznan.pl/arboretum/"
   },
   {
    "id": "kleszczewo-gokis",
-   "err": "TypeError: fetch failed"
+   "err": "GET https://gokis-kleszczewo.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND gokis-kleszczewo.pl"
   }
- ]
+ ],
+ "brightdata": {
+  "triggers": 0,
+  "inputs": 0,
+  "polls": 0,
+  "records": 0,
+  "errors": 0,
+  "snapshots": [],
+  "byDataset": {}
+ }
 }

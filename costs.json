@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-25T18:01:35.465Z",
+ "updated": "2026-07-26T06:44:07.358Z",
  "rates": {
   "bdPerRecord": 0.0015,
   "bravePerQuery": 0,
@@ -61,6 +61,79 @@
    "units": 41,
    "unit": "fetches",
    "inferred": true
+  },
+  {
+   "day": "2026-07-26",
+   "at": "2026-07-26T06:44:07.354Z",
+   "stage": "daily",
+   "run": "2026-07-26T06:31:45.703Z",
+   "category": "llm-extract",
+   "usd": 0.838207,
+   "estimated": false,
+   "units": 59,
+   "unit": "calls",
+   "tokensIn": 396302,
+   "tokensOut": 88381,
+   "top": [
+    {
+     "id": "swarzedz-city",
+     "usd": 0.082543,
+     "units": 5
+    },
+    {
+     "id": "poznan-kultura-rss",
+     "usd": 0.071903,
+     "units": 4
+    },
+    {
+     "id": "czerwonak-city",
+     "usd": 0.070801,
+     "units": 3
+    },
+    {
+     "id": "komorniki-gok",
+     "usd": 0.070489,
+     "units": 4
+    },
+    {
+     "id": "lubon-city",
+     "usd": 0.066561,
+     "units": 3
+    }
+   ]
+  },
+  {
+   "day": "2026-07-26",
+   "at": "2026-07-26T06:44:07.354Z",
+   "stage": "daily",
+   "run": "2026-07-26T06:31:45.703Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 78,
+   "unit": "fetches"
+  },
+  {
+   "day": "2026-07-26",
+   "at": "2026-07-26T06:44:07.354Z",
+   "stage": "daily",
+   "run": "2026-07-26T06:31:45.703Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 15,
+   "unit": "lookups"
+  },
+  {
+   "day": "2026-07-26",
+   "at": "2026-07-26T06:44:07.354Z",
+   "stage": "daily",
+   "run": "2026-07-26T06:31:45.703Z",
+   "category": "storage",
+   "usd": 0,
+   "estimated": true,
+   "units": 2.257,
+   "unit": "MB"
   }
  ]
 }
