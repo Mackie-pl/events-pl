@@ -30,21 +30,22 @@ import {
 } from "./adapters/supabase-archive.js";
 import { type CostInput, costEntries, costLine, costRates, recordCosts } from "./reporting/cost-ledger.js";
 import { webSearch, searchState } from "./adapters/brave.js";
-import { BROWSER_HEADERS, fetchUrl } from "./adapters/http.js";
 import { townsInRadius } from "./adapters/overpass.js";
 import { MIN_CONFIDENCE, matchHit } from "./pipeline/discover/proposal-match.js";
 import { type Registry, buildRegistry, uniqueId } from "./pipeline/discover/registry.js";
 import { toSource } from "./pipeline/discover/to-source.js";
+import { probeStats } from "./pipeline/verify/probe.js";
+import { verifySource } from "./pipeline/verify/verify-source.js";
 import { describeError } from "./shared/errors.js";
 import {
-  MODEL_DISCOVER, MODEL_EXTRACT, chat, resetUsage, setCallRecorder, snapshotUsage,
+  MODEL_DISCOVER, chat, resetUsage, setCallRecorder, snapshotUsage,
 } from "./adapters/openrouter.js";
 import { type RedactionStats, newStats, redactText } from "./pipeline/pii.js";
-import { DISCOVERY_QUERIES, DISCOVERY_SYSTEM, REVERIFY_SYSTEM } from "./pipeline/prompts.js";
+import { DISCOVERY_QUERIES, DISCOVERY_SYSTEM } from "./pipeline/prompts.js";
 import { DISCOVER_RUNS_PATH, SOURCES_PATH } from "./shared/paths.js";
 import { todayIso } from "./shared/dates.js";
 import { slug, str, trim } from "./shared/text.js";
-import { isFbFetch, urlKey } from "./shared/url.js";
+import { urlKey } from "./shared/url.js";
 import type {
   CostEntry, DiscoverRunReport, DiscoverTotals, FetchProbe, LlmUsage,
   SearchCall, SearchResult, Source, SourceProposal, SourceProvenance,
@@ -59,11 +60,6 @@ const DISCOVER_RUNS_KEEP = 24; // ~2 lata miesięcznych przebiegów
  * i tak odpowiada `provenance` w sources.json.
  */
 const DISCOVER_RUNS_DETAILED = 4;
-/** Poniżej tego progu odpowiedź traktujemy jako zaślepkę/błąd, nie treść. */
-const MIN_BODY_CHARS = 500;
-
-/** Pobrania HTTP przy weryfikacji URL-i (każde źródło + kandydaci przy naprawie) — wolumen do costs.json. */
-let verifyFetches = 0;
 
 // ---------------- discovery ----------------
 
@@ -207,152 +203,6 @@ async function discoverTown(town: string, reg: Registry, runStartedAt: string): 
 
 // ---------------- weryfikacja / naprawa URL-i ----------------
 
-/**
- * Jedno żądanie z pełnym opisem odpowiedzi. Sam kod statusu nie diagnozuje: 200 z 300 bajtami
- * to zaślepka, a 200 pod innym adresem niż pytany to przekierowanie na stronę główną
- * (czyli podstrona z wydarzeniami zniknęła, choć URL „działa").
- */
-async function probeUrl(url: string): Promise<FetchProbe> {
-  const t0 = performance.now();
-  verifyFetches += 1;
-  const probe: FetchProbe = { at: new Date().toISOString(), url, ok: false, ms: 0 };
-  try {
-    const res = await fetchUrl(url, { headers: BROWSER_HEADERS }, 20_000);
-    probe.httpStatus = res.status;
-    const ct = res.headers.get("content-type")?.split(";")[0]?.trim();
-    if (ct) probe.contentType = ct;
-    if (res.url && urlKey(res.url) !== urlKey(url)) probe.finalUrl = res.url;
-    if (!res.ok) {
-      probe.err = `HTTP ${res.status}`;
-      return probe;
-    }
-    const text = await res.text();
-    probe.chars = text.length;
-    if (text.length < MIN_BODY_CHARS) {
-      probe.err = `podejrzanie krótka odpowiedź (${text.length} B)`;
-      return probe;
-    }
-    probe.ok = true;
-    return probe;
-  } catch (e) {
-    probe.err = describeError(e);
-    return probe;
-  } finally {
-    probe.ms = Math.round(performance.now() - t0);
-  }
-}
-
-/** Szuka aktualnego URL instytucji (Brave + tani model). null = nie znaleziono. */
-async function findReplacementUrl(src: Source, ver: SourceVerification): Promise<string | null> {
-  const results: SearchResult[] = [];
-  for (const q of [`"${src.name}" ${src.town}`, `${src.name} ${src.town} wydarzenia`]) {
-    results.push(...(await webSearch(q, ver.searches)));
-  }
-  if (results.length === 0) return null;
-  const out = await chat({
-    model: MODEL_EXTRACT,
-    task: "verify",
-    system: REVERIFY_SYSTEM,
-    user: `Instytucja: ${src.name} (${src.town})\nStary, martwy URL: ${src.url}\nWyniki wyszukiwania:\n${JSON.stringify(results)}`,
-    maxTokens: 300,
-  });
-  const m = out.match(/\{[\s\S]*\}/);
-  if (!m) return null;
-  try {
-    const url = (JSON.parse(m[0]) as { url?: string | null }).url;
-    return typeof url === "string" && /^https?:\/\//.test(url) ? url : null;
-  } catch {
-    return null;
-  }
-}
-
-/** Weryfikuje URL źródła i mutuje `src` (verified/checked/url/previous_urls/dead/notes). */
-async function verifySource(src: Source, isNew: boolean): Promise<SourceVerification> {
-  const t0 = performance.now();
-  resetUsage();
-  beginSource(`verify-${src.id}`);
-  const ver: SourceVerification = {
-    id: src.id, name: src.name, town: src.town, url: src.url,
-    outcome: "ok", searches: [], llm: snapshotUsage(), ms: 0,
-    ...(isNew ? { isNew: true } : {}),
-  };
-  const finalize = (): SourceVerification => {
-    ver.llm = snapshotUsage();
-    ver.ms = Math.round(performance.now() - t0);
-    const paths = sourcePaths();
-    if (paths.length) ver.archive = paths;
-    return ver;
-  };
-
-  if (isFbFetch(src.fetch)) {
-    // FB odpowiada login-wallem: 200 z treścią „zaloguj się" albo 403. Jedno i drugie
-    // prowadziło do „naprawy" adresu przypadkowym wynikiem z wyszukiwarki albo do dead:true,
-    // przez co daily przestawało odpytywać żywą grupę (skipped-dead).
-    ver.outcome = "skipped";
-    ver.note = `fetch:"${src.fetch}" — adresy FB nie odpowiadają na zwykły fetch`;
-    // `checked` znaczy „URL potwierdzony jako działający tego dnia" — pominięcia nim nie znaczymy,
-    // ślad zostaje w raporcie przebiegu (outcome: skipped + note)
-    return finalize();
-  }
-
-  try {
-    const probe = await probeUrl(src.url.replace("{page}", "1"));
-    ver.probe = probe;
-    if (probe.httpStatus !== undefined) ver.httpStatus = probe.httpStatus;
-    if (isNew && src.provenance) src.provenance.firstFetch = probe;
-
-    if (probe.ok) {
-      src.verified = true;
-      src.checked = todayIso();
-      delete src.dead;
-      return finalize();
-    }
-    ver.err = probe.err ?? "nieznany błąd";
-
-    if (!process.env["BRAVE_API_KEY"] || searchState().disabled) {
-      // bez wyszukiwarki nie próbujemy naprawy — i nie dotykamy źródła
-      ver.outcome = "error";
-      ver.err = `${ver.err}; ${searchState().disabled ?? "brak BRAVE_API_KEY"} — naprawa pominięta`;
-      return finalize();
-    }
-
-    const candidate = await findReplacementUrl(src, ver);
-    if (candidate) ver.candidate = candidate;
-    if (candidate && urlKey(candidate) !== urlKey(src.url)) {
-      const second = await probeUrl(candidate);
-      ver.candidateProbe = second;
-      if (second.ok) {
-        src.previous_urls = [...(src.previous_urls ?? []), src.url];
-        src.url = candidate;
-        src.verified = true;
-        src.checked = todayIso();
-        delete src.dead;
-        src.notes = `${src.notes ? src.notes + " | " : ""}URL naprawiony ${todayIso()} (stary w previous_urls)`;
-        ver.outcome = "fixed";
-        ver.newUrl = candidate;
-        return finalize();
-      }
-      ver.err = `${ver.err}; kandydat ${candidate} też padł: ${second.err}`;
-    }
-
-    // naprawa się nie udała — oznacz jako martwe (daily pominie do następnego --verify)
-    if (!src.dead) src.notes = `${src.notes ? src.notes + " | " : ""}martwy URL (${todayIso()}): ${probe.err}`;
-    src.dead = true;
-    src.verified = false;
-    src.checked = todayIso();
-    ver.outcome = "dead";
-    return finalize();
-  } catch (e) {
-    // Wyjątek w naprawie (padnięty OpenRouter, timeout) nie może zabrać ze sobą reszty rejestru
-    // ani tego, co już wiemy o TYM źródle: bez tego łapania ginęły jego zapytania i zużycie LLM,
-    // a 45 pozostałych źródeł zostawało niesprawdzonych. Źródła nie oznaczamy — naprawa
-    // nie dała odpowiedzi, więc `dead` byłoby zgadywaniem (daily przestałoby je odpytywać).
-    ver.outcome = "error";
-    ver.err = `${ver.err ? ver.err + "; " : ""}${describeError(e)}`;
-    return finalize();
-  }
-}
-
 // ---------------- raport ----------------
 
 function emptyTotals(): DiscoverTotals {
@@ -442,9 +292,9 @@ function buildCosts(report: DiscoverRunReport): CostEntry[] {
   inputs.push({
     category: "scrape",
     // weryfikacja pobiera każdy URL z rejestru (plus kandydatów przy naprawie)
-    usd: verifyFetches * rates.scrapePerFetch,
+    usd: probeStats() * rates.scrapePerFetch,
     estimated: true,
-    units: verifyFetches,
+    units: probeStats(),
     unit: "fetches",
   });
   return costEntries("discover", report.startedAt, inputs);
