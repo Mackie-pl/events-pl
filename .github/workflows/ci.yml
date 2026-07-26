@@ -1,0 +1,50 @@
+name: ci
+
+# Osobny workflow, a nie kroki doklejone do daily/discover: tamte chodzą z cronu na sekretach
+# produkcyjnych i nie mogą się wywracać na lincie, a przy tym nie odpalają się na pull requestach,
+# więc niczego nie bramkują.
+on:
+  pull_request:
+  push:
+    branches: [main]
+    # Bot dopisuje co noc events.json/state.json/runs.json/costs.json/index.html — bez tego
+    # filtra każdy taki commit paliłby przebieg CI bez powodu.
+    paths:
+      - "src/**"
+      - "test/**"
+      - "package.json"
+      - "package-lock.json"
+      - "tsconfig*.json"
+      - "eslint.config.js"
+      - "eslint.shared.js"
+      - ".github/workflows/ci.yml"
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      # playwright jest optionalDependency i do typecheck/lint/testów niepotrzebny
+      - run: npm ci --omit=optional
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+
+  panel:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: panel
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: panel/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: npm run lint

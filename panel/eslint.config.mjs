@@ -1,10 +1,14 @@
 // @ts-check
-const eslint = require('@eslint/js');
-const { defineConfig } = require('eslint/config');
-const tseslint = require('typescript-eslint');
-const angular = require('angular-eslint');
+// .mjs, a nie .js: panel/package.json nie ma "type": "module", więc zwykły .js byłby CommonJS
+// i nie mógłby zaciągnąć wspólnych progów z ../eslint.shared.js (ESM).
+import eslint from '@eslint/js';
+import { defineConfig } from 'eslint/config';
+import tseslint from 'typescript-eslint';
+import angular from 'angular-eslint';
 
-module.exports = defineConfig([
+import { asWarnings, sizeRules } from '../eslint.shared.js';
+
+export default defineConfig([
   {
     files: ['**/*.ts'],
     extends: [
@@ -15,6 +19,10 @@ module.exports = defineConfig([
     ],
     processor: angular.processInlineTemplates,
     rules: {
+      // Te same progi co w potoku, ale jako ostrzeżenia: panelu w tym refaktorze nie
+      // przebudowujemy, a jego największy plik (types.ts, 335 linii kodu) i tak mieści się
+      // w limicie 350. Ostrzeżenia pokazują dług, nie blokując builda.
+      ...asWarnings(sizeRules),
       '@angular-eslint/directive-selector': [
         'error',
         {

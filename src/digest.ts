@@ -308,7 +308,7 @@ async function main(): Promise<void> {
   const digest = buildDigest(
     data,
     todayWarsaw(),
-    Number.isNaN(childAge as number) ? null : childAge,
+    Number.isNaN(childAge) ? null : childAge,
   );
 
   const sentTg = await sendTelegram(digest);

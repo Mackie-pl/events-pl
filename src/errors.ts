@@ -29,6 +29,10 @@ export function describeError(e: unknown): string {
       if (!parts.some((p) => p.includes(label))) parts.push(label);
       cur = cur.cause;
     } else {
+      // Ostatnia deska ratunku w opisie błędu: cur ma typ unknown, a String() nigdy nie rzuca.
+      // JSON.stringify byłby czytelniejszy dla obiektów, ale wywala się na cyklach — a wysypka
+      // w formatowaniu błędu zjadłaby błąd źródłowy.
+      // eslint-disable-next-line @typescript-eslint/no-base-to-string -- String() nie może rzucić
       parts.push(String(cur));
       break;
     }

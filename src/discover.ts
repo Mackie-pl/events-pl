@@ -156,7 +156,7 @@ async function webSearch(query: string, log: SearchCall[]): Promise<SearchResult
   const t0 = performance.now();
   try {
     const res = await fetchUrl(
-      `${BRAVE_URL}?${new URLSearchParams({ q: query, count: "8", country: "pl" })}`,
+      `${BRAVE_URL}?${new URLSearchParams({ q: query, count: "8", country: "pl" }).toString()}`,
       { headers: { "X-Subscription-Token": key } },
       20_000,
       "Brave Search",
@@ -300,6 +300,7 @@ function toSource(raw: unknown, town: string): { src: Source; fixes: string[] } 
   const id = slug(str(r["id"]) ?? `${town}-${name}`);
   if (!id) return { err: "nie da się zbudować id" };
 
+  const notes = str(r["notes"]);
   const src: Source = {
     id,
     name,
@@ -310,7 +311,7 @@ function toSource(raw: unknown, town: string): { src: Source; fixes: string[] } 
     verified: false,
     discovered: "auto",
     ...(confidence !== undefined ? { confidence } : {}),
-    ...(str(r["notes"]) ? { notes: str(r["notes"]) as string } : {}),
+    ...(notes !== undefined ? { notes } : {}),
   };
   return { src, fixes };
 }
@@ -965,7 +966,7 @@ function printProvenance(src: Source): void {
  * Odpowiada na dwa pytania naraz: „czemu ten adres tu jest?" (proweniencja + historia weryfikacji)
  * oraz „czemu tego adresu tu NIE ma?" (ledger propozycji: duplikat / niska pewność / zły rekord).
  */
-async function explain(needle: string, cfg: SourcesFile, runs: DiscoverRunReport[]): Promise<void> {
+function explain(needle: string, cfg: SourcesFile, runs: DiscoverRunReport[]): void {
   const q = needle.toLowerCase();
   const matches = cfg.sources.filter(
     (s) => s.id.toLowerCase() === q || s.id.toLowerCase().includes(q) ||
@@ -1046,7 +1047,7 @@ async function main(): Promise<void> {
       process.exitCode = 1;
       return;
     }
-    await explain(needle, await loadCfg("Poznań", 15), await loadRuns());
+    explain(needle, await loadCfg("Poznań", 15), await loadRuns());
     return;
   }
 

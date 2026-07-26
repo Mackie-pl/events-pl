@@ -105,6 +105,9 @@ async function fetchPlain(url: string, extraHeaders: Record<string, string> = {}
   const ct = res.headers.get("content-type") ?? "";
   if (ct.includes("pdf") || /\.pdf(\?|$)/i.test(url)) {
     const buf = new Uint8Array(await res.arrayBuffer());
+    // unpdf nie eksportuje typu PDFDocumentProxy, więc dla tseslinta to „error type". tsc to
+    // przepuszcza, bo extractText przyjmuje dokładnie to, co zwraca getDocumentProxy.
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- brak typu w unpdf
     const pdf = await getDocumentProxy(buf);
     const { text } = await extractText(pdf, { mergePages: true });
     return { kind: "pdf", text, httpStatus: status, ...v };
@@ -208,7 +211,7 @@ async function geocode(venue: string, town: string, cache: PipelineState["geo"])
   netUsage.geoLookups += 1;
   try {
     const res = await fetchUrl(
-      `https://nominatim.openstreetmap.org/search?${new URLSearchParams({ q, format: "json", limit: "1" })}`,
+      `https://nominatim.openstreetmap.org/search?${new URLSearchParams({ q, format: "json", limit: "1" }).toString()}`,
       { headers: UA },
       15_000,
     );
