@@ -91,12 +91,12 @@ function freshFetchTable(verifications: SourceVerification[]): string[] {
     "|---|---|--:|---|--:|---|---|",
   ];
   for (const v of fresh) {
-    lines.push(
-      `| ${v.id} | ${OUTCOME_ICON[v.outcome]} ${v.outcome} | ${v.probe?.httpStatus ?? ""} | ` +
-      `${v.probe?.contentType ?? ""} | ${v.probe?.chars ?? ""} | ` +
-      `${v.probe?.finalUrl ? md(v.probe.finalUrl, 60) : ""} | ` +
-      `${md(v.err ?? "", 80)} |`,
-    );
+    const p = v.probe;
+    const cells = [
+      p?.httpStatus ?? "", p?.contentType ?? "", p?.chars ?? "",
+      p?.finalUrl ? md(p.finalUrl, 60) : "", md(v.err ?? "", 80),
+    ];
+    lines.push(`| ${v.id} | ${OUTCOME_ICON[v.outcome]} ${v.outcome} | ${cells.join(" | ")} |`);
   }
   lines.push("");
   return lines;

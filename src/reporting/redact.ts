@@ -25,33 +25,43 @@ export function redactDiscoverRun(report: DiscoverRunReport, cfg: SourcesFile): 
     }
   };
 
+  const redTowns = (): void => {
+    for (const town of report.towns) {
+      red(town, "err");
+      redSearches(town.searches);
+      for (const p of town.proposals) {
+        red(p, "name");
+        red(p, "why");
+        red(p, "reason");
+        redHit(p.hit);
+      }
+    }
+  };
+  const redVerifications = (): void => {
+    for (const v of report.verifications) {
+      red(v, "err");
+      red(v, "note");
+      redSearches(v.searches);
+      red(v.probe, "err");
+      red(v.candidateProbe, "err");
+    }
+  };
+  // sources.json też jest publiczny — proweniencja niesie opis wyniku wyszukiwarki
+  const redSources = (): void => {
+    for (const s of cfg.sources) {
+      red(s, "notes");
+      if (!s.provenance) continue;
+      red(s.provenance, "why");
+      redHit(s.provenance.hit);
+      red(s.provenance.firstFetch, "err");
+    }
+  };
+
   red(report, "err");
   red(report.geo, "err");
-  for (const town of report.towns) {
-    red(town, "err");
-    redSearches(town.searches);
-    for (const p of town.proposals) {
-      red(p, "name");
-      red(p, "why");
-      red(p, "reason");
-      redHit(p.hit);
-    }
-  }
-  for (const v of report.verifications) {
-    red(v, "err");
-    red(v, "note");
-    redSearches(v.searches);
-    red(v.probe, "err");
-    red(v.candidateProbe, "err");
-  }
-  // sources.json też jest publiczny — proweniencja niesie opis wyniku wyszukiwarki
-  for (const s of cfg.sources) {
-    red(s, "notes");
-    if (!s.provenance) continue;
-    red(s.provenance, "why");
-    redHit(s.provenance.hit);
-    red(s.provenance.firstFetch, "err");
-  }
+  redTowns();
+  redVerifications();
+  redSources();
   report.totals.redactedPhones = stats.phones;
   report.totals.redactedEmails = stats.emails;
 }

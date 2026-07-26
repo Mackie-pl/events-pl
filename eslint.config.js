@@ -4,7 +4,7 @@ import js from "@eslint/js";
 import { defineConfig, globalIgnores } from "eslint/config";
 import tseslint from "typescript-eslint";
 
-import { asWarnings, sizeRules } from "./eslint.shared.js";
+import { functionRules, sizeRules } from "./eslint.shared.js";
 
 export default defineConfig([
   // node_modules/** i pliki kropkowe flat config ignoruje sam; tu tylko to, co naprawdę trzeba:
@@ -31,8 +31,8 @@ export default defineConfig([
     // Martwe // eslint-disable mają wywalać CI, a nie zarastać.
     linterOptions: { reportUnusedDisableDirectives: "error" },
     rules: {
-      // TODO(refaktor): po Fazie F zamienić na `...sizeRules` (twarde błędy).
-      ...asWarnings(sizeRules),
+      ...sizeRules,
+      ...functionRules,
       "@typescript-eslint/no-unused-vars": ["error", {
         argsIgnorePattern: "^_", varsIgnorePattern: "^_", ignoreRestSiblings: true, caughtErrors: "none",
       }],

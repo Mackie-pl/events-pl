@@ -6,7 +6,7 @@ import { defineConfig } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 import angular from 'angular-eslint';
 
-import { asWarnings, sizeRules } from '../eslint.shared.js';
+import { asWarnings, functionRules, sizeRules } from '../eslint.shared.js';
 
 export default defineConfig([
   {
@@ -23,6 +23,7 @@ export default defineConfig([
       // przebudowujemy, a jego największy plik (types.ts, 335 linii kodu) i tak mieści się
       // w limicie 350. Ostrzeżenia pokazują dług, nie blokując builda.
       ...asWarnings(sizeRules),
+      ...functionRules,
       '@angular-eslint/directive-selector': [
         'error',
         {
