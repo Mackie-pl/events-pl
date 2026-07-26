@@ -22,35 +22,34 @@
  *      DISCOVER_MAX_SEARCHES (domyślnie 300 — bezpiecznik darmowego tieru 2000/mies.)
  * Brave Search API: darmowy tier 2000 zapytań/mies. Alternatywy: Serper.dev, SearXNG (0 zł).
  */
-import { readFile, writeFile } from "node:fs/promises";
-import { appendFileSync, existsSync } from "node:fs";
-
-import {
-  archiveEnabled, archiveLlmCall, archiveRaw, archiveStats, beginRun, beginSource, sourcePaths,
-} from "./adapters/supabase-archive.js";
-import { type CostInput, costEntries, costLine, costRates, recordCosts } from "./reporting/cost-ledger.js";
 import { webSearch, searchState } from "./adapters/brave.js";
-import { townsInRadius } from "./adapters/overpass.js";
-import { MIN_CONFIDENCE, matchHit } from "./pipeline/discover/proposal-match.js";
-import { type Registry, buildRegistry, uniqueId } from "./pipeline/discover/registry.js";
-import { toSource } from "./pipeline/discover/to-source.js";
-import { probeStats } from "./pipeline/verify/probe.js";
-import { discoverRunsStore } from "./reporting/discover-runs-store.js";
-import { verifySource } from "./pipeline/verify/verify-source.js";
-import { describeError } from "./shared/errors.js";
 import {
   MODEL_DISCOVER, chat, resetUsage, setCallRecorder, snapshotUsage,
 } from "./adapters/openrouter.js";
-import { type RedactionStats, newStats, redactText } from "./pipeline/pii.js";
+import { townsInRadius } from "./adapters/overpass.js";
+import {
+  archiveEnabled, archiveLlmCall, archiveRaw, archiveStats, beginRun, beginSource, sourcePaths,
+} from "./adapters/supabase-archive.js";
+import { MIN_CONFIDENCE, matchHit } from "./pipeline/discover/proposal-match.js";
+import { type Registry, buildRegistry, uniqueId } from "./pipeline/discover/registry.js";
+import { toSource } from "./pipeline/discover/to-source.js";
 import { DISCOVERY_QUERIES, DISCOVERY_SYSTEM } from "./pipeline/prompts.js";
-import { SOURCES_PATH } from "./shared/paths.js";
+import { verifySource } from "./pipeline/verify/verify-source.js";
+import { costLine, recordCosts } from "./reporting/cost-ledger.js";
+import { buildDiscoverCosts } from "./reporting/discover-costs.js";
+import { discoverRunsStore } from "./reporting/discover-runs-store.js";
+import { writeDiscoverSummary } from "./reporting/discover-summary.js";
+import { buildTotals, emptyTotals } from "./reporting/discover-totals.js";
+import { DECISION_ICON, OUTCOME_ICON } from "./reporting/icons.js";
+import { redactDiscoverRun } from "./reporting/redact.js";
 import { todayIso } from "./shared/dates.js";
+import { describeError } from "./shared/errors.js";
 import { slug, str, trim } from "./shared/text.js";
 import { urlKey } from "./shared/url.js";
+import { doc } from "./storage/index.js";
 import type {
-  CostEntry, DiscoverRunReport, DiscoverTotals, FetchProbe, LlmUsage,
-  SearchCall, SearchResult, Source, SourceProposal, SourceProvenance,
-  SourceVerification, SourcesFile, TownDiscoveryRun,
+  DiscoverRunReport, FetchProbe, SearchResult, Source, SourceProposal, SourceProvenance,
+  SourcesFile, TownDiscoveryRun,
 } from "./types/index.js";
 
 
@@ -196,256 +195,6 @@ async function discoverTown(town: string, reg: Registry, runStartedAt: string): 
 
 // ---------------- weryfikacja / naprawa URL-i ----------------
 
-// ---------------- raport ----------------
-
-function emptyTotals(): DiscoverTotals {
-  return {
-    towns: 0, searches: 0, searchErrors: 0, searchesSkipped: 0,
-    sourcesAdded: 0, proposalsRejected: 0, sourcesChecked: 0,
-    ok: 0, fixed: 0, dead: 0, unrepaired: 0, skipped: 0,
-    calls: 0, promptTokens: 0, completionTokens: 0, costUsd: 0,
-    costDiscoveryUsd: 0, costVerifyUsd: 0,
-    redactedPhones: 0, redactedEmails: 0,
-  };
-}
-
-function addUsage(t: DiscoverTotals, u: LlmUsage): void {
-  t.calls += u.calls;
-  t.promptTokens += u.promptTokens;
-  t.completionTokens += u.completionTokens;
-  t.costUsd += u.costUsd;
-}
-
-function countSearches(t: DiscoverTotals, calls: SearchCall[]): void {
-  for (const c of calls) {
-    if (c.skipped) continue; // niewysłane nie zużyły limitu
-    t.searches++;
-    if (c.err) t.searchErrors++;
-  }
-}
-
-function buildTotals(report: DiscoverRunReport): void {
-  const t = report.totals;
-  t.towns = report.towns.length;
-  t.searchesSkipped = searchState().skipped;
-  for (const town of report.towns) {
-    countSearches(t, town.searches);
-    t.sourcesAdded += town.added;
-    t.proposalsRejected += town.proposals.filter((p) => p.decision !== "added").length;
-    t.costDiscoveryUsd += town.llm.costUsd;
-    addUsage(t, town.llm);
-  }
-  for (const v of report.verifications) {
-    countSearches(t, v.searches);
-    t.sourcesChecked += v.outcome === "skipped" ? 0 : 1;
-    if (v.outcome === "ok") t.ok++;
-    else if (v.outcome === "fixed") t.fixed++;
-    else if (v.outcome === "dead") t.dead++;
-    else if (v.outcome === "error") t.unrepaired++;
-    else t.skipped++;
-    t.costVerifyUsd += v.llm.costUsd;
-    addUsage(t, v.llm);
-  }
-}
-
-/**
- * Koszt przebiegu w rozbiciu na kategorie (costs.json). Discovery i weryfikacja to ten sam
- * rachunek w OpenRouterze, ale zupełnie różne pozycje w budżecie: pierwsza jest droga
- * i jednorazowa (Sonnet, nowe miasto), druga tania i comiesięczna (Haiku, naprawa URL-i).
- * Zapytania Brave idą osobno — darmowy tier 2000/mies. kończy się cicho, więc wolumen
- * musi być zapisany także wtedy, gdy stawka wynosi zero.
- */
-function buildCosts(report: DiscoverRunReport): CostEntry[] {
-  const rates = costRates();
-  const t = report.totals;
-  const inputs: CostInput[] = [];
-  const llm = (category: "llm-discover" | "llm-verify", usages: Array<{ id: string; llm: LlmUsage }>): void => {
-    const calls = usages.reduce((n, u) => n + u.llm.calls, 0);
-    if (!calls) return;
-    inputs.push({
-      category,
-      usd: usages.reduce((n, u) => n + u.llm.costUsd, 0),
-      estimated: false, // kwota od OpenRoutera
-      units: calls,
-      unit: "calls",
-      tokensIn: usages.reduce((n, u) => n + u.llm.promptTokens, 0),
-      tokensOut: usages.reduce((n, u) => n + u.llm.completionTokens, 0),
-      drivers: usages.map((u) => ({ id: u.id, usd: u.llm.costUsd, units: u.llm.calls })),
-    });
-  };
-  llm("llm-discover", report.towns.map((x) => ({ id: x.town, llm: x.llm })));
-  llm("llm-verify", report.verifications.map((x) => ({ id: x.id, llm: x.llm })));
-  inputs.push({
-    category: "search",
-    usd: t.searches * rates.bravePerQuery,
-    estimated: true,
-    units: t.searches,
-    unit: "queries",
-  });
-  inputs.push({
-    category: "scrape",
-    // weryfikacja pobiera każdy URL z rejestru (plus kandydatów przy naprawie)
-    usd: probeStats() * rates.scrapePerFetch,
-    estimated: true,
-    units: probeStats(),
-    unit: "fetches",
-  });
-  return costEntries("discover", report.startedAt, inputs);
-}
-
-/**
- * Redakcja PII przed zapisem do PUBLICZNEGO repo. Wyniki wyszukiwarki (zwłaszcza dla zapytań
- * `site:facebook.com/groups`) niosą w opisach numery i e-maile mieszkańców — do tej pory
- * discover-runs.json omijał redakcję, którą daily.ts stosuje do runs.json.
- * URL-e zostają nietknięte (redactText wycina je z redakcji).
- */
-function redactRun(report: DiscoverRunReport, cfg: SourcesFile): void {
-  const stats: RedactionStats = newStats();
-  /** In-place, tylko dla realnych stringów — przy exactOptionalPropertyTypes nie wolno wstawić undefined. */
-  const red = <T extends object, K extends keyof T>(o: T | undefined, k: K): void => {
-    if (!o) return;
-    const v = o[k];
-    if (typeof v === "string") o[k] = redactText(v, stats) as T[K];
-  };
-  const redHit = (h: SearchResult | undefined): void => {
-    red(h, "title");
-    red(h, "desc");
-  };
-  const redSearches = (calls: SearchCall[]): void => {
-    for (const c of calls) {
-      red(c, "err");
-      for (const r of c.results) redHit(r);
-    }
-  };
-
-  red(report, "err");
-  red(report.geo, "err");
-  for (const town of report.towns) {
-    red(town, "err");
-    redSearches(town.searches);
-    for (const p of town.proposals) {
-      red(p, "name");
-      red(p, "why");
-      red(p, "reason");
-      redHit(p.hit);
-    }
-  }
-  for (const v of report.verifications) {
-    red(v, "err");
-    red(v, "note");
-    redSearches(v.searches);
-    red(v.probe, "err");
-    red(v.candidateProbe, "err");
-  }
-  // sources.json też jest publiczny — proweniencja niesie opis wyniku wyszukiwarki
-  for (const s of cfg.sources) {
-    red(s, "notes");
-    if (!s.provenance) continue;
-    red(s.provenance, "why");
-    redHit(s.provenance.hit);
-    red(s.provenance.firstFetch, "err");
-  }
-  report.totals.redactedPhones = stats.phones;
-  report.totals.redactedEmails = stats.emails;
-}
-
-/** Starszy przebieg bez szczegółów: zostają metryki i decyzje, znika masa wyników wyszukiwarki. */
-const OUTCOME_ICON: Record<SourceVerification["outcome"], string> = {
-  ok: "✅", fixed: "🔧", dead: "💀", error: "⚠️", skipped: "⏭️",
-};
-
-const DECISION_ICON: Record<SourceProposal["decision"], string> = {
-  added: "➕", duplicate: "♻️", "low-confidence": "🤏", invalid: "🚫",
-};
-
-const md = (s: string, max = 120): string => trim(s.replaceAll("|", "\\|").replace(/\s+/g, " "), max);
-
-/** Podsumowanie do GitHub Actions job summary (Markdown), jak writeStepSummary w daily. */
-function writeStepSummary(report: DiscoverRunReport): void {
-  const path = process.env["GITHUB_STEP_SUMMARY"];
-  if (!path) return;
-  const t = report.totals;
-  const lines: string[] = [];
-  lines.push(`## discover (${report.mode}) — ${report.startedAt}`, "");
-  if (report.err) lines.push(`> ⚠️ **przebieg przerwany:** ${md(report.err, 300)} — liczby są cząstkowe`, "");
-  if (report.geo?.fallback) lines.push(`> ⚠️ Overpass padł (${md(report.geo.err ?? "", 200)}) — discovery tylko dla miasta centralnego`, "");
-  lines.push(
-    `**${t.sourcesChecked}** zweryfikowanych · ✅ ${t.ok} ok · 🔧 ${t.fixed} naprawionych · ` +
-    `💀 ${t.dead} martwych · ⚠️ ${t.unrepaired} bez próby naprawy · ⏭️ ${t.skipped} pominiętych (FB) · ` +
-    `${t.sourcesAdded} nowych (${t.proposalsRejected} propozycji odrzuconych) · ` +
-    `${t.searches} zapytań search (${t.searchErrors} błędnych, ${t.searchesSkipped} pominiętych) · ` +
-    `${t.calls} LLM (${t.promptTokens}+${t.completionTokens} tok) · ` +
-    `koszt ${costLine(report.costs ?? [])} · ` +
-    `🔒 ${t.redactedPhones} tel. / ${t.redactedEmails} e-mail zredagowanych · ` +
-    `${Math.round(report.durationMs / 1000)}s`,
-    "",
-  );
-  if (!report.archiveEnabled) {
-    lines.push("> ℹ️ prywatne archiwum wyłączone (brak SUPABASE_*) — promptów modelu nie da się odtworzyć", "");
-  }
-
-  if (report.towns.length) {
-    lines.push("| gmina | zapytań | odpowiedź | propozycji | dodanych | tokeny | koszt | ms |");
-    lines.push("|---|--:|---|--:|--:|--:|--:|--:|");
-    for (const town of report.towns) {
-      // wysłane, nie „zalogowane": pominięte po wyłączeniu wyszukiwarki nie zużyły limitu
-      const sent = town.searches.filter((s) => !s.skipped).length;
-      const skipped = town.searches.length - sent;
-      lines.push(
-        `| ${town.town} | ${sent}${skipped ? ` (+${skipped} pom.)` : ""} | ` +
-        `${town.parse ?? "—"}${town.err ? ` (${md(town.err, 60)})` : ""} | ` +
-        `${town.proposed} | ${town.added} | ${town.llm.promptTokens}+${town.llm.completionTokens} | ` +
-        `$${town.llm.costUsd.toFixed(4)} | ${town.ms} |`,
-      );
-    }
-    lines.push("");
-
-    // proweniencja: to jest odpowiedź na „czemu ten adres wszedł na listę"
-    const proposals = report.towns.flatMap((t2) => t2.proposals.map((p) => ({ town: t2.town, p })));
-    if (proposals.length) {
-      lines.push("### Propozycje modelu", "");
-      lines.push("| decyzja | źródło | URL | conf. | z zapytania | dlaczego / powód odrzucenia |");
-      lines.push("|---|---|---|--:|---|---|");
-      for (const { p } of proposals) {
-        lines.push(
-          `| ${DECISION_ICON[p.decision]} ${p.decision} | ${md(p.name, 40)} | ${md(p.url, 60)} | ` +
-          `${p.confidence ?? ""} | ${p.query ? md(p.query, 40) : "—"} | ` +
-          `${md([p.why, p.reason].filter(Boolean).join(" · ") || "—", 140)} |`,
-        );
-      }
-      lines.push("");
-    }
-  }
-
-  const fresh = report.verifications.filter((v) => v.isNew);
-  if (fresh.length) {
-    lines.push("### Pierwsze pobranie nowych źródeł", "");
-    lines.push("| źródło | wynik | http | typ | znaków | przekierowanie | błąd |");
-    lines.push("|---|---|--:|---|--:|---|---|");
-    for (const v of fresh) {
-      lines.push(
-        `| ${v.id} | ${OUTCOME_ICON[v.outcome]} ${v.outcome} | ${v.probe?.httpStatus ?? ""} | ` +
-        `${v.probe?.contentType ?? ""} | ${v.probe?.chars ?? ""} | ${v.probe?.finalUrl ? md(v.probe.finalUrl, 60) : ""} | ` +
-        `${md(v.err ?? "", 80)} |`,
-      );
-    }
-    lines.push("");
-  }
-
-  lines.push("### Weryfikacja rejestru", "");
-  lines.push("| źródło | wynik | http | znaków | szczegóły | koszt |");
-  lines.push("|---|---|--:|--:|---|--:|");
-  for (const v of report.verifications) {
-    const detail = v.outcome === "fixed" ? `→ ${v.newUrl}` : (v.err ?? v.note ?? "");
-    lines.push(
-      `| ${v.id} | ${OUTCOME_ICON[v.outcome]} ${v.outcome} | ${v.httpStatus ?? ""} | ${v.probe?.chars ?? ""} | ` +
-      `${md(detail)} | ${v.llm.costUsd ? "$" + v.llm.costUsd.toFixed(4) : ""} |`,
-    );
-  }
-  lines.push("");
-  appendFileSync(path, lines.join("\n") + "\n", "utf-8");
-}
-
 // ---------------- --why: dlaczego ten adres jest (albo nie) w rejestrze ----------------
 
 const fmtProbe = (p: FetchProbe): string =>
@@ -535,17 +284,22 @@ function explain(needle: string, cfg: SourcesFile, runs: DiscoverRunReport[]): v
 
 // ---------------- main ----------------
 
-async function loadCfg(center: string, radius: number): Promise<SourcesFile> {
-  return existsSync(SOURCES_PATH)
-    ? (JSON.parse(await readFile(SOURCES_PATH, "utf-8")) as SourcesFile)
-    : {
-        region: {
-          name: `${center} +${radius}km`, center: { lat: 0, lon: 0 }, radius_km: radius,
-          discovered_at: todayIso(), discovery_method: "discover.ts",
-        },
-        sources: [],
-      };
-}
+/**
+ * Własne wiązanie rejestru, a nie współdzielony `sourcesStore`: discover jako jedyny
+ * TWORZY sources.json, więc brak pliku jest dla niego stanem początkowym. Dla daily
+ * i digestu ten sam brak to awaria i tam store słusznie rzuca.
+ */
+const bootstrapSources = (center: string, radius: number) =>
+  doc<SourcesFile>("sources", () => ({
+    region: {
+      name: `${center} +${radius}km`, center: { lat: 0, lon: 0 }, radius_km: radius,
+      discovered_at: todayIso(), discovery_method: "discover.ts",
+    },
+    sources: [],
+  }));
+
+const loadCfg = (center: string, radius: number): Promise<SourcesFile> =>
+  bootstrapSources(center, radius).load();
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
@@ -623,15 +377,15 @@ async function main(): Promise<void> {
   report.finishedAt = new Date().toISOString();
   report.durationMs = Math.round(performance.now() - t0);
   buildTotals(report);
-  report.costs = buildCosts(report);
-  redactRun(report, cfg);
+  report.costs = buildDiscoverCosts(report);
+  redactDiscoverRun(report, cfg);
 
-  await writeFile(SOURCES_PATH, JSON.stringify(cfg, null, 1), "utf-8");
+  await bootstrapSources(center, radius).save(cfg);
   await discoverRunsStore.append([report]);
   // księga kosztów przeżywa przycinanie przebiegów i łączy etap 1 z etapem 2 —
   // rachunek przychodzi jeden, więc wykres „ile dziennie" musi widzieć oba
   await recordCosts(report.costs);
-  writeStepSummary(report);
+  writeDiscoverSummary(report);
 
   const t = report.totals;
   console.log(
