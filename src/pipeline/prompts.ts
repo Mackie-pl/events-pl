@@ -73,10 +73,15 @@ z konkretnymi terminami — rozbij na osobne wydarzenia i ustaw "container": naz
 Jeśli program jest POD LINKIEM (PDF, podstrona, plakat JPG) — NIE zgaduj; dodaj URL do "followups":
 [{"url": str, "reason": "program PDF"|"szczegóły wydarzenia"|"plakat"}]. Maks 5 followupów, tylko z tej samej domeny lub oficjalnych.
 
-Nie wymyślaj danych. null gdy brak. Daty przeszłe pomijaj.`;
+Nie wymyślaj danych. null gdy brak. Daty przeszłe pomijaj.
+
+BEZ DATY = NIE WYDARZENIE. Pomijaj atrakcje stałe i całoroczne (zoo, muzeum, plac zabaw,
+park linowy, basen, „czynne codziennie", oferta stała, cennik biletów) — od tego są mapy,
+nie ten serwis. Jeśli nie da się ustalić konkretnego "date_start", NIE dodawaj wpisu.`;
 
 export const POSTER_SYSTEM = `Na obrazie jest plakat wydarzenia (PL). Wyciągnij dane wg tego samego schematu JSON
-{"events":[...]}. Zwróć uwagę na: daty, godziny, miejsce, ceny, ograniczenia wiekowe, program wielogodzinny.`;
+{"events":[...]}. Zwróć uwagę na: daty, godziny, miejsce, ceny, ograniczenia wiekowe, program wielogodzinny.
+Bez konkretnego "date_start" nie zwracaj wpisu — plakat oferty stałej pomiń.`;
 
 export const DEDUPE_SYSTEM = `Dostajesz listę wydarzeń z różnych źródeł. Znajdź duplikaty (to samo wydarzenie
 opisane przez urząd, GOK i FB). Kryteria: zbliżony tytuł/data/miejsce. Zwróć JSON:

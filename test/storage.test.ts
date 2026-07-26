@@ -28,10 +28,13 @@ describe("applyRetention — sortowanie", () => {
 });
 
 describe("applyRetention — polityka runs.json (7 dni, min 2, max 30)", () => {
-  const iso = (daysAgo: number): string => new Date(Date.now() - daysAgo * 86_400_000).toISOString();
+  // Zegar zamrożony na czas testu: iso() wołane dwa razy (raz do rekordu, raz do oczekiwania)
+  // rozjeżdżało się o milisekundę i test potrafił migotać.
+  const NOW = Date.now();
+  const iso = (daysAgo: number): string => new Date(NOW - daysAgo * 86_400_000).toISOString();
   const runs: Retention<Rec> = {
     at: (r) => r.at,
-    cutoff: () => new Date(Date.now() - 7 * 86_400_000).toISOString(),
+    cutoff: () => new Date(NOW - 7 * 86_400_000).toISOString(),
     minKeep: 2,
     maxKeep: 30,
   };

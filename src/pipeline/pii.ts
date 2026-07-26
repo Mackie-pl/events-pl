@@ -33,8 +33,19 @@ const LANDLINE_AREA_CODES = new Set([
 export const PHONE_MARK = "[tel. w źródle]";
 export const EMAIL_MARK = "[e-mail w źródle]";
 
-// Szeroki łapacz kandydatów — właściwą decyzję podejmuje classifyPhone().
-const PHONE_CANDIDATE = /(?:\+?\s?48[\s-]?)?\d(?:[\s.-]?\d){7,10}/g;
+/**
+ * Szeroki łapacz kandydatów — właściwą decyzję podejmuje classifyPhone().
+ *
+ * Prefiks krajowy obejmuje też zapis `0048` / `00 48`. Wcześniej było tu samo `\+?\s?48`,
+ * więc 13-cyfrowy zapis nie mieścił się w `\d(?:…){7,10}` (maks. 11 cyfr) i gałąź
+ * `d.length === 13 && startsWith("0048")` w classifyPhone była martwa — komórki zapisane
+ * jako „0048 xxx xxx xxx" szły do PUBLICZNEGO repo nieredagowane.
+ *
+ * Rozszerzamy PREFIKS, a nie zakres `{7,10}`: podniesienie go do `{7,12}` kazałoby
+ * wyrażeniu łapczywie zjadać cyfry sąsiednich liczb, przez co prawdziwa komórka
+ * z doklejoną datą przestawałaby się klasyfikować (i przestała być redagowana).
+ */
+const PHONE_CANDIDATE = /(?:(?:\+|00)?\s?48[\s-]?)?\d(?:[\s.-]?\d){7,10}/g;
 const EMAIL = /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g;
 const URL = /https?:\/\/\S+/g;
 

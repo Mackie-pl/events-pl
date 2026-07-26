@@ -18,13 +18,15 @@ describe("redactText", () => {
     assert.equal(redactText("kom. 48 733 111 222"), `kom.${PHONE_MARK}`);
   });
 
-  // ZNANA LUKA (udokumentowana, nie naprawiona w tym refaktorze — zmieniłaby treść events.json).
-  // classifyPhone ma gałąź `d.length === 13 && d.startsWith("0048")`, ale PHONE_CANDIDATE to
-  // \d(?:[\s.-]?\d){7,10}, czyli maksymalnie 11 cyfr — 13-cyfrowy zapis nigdy do niej nie dociera.
-  // Efekt: „0048 733 111 222" wychodzi do publicznego repo nieredagowane.
-  // Test pilnuje stanu OBECNEGO, żeby przenosiny plików niczego nie zmieniły po cichu.
-  it("NIE usuwa komórek w zapisie 0048 — martwa gałąź w classifyPhone", () => {
-    assert.equal(redactText("kom. 0048 733 111 222"), "kom. 0048 733 111 222");
+  // Regresja: prefiks `0048` nie mieścił się w zakresie {7,10}, więc gałąź dla 13 cyfr
+  // w classifyPhone była martwa i takie komórki szły do publicznego repo nieredagowane.
+  it("usuwa komórki w zapisie 0048 i 00 48", () => {
+    assert.equal(redactText("kom. 0048 733 111 222"), `kom. ${PHONE_MARK}`);
+    assert.equal(redactText("kom. 00 48 733 111 222"), `kom. ${PHONE_MARK}`);
+  });
+
+  it("stacjonarny z prefiksem 0048 nadal zostaje", () => {
+    assert.equal(redactText("tel. 0048 22 123 45 67"), "tel. 0048 22 123 45 67");
   });
 
   it("zostawia numery stacjonarne — to centrala instytucji, nie osoba", () => {
