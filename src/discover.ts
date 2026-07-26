@@ -40,7 +40,7 @@ import type {
   CostEntry, DiscoverRunReport, DiscoverTotals, FetchProbe, FetchStrategy, GeoLookup, LlmUsage,
   SearchCall, SearchResult, Source, SourceProposal, SourceProvenance, SourceType,
   SourceVerification, SourcesFile, TownDiscoveryRun,
-} from "./types.js";
+} from "./types/index.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SOURCES_PATH = join(ROOT, "sources.json");

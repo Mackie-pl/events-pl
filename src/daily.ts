@@ -29,7 +29,7 @@ import { DEDUPE_SYSTEM, POSTER_SYSTEM, extractionSystem } from "./prompts.js";
 import type {
   CachedExtraction, CostDriver, CostEntry, EventItem, EventsFile, ExtractionResult, FollowupRun,
   LlmTask, PipelineError, PipelineState, RunReport, RunTotals, Source, SourceRun, SourcesFile,
-} from "./types.js";
+} from "./types/index.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const STATE_PATH = join(ROOT, "state.json");

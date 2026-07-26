@@ -25,7 +25,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 import { describeError } from "./errors.js";
-import type { CostCategory, CostDriver, CostEntry, CostLedger, CostRates, CostUnit } from "./types.js";
+import type { CostCategory, CostDriver, CostEntry, CostLedger, CostRates, CostUnit } from "./types/index.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 export const COSTS_PATH = join(ROOT, "costs.json");

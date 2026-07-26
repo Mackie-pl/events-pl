@@ -19,7 +19,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 import { fetchUrl } from "./errors.js";
-import type { EventItem, EventsFile } from "./types.js";
+import type { EventItem, EventsFile } from "./types/index.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const TZ = "Europe/Warsaw";

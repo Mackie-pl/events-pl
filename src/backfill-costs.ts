@@ -18,7 +18,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 import { type CostInput, costEntries, costLine, costRates, loadCostEntries, recordCosts } from "./cost.js";
-import type { CostDriver, CostEntry, DiscoverRunReport, RunReport } from "./types.js";
+import type { CostDriver, CostEntry, DiscoverRunReport, RunReport } from "./types/index.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 

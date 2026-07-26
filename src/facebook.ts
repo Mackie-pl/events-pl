@@ -8,7 +8,7 @@
  * po kilka wariantów każdego pola.
  */
 import type { BdRecord } from "./brightdata.js";
-import type { AgeRange, EventItem, Price } from "./types.js";
+import type { AgeRange, EventItem, Price } from "./types/index.js";
 
 const EVENT_URL_RE = /(?:https?:\/\/)?(?:[\w-]+\.)?facebook\.com\/events\/(\d+)/gi;
 

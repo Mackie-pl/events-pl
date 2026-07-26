@@ -10,7 +10,7 @@ import { strict as assert } from "node:assert";
 import { describe, it } from "node:test";
 
 import { buildDigest, sectionsFor } from "../src/digest.js";
-import type { EventsFile } from "../src/types.js";
+import type { EventsFile } from "../src/types/index.js";
 
 import { event } from "./helpers.js";
 

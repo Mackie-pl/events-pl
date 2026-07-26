@@ -15,7 +15,7 @@
  * Pełne, niezredagowane dane zostaną w prywatnym archiwum (Supabase Storage) — nie tutaj.
  */
 
-import type { EventItem } from "./types.js";
+import type { EventItem } from "./types/index.js";
 
 /** Prefiksy polskich sieci komórkowych (numer krajowy = 9 cyfr). */
 const MOBILE_PREFIXES = new Set([

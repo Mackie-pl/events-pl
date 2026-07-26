@@ -7,7 +7,7 @@
  */
 
 import { describeError, fetchUrl } from "./errors.js";
-import type { LlmTask, LlmUsage, TaskUsage } from "./types.js";
+import type { LlmTask, LlmUsage, TaskUsage } from "./types/index.js";
 
 // nadpisywalne: pozwala wpiąć proxy/gateway albo mock w testach integracyjnych
 const OPENROUTER_URL =

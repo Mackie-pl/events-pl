@@ -1,5 +1,5 @@
 /** Wspólne atrapy dla testów. EventItem ma 15 pól wymaganych — bez fabryki każdy test to ściana szumu. */
-import type { EventItem } from "../src/types.js";
+import type { EventItem } from "../src/types/index.js";
 
 export function event(over: Partial<EventItem> = {}): EventItem {
   return {
