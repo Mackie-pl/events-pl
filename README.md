@@ -14,8 +14,8 @@ miasto + promień                            sources.json
     martwy URL → Brave + HAIKU → naprawa     → geocode (Nominatim, darmowe, cache)
     (stary adres → previous_urls) albo        → dedupe (heurystyka + LLM)
     dead:true (daily pomija)                  → events.json → index.html
-  → discover-runs.json (observability)      src/daily.ts → runs.json (observability)
-src/discover.ts  ·  --why <id> = skąd to źródło
+  → discover-runs.json (observability)   src/actions/daily.ts → runs.json (observability)
+src/actions/discover.ts  ·  --why <id> = skąd to źródło
 ```
 
 ## Pliki
@@ -23,18 +23,19 @@ src/discover.ts  ·  --why <id> = skąd to źródło
 | plik | rola |
 |---|---|
 | `sources.json` | rejestr źródeł Poznań +15 km (etap 1 wykonany ręcznie 2026-07-20; 46 źródeł, 13 gmin) + `provenance` przy każdym źródle dodanym automatycznie |
-| `src/types.ts` | pełne typy: Source, EventItem (age/price/sub_slots/tags/conditional), State |
-| `src/discover.ts` | etap 1 (Sonnet + Brave Search + Overpass) + weryfikacja/naprawa URL-i (`--verify`, cron miesięczny w `discover.yml`) + `--why` |
+| `src/actions/` | wejścia potoku — `daily`, `discover`, `digest`, `backfill-costs`, `archive-server`. Same main() + orkiestracja, zero logiki dziedzinowej |
+| `src/adapters/` | wyjścia do świata: `openrouter`, `brave`, `overpass`, `nominatim`, `page-fetch`, `brightdata`, `supabase-archive`, `telegram`, `resend`, `http` |
+| `src/pipeline/` | logika dziedzinowa: `discover/` (discovery gmin, walidacja propozycji, `--why`), `verify/` (sonda + naprawa URL-i), `extract/` (ekstrakcja, followupy, wydarzenia FB), `digest/`, `dedupe`, `pii`, `facebook`, `prompts` |
+| `src/reporting/` | agregaty, koszty, podsumowania Actions, redakcja PII, polityki retencji raportów |
+| `src/storage/` | **port składowania** — `DocStore`/`CollectionStore` + implementacja na plikach JSON. Jedyne miejsce znające ścieżki; przejście na bazę to druga implementacja i podmiana wiązań w `storage/index.ts` |
+| `src/shared/` | ścieżki, hash, tekst, daty, URL-e, formatowanie błędów |
+| `src/types/` | typy podzielone po dziedzinach + jedyny barrel w repo (`types/index.ts`) |
+| `test/` | testy `node:test` (93 przypadki): pii, url/slug/daty, dedupe, facebook, digest, koszty, retencja, podsumowania, walidacja propozycji |
 | `discover-runs.json` | observability etapu 1: każde zapytanie search + wyniki, **każda propozycja modelu wraz z decyzją** (także odrzucenia), geo (Overpass), tokeny/koszt LLM per gmina / źródło / typ zadania (discovery vs weryfikacja); ostatnie 24 przebiegi (szczegóły dla 4 najnowszych) |
-| `src/daily.ts` | etap 2 (Haiku: ekstrakcja, kontenery, PDF przez `unpdf`, plakaty vision, geo, dedupe) |
 | `runs.json` | observability etapu 2: przebieg źródło po źródle (status, HTTP, followupy, tokeny/koszt per zadanie, rekordy Bright Data, ścieżki archiwum); **ostatnie 7 dni** (min. 2, maks. 30 przebiegów) |
 | `costs.json` | księga wydatków obu etapów: linia na (przebieg × kategoria) z wolumenem, stawką i najdroższymi pozycjami; 90 dni. Zasila zakładkę **Money** |
-| `src/cost.ts` · `src/backfill-costs.ts` | zapis księgi + odtworzenie jej z raportów, które już leżą w repo |
-| `src/prompts.ts` | prompty PL dla obu etapów |
-| `src/pii.ts` | redakcja danych osobowych przed zapisem do publicznego repo (patrz niżej) |
-| `src/archive.ts` | prywatne archiwum treści (Supabase Storage): surowe strony, wejścia/wyjścia LLM, dane przed redakcją |
-| `src/archive-server.ts` | lokalny most do archiwum (`npm run archive-server`) — trzyma klucz sekretny poza panelem |
-| `template.html` | frontend (wiek dziecka, tagi zagnieżdżone, weekend, mapa OSM); `daily.ts` wstrzykuje JSON |
+| `eslint.shared.js` | wspólne progi rozmiaru dla potoku i panelu (max 350 linii kodu na plik, 120 znaków na linię) — pilnowane przez `ci.yml` |
+| `template.html` | frontend (wiek dziecka, tagi zagnieżdżone, weekend, mapa OSM); `reporting/render-index.ts` wstrzykuje JSON |
 | `panel/` | panel observability (Angular 22 + Taiga UI): **Day** (przegląd dnia → source runs → eventy + iframe podglądu), **Discovery** (proweniencja rejestru → przebiegi discover) i **Money** (wydatki dzień po dniu wg kategorii); deploy na GH Pages pod `/panel/` przez `deploy-pages.yml` (Settings → Pages → Source: GitHub Actions) |
 
 ## Setup
@@ -71,7 +72,7 @@ export OPENROUTER_API_KEY=sk-or-...     # bash / zsh
 Na GitHub Actions `.env` nie istnieje — te same nazwy przychodzą z repo secrets, dlatego
 flaga to `--env-file-if-exists`, a nie `--env-file` (ta wywaliłaby się przy braku pliku).
 
-Wymagania dla MODEL_EXTRACT: obsługa obrazów (plakaty) + solidny JSON po polsku. Struktura `src/llm.ts`
+Wymagania dla MODEL_EXTRACT: obsługa obrazów (plakaty) + solidny JSON po polsku. Struktura `src/adapters/openrouter.ts`
 to czysty fetch do OpenRouter chat completions — zero vendor lock-in.
 
 ## GitHub Actions (darmowy hosting + cron)
@@ -166,7 +167,7 @@ Opcjonalnie FB przez Bright Data (sekcja niżej): rozliczenie per-rekord, rząd 
 
 Włączane sekretem `BRIGHTDATA_API_KEY` (GitHub → Settings → Secrets albo `.env` lokalnie). Bez niego
 cały pipeline działa jak dotąd, a źródła FB są raportowane jako `skipped-fb` (tryb zero-cost).
-Dwie funkcje (`src/brightdata.ts` + `src/facebook.ts`):
+Dwie funkcje (`src/adapters/brightdata.ts` + `src/pipeline/facebook.ts`):
 
 1. **Rozwiązywanie linków do wydarzeń FB** — `facebook.com/events/<id>` znalezione na stronach źródeł,
    w followupach ekstraktora i w postach grup są zbierane i zbiorczo zamieniane w `EventItem`
@@ -197,7 +198,7 @@ w panelu Bright Data). Przykład analizy: `cat brightdata-usage.jsonl | jq`.
 
 ## Digest (17:00): Telegram (aktywny) / email (w zapasie)
 
-`src/digest.ts` + workflow `digest.yml` (cron 15:00 UTC = 17:00 CEST; zimą zmienić na 16).
+`src/actions/digest.ts` + workflow `digest.yml` (cron 15:00 UTC = 17:00 CEST; zimą zmienić na 16).
 Logika dni: **pt** → sam WEEKEND (sob+nd) · **sob** → tylko JUTRO (nd) · **nd–czw** → JUTRO + najbliższy WEEKEND.
 Rodzinne 👨‍👦 na górze; szum (komisje itp.) odfiltrowany. Kanały niezależne — aktywny każdy, który ma ustawione env.
 
@@ -254,7 +255,7 @@ mówią to wprost zamiast udawać. Zapisywana jest od pierwszego automatycznego 
   więc duplikat cicho scalałby dwa różne źródła,
 - adresy FB (`fb`, `fb_group`, `fb_event`) są pomijane w weryfikacji URL-i: login wall potrafił
   wypchnąć żywą grupę w `dead:true`, po czym daily przestawało ją odpytywać,
-- `discover-runs.json` przechodzi przez redakcję PII (`src/pii.ts`) tak samo jak `runs.json` — opisy
+- `discover-runs.json` przechodzi przez redakcję PII (`src/pipeline/pii.ts`) tak samo jak `runs.json` — opisy
   wyników dla zapytań `site:facebook.com/groups` potrafią zawierać numery i e-maile mieszkańców.
 
 ## Cache ekstrakcji (state.json)
@@ -286,7 +287,7 @@ pełna wersja z dnia ekstrakcji żyje w prywatnym archiwum.
 ## Dane osobowe (PII)
 
 Repo jest **publiczne**, a strony instytucji podają numery kontaktowe osób prowadzących zapisy.
-`src/pii.ts` redaguje je tuż przed zapisem — `events.json`, `index.html`, `runs.json`
+`src/pipeline/pii.ts` redaguje je tuż przed zapisem — `events.json`, `index.html`, `runs.json`
 i job summary zawierają już wersję oczyszczoną.
 
 | dane | decyzja | dlaczego |
@@ -367,6 +368,39 @@ GH Pages nie dogada się z mostem nawet przy uruchomionym serwerze, więc żadna
 nie przeskanuje twojego localhosta. Most akceptuje tylko prefiksy `raw/`, `llm/`, `events/`
 (bez `..`), więc nie da się przez niego czytać dowolnych obiektów z projektu.
 
+## Jakość: progi rozmiaru i bramka CI
+
+Kod potrafi urosnąć niepostrzeżenie — `discover.ts` miał w szczycie 1146 linii. Progi
+pilnuje ESLint (`eslint.shared.js`, wspólne z panelem), a `ci.yml` odpala je na każdym
+PR-ze i pushu do `main`:
+
+```bash
+npm run typecheck   # tsc na src/ i test/
+npm run lint        # progi rozmiaru + reguły typowane
+npm test            # node:test przez tsx, bez dodatkowych zależności
+```
+
+**Twarde (wywracają CI):** 350 linii kodu na plik · 120 znaków na linię · zagnieżdżenie ≤ 4 ·
+≤ 4 parametry · ≤ 3 zagnieżdżone callbacki. Liczone bez pustych linii i komentarzy — gęsty
+JSDoc w tym repo jest dokumentacją decyzji, nie długiem.
+
+**Ostrzeżenia:** długość i złożoność funkcji. Zostało osiem orkiestratorów wejścia/wyjścia
+(`run`, `main`, `webSearch`, `collect`, `chat`, `discoverTown`, `processSource`/`processFollowup`,
+`verifySource`), których nie da się sprawdzić bez płatnego przebiegu — lista i uzasadnienie
+są w `eslint.shared.js`. Wszystko, co dało się rozciąć pod osłoną testu albo wyjścia
+bajt-w-bajt, jest już rozcięte.
+
+Wyrocznie offline (darmowe, bez sieci), przydatne przy każdej zmianie w potoku:
+
+```bash
+npx tsx src/actions/discover.ts --why "poznan-kultura"   # czyta tylko zapisany stan
+npx tsx src/actions/digest.ts                            # dry-run bez .env
+npm run backfill-costs -- --force                        # przelicza księgę z raportów
+```
+
+⚠️ `npm run digest` ładuje `.env` i przy ustawionym `TELEGRAM_BOT_TOKEN` **naprawdę wyśle** —
+do podglądu używaj `npx tsx` bez `--env-file`.
+
 ## Znane ograniczenia / TODO
 
 - FB: linki do wydarzeń + otwarte grupy przez Bright Data (sekcja wyżej). Fanpage (`fetch:"fb"`)
@@ -380,5 +414,5 @@ nie przeskanuje twojego localhosta. Most akceptuje tylko prefiksy `raw/`, `llm/`
   Backfill jest możliwy tylko przez ponowne discovery — świadomie niezrobiony, bo kosztowałby
   pełny przebieg Sonneta dla danych, które i tak nie odtworzą wyników wyszukiwarki sprzed miesięcy.
 - Tagi zagnieżdżone (`dzieci:dmuchańce`, `warsztaty:ceramika`) generuje prompt — słownik warto ustabilizować po ~2 tyg. danych.
-- Powiadomienia: dodać `src/digest.ts` (czwartek 17:00, filtr wiek+weekend → mail/Telegram) — trywialne rozszerzenie.
+- Powiadomienia: dodać `src/actions/digest.ts` (czwartek 17:00, filtr wiek+weekend → mail/Telegram) — trywialne rozszerzenie.
 - Walidacja odpowiedzi LLM: typy są rzutowane (`as ExtractionResult`); produkcyjnie warto dodać `zod` schema → `EventItem`.

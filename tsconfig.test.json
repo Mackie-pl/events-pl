@@ -1,0 +1,10 @@
+// Bazowy tsconfig ma rootDir: "src" i include: ["src/**/*.ts"], więc testy nigdy by się
+// nie typecheckowały. Ten projekt istnieje wyłącznie po to, żeby je objąć — nic nie emituje.
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": "."
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts"]
+}
