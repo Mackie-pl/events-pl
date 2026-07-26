@@ -10,7 +10,7 @@
   "scripts": {
     "daily": "tsx --env-file-if-exists=.env src/daily.ts",
     "digest": "tsx --env-file-if-exists=.env src/digest.ts",
-    "discover": "tsx --env-file-if-exists=.env src/discover.ts",
+    "discover": "tsx --env-file-if-exists=.env src/actions/discover.ts",
     "backfill-costs": "tsx --env-file-if-exists=.env src/backfill-costs.ts",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
     "lint": "eslint .",
