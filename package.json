@@ -8,7 +8,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "daily": "tsx --env-file-if-exists=.env src/daily.ts",
+    "daily": "tsx --env-file-if-exists=.env src/actions/daily.ts",
     "digest": "tsx --env-file-if-exists=.env src/digest.ts",
     "discover": "tsx --env-file-if-exists=.env src/actions/discover.ts",
     "backfill-costs": "tsx --env-file-if-exists=.env src/backfill-costs.ts",
