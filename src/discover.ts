@@ -35,6 +35,7 @@ import { MIN_CONFIDENCE, matchHit } from "./pipeline/discover/proposal-match.js"
 import { type Registry, buildRegistry, uniqueId } from "./pipeline/discover/registry.js";
 import { toSource } from "./pipeline/discover/to-source.js";
 import { probeStats } from "./pipeline/verify/probe.js";
+import { discoverRunsStore } from "./reporting/discover-runs-store.js";
 import { verifySource } from "./pipeline/verify/verify-source.js";
 import { describeError } from "./shared/errors.js";
 import {
@@ -42,7 +43,7 @@ import {
 } from "./adapters/openrouter.js";
 import { type RedactionStats, newStats, redactText } from "./pipeline/pii.js";
 import { DISCOVERY_QUERIES, DISCOVERY_SYSTEM } from "./pipeline/prompts.js";
-import { DISCOVER_RUNS_PATH, SOURCES_PATH } from "./shared/paths.js";
+import { SOURCES_PATH } from "./shared/paths.js";
 import { todayIso } from "./shared/dates.js";
 import { slug, str, trim } from "./shared/text.js";
 import { urlKey } from "./shared/url.js";
@@ -52,14 +53,6 @@ import type {
   SourceVerification, SourcesFile, TownDiscoveryRun,
 } from "./types/index.js";
 
-const DISCOVER_RUNS_KEEP = 24; // ~2 lata miesięcznych przebiegów
-/**
- * Pełne szczegóły (wyniki wyszukiwarki, dopasowane trafienia) trzymamy tylko dla najnowszych
- * przebiegów — pełne discovery to ~13 gmin × 10 zapytań × 8 wyników, czyli setki kB na przebieg
- * w publicznym repo. Starsze wpisy zostają jako metryki + decyzje; „czemu to źródło tu jest"
- * i tak odpowiada `provenance` w sources.json.
- */
-const DISCOVER_RUNS_DETAILED = 4;
 
 // ---------------- discovery ----------------
 
@@ -357,56 +350,6 @@ function redactRun(report: DiscoverRunReport, cfg: SourcesFile): void {
 }
 
 /** Starszy przebieg bez szczegółów: zostają metryki i decyzje, znika masa wyników wyszukiwarki. */
-function slim(r: DiscoverRunReport): DiscoverRunReport {
-  if (r.slimmed) return r;
-  const slimSearches = (calls: SearchCall[]): SearchCall[] =>
-    calls.map((c) => (c.results.length ? { ...c, results: [], trimmed: c.results.length } : c));
-  return {
-    ...r,
-    slimmed: true,
-    towns: r.towns.map((t) => ({
-      ...t,
-      searches: slimSearches(t.searches),
-      proposals: t.proposals.map(({ hit: _hit, ...p }) => p),
-    })),
-    verifications: r.verifications.map((v) => ({ ...v, searches: slimSearches(v.searches) })),
-  };
-}
-
-/**
- * Kształt przebiegu tak, jak leży na dysku: przebiegi zapisane starszą wersją nie mają
- * `proposals` ani nowych pól. Czytamy plik z historii, więc typy z types.ts opisują tu
- * intencję, a nie gwarancję — normalizujemy przy wczytaniu, zamiast rozsypywać `?? []`.
- */
-type StoredRun = Omit<DiscoverRunReport, "towns" | "verifications"> & {
-  towns?: Array<Omit<TownDiscoveryRun, "searches" | "proposals"> & { searches?: SearchCall[]; proposals?: SourceProposal[] }>;
-  verifications?: Array<Omit<SourceVerification, "searches"> & { searches?: SearchCall[] }>;
-};
-
-const normalizeRun = (r: StoredRun): DiscoverRunReport => ({
-  ...r,
-  towns: (r.towns ?? []).map((t) => ({ ...t, searches: t.searches ?? [], proposals: t.proposals ?? [] })),
-  verifications: (r.verifications ?? []).map((v) => ({ ...v, searches: v.searches ?? [] })),
-});
-
-async function loadRuns(): Promise<DiscoverRunReport[]> {
-  if (!existsSync(DISCOVER_RUNS_PATH)) return [];
-  try {
-    const parsed: unknown = JSON.parse(await readFile(DISCOVER_RUNS_PATH, "utf-8"));
-    return Array.isArray(parsed) ? (parsed as StoredRun[]).map(normalizeRun) : [];
-  } catch (e) {
-    // uszkodzony plik historii nie może wywrócić przebiegu wartego kilku dolarów
-    console.warn(`discover-runs.json nie do odczytania (${describeError(e)}) — historia zaczyna się od nowa`);
-    return [];
-  }
-}
-
-async function persistRun(report: DiscoverRunReport): Promise<void> {
-  const kept = [...(await loadRuns()), report].slice(-DISCOVER_RUNS_KEEP);
-  const out = kept.map((r, i) => (i < kept.length - DISCOVER_RUNS_DETAILED ? slim(r) : r));
-  await writeFile(DISCOVER_RUNS_PATH, JSON.stringify(out, null, 1), "utf-8");
-}
-
 const OUTCOME_ICON: Record<SourceVerification["outcome"], string> = {
   ok: "✅", fixed: "🔧", dead: "💀", error: "⚠️", skipped: "⏭️",
 };
@@ -615,7 +558,7 @@ async function main(): Promise<void> {
       process.exitCode = 1;
       return;
     }
-    explain(needle, await loadCfg("Poznań", 15), await loadRuns());
+    explain(needle, await loadCfg("Poznań", 15), await discoverRunsStore.all());
     return;
   }
 
@@ -684,7 +627,7 @@ async function main(): Promise<void> {
   redactRun(report, cfg);
 
   await writeFile(SOURCES_PATH, JSON.stringify(cfg, null, 1), "utf-8");
-  await persistRun(report);
+  await discoverRunsStore.append([report]);
   // księga kosztów przeżywa przycinanie przebiegów i łączy etap 1 z etapem 2 —
   // rachunek przychodzi jeden, więc wykres „ile dziennie" musi widzieć oba
   await recordCosts(report.costs);

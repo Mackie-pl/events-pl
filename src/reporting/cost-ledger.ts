@@ -19,12 +19,9 @@
  *   COST_MONTHLY_BUDGET_USD     domyślnie 15      (linia odniesienia w panelu)
  *   COST_RETENTION_DAYS         domyślnie 90
  */
-import { readFile, writeFile } from "node:fs/promises";
-import { existsSync } from "node:fs";
-
-import { describeError } from "../shared/errors.js";
 import { dayOffset } from "../shared/dates.js";
-import { COSTS_PATH } from "../shared/paths.js";
+import { collection } from "../storage/index.js";
+import type { CollectionStore, Retention } from "../storage/index.js";
 import type { CostCategory, CostDriver, CostEntry, CostLedger, CostRates, CostUnit } from "../types/index.js";
 
 const num = (name: string, fallback: number): number => {
@@ -96,19 +93,36 @@ export function costEntries(
   return out;
 }
 
-export async function loadCostEntries(): Promise<CostEntry[]> {
-  if (!existsSync(COSTS_PATH)) return [];
-  try {
-    const parsed: unknown = JSON.parse(await readFile(COSTS_PATH, "utf-8"));
-    const entries = (parsed as Partial<CostLedger>)?.entries;
+/**
+ * Retencja księgi. Przycinamy po dacie DZIENNEJ (nie po znaczniku zapisu), bo oś wykresu
+ * w panelu jest dzienna — wpis z 3:59 i z 4:01 tego samego dnia mają wypaść razem.
+ * Klucz `run|stage`: ponowny zapis tego samego przebiegu zastępuje wpis, a nie dubluje kwotę.
+ */
+export const costRetention: Retention<CostEntry> = {
+  at: (e) => e.at,
+  ageKey: (e) => e.day,
+  cutoff: () => dayOffset(RETENTION_DAYS()),
+  key: (e) => `${e.run}|${e.stage}`,
+};
+
+/**
+ * Koperta: obok wpisów zapisujemy stawki obowiązujące w chwili zapisu. Po zmianie
+ * cennika stary wpis musi dać się wytłumaczyć stawką, która wtedy obowiązywała.
+ */
+const ledgerStore: CollectionStore<CostEntry> = collection<CostEntry>("costs", costRetention, {
+  unwrap: (raw) => {
+    const entries = (raw as Partial<CostLedger> | null)?.entries;
     return Array.isArray(entries) ? entries : [];
-  } catch (e) {
-    // uszkodzona księga nie może wywrócić przebiegu — historia zaczyna się od nowa,
-    // a poprzednia wersja i tak zostaje w historii gita
-    console.warn(`costs.json nie do odczytania (${describeError(e)}) — księga zaczyna się od nowa`);
-    return [];
-  }
-}
+  },
+  wrap: (entries): CostLedger => ({
+    updated: new Date().toISOString(),
+    rates: costRates(),
+    retentionDays: RETENTION_DAYS(),
+    entries,
+  }),
+});
+
+export const loadCostEntries = (): Promise<CostEntry[]> => ledgerStore.all();
 
 /**
  * Dopisuje wpisy do księgi i przycina ją do `COST_RETENTION_DAYS`.
@@ -116,21 +130,7 @@ export async function loadCostEntries(): Promise<CostEntry[]> {
  * ale wpisy z tego samego `run` są zastępowane — powtórzony zapis raportu nie ma
  * podwajać kwoty.
  */
-export async function recordCosts(entries: CostEntry[]): Promise<void> {
-  if (!entries.length) return;
-  const runs = new Set(entries.map((e) => `${e.run}|${e.stage}`));
-  const cutoff = dayOffset(RETENTION_DAYS());
-  const kept = (await loadCostEntries()).filter(
-    (e) => e.day >= cutoff && !runs.has(`${e.run}|${e.stage}`),
-  );
-  const ledger: CostLedger = {
-    updated: new Date().toISOString(),
-    rates: costRates(),
-    retentionDays: RETENTION_DAYS(),
-    entries: [...kept, ...entries].sort((a, b) => a.at.localeCompare(b.at)),
-  };
-  await writeFile(COSTS_PATH, JSON.stringify(ledger, null, 1), "utf-8");
-}
+export const recordCosts = (entries: CostEntry[]): Promise<void> => ledgerStore.append(entries);
 
 const LABEL: Record<CostCategory, string> = {
   "llm-extract": "tekst",
