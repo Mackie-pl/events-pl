@@ -7,8 +7,8 @@
  * Nazwy pól Bright Data bywają różne między wersjami scrapera — sięgamy defensywnie
  * po kilka wariantów każdego pola.
  */
-import type { BdRecord } from "./brightdata.js";
-import type { AgeRange, EventItem, Price } from "./types/index.js";
+import type { BdRecord } from "../adapters/brightdata.js";
+import type { AgeRange, EventItem, Price } from "../types/index.js";
 
 const EVENT_URL_RE = /(?:https?:\/\/)?(?:[\w-]+\.)?facebook\.com\/events\/(\d+)/gi;
 

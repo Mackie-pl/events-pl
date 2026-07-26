@@ -6,8 +6,9 @@
  *   MODEL_DISCOVER      default: anthropic/claude-sonnet-4.6  (mocny, miesięczne discovery)
  */
 
-import { describeError, fetchUrl } from "./errors.js";
-import type { LlmTask, LlmUsage, TaskUsage } from "./types/index.js";
+import { fetchUrl } from "./http.js";
+import { describeError } from "../shared/errors.js";
+import type { LlmTask, LlmUsage, TaskUsage } from "../types/index.js";
 
 // nadpisywalne: pozwala wpiąć proxy/gateway albo mock w testach integracyjnych
 const OPENROUTER_URL =

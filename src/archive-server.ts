@@ -12,8 +12,9 @@
  */
 import { createServer } from "node:http";
 
-import { authHeaders, keyLooksPublic, supabaseKey } from "./archive.js";
-import { describeError, fetchUrl } from "./errors.js";
+import { authHeaders, keyLooksPublic, supabaseKey } from "./adapters/supabase-archive.js";
+import { fetchUrl } from "./adapters/http.js";
+import { describeError } from "./shared/errors.js";
 
 const PORT = Number(process.env["ARCHIVE_PORT"] ?? 8787);
 const BUCKET = process.env["SUPABASE_BUCKET"] ?? "archive";

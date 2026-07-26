@@ -28,12 +28,13 @@ import { setTimeout as sleep } from "node:timers/promises";
 
 import {
   archiveEnabled, archiveLlmCall, archiveRaw, archiveStats, beginRun, beginSource, sourcePaths,
-} from "./archive.js";
-import { type CostInput, costEntries, costLine, costRates, recordCosts } from "./cost.js";
-import { BROWSER_HEADERS, describeError, fetchUrl } from "./errors.js";
-import { MODEL_DISCOVER, MODEL_EXTRACT, chat, resetUsage, setCallRecorder, snapshotUsage } from "./llm.js";
-import { type RedactionStats, newStats, redactText } from "./pii.js";
-import { DISCOVERY_QUERIES, DISCOVERY_SYSTEM, REVERIFY_SYSTEM } from "./prompts.js";
+} from "./adapters/supabase-archive.js";
+import { type CostInput, costEntries, costLine, costRates, recordCosts } from "./reporting/cost-ledger.js";
+import { BROWSER_HEADERS, fetchUrl } from "./adapters/http.js";
+import { describeError } from "./shared/errors.js";
+import { MODEL_DISCOVER, MODEL_EXTRACT, chat, resetUsage, setCallRecorder, snapshotUsage } from "./adapters/openrouter.js";
+import { type RedactionStats, newStats, redactText } from "./pipeline/pii.js";
+import { DISCOVERY_QUERIES, DISCOVERY_SYSTEM, REVERIFY_SYSTEM } from "./pipeline/prompts.js";
 import { DISCOVER_RUNS_PATH, SOURCES_PATH } from "./shared/paths.js";
 import { todayIso } from "./shared/dates.js";
 import { slug, str, trim } from "./shared/text.js";

@@ -6,7 +6,7 @@
 import { strict as assert } from "node:assert";
 import { describe, it } from "node:test";
 
-import { EMAIL_MARK, PHONE_MARK, newStats, redactEvent, redactEvents, redactText } from "../src/pii.js";
+import { EMAIL_MARK, PHONE_MARK, newStats, redactEvent, redactEvents, redactText } from "../src/pipeline/pii.js";
 
 import { event } from "./helpers.js";
 

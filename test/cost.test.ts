@@ -11,7 +11,7 @@
 import { strict as assert } from "node:assert";
 import { describe, it } from "node:test";
 
-import { type CostInput, costEntries, costLine, totalUsd } from "../src/cost.js";
+import { type CostInput, costEntries, costLine, totalUsd } from "../src/reporting/cost-ledger.js";
 
 const RUN = "2026-07-26T04:00:00.000Z";
 const AT = "2026-07-26T04:12:00.000Z";

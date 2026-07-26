@@ -18,9 +18,10 @@
  * Bucket musi być PRYWATNY.
  */
 
-import { describeError, fetchUrl } from "./errors.js";
-import { sha256 } from "./shared/hash.js";
-import type { LlmCallRecord } from "./llm.js";
+import { fetchUrl } from "./http.js";
+import { describeError } from "../shared/errors.js";
+import { sha256 } from "../shared/hash.js";
+import type { LlmCallRecord } from "./openrouter.js";
 
 const BUCKET = process.env["SUPABASE_BUCKET"] ?? "archive";
 /** Retencja: pomocnicze, do cyklicznego czyszczenia (Supabase nie ma lifecycle rules). */

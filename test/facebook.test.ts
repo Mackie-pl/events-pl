@@ -6,7 +6,7 @@
 import { strict as assert } from "node:assert";
 import { describe, it } from "node:test";
 
-import { fbEventToItem, fbGroupPostsToText, harvestEventUrls, isEventUrl } from "../src/facebook.js";
+import { fbEventToItem, fbGroupPostsToText, harvestEventUrls, isEventUrl } from "../src/pipeline/facebook.js";
 
 describe("harvestEventUrls", () => {
   it("normalizuje do kanonicznej postaci i deduplikuje", () => {

@@ -19,8 +19,8 @@
  */
 import { setTimeout as sleep } from "node:timers/promises";
 
-import { fetchUrl } from "./errors.js";
-import type { BdUsage } from "./types/index.js";
+import { fetchUrl } from "./http.js";
+import type { BdUsage } from "../types/index.js";
 
 const BASE = "https://api.brightdata.com/datasets/v3";
 

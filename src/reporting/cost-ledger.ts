@@ -22,10 +22,10 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 
-import { describeError } from "./errors.js";
-import { dayOffset } from "./shared/dates.js";
-import { COSTS_PATH } from "./shared/paths.js";
-import type { CostCategory, CostDriver, CostEntry, CostLedger, CostRates, CostUnit } from "./types/index.js";
+import { describeError } from "../shared/errors.js";
+import { dayOffset } from "../shared/dates.js";
+import { COSTS_PATH } from "../shared/paths.js";
+import type { CostCategory, CostDriver, CostEntry, CostLedger, CostRates, CostUnit } from "../types/index.js";
 
 const num = (name: string, fallback: number): number => {
   const raw = process.env[name];

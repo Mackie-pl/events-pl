@@ -16,7 +16,7 @@
  */
 import { readFile } from "node:fs/promises";
 
-import { fetchUrl } from "./errors.js";
+import { fetchUrl } from "./adapters/http.js";
 import { addDays, dayOfWeek, fmtDayPl, todayWarsaw } from "./shared/dates.js";
 import { EVENTS_PATH } from "./shared/paths.js";
 import type { EventItem, EventsFile } from "./types/index.js";

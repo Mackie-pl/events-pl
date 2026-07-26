@@ -15,14 +15,15 @@ import { extractText, getDocumentProxy } from "unpdf";
 import {
   RETENTION_DAYS as ARCHIVE_RETENTION_DAYS, archiveEnabled, archiveEventsFull, archiveLlmCall,
   archiveRaw, archiveStats, beginRun, beginSource, sourcePaths,
-} from "./archive.js";
-import { BD_DATASETS, bdDelta, bdEnabled, bdSnapshot, bdUsage, collect as bdCollect } from "./brightdata.js";
-import { type CostInput, costEntries, costLine, costRates, recordCosts } from "./cost.js";
-import { BROWSER_HEADERS, describeError, fetchUrl } from "./errors.js";
-import { fbEventToItem, fbGroupPostsToText, harvestEventUrls, isEventUrl } from "./facebook.js";
-import { MODEL_EXTRACT, chat, imagePart, resetUsage, setCallRecorder, snapshotTasks, snapshotUsage } from "./llm.js";
-import { type RedactionStats, redactEvents, redactText } from "./pii.js";
-import { DEDUPE_SYSTEM, POSTER_SYSTEM, extractionSystem } from "./prompts.js";
+} from "./adapters/supabase-archive.js";
+import { BD_DATASETS, bdDelta, bdEnabled, bdSnapshot, bdUsage, collect as bdCollect } from "./adapters/brightdata.js";
+import { type CostInput, costEntries, costLine, costRates, recordCosts } from "./reporting/cost-ledger.js";
+import { BROWSER_HEADERS, fetchUrl } from "./adapters/http.js";
+import { describeError } from "./shared/errors.js";
+import { fbEventToItem, fbGroupPostsToText, harvestEventUrls, isEventUrl } from "./pipeline/facebook.js";
+import { MODEL_EXTRACT, chat, imagePart, resetUsage, setCallRecorder, snapshotTasks, snapshotUsage } from "./adapters/openrouter.js";
+import { type RedactionStats, redactEvents, redactText } from "./pipeline/pii.js";
+import { DEDUPE_SYSTEM, POSTER_SYSTEM, extractionSystem } from "./pipeline/prompts.js";
 import { sha256 } from "./shared/hash.js";
 import {
   BD_USAGE_LOG, EVENTS_PATH, INDEX_HTML, RUNS_PATH, SOURCES_PATH, STATE_PATH, TEMPLATE_HTML,
