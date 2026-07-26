@@ -5,7 +5,6 @@
  *
  * Uruchomienie: ANTHROPIC_API_KEY=... npm run daily
  */
-import { createHash } from "node:crypto";
 import { appendFile, readFile, writeFile } from "node:fs/promises";
 import { appendFileSync, existsSync } from "node:fs";
 import { setTimeout as sleep } from "node:timers/promises";
@@ -24,6 +23,7 @@ import { fbEventToItem, fbGroupPostsToText, harvestEventUrls, isEventUrl } from 
 import { MODEL_EXTRACT, chat, imagePart, resetUsage, setCallRecorder, snapshotTasks, snapshotUsage } from "./llm.js";
 import { type RedactionStats, redactEvents, redactText } from "./pii.js";
 import { DEDUPE_SYSTEM, POSTER_SYSTEM, extractionSystem } from "./prompts.js";
+import { sha256 } from "./shared/hash.js";
 import {
   BD_USAGE_LOG, EVENTS_PATH, INDEX_HTML, RUNS_PATH, SOURCES_PATH, STATE_PATH, TEMPLATE_HTML,
 } from "./shared/paths.js";
@@ -288,7 +288,6 @@ async function fetchSource(src: Source, url: string, run: SourceRun, extraHeader
   }
 }
 
-const sha256 = (s: string): string => createHash("sha256").update(s).digest("hex");
 
 /**
  * Pobiera followup (podstrona / PDF / plakat) i zwraca jego wydarzenia.

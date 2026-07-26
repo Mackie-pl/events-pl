@@ -18,9 +18,8 @@
  * Bucket musi być PRYWATNY.
  */
 
-import { createHash } from "node:crypto";
-
 import { describeError, fetchUrl } from "./errors.js";
+import { sha256 } from "./shared/hash.js";
 import type { LlmCallRecord } from "./llm.js";
 
 const BUCKET = process.env["SUPABASE_BUCKET"] ?? "archive";
@@ -114,7 +113,6 @@ export function beginSource(sourceId: string): void {
 /** Ścieżki zarchiwizowane od ostatniego beginSource() — do zapisania w SourceRun. */
 export const sourcePaths = (): string[] => [...currentPaths];
 
-export const sha256 = (s: string): string => createHash("sha256").update(s).digest("hex");
 
 /**
  * Upload jednego obiektu. Zwraca false przy błędzie — nigdy nie rzuca.

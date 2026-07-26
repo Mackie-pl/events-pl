@@ -23,6 +23,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 
 import { describeError } from "./errors.js";
+import { dayOffset } from "./shared/dates.js";
 import { COSTS_PATH } from "./shared/paths.js";
 import type { CostCategory, CostDriver, CostEntry, CostLedger, CostRates, CostUnit } from "./types/index.js";
 
@@ -108,9 +109,6 @@ export async function loadCostEntries(): Promise<CostEntry[]> {
     return [];
   }
 }
-
-const dayOffset = (days: number): string =>
-  new Date(Date.now() - days * 86_400_000).toISOString().slice(0, 10);
 
 /**
  * Dopisuje wpisy do księgi i przycina ją do `COST_RETENTION_DAYS`.

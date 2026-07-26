@@ -35,6 +35,9 @@ import { MODEL_DISCOVER, MODEL_EXTRACT, chat, resetUsage, setCallRecorder, snaps
 import { type RedactionStats, newStats, redactText } from "./pii.js";
 import { DISCOVERY_QUERIES, DISCOVERY_SYSTEM, REVERIFY_SYSTEM } from "./prompts.js";
 import { DISCOVER_RUNS_PATH, SOURCES_PATH } from "./shared/paths.js";
+import { todayIso } from "./shared/dates.js";
+import { slug, str, trim } from "./shared/text.js";
+import { host, isFbFetch, normalizeFbGroupUrl, urlKey } from "./shared/url.js";
 import type {
   CostEntry, DiscoverRunReport, DiscoverTotals, FetchProbe, FetchStrategy, GeoLookup, LlmUsage,
   SearchCall, SearchResult, Source, SourceProposal, SourceProvenance, SourceType,
@@ -60,64 +63,6 @@ const MAX_DESC_CHARS = 300;
 // nadpisywalne jak OPENROUTER_URL w llm.ts: pozwala wpiąć proxy albo mock w testach
 const BRAVE_URL = process.env["BRAVE_URL"] ?? "https://api.search.brave.com/res/v1/web/search";
 const OVERPASS_URL = process.env["OVERPASS_URL"] ?? "https://overpass-api.de/api/interpreter";
-
-const today = (): string => new Date().toISOString().slice(0, 10);
-
-const trim = (s: string, max: number): string => (s.length > max ? `${s.slice(0, max)}…` : s);
-
-// ---------------- normalizacja adresów ----------------
-
-/**
- * Klucz porównania adresów: bez schematu, `www.` i końcowego `/`, z posortowanymi parametrami.
- * Samo obcinanie `/` (poprzednia wersja) uznawało `http://x` i `https://www.x/` za różne źródła,
- * więc ten sam serwis potrafił wejść do rejestru dwa razy.
- */
-function urlKey(u: string): string {
-  try {
-    const p = new URL(u);
-    const host = p.host.replace(/^www\./i, "").toLowerCase();
-    const path = p.pathname.replace(/\/+$/, "").toLowerCase();
-    const params = [...p.searchParams.entries()]
-      .filter(([, v]) => !v.includes("{page}")) // paginacja to nie inne źródło
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([k, v]) => `${k}=${v}`)
-      .join("&");
-    return host + path + (params ? `?${params}` : "");
-  } catch {
-    return u.replace(/^https?:\/\//i, "").replace(/^www\./i, "").replace(/\/+$/, "").toLowerCase();
-  }
-}
-
-const host = (u: string): string => {
-  try {
-    return new URL(u).host.replace(/^www\./i, "").toLowerCase();
-  } catch {
-    return "";
-  }
-};
-
-const PL_MAP: Record<string, string> = {
-  ą: "a", ć: "c", ę: "e", ł: "l", ń: "n", ó: "o", ś: "s", ż: "z", ź: "z",
-};
-
-/** id musi być stabilne i bezpieczne: jest kluczem cache ekstrakcji w state.json. */
-function slug(s: string): string {
-  return s
-    .toLowerCase()
-    .replace(/[ąćęłńóśżź]/g, (c) => PL_MAP[c] ?? c)
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 48);
-}
-
-/** Grupa FB: korzeń grupy bez /posts/… i parametrów (prompt o to prosi, ale ufamy-i-sprawdzamy). */
-function normalizeFbGroupUrl(u: string): string {
-  const m = u.match(/^https?:\/\/(?:www\.)?facebook\.com\/groups\/([^/?#]+)/i);
-  return m ? `https://www.facebook.com/groups/${m[1]}` : u;
-}
-
-/** Adresy FB nie odpowiadają na zwykły fetch (login wall) — weryfikacja URL-a ich nie dotyczy. */
-const isFbFetch = (f: FetchStrategy): boolean => f === "fb" || f === "fb_group" || f === "fb_event";
 
 // ---------------- wyszukiwarka (logowana do raportu) ----------------
 
@@ -238,7 +183,6 @@ function matchHit(url: string, hits: Array<{ query: string; result: SearchResult
   return found ? { query: found.query, hit: found.result } : null;
 }
 
-const str = (v: unknown): string | undefined => (typeof v === "string" && v.trim() ? v.trim() : undefined);
 
 /**
  * Rekord od LLM → Source. Odpowiedź modelu jest rzutowana, nie walidowana (`as Source[]`
@@ -581,7 +525,7 @@ async function verifySource(src: Source, isNew: boolean): Promise<SourceVerifica
 
     if (probe.ok) {
       src.verified = true;
-      src.checked = today();
+      src.checked = todayIso();
       delete src.dead;
       return finalize();
     }
@@ -603,9 +547,9 @@ async function verifySource(src: Source, isNew: boolean): Promise<SourceVerifica
         src.previous_urls = [...(src.previous_urls ?? []), src.url];
         src.url = candidate;
         src.verified = true;
-        src.checked = today();
+        src.checked = todayIso();
         delete src.dead;
-        src.notes = `${src.notes ? src.notes + " | " : ""}URL naprawiony ${today()} (stary w previous_urls)`;
+        src.notes = `${src.notes ? src.notes + " | " : ""}URL naprawiony ${todayIso()} (stary w previous_urls)`;
         ver.outcome = "fixed";
         ver.newUrl = candidate;
         return finalize();
@@ -614,10 +558,10 @@ async function verifySource(src: Source, isNew: boolean): Promise<SourceVerifica
     }
 
     // naprawa się nie udała — oznacz jako martwe (daily pominie do następnego --verify)
-    if (!src.dead) src.notes = `${src.notes ? src.notes + " | " : ""}martwy URL (${today()}): ${probe.err}`;
+    if (!src.dead) src.notes = `${src.notes ? src.notes + " | " : ""}martwy URL (${todayIso()}): ${probe.err}`;
     src.dead = true;
     src.verified = false;
-    src.checked = today();
+    src.checked = todayIso();
     ver.outcome = "dead";
     return finalize();
   } catch (e) {
@@ -1026,7 +970,7 @@ async function loadCfg(center: string, radius: number): Promise<SourcesFile> {
     : {
         region: {
           name: `${center} +${radius}km`, center: { lat: 0, lon: 0 }, radius_km: radius,
-          discovered_at: today(), discovery_method: "discover.ts",
+          discovered_at: todayIso(), discovery_method: "discover.ts",
         },
         sources: [],
       };

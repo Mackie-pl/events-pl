@@ -17,43 +17,9 @@
 import { readFile } from "node:fs/promises";
 
 import { fetchUrl } from "./errors.js";
+import { addDays, dayOfWeek, fmtDayPl, todayWarsaw } from "./shared/dates.js";
 import { EVENTS_PATH } from "./shared/paths.js";
 import type { EventItem, EventsFile } from "./types/index.js";
-
-const TZ = "Europe/Warsaw";
-
-// ---------------- daty ----------------
-
-/** Dzisiejsza data YYYY-MM-DD w strefie PL. */
-function todayWarsaw(): string {
-  return new Intl.DateTimeFormat("sv-SE", { timeZone: TZ }).format(new Date());
-}
-
-function addDays(iso: string, days: number): string {
-  const d = new Date(`${iso}T12:00:00Z`);
-  d.setUTCDate(d.getUTCDate() + days);
-  return d.toISOString().slice(0, 10);
-}
-
-/** 0=nd ... 6=sob */
-function dayOfWeek(iso: string): number {
-  return new Date(`${iso}T12:00:00Z`).getUTCDay();
-}
-
-const DAY_NAMES = [
-  "niedziela",
-  "poniedziałek",
-  "wtorek",
-  "środa",
-  "czwartek",
-  "piątek",
-  "sobota",
-] as const;
-
-function fmtDay(iso: string): string {
-  const d = new Date(`${iso}T12:00:00Z`);
-  return `${DAY_NAMES[d.getUTCDay()]} ${d.getUTCDate()}.${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
-}
 
 interface Section {
   label: string;
@@ -69,7 +35,7 @@ export function sectionsFor(today: string): Section[] {
     // piątek: jutro==sobota, więc jedna sekcja weekendowa
     return [
       {
-        label: `WEEKEND (${fmtDay(tomorrow)} – ${fmtDay(addDays(today, 2))})`,
+        label: `WEEKEND (${fmtDayPl(tomorrow)} – ${fmtDayPl(addDays(today, 2))})`,
         from: tomorrow,
         to: addDays(today, 2),
       },
@@ -78,7 +44,7 @@ export function sectionsFor(today: string): Section[] {
   if (dow === 6) {
     // sobota: została tylko niedziela
     return [
-      { label: `JUTRO (${fmtDay(tomorrow)})`, from: tomorrow, to: tomorrow },
+      { label: `JUTRO (${fmtDayPl(tomorrow)})`, from: tomorrow, to: tomorrow },
     ];
   }
   // nd–czw: jutro + najbliższy weekend
@@ -86,8 +52,8 @@ export function sectionsFor(today: string): Section[] {
   const sat = addDays(today, daysToSaturday);
   const sun = addDays(sat, 1);
   return [
-    { label: `JUTRO (${fmtDay(tomorrow)})`, from: tomorrow, to: tomorrow },
-    { label: `WEEKEND (${fmtDay(sat)} – ${fmtDay(sun)})`, from: sat, to: sun },
+    { label: `JUTRO (${fmtDayPl(tomorrow)})`, from: tomorrow, to: tomorrow },
+    { label: `WEEKEND (${fmtDayPl(sat)} – ${fmtDayPl(sun)})`, from: sat, to: sun },
   ];
 }
 
