@@ -24,15 +24,18 @@
  */
 import { readFile, writeFile } from "node:fs/promises";
 import { appendFileSync, existsSync } from "node:fs";
-import { setTimeout as sleep } from "node:timers/promises";
 
 import {
   archiveEnabled, archiveLlmCall, archiveRaw, archiveStats, beginRun, beginSource, sourcePaths,
 } from "./adapters/supabase-archive.js";
 import { type CostInput, costEntries, costLine, costRates, recordCosts } from "./reporting/cost-ledger.js";
+import { webSearch, searchState } from "./adapters/brave.js";
 import { BROWSER_HEADERS, fetchUrl } from "./adapters/http.js";
+import { townsInRadius } from "./adapters/overpass.js";
 import { describeError } from "./shared/errors.js";
-import { MODEL_DISCOVER, MODEL_EXTRACT, chat, resetUsage, setCallRecorder, snapshotUsage } from "./adapters/openrouter.js";
+import {
+  MODEL_DISCOVER, MODEL_EXTRACT, chat, resetUsage, setCallRecorder, snapshotUsage,
+} from "./adapters/openrouter.js";
 import { type RedactionStats, newStats, redactText } from "./pipeline/pii.js";
 import { DISCOVERY_QUERIES, DISCOVERY_SYSTEM, REVERIFY_SYSTEM } from "./pipeline/prompts.js";
 import { DISCOVER_RUNS_PATH, SOURCES_PATH } from "./shared/paths.js";
@@ -40,7 +43,7 @@ import { todayIso } from "./shared/dates.js";
 import { slug, str, trim } from "./shared/text.js";
 import { host, isFbFetch, normalizeFbGroupUrl, urlKey } from "./shared/url.js";
 import type {
-  CostEntry, DiscoverRunReport, DiscoverTotals, FetchProbe, FetchStrategy, GeoLookup, LlmUsage,
+  CostEntry, DiscoverRunReport, DiscoverTotals, FetchProbe, FetchStrategy, LlmUsage,
   SearchCall, SearchResult, Source, SourceProposal, SourceProvenance, SourceType,
   SourceVerification, SourcesFile, TownDiscoveryRun,
 } from "./types/index.js";
@@ -53,118 +56,13 @@ const DISCOVER_RUNS_KEEP = 24; // ~2 lata miesięcznych przebiegów
  * i tak odpowiada `provenance` w sources.json.
  */
 const DISCOVER_RUNS_DETAILED = 4;
-/** Bezpiecznik darmowego tieru Brave (2000/mies.) — pełne discovery 13 gmin to ~130 zapytań. */
-const SEARCH_BUDGET = Number(process.env["DISCOVER_MAX_SEARCHES"] ?? 300);
 /** Poniżej tego progu odpowiedź traktujemy jako zaślepkę/błąd, nie treść. */
 const MIN_BODY_CHARS = 500;
 /** Próg pewności modelu, poniżej którego propozycja nie trafia do rejestru. */
 const MIN_CONFIDENCE = 0.5;
-/** Opis wyniku wyszukiwarki bywa akapitem — do raportu wystarczy pierwsze zdanie z hakiem. */
-const MAX_DESC_CHARS = 300;
-// nadpisywalne jak OPENROUTER_URL w llm.ts: pozwala wpiąć proxy albo mock w testach
-const BRAVE_URL = process.env["BRAVE_URL"] ?? "https://api.search.brave.com/res/v1/web/search";
-const OVERPASS_URL = process.env["OVERPASS_URL"] ?? "https://overpass-api.de/api/interpreter";
 
-// ---------------- wyszukiwarka (logowana do raportu) ----------------
-
-/**
- * Licznik + wyłącznik. Brave przy przekroczeniu limitu odpowiada 429 z poprawnym JSON-em bez
- * `web.results` — poprzednia wersja czytała to jako „zero trafień", więc wyczerpany limit
- * wyglądał w raporcie identycznie jak gmina bez źródeł, a kolejne 100 zapytań i tak leciało.
- */
-let searchesUsed = 0;
-let searchDisabled: string | null = null;
-let searchesSkipped = 0;
 /** Pobrania HTTP przy weryfikacji URL-i (każde źródło + kandydaci przy naprawie) — wolumen do costs.json. */
 let verifyFetches = 0;
-
-async function webSearch(query: string, log: SearchCall[]): Promise<SearchResult[]> {
-  const key = process.env["BRAVE_API_KEY"];
-  if (!key) throw new Error("Brak BRAVE_API_KEY");
-  const call: SearchCall = { query, results: [], ms: 0 };
-  log.push(call);
-
-  if (!searchDisabled && searchesUsed >= SEARCH_BUDGET) {
-    searchDisabled = `budżet ${SEARCH_BUDGET} zapytań wyczerpany (DISCOVER_MAX_SEARCHES)`;
-  }
-  if (searchDisabled) {
-    call.skipped = true;
-    call.err = searchDisabled;
-    searchesSkipped++;
-    return [];
-  }
-
-  searchesUsed++;
-  const t0 = performance.now();
-  try {
-    const res = await fetchUrl(
-      `${BRAVE_URL}?${new URLSearchParams({ q: query, count: "8", country: "pl" }).toString()}`,
-      { headers: { "X-Subscription-Token": key } },
-      20_000,
-      "Brave Search",
-    );
-    if (!res.ok) {
-      call.httpStatus = res.status;
-      call.err = `HTTP ${res.status}: ${trim((await res.text()).replace(/\s+/g, " "), 200)}`;
-      if (res.status === 401 || res.status === 403 || res.status === 429) {
-        // klucz odrzucony albo limit — dalsze zapytania to pewne porażki i strata czasu
-        searchDisabled = `wyszukiwarka wyłączona po HTTP ${res.status} (klucz/limit)`;
-        console.warn(`Brave: ${call.err} — pomijam pozostałe zapytania w tym przebiegu`);
-      }
-      return [];
-    }
-    const json = (await res.json()) as { web?: { results?: Array<{ title?: string; url?: string; description?: string }> } };
-    call.results = (json.web?.results ?? []).map((w) => ({
-      title: w.title ?? null,
-      url: w.url ?? null,
-      desc: w.description ? trim(w.description, MAX_DESC_CHARS) : null,
-    }));
-    return call.results;
-  } catch (e) {
-    call.err = describeError(e);
-    return [];
-  } finally {
-    call.ms = Math.round(performance.now() - t0);
-    if (!call.skipped) await sleep(1_100); // darmowy tier Brave: 1 zapytanie/s
-  }
-}
-
-/** Gminy w promieniu — Overpass API (OSM, darmowe): admin_level 7/8 wokół miasta. */
-async function townsInRadius(centerTown: string, radiusKm: number, report: DiscoverRunReport): Promise<string[]> {
-  const geo: GeoLookup = { query: `Overpass: admin_level 7|8 w promieniu ${radiusKm} km od "${centerTown}"`, towns: [], ms: 0 };
-  report.geo = geo;
-  const t0 = performance.now();
-  try {
-    const q = `
-      [out:json][timeout:30];
-      area["name"="${centerTown}"]["boundary"="administrative"]->.c;
-      ( relation["boundary"="administrative"]["admin_level"~"7|8"](around.c:${radiusKm * 1000}); );
-      out tags center;`;
-    const res = await fetchUrl(OVERPASS_URL, {
-      method: "POST",
-      body: new URLSearchParams({ data: q }),
-    }, 60_000);
-    if (!res.ok) throw new Error(`Overpass HTTP ${res.status}`);
-    const json = (await res.json()) as { elements?: Array<{ tags?: Record<string, string> }> };
-    const names = new Set<string>([centerTown]);
-    for (const el of json.elements ?? []) {
-      const name = el.tags?.["name"];
-      if (name) names.add(name);
-    }
-    geo.towns = [...names].sort();
-    return geo.towns;
-  } catch (e) {
-    // Overpass bywa przeciążony. Padnięcie na tym etapie kosztowało cały przebieg;
-    // sensowniejsze jest discovery samego miasta centralnego i wyraźna adnotacja w raporcie.
-    geo.err = describeError(e);
-    geo.fallback = true;
-    geo.towns = [centerTown];
-    console.warn(`Overpass padł (${geo.err}) — discovery tylko dla "${centerTown}"`);
-    return geo.towns;
-  } finally {
-    geo.ms = Math.round(performance.now() - t0);
-  }
-}
 
 // ---------------- propozycje modelu: walidacja + dopasowanie do wyniku search ----------------
 
@@ -317,7 +215,7 @@ async function discoverTown(town: string, reg: Registry, runStartedAt: string): 
     }
     if (hits.length === 0) {
       run.parse = "no-sources";
-      run.err = searchDisabled ?? "wyszukiwarka nie zwróciła żadnych wyników";
+      run.err = searchState().disabled ?? "wyszukiwarka nie zwróciła żadnych wyników";
       return finalize();
     }
 
@@ -532,10 +430,10 @@ async function verifySource(src: Source, isNew: boolean): Promise<SourceVerifica
     }
     ver.err = probe.err ?? "nieznany błąd";
 
-    if (!process.env["BRAVE_API_KEY"] || searchDisabled) {
+    if (!process.env["BRAVE_API_KEY"] || searchState().disabled) {
       // bez wyszukiwarki nie próbujemy naprawy — i nie dotykamy źródła
       ver.outcome = "error";
-      ver.err = `${ver.err}; ${searchDisabled ?? "brak BRAVE_API_KEY"} — naprawa pominięta`;
+      ver.err = `${ver.err}; ${searchState().disabled ?? "brak BRAVE_API_KEY"} — naprawa pominięta`;
       return finalize();
     }
 
@@ -607,7 +505,7 @@ function countSearches(t: DiscoverTotals, calls: SearchCall[]): void {
 function buildTotals(report: DiscoverRunReport): void {
   const t = report.totals;
   t.towns = report.towns.length;
-  t.searchesSkipped = searchesSkipped;
+  t.searchesSkipped = searchState().skipped;
   for (const town of report.towns) {
     countSearches(t, town.searches);
     t.sourcesAdded += town.added;
@@ -1025,7 +923,9 @@ async function main(): Promise<void> {
     if (!verifyOnly) {
       report.center = center;
       report.radiusKm = radius;
-      const towns = await townsInRadius(center, radius, report);
+      const geo = await townsInRadius(center, radius);
+      report.geo = geo;
+      const towns = geo.towns;
       console.log(`Gminy w promieniu ${radius} km od ${center}:`, towns.join(", "));
       for (const town of towns) {
         report.towns.push(await discoverTown(town, reg, startedAt));
