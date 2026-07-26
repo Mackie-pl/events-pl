@@ -12,7 +12,9 @@ import { geocode } from "../../adapters/nominatim.js";
 import { resetUsage, snapshotUsage } from "../../adapters/openrouter.js";
 import { archiveRaw, beginSource, sourcePaths } from "../../adapters/supabase-archive.js";
 import { describeError } from "../../shared/errors.js";
-import type { EventItem, PipelineError, PipelineState, SourceRun } from "../../types/index.js";
+import type {
+  BdUsage, EventItem, PipelineError, PipelineState, SourceRun,
+} from "../../types/index.js";
 import { fbEventToItem } from "../facebook.js";
 
 /** Górny limit rozwiązywanych linków na przebieg — bezpiecznik kosztów Bright Data. */
@@ -24,6 +26,95 @@ const FB_EVENT_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
 /** id z https://www.facebook.com/events/123… — do sparowania rekordu BD z żądanym URL-em. */
 const fbEventId = (url: string): string | null => url.match(/events\/(\d+)/i)?.[1] ?? null;
+
+type FbCache = NonNullable<PipelineState["extractions"]>;
+
+/** Wyrzuca z cache wpisy zakończone oraz nierozwiązane po TTL (wtedy wolno spróbować ponownie). */
+function pruneFbCache(cache: FbCache, today: string): void {
+  for (const [key, entry] of Object.entries(cache)) {
+    if (!key.startsWith(FB_EVENT_CACHE_PREFIX)) continue;
+    const stale = entry.events.length
+      ? entry.events.every((ev) => (ev.date_end ?? ev.date_start) < today)
+      : Date.now() - Date.parse(entry.at) > FB_EVENT_TTL_MS;
+    if (stale) delete cache[key];
+  }
+}
+
+function partitionByCache(
+  urls: string[], cache: FbCache,
+): { cached: EventItem[]; toResolve: string[] } {
+  const cached: EventItem[] = [];
+  const toResolve: string[] = [];
+  for (const url of urls) {
+    const entry = cache[FB_EVENT_CACHE_PREFIX + url];
+    if (entry && Date.now() - Date.parse(entry.at) <= FB_EVENT_TTL_MS) cached.push(...entry.events);
+    else toResolve.push(url);
+  }
+  return { cached, toResolve };
+}
+
+/** Współrzędne miejsca, jeśli w ogóle je znamy. Liczniki trafień idą do raportu przebiegu. */
+async function geocodeEvent(ev: EventItem, state: PipelineState, run: SourceRun): Promise<void> {
+  if (!ev.venue) return;
+  const g = await geocode(ev.venue, ev.town ?? "", state.geo);
+  ev.geo = g;
+  if (g) run.geo.hits++; else run.geo.misses++;
+}
+
+/**
+ * Jedno zbiorcze żądanie do Bright Data + geokodowanie wyników. Do cache trafia wynik
+ * KAŻDEGO żądanego linku, także pusty — inaczej nieudane linki byłyby ponawiane
+ * (i płatne) przy każdym przebiegu, zamiast dopiero po TTL.
+ */
+async function collectFbEvents(
+  capped: string[],
+  today: string,
+  run: SourceRun,
+  ctx: { state: PipelineState; cache: FbCache },
+): Promise<EventItem[]> {
+  const { state, cache } = ctx;
+  const records = await bdCollect(BD_DATASETS.fbEvents, capped);
+  await archiveRaw(
+    "fb-events", "https://www.facebook.com/events/ (zbiorczo)",
+    JSON.stringify(records, null, 1), "fb_event",
+  );
+  const out: EventItem[] = [];
+  const byId = new Map<string, EventItem[]>();
+  for (const rec of records) {
+    const ev = fbEventToItem(rec, today);
+    if (!ev) continue;
+    ev.source_id = "fb-event";
+    await geocodeEvent(ev, state, run);
+    const id = fbEventId(ev.source_url);
+    if (id) byId.set(id, [...(byId.get(id) ?? []), ev]);
+    out.push(ev);
+  }
+  for (const url of capped) {
+    const id = fbEventId(url);
+    const hit = (id ? byId.get(id) : undefined) ?? [];
+    cache[FB_EVENT_CACHE_PREFIX + url] = { hash: url, events: hit, at: new Date().toISOString() };
+  }
+  return out;
+}
+
+/**
+ * Domknięcie raportu źródła. Musi zostać TU, a nie w wywołującym: snapshotUsage() i
+ * sourcePaths() czytają liczniki modułowe, których granicą jest właśnie to „jedno źródło".
+ */
+function finalize(
+  run: SourceRun,
+  m: { events: number; fromCache: number; sent: number; bdBefore: BdUsage; t0: number },
+): void {
+  run.events = m.events;
+  run.cached = m.fromCache;
+  if (run.status !== "error") run.status = m.events ? (m.sent ? "ok" : "unchanged") : "empty";
+  run.llm = snapshotUsage();
+  const bd = bdDelta(m.bdBefore);
+  if (bd) run.bd = bd;
+  run.ms = Math.round(performance.now() - m.t0);
+  const paths = sourcePaths();
+  if (paths.length) run.archive = paths;
+}
 
 /**
  * Zbiorcze rozwiązanie zebranych linków do wydarzeń FB (link → EventItem, mapowanie
@@ -46,21 +137,10 @@ export async function resolveFbEvents(
   const today = new Date().toISOString().slice(0, 10);
   const cache = (state.extractions ??= {});
 
-  for (const [key, entry] of Object.entries(cache)) {
-    if (!key.startsWith(FB_EVENT_CACHE_PREFIX)) continue;
-    const stale = entry.events.length
-      ? entry.events.every((ev) => (ev.date_end ?? ev.date_start) < today) // zakończone
-      : Date.now() - Date.parse(entry.at) > FB_EVENT_TTL_MS; // nierozwiązane — po TTL wolno spróbować znowu
-    if (stale) delete cache[key];
-  }
+  pruneFbCache(cache, today);
 
-  const events: EventItem[] = [];
-  const toResolve: string[] = [];
-  for (const url of urls) {
-    const entry = cache[FB_EVENT_CACHE_PREFIX + url];
-    if (entry && Date.now() - Date.parse(entry.at) <= FB_EVENT_TTL_MS) events.push(...entry.events);
-    else toResolve.push(url);
-  }
+  const { cached, toResolve } = partitionByCache(urls, cache);
+  const events: EventItem[] = [...cached];
   const fromCache = events.length;
 
   const capped = toResolve.slice(0, MAX_FB_EVENTS_PER_RUN);
@@ -70,28 +150,7 @@ export async function resolveFbEvents(
 
   if (capped.length) {
     try {
-      const records = await bdCollect(BD_DATASETS.fbEvents, capped);
-      await archiveRaw("fb-events", "https://www.facebook.com/events/ (zbiorczo)", JSON.stringify(records, null, 1), "fb_event");
-      const byId = new Map<string, EventItem[]>();
-      for (const rec of records) {
-        const ev = fbEventToItem(rec, today);
-        if (!ev) continue;
-        ev.source_id = "fb-event";
-        if (ev.venue) {
-          const g = await geocode(ev.venue, ev.town ?? "", state.geo);
-          ev.geo = g;
-          if (g) run.geo.hits++; else run.geo.misses++;
-        }
-        const id = fbEventId(ev.source_url);
-        if (id) byId.set(id, [...(byId.get(id) ?? []), ev]);
-        events.push(ev);
-      }
-      // wynik per żądany link do cache — także pusty (nie ponawiamy nieudanych przed TTL)
-      for (const url of capped) {
-        const id = fbEventId(url);
-        const hit = (id ? byId.get(id) : undefined) ?? [];
-        cache[FB_EVENT_CACHE_PREFIX + url] = { hash: url, events: hit, at: new Date().toISOString() };
-      }
+      events.push(...(await collectFbEvents(capped, today, run, { state, cache })));
     } catch (e) {
       bdUsage.errors += 1;
       const err = describeError(e);
@@ -101,15 +160,7 @@ export async function resolveFbEvents(
     }
   }
 
-  run.events = events.length;
-  run.cached = fromCache;
-  if (run.status !== "error") run.status = events.length ? (capped.length ? "ok" : "unchanged") : "empty";
-  run.llm = snapshotUsage();
-  const bd = bdDelta(bdBefore);
-  if (bd) run.bd = bd;
-  run.ms = Math.round(performance.now() - t0);
-  const paths = sourcePaths();
-  if (paths.length) run.archive = paths;
+  finalize(run, { events: events.length, fromCache, sent: capped.length, bdBefore, t0 });
   console.log(
     `FB: ${events.length} wydarzeń z linków ` +
     `(${fromCache} z cache, ${capped.length} wysłanych do Bright Data)`,

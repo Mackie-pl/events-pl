@@ -85,11 +85,6 @@ export function toSource(raw: unknown, town: string): { src: Source; fixes: stri
   const id = slug(str(r["id"]) ?? `${town}-${name}`);
   if (!id) return { err: "nie da się zbudować id" };
 
-  const confidence = typeof r["confidence"] === "number" && Number.isFinite(r["confidence"])
-    ? Math.max(0, Math.min(1, r["confidence"]))
-    : undefined;
-  const notes = str(r["notes"]);
-
   const src: Source = {
     id,
     name,
@@ -99,8 +94,23 @@ export function toSource(raw: unknown, town: string): { src: Source; fixes: stri
     fetch: fb.fetch as FetchStrategy,
     verified: false,
     discovered: "auto",
+    ...optionalFields(r),
+  };
+  return { src, fixes: [...parsed.fixes, ...fb.fixes] };
+}
+
+/**
+ * Pola, których brak jest dopuszczalny. Rozdzielone spreadem, a nie `field: undefined`,
+ * bo tsconfig ma exactOptionalPropertyTypes — jawne undefined by się nie skompilowało.
+ */
+function optionalFields(r: Record<string, unknown>): Pick<Source, "confidence" | "notes"> {
+  const raw = r["confidence"];
+  const confidence = typeof raw === "number" && Number.isFinite(raw)
+    ? Math.max(0, Math.min(1, raw))
+    : undefined;
+  const notes = str(r["notes"]);
+  return {
     ...(confidence !== undefined ? { confidence } : {}),
     ...(notes !== undefined ? { notes } : {}),
   };
-  return { src, fixes: [...parsed.fixes, ...fb.fixes] };
 }

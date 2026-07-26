@@ -68,6 +68,19 @@ function townFromAddress(address: string | null): string | null {
  * albo wydarzenie już się zakończyło (< today). Mapowanie strukturalne — bez LLM (zero dodatkowego kosztu).
  * Klasyfikacja wieku/rodzinności zostaje "otwarta" (age=null, family_friendly="maybe").
  */
+/**
+ * Miejsce: nazwa + adres, ale bez powielania — scraper często wkleja pełny adres
+ * już w nazwę lokalu, a „Dom Kultury, ul. Główna 1, ul. Główna 1" wygląda na błąd danych.
+ */
+function venueOf(rec: BdRecord): { venue: string | null; town: string | null } {
+  const venueName = pick(rec, "location", "venue", "place", "place_name", "location_name");
+  const address = pick(rec, "address", "full_address", "location_address");
+  const venue = venueName && address && !venueName.includes(address)
+    ? `${venueName}, ${address}`
+    : venueName ?? address;
+  return { venue, town: pick(rec, "city") ?? townFromAddress(address) };
+}
+
 export function fbEventToItem(rec: BdRecord, today: string): EventItem | null {
   const title = pick(rec, "name", "title", "event_name");
   const start = splitDateTime(pick(rec, "start_date", "startDate", "date_start", "start_time", "start"));
@@ -77,19 +90,10 @@ export function fbEventToItem(rec: BdRecord, today: string): EventItem | null {
   const lastDay = end.date ?? start.date;
   if (lastDay < today) return null; // zakończone pomijamy
 
-  const url = pick(rec, "url", "event_url", "input_url", "link") ?? "";
-  const venueName = pick(rec, "location", "venue", "place", "place_name", "location_name");
-  const address = pick(rec, "address", "full_address", "location_address");
-  const town = pick(rec, "city") ?? townFromAddress(address);
+  const { venue, town } = venueOf(rec);
   const category = pick(rec, "category", "event_type");
-  const ticket = pick(rec, "ticket_url", "tickets_url", "external_url", "registration_url");
-
   const price: Price = { free: null, amount_pln: null, note: null };
   const age: AgeRange = { min: null, max: null, label: null };
-  const venue =
-    venueName && address && !venueName.includes(address)
-      ? `${venueName}, ${address}`
-      : venueName ?? address;
 
   return {
     title,
@@ -103,10 +107,10 @@ export function fbEventToItem(rec: BdRecord, today: string): EventItem | null {
     age,
     family_friendly: "maybe",
     tags: [category ? `fb:${category.toLowerCase()}` : "fb:wydarzenie"],
-    registration: ticket,
+    registration: pick(rec, "ticket_url", "tickets_url", "external_url", "registration_url"),
     sub_slots: null,
     conditional: null,
-    source_url: url,
+    source_url: pick(rec, "url", "event_url", "input_url", "link") ?? "",
     is_noise: false,
     geo: null,
   };

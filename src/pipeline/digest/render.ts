@@ -75,6 +75,26 @@ export interface Digest {
   total: number;
 }
 
+/**
+ * Jedna sekcja → wiadomości Telegrama. Limit API to 4096 znaków, więc tniemy z zapasem
+ * na ~3900 i powtarzamy nagłówek z dopiskiem „(cd.)", żeby każda część dało się czytać osobno.
+ */
+function telegramChunks(label: string, evs: EventItem[]): string[] {
+  const header = `<b>${esc(label)}</b>`;
+  const lines = evs.length ? evs.map(lineTg) : ["(nic nie znaleziono)"];
+  const out: string[] = [];
+  let buf = header;
+  for (const ln of lines) {
+    if (buf.length + ln.length + 2 > 3900) {
+      out.push(buf);
+      buf = `${header} <i>(cd.)</i>`;
+    }
+    buf += `\n\n${ln}`;
+  }
+  out.push(buf);
+  return out;
+}
+
 export function buildDigest(
   data: EventsFile,
   today: string,
@@ -95,18 +115,7 @@ export function buildDigest(
     const items = evs.length ? evs.map(lineHtml).join("") : "<li>(nic nie znaleziono)</li>";
     htmlParts.push(`<h3 style="margin:18px 0 6px">${s.label}</h3>
       <ul style="padding-left:18px;margin:0">${items}</ul>`);
-    // Telegram: osobna wiadomość na sekcję; w razie potrzeby tnij co ~3900 znaków
-    const header = `<b>${esc(s.label)}</b>`;
-    const lines = evs.length ? evs.map(lineTg) : ["(nic nie znaleziono)"];
-    let buf = header;
-    for (const ln of lines) {
-      if (buf.length + ln.length + 2 > 3900) {
-        tgMessages.push(buf);
-        buf = `${header} <i>(cd.)</i>`;
-      }
-      buf += `\n\n${ln}`;
-    }
-    tgMessages.push(buf);
+    tgMessages.push(...telegramChunks(s.label, evs));
   }
 
   const subject = `Wydarzenia: ${sections.map((s) => s.label.split(" (")[0]).join(" + ")} — ${total} pozycji`;
