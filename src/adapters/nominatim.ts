@@ -15,7 +15,9 @@ let geoLookups = 0;
 export const geoStats = (): number => geoLookups;
 export function resetGeoStats(): void { geoLookups = 0; }
 
-export async function geocode(venue: string, town: string, cache: PipelineState["geo"]): Promise<{ lat: number; lon: number } | null> {
+export async function geocode(
+  venue: string, town: string, cache: PipelineState["geo"],
+): Promise<{ lat: number; lon: number } | null> {
   const key = `${venue}|${town}`;
   if (key in cache) return cache[key] ?? null;
   const q = town ? `${venue}, ${town}, Poland` : `${venue}, Poland`;

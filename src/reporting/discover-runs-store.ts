@@ -41,7 +41,8 @@ function slim(r: DiscoverRunReport): DiscoverRunReport {
  * intencję, a nie gwarancję — normalizujemy przy wczytaniu, zamiast rozsypywać `?? []`.
  */
 type StoredRun = Omit<DiscoverRunReport, "towns" | "verifications"> & {
-  towns?: Array<Omit<TownDiscoveryRun, "searches" | "proposals"> & { searches?: SearchCall[]; proposals?: SourceProposal[] }>;
+  towns?: Array<Omit<TownDiscoveryRun, "searches" | "proposals">
+    & { searches?: SearchCall[]; proposals?: SourceProposal[] }>;
   verifications?: Array<Omit<SourceVerification, "searches"> & { searches?: SearchCall[] }>;
 };
 

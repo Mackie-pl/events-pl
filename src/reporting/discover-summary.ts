@@ -12,7 +12,12 @@ export function writeDiscoverSummary(report: DiscoverRunReport): void {
   const lines: string[] = [];
   lines.push(`## discover (${report.mode}) — ${report.startedAt}`, "");
   if (report.err) lines.push(`> ⚠️ **przebieg przerwany:** ${md(report.err, 300)} — liczby są cząstkowe`, "");
-  if (report.geo?.fallback) lines.push(`> ⚠️ Overpass padł (${md(report.geo.err ?? "", 200)}) — discovery tylko dla miasta centralnego`, "");
+  if (report.geo?.fallback) {
+    lines.push(
+      `> ⚠️ Overpass padł (${md(report.geo.err ?? "", 200)}) — discovery tylko dla miasta centralnego`,
+      "",
+    );
+  }
   lines.push(
     `**${t.sourcesChecked}** zweryfikowanych · ✅ ${t.ok} ok · 🔧 ${t.fixed} naprawionych · ` +
     `💀 ${t.dead} martwych · ⚠️ ${t.unrepaired} bez próby naprawy · ⏭️ ${t.skipped} pominiętych (FB) · ` +
@@ -69,7 +74,8 @@ export function writeDiscoverSummary(report: DiscoverRunReport): void {
     for (const v of fresh) {
       lines.push(
         `| ${v.id} | ${OUTCOME_ICON[v.outcome]} ${v.outcome} | ${v.probe?.httpStatus ?? ""} | ` +
-        `${v.probe?.contentType ?? ""} | ${v.probe?.chars ?? ""} | ${v.probe?.finalUrl ? md(v.probe.finalUrl, 60) : ""} | ` +
+        `${v.probe?.contentType ?? ""} | ${v.probe?.chars ?? ""} | ` +
+        `${v.probe?.finalUrl ? md(v.probe.finalUrl, 60) : ""} | ` +
         `${md(v.err ?? "", 80)} |`,
       );
     }

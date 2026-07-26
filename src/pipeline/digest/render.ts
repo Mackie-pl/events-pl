@@ -61,7 +61,9 @@ function lineTg(e: EventItem): string {
     .map((x) => esc(String(x)))
     .join(" · ");
   const warn = e.conditional ? `\n   ⚠️ <i>${esc(e.conditional)}</i>` : "";
-  return `• ${e.time_start ? `<b>${e.time_start}</b> ` : ""}<a href="${e.source_url}">${esc(e.title)}</a>${e.family_friendly === true ? " 👨‍👦" : ""}\n   <i>${meta}</i>${warn}`;
+  const time = e.time_start ? `<b>${e.time_start}</b> ` : "";
+  const fam = e.family_friendly === true ? " 👨‍👦" : "";
+  return `• ${time}<a href="${e.source_url}">${esc(e.title)}</a>${fam}\n   <i>${meta}</i>${warn}`;
 }
 
 export interface Digest {
@@ -90,8 +92,9 @@ export function buildDigest(
     parts.push(
       `=== ${s.label} ===\n${evs.length ? evs.map(lineTxt).join("\n") : "  (nic nie znaleziono)"}`,
     );
+    const items = evs.length ? evs.map(lineHtml).join("") : "<li>(nic nie znaleziono)</li>";
     htmlParts.push(`<h3 style="margin:18px 0 6px">${s.label}</h3>
-      <ul style="padding-left:18px;margin:0">${evs.length ? evs.map(lineHtml).join("") : "<li>(nic nie znaleziono)</li>"}</ul>`);
+      <ul style="padding-left:18px;margin:0">${items}</ul>`);
     // Telegram: osobna wiadomość na sekcję; w razie potrzeby tnij co ~3900 znaków
     const header = `<b>${esc(s.label)}</b>`;
     const lines = evs.length ? evs.map(lineTg) : ["(nic nie znaleziono)"];
@@ -107,12 +110,15 @@ export function buildDigest(
   }
 
   const subject = `Wydarzenia: ${sections.map((s) => s.label.split(" (")[0]).join(" + ")} — ${total} pozycji`;
-  const footer = `\n—\nevents-pl · dane: ${data.generated} · 👨‍👦 = rodzinne${childAge !== null ? ` · filtr wieku: ${childAge} lat` : ""}`;
+  const ageTxt = childAge !== null ? ` · filtr wieku: ${childAge} lat` : "";
+  const ageHtml = childAge !== null ? ` · filtr wieku: ${childAge}` : "";
+  const footer = `\n—\nevents-pl · dane: ${data.generated} · 👨‍👦 = rodzinne${ageTxt}`;
+  const foot = `events-pl · dane: ${data.generated} · 👨‍👦 = rodzinne${ageHtml}`;
   return {
     subject,
     text: parts.join("\n\n") + footer,
     html: `<div style="font-family:system-ui,sans-serif;max-width:640px">${htmlParts.join("")}
-      <p style="color:#999;font-size:12px;margin-top:20px">events-pl · dane: ${data.generated} · 👨‍👦 = rodzinne${childAge !== null ? ` · filtr wieku: ${childAge}` : ""}</p></div>`,
+      <p style="color:#999;font-size:12px;margin-top:20px">${foot}</p></div>`,
     tgMessages,
     total,
   };

@@ -123,7 +123,10 @@ export function fbGroupPostsToText(records: BdRecord[]): string {
     if (!content) continue;
     const date = pick(r, "date_posted", "date", "timestamp", "created_time", "post_date");
     const link = pick(r, "url", "post_url", "link", "post_link");
-    blocks.push([date ? `DATA POSTU: ${date}` : null, link ? `LINK: ${link}` : null, content].filter(Boolean).join("\n"));
+    blocks.push(
+      [date ? `DATA POSTU: ${date}` : null, link ? `LINK: ${link}` : null, content]
+        .filter(Boolean).join("\n"),
+    );
   }
   return blocks.join("\n\n---\n\n");
 }

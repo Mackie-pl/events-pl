@@ -75,7 +75,10 @@ export function discoverCosts(r: DiscoverRunReport): CostEntry[] {
 
   const push = (
     category: "llm-discover" | "llm-verify",
-    rows: Array<{ id: string; llm: { calls: number; promptTokens: number; completionTokens: number; costUsd: number } }>,
+    rows: Array<{
+      id: string;
+      llm: { calls: number; promptTokens: number; completionTokens: number; costUsd: number };
+    }>,
   ): void => {
     const calls = rows.reduce((n, x) => n + x.llm.calls, 0);
     if (!calls) return;

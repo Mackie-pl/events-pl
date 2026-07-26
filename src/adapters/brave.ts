@@ -64,7 +64,8 @@ export async function webSearch(query: string, log: SearchCall[]): Promise<Searc
       }
       return [];
     }
-    const json = (await res.json()) as { web?: { results?: Array<{ title?: string; url?: string; description?: string }> } };
+    type BraveHit = { title?: string; url?: string; description?: string };
+    const json = (await res.json()) as { web?: { results?: BraveHit[] } };
     call.results = (json.web?.results ?? []).map((w) => ({
       title: w.title ?? null,
       url: w.url ?? null,

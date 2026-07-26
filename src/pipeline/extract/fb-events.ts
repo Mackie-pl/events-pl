@@ -89,7 +89,8 @@ export async function resolveFbEvents(
       // wynik per żądany link do cache — także pusty (nie ponawiamy nieudanych przed TTL)
       for (const url of capped) {
         const id = fbEventId(url);
-        cache[FB_EVENT_CACHE_PREFIX + url] = { hash: url, events: (id ? byId.get(id) : undefined) ?? [], at: new Date().toISOString() };
+        const hit = (id ? byId.get(id) : undefined) ?? [];
+        cache[FB_EVENT_CACHE_PREFIX + url] = { hash: url, events: hit, at: new Date().toISOString() };
       }
     } catch (e) {
       bdUsage.errors += 1;
@@ -109,6 +110,9 @@ export async function resolveFbEvents(
   run.ms = Math.round(performance.now() - t0);
   const paths = sourcePaths();
   if (paths.length) run.archive = paths;
-  console.log(`FB: ${events.length} wydarzeń z linków (${fromCache} z cache, ${capped.length} wysłanych do Bright Data)`);
+  console.log(
+    `FB: ${events.length} wydarzeń z linków ` +
+    `(${fromCache} z cache, ${capped.length} wysłanych do Bright Data)`,
+  );
   return { events, run };
 }

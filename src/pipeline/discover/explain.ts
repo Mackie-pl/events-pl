@@ -51,7 +51,8 @@ export function explain(needle: string, cfg: SourcesFile, runs: DiscoverRunRepor
     console.log(`  url:         ${src.url}`);
     console.log(`  gmina/typ:   ${src.town} · ${src.type} · fetch:${src.fetch}`);
     console.log(`  stan:        ${src.dead ? "💀 martwy" : src.verified ? "✅ zweryfikowany" : "niezweryfikowany"}` +
-      `${src.checked ? ` (ostatnio sprawdzony ${src.checked})` : ""}${src.discovered ? ` · dodane: ${src.discovered}` : ""}`);
+      `${src.checked ? ` (ostatnio sprawdzony ${src.checked})` : ""}` +
+      `${src.discovered ? ` · dodane: ${src.discovered}` : ""}`);
     if (src.notes) console.log(`  notatki:     ${src.notes}`);
     if (src.previous_urls?.length) console.log(`  stare URL-e: ${src.previous_urls.join(", ")}`);
     printProvenance(src);
@@ -73,7 +74,9 @@ export function explain(needle: string, cfg: SourcesFile, runs: DiscoverRunRepor
   const proposals = runs.flatMap((r) =>
     r.towns.flatMap((t) =>
       t.proposals
-        .filter((p) => p.id.toLowerCase().includes(q) || p.url.toLowerCase().includes(q) || p.name.toLowerCase().includes(q))
+        .filter((p) =>
+          p.id.toLowerCase().includes(q) || p.url.toLowerCase().includes(q) ||
+          p.name.toLowerCase().includes(q))
         .map((p) => ({ at: r.startedAt, town: t.town, p })),
     ),
   );

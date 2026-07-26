@@ -33,7 +33,9 @@ export const BD_DATASETS = {
 export type BdRecord = Record<string, unknown>;
 
 /** Współdzielony licznik zużycia w ramach jednego przebiegu. */
-export const bdUsage: BdUsage = { triggers: 0, inputs: 0, polls: 0, records: 0, errors: 0, snapshots: [], byDataset: {} };
+export const bdUsage: BdUsage = {
+  triggers: 0, inputs: 0, polls: 0, records: 0, errors: 0, snapshots: [], byDataset: {},
+};
 
 /** Nazwa datasetu do rozbicia kosztu; nieznane id (nadpisane env-em) zostaje samo sobą. */
 const datasetName = (id: string): string =>
@@ -44,7 +46,8 @@ const datasetName = (id: string): string =>
  * „ta jedna grupa kosztowała 300 rekordów", trzeba zmierzyć różnicę wokół wywołania —
  * sam licznik zbiorczy pokazuje tylko, że przebieg był drogi.
  */
-export const bdSnapshot = (): BdUsage => ({ ...bdUsage, snapshots: [...bdUsage.snapshots], byDataset: { ...bdUsage.byDataset } });
+export const bdSnapshot = (): BdUsage =>
+  ({ ...bdUsage, snapshots: [...bdUsage.snapshots], byDataset: { ...bdUsage.byDataset } });
 
 /** Przyrost względem migawki. `null` = nic nie zużyto (pole `bd` nie pojawia się w raporcie). */
 export function bdDelta(before: BdUsage): BdUsage | null {
@@ -90,7 +93,8 @@ async function trigger(datasetId: string, inputs: Array<{ url: string }>): Promi
   );
   const json = (await res.json().catch(() => ({}))) as { snapshot_id?: string; error?: string; message?: string };
   if (!res.ok || !json.snapshot_id) {
-    throw new Error(`Bright Data trigger ${res.status}: ${json.error ?? json.message ?? JSON.stringify(json).slice(0, 200)}`);
+    const why = json.error ?? json.message ?? JSON.stringify(json).slice(0, 200);
+    throw new Error(`Bright Data trigger ${res.status}: ${why}`);
   }
   return json.snapshot_id;
 }
@@ -131,7 +135,8 @@ export async function collect(datasetId: string, urls: string[]): Promise<BdReco
   const timeoutMs = Number(process.env["BD_TIMEOUT_MS"] ?? 480_000);
 
   const snapshotId = await trigger(datasetId, uniq.map((url) => ({ url })));
-  bdUsage.snapshots.push(snapshotId); // od razu po triggerze — id nieudanego/przeterminowanego zbioru też chcemy mieć w logu
+  // od razu po triggerze — id nieudanego/przeterminowanego zbioru też chcemy mieć w logu
+  bdUsage.snapshots.push(snapshotId);
   const deadline = Date.now() + timeoutMs;
   for (;;) {
     await sleep(pollMs);

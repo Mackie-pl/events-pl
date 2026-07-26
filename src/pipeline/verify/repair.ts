@@ -15,7 +15,8 @@ export async function findReplacementUrl(src: Source, ver: SourceVerification): 
     model: MODEL_EXTRACT,
     task: "verify",
     system: REVERIFY_SYSTEM,
-    user: `Instytucja: ${src.name} (${src.town})\nStary, martwy URL: ${src.url}\nWyniki wyszukiwania:\n${JSON.stringify(results)}`,
+    user: `Instytucja: ${src.name} (${src.town})\nStary, martwy URL: ${src.url}\n` +
+      `Wyniki wyszukiwania:\n${JSON.stringify(results)}`,
     maxTokens: 300,
   });
   const m = out.match(/\{[\s\S]*\}/);

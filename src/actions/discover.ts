@@ -124,7 +124,8 @@ async function main(): Promise<void> {
     for (const src of cfg.sources) {
       const ver = await verifySource(src, reg.fresh.has(src.id));
       if (ver.outcome !== "ok" && ver.outcome !== "skipped") {
-        console.log(`  ${OUTCOME_ICON[ver.outcome]} ${ver.id}: ${ver.outcome === "fixed" ? `${ver.url} → ${ver.newUrl}` : ver.err}`);
+        const detail = ver.outcome === "fixed" ? `${ver.url} → ${ver.newUrl}` : ver.err;
+        console.log(`  ${OUTCOME_ICON[ver.outcome]} ${ver.id}: ${detail}`);
       }
       report.verifications.push(ver);
     }
@@ -159,7 +160,10 @@ async function main(): Promise<void> {
   );
   if (archiveEnabled()) {
     const a = archiveStats();
-    console.log(`archiwum: ${a.uploaded} obiektów (${(a.bytes / 1024 / 1024).toFixed(2)} MB)` + (a.failed ? `, ${a.failed} błędów` : ""));
+    console.log(
+      `archiwum: ${a.uploaded} obiektów (${(a.bytes / 1024 / 1024).toFixed(2)} MB)` +
+      (a.failed ? `, ${a.failed} błędów` : ""),
+    );
   }
   if (t.sourcesAdded) {
     console.log(`Dlaczego dany adres wszedł na listę: npm run discover -- --why "<id źródła>"`);

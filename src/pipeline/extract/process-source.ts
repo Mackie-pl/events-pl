@@ -6,7 +6,9 @@
  * któregokolwiek do helpera przypisuje koszt tokenów niewłaściwemu źródłu — czego tsc nie
  * widzi, a co wychodzi dopiero jako błędny costs.json.
  */
-import { BD_DATASETS, bdDelta, bdEnabled, bdSnapshot, bdUsage, collect as bdCollect } from "../../adapters/brightdata.js";
+import {
+  BD_DATASETS, bdDelta, bdEnabled, bdSnapshot, bdUsage, collect as bdCollect,
+} from "../../adapters/brightdata.js";
 import { geocode } from "../../adapters/nominatim.js";
 import { resetUsage, snapshotTasks, snapshotUsage } from "../../adapters/openrouter.js";
 import {
@@ -33,7 +35,9 @@ export function newSourceRun(src: Source, url: string, status: SourceRun["status
 }
 
 /** Fetch wg strategii źródła; 403/429 przy zwykłym fetchu to zwykle anty-bot — jedna próba przez headless. */
-async function fetchSource(src: Source, url: string, run: SourceRun, extraHeaders: Record<string, string> = {}): Promise<Fetched> {
+async function fetchSource(
+  src: Source, url: string, run: SourceRun, extraHeaders: Record<string, string> = {},
+): Promise<Fetched> {
   if (src.fetch === "fb_group") {
     // posty otwartej grupy przez Bright Data (FB blokuje zwykły fetch); BD zawsze zwraca
     // pełną treść — brak 304, diff załatwia standardowe porównanie hashy w processSource

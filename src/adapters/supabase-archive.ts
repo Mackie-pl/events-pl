@@ -173,7 +173,10 @@ export async function archiveRaw(sourceId: string, url: string, text: string, ki
   if (!archiveEnabled()) return null;
   const hash = sha256(text);
   const path = `raw/${day()}/${sourceId}/${hash}.json`;
-  const ok = await put(path, JSON.stringify({ runId, sourceId, url, kind, fetchedAt: new Date().toISOString(), chars: text.length, text }, null, 1));
+  const body = {
+    runId, sourceId, url, kind, fetchedAt: new Date().toISOString(), chars: text.length, text,
+  };
+  const ok = await put(path, JSON.stringify(body, null, 1));
   return ok ? path : null;
 }
 

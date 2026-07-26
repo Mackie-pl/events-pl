@@ -26,7 +26,10 @@ export async function extractEvents(text: string, sourceUrl: string): Promise<Ex
   return parseJson(out);
 }
 
-export async function extractPoster(img: { data: string; mediaType: "image/jpeg" | "image/png" }, sourceUrl: string): Promise<ExtractionResult> {
+export async function extractPoster(
+  img: { data: string; mediaType: "image/jpeg" | "image/png" },
+  sourceUrl: string,
+): Promise<ExtractionResult> {
   const out = await chat({
     model: MODEL_EXTRACT,
     task: "poster",

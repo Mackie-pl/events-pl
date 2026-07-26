@@ -8,7 +8,8 @@ const OVERPASS_URL = process.env["OVERPASS_URL"] ?? "https://overpass-api.de/api
 
 /** Gminy w promieniu — Overpass API (OSM, darmowe): admin_level 7/8 wokół miasta. */
 export async function townsInRadius(centerTown: string, radiusKm: number): Promise<GeoLookup> {
-  const geo: GeoLookup = { query: `Overpass: admin_level 7|8 w promieniu ${radiusKm} km od "${centerTown}"`, towns: [], ms: 0 };
+  const query = `Overpass: admin_level 7|8 w promieniu ${radiusKm} km od "${centerTown}"`;
+  const geo: GeoLookup = { query, towns: [], ms: 0 };
   const t0 = performance.now();
   try {
     const q = `

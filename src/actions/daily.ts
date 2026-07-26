@@ -109,8 +109,10 @@ async function run(): Promise<void> {
   writeDailySummary(report);
   console.log(summaryLine(report));
   if (bdEnabled()) {
-    // log zużycia per przebieg → policzenie kosztu (snapshot_id pozwala ponownie pobrać dane z BD za darmo)
-    await appendFile(BD_USAGE_LOG, `${JSON.stringify({ date: out.generated, at: new Date().toISOString(), ...bdUsage })}\n`, "utf-8");
+    // log zużycia per przebieg → policzenie kosztu
+    // (snapshot_id pozwala ponownie pobrać dane z BD za darmo)
+    const entry = { date: out.generated, at: new Date().toISOString(), ...bdUsage };
+    await appendFile(BD_USAGE_LOG, `${JSON.stringify(entry)}\n`, "utf-8");
     console.log(
       `Bright Data: ${bdUsage.triggers} trigger · ${bdUsage.inputs} URL · ${bdUsage.records} rekordów · ` +
       `${bdUsage.polls} polls · ${bdUsage.errors} błędów`,

@@ -37,7 +37,10 @@ async function main(): Promise<void> {
   }
 
   if (!entries.length) {
-    console.log(`Nic do dopisania (${skipped} przebiegów już w księdze, ${daily.length + discover.length} raportów przejrzanych).`);
+    console.log(
+      `Nic do dopisania (${skipped} przebiegów już w księdze, ` +
+      `${daily.length + discover.length} raportów przejrzanych).`,
+    );
     return;
   }
   await recordCosts(entries);
@@ -48,7 +51,10 @@ async function main(): Promise<void> {
   );
   const inferred = entries.filter((e) => e.inferred).length;
   if (inferred) {
-    console.log(`  ${inferred} pozycji odtworzonych bez podziału na zadania (plakaty w "llm-extract") — panel je znaczy.`);
+    console.log(
+      `  ${inferred} pozycji odtworzonych bez podziału na zadania ` +
+      '(plakaty w "llm-extract") — panel je znaczy.',
+    );
   }
 }
 

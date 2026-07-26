@@ -85,7 +85,10 @@ export async function fetchHeadless(url: string): Promise<Fetched> {
   // playwright jest optionalDependency — dynamiczny import przez zmienną,
   // żeby typecheck przechodził bez zainstalowanego pakietu
   interface MinimalResponse { status(): number }
-  interface MinimalPage { goto(u: string, o: { waitUntil: string; timeout: number }): Promise<MinimalResponse | null>; content(): Promise<string> }
+  interface MinimalPage {
+    goto(u: string, o: { waitUntil: string; timeout: number }): Promise<MinimalResponse | null>;
+    content(): Promise<string>;
+  }
   interface MinimalBrowser { newPage(): Promise<MinimalPage>; close(): Promise<void> }
   const modName = "playwright";
   fetches += 1;
@@ -108,7 +111,9 @@ export type FetchedImage =
   | { notModified: false; data: string; mediaType: "image/jpeg" | "image/png"; etag?: string; lastModified?: string };
 
 /** Plakat JPG/PNG -> base64 dla modelu wizyjnego. 304 = ten sam plakat, nie pobieramy bajtów. */
-export async function fetchImageB64(url: string, extraHeaders: Record<string, string> = {}): Promise<FetchedImage | null> {
+export async function fetchImageB64(
+  url: string, extraHeaders: Record<string, string> = {},
+): Promise<FetchedImage | null> {
   fetches += 1;
   const res = await fetchUrl(url, { headers: { ...BROWSER_HEADERS, ...extraHeaders } }, 30_000);
   if (res.status === 304) return { notModified: true };

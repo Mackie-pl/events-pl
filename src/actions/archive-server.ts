@@ -44,7 +44,9 @@ const cors = (origin: string | undefined): Record<string, string> =>
     ? { "Access-Control-Allow-Origin": origin, Vary: "Origin" }
     : {};
 
-const json = (res: import("node:http").ServerResponse, code: number, body: unknown, extra: Record<string, string>): void => {
+const json = (
+  res: import("node:http").ServerResponse, code: number, body: unknown, extra: Record<string, string>,
+): void => {
   res.writeHead(code, { "Content-Type": "application/json; charset=utf-8", ...extra });
   res.end(JSON.stringify(body));
 };
