@@ -15,7 +15,9 @@ function headerLines(report: RunReport): string[] {
     "",
     `**${t.sources}** źródeł · ✅ ${t.ok} ok · ♻️ ${t.unchanged} bez zmian · ` +
     `⚠️ ${t.errors} błędów · ⏭️ ${t.skippedFb} fb · 💀 ${t.skippedDead} martwych · ∅ ${t.empty} pusto · ` +
-    `**${t.events}** wydarzeń · ${t.calls} LLM (${t.promptTokens}+${t.completionTokens} tok) · ` +
+    `**${t.events}** wydarzeń` +
+    `${t.droppedNoDate ? ` (−${t.droppedNoDate} bez daty)` : ""} · ` +
+    `${t.calls} LLM (${t.promptTokens}+${t.completionTokens} tok) · ` +
     `🔒 ${t.redactedPhones} tel. / ${t.redactedEmails} e-mail zredagowanych · ` +
     `${Math.round(report.durationMs / 1000)}s`,
     "",
@@ -80,7 +82,8 @@ export function summaryLine(r: RunReport): string {
   const t = r.totals;
   return (
     `OK: ${t.events} wydarzeń · ${t.ok} ok / ${t.unchanged} bez zmian / ${t.errors} błędów / ` +
-    `${t.skippedFb} fb / ${t.skippedDead} martwych / ${t.empty} pusto · ${t.calls} LLM · ` +
+    `${t.skippedFb} fb / ${t.skippedDead} martwych / ${t.empty} pusto · ` +
+    `${t.droppedNoDate ? `−${t.droppedNoDate} bez daty · ` : ""}${t.calls} LLM · ` +
     `koszt ${costLine(r.costs ?? [])} · ` +
     `PII: −${t.redactedPhones} tel. −${t.redactedEmails} e-mail · ${Math.round(r.durationMs / 1000)}s`
   );

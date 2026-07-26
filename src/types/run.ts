@@ -45,6 +45,8 @@ export interface SourceRun {
   note?: string;
   /** wydarzenia odtworzone z cache (bez wywołania LLM) */
   cached?: number;
+  /** wydarzenia odrzucone z braku daty startu (atrakcje stałe) — brak = żadnego nie odrzucono */
+  droppedNoDate?: number;
   /** followupy sprawdzone mimo niezmienionej strony źródła */
   followupsRechecked?: number;
   /** ścieżki obiektów w prywatnym archiwum (raw/ + llm/); brak = archiwum wyłączone */
@@ -63,6 +65,8 @@ export interface RunTotals extends LlmUsage {
   followupsTried: number;
   geoHits: number;
   geoMisses: number;
+  /** wydarzenia odrzucone z braku daty startu — model mimo promptu zwraca atrakcje stałe */
+  droppedNoDate: number;
   /** ile numerów komórkowych / e-maili usunięto przed publikacją (pii.ts) */
   redactedPhones: number;
   redactedEmails: number;

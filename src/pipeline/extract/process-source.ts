@@ -22,7 +22,9 @@ import type {
 } from "../../types/index.js";
 import { fbGroupPostsToText, harvestEventUrls, isEventUrl } from "../facebook.js";
 
-import { extractEvents, extractPoster } from "./extract.js";
+import {
+  droppedNoDateStats, extractEvents, extractPoster, resetDroppedNoDate,
+} from "./extract.js";
 
 const MAX_FOLLOWUPS_PER_SOURCE = 5;
 
@@ -132,12 +134,15 @@ export async function processSource(
 ): Promise<{ events: EventItem[]; run: SourceRun }> {
   const t0 = performance.now();
   resetUsage();
+  resetDroppedNoDate();
   beginSource(src.id);
   const bdBefore = bdSnapshot();
   const url = src.url.replace("{page}", "1");
   const run = newSourceRun(src, url, "empty");
   const finalize = (events: EventItem[]): { events: EventItem[]; run: SourceRun } => {
     run.events = events.length;
+    const dropped = droppedNoDateStats();
+    if (dropped) run.droppedNoDate = dropped;
     run.llm = snapshotUsage();
     const tasks = snapshotTasks();
     if (Object.keys(tasks).length) run.llmByTask = tasks;
