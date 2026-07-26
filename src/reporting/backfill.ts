@@ -1,38 +1,16 @@
 /**
- * Odtworzenie księgi kosztów z raportów przebiegów, które już leżą w repo
- * (`runs.json`, `discover-runs.json`). Bez tego wykres wydatków startuje pusty
- * i pierwszą odpowiedź na „dlaczego drożej?" dałoby się dostać dopiero po tygodniu.
+ * Odtworzenie wpisów księgi z raportów przebiegów, które już leżą w repo.
  *
- *   npm run backfill-costs           # dopisuje brakujące przebiegi
- *   npm run backfill-costs -- --force  # nadpisuje także te już w księdze
- *
- * Ograniczenie, którego nie da się obejść: przebiegi sprzed podziału na zadania
- * (`LlmTask`) nie wiedzą, ile kosztowały plakaty. Ich koszt LLM ląduje w całości
- * w `llm-extract` z flagą `inferred: true` — kwota jest prawdziwa, przypisanie
- * kategorii to rekonstrukcja. Panel pokazuje takie słupki z osobnym znacznikiem,
- * zamiast udawać pomiar.
+ * Ograniczenie wpisane w dane, nie w kod: przebiegi sprzed podziału na zadania (`LlmTask`)
+ * nie wiedzą, ile kosztowały plakaty. Ich koszt LLM ląduje w całości w `llm-extract`
+ * z flagą `inferred: true` — kwota jest prawdziwa, przypisanie kategorii to rekonstrukcja.
  */
-import { readFile } from "node:fs/promises";
-import { existsSync } from "node:fs";
-import { join } from "node:path";
+import type { CostDriver, CostEntry, DiscoverRunReport, RunReport } from "../types/index.js";
 
-import { type CostInput, costEntries, costLine, costRates, loadCostEntries, recordCosts } from "./reporting/cost-ledger.js";
-import { ROOT } from "./shared/paths.js";
-import type { CostDriver, CostEntry, DiscoverRunReport, RunReport } from "./types/index.js";
-
-async function loadJson<T>(name: string, fallback: T): Promise<T> {
-  const path = join(ROOT, name);
-  if (!existsSync(path)) return fallback;
-  try {
-    return JSON.parse(await readFile(path, "utf-8")) as T;
-  } catch {
-    console.warn(`${name}: nie do odczytania — pomijam`);
-    return fallback;
-  }
-}
+import { type CostInput, costEntries, costRates } from "./cost-ledger.js";
 
 /** Etap 2. Rozbicie na zadania mają tylko nowe przebiegi; starsze idą jako `inferred`. */
-function dailyCosts(r: RunReport): CostEntry[] {
+export function dailyCosts(r: RunReport): CostEntry[] {
   const rates = costRates();
   const inputs: CostInput[] = [];
   const hasTasks = r.sources.some((s) => s.llmByTask);
@@ -89,7 +67,7 @@ function dailyCosts(r: RunReport): CostEntry[] {
 }
 
 /** Etap 1. Podział discovery/verify istniał od początku (`costDiscoveryUsd` / `costVerifyUsd`). */
-function discoverCosts(r: DiscoverRunReport): CostEntry[] {
+export function discoverCosts(r: DiscoverRunReport): CostEntry[] {
   const rates = costRates();
   const inputs: CostInput[] = [];
   const towns = r.towns ?? [];
@@ -140,42 +118,3 @@ function discoverCosts(r: DiscoverRunReport): CostEntry[] {
   }
   return costEntries("discover", r.startedAt, inputs, r.finishedAt || r.startedAt);
 }
-
-async function main(): Promise<void> {
-  const force = process.argv.includes("--force");
-  const known = new Set((await loadCostEntries()).map((e) => `${e.run}|${e.stage}`));
-
-  const daily = await loadJson<RunReport[]>("runs.json", []);
-  const discover = await loadJson<DiscoverRunReport[]>("discover-runs.json", []);
-
-  const entries: CostEntry[] = [];
-  let skipped = 0;
-  for (const r of daily) {
-    if (!force && known.has(`${r.startedAt}|daily`)) { skipped++; continue; }
-    entries.push(...dailyCosts(r));
-  }
-  for (const r of discover) {
-    if (!force && known.has(`${r.startedAt}|discover`)) { skipped++; continue; }
-    entries.push(...discoverCosts(r));
-  }
-
-  if (!entries.length) {
-    console.log(`Nic do dopisania (${skipped} przebiegów już w księdze, ${daily.length + discover.length} raportów przejrzanych).`);
-    return;
-  }
-  await recordCosts(entries);
-  const runs = new Set(entries.map((e) => e.run)).size;
-  console.log(
-    `Dopisano ${entries.length} pozycji z ${runs} przebiegów (${skipped} pominiętych jako już policzone): ` +
-    costLine(entries),
-  );
-  const inferred = entries.filter((e) => e.inferred).length;
-  if (inferred) {
-    console.log(`  ${inferred} pozycji odtworzonych bez podziału na zadania (plakaty w "llm-extract") — panel je znaczy.`);
-  }
-}
-
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});

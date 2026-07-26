@@ -9,15 +9,15 @@
   },
   "scripts": {
     "daily": "tsx --env-file-if-exists=.env src/actions/daily.ts",
-    "digest": "tsx --env-file-if-exists=.env src/digest.ts",
+    "digest": "tsx --env-file-if-exists=.env src/actions/digest.ts",
     "discover": "tsx --env-file-if-exists=.env src/actions/discover.ts",
-    "backfill-costs": "tsx --env-file-if-exists=.env src/backfill-costs.ts",
+    "backfill-costs": "tsx --env-file-if-exists=.env src/actions/backfill-costs.ts",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "node --import tsx --test \"test/**/*.test.ts\"",
     "build": "tsc",
-    "archive-server": "tsx --env-file-if-exists=.env src/archive-server.ts"
+    "archive-server": "tsx --env-file-if-exists=.env src/actions/archive-server.ts"
   },
   "dependencies": {
     "html-to-text": "^9.0.5",

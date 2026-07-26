@@ -3,13 +3,14 @@
  * to, co przy przenoszeniu helperów dat do shared/dates.ts najłatwiej przesunąć o jeden dzień.
  * Daje też digestowi wyrocznię niezależną od dzisiejszej daty, bo wstrzykujemy „dziś".
  *
- * Import ../src/digest.js nie odpala main() — plik ma na końcu strażnika
- * /digest\.(ts|js)$/.test(process.argv[1]), a tu argv[1] to runner testów.
+ * Po podziale importujemy sam pipeline (sections/render), więc entrypoint z main()
+ * i strażnikiem argv w ogóle nie jest ładowany.
  */
 import { strict as assert } from "node:assert";
 import { describe, it } from "node:test";
 
-import { buildDigest, sectionsFor } from "../src/digest.js";
+import { buildDigest } from "../src/pipeline/digest/render.js";
+import { sectionsFor } from "../src/pipeline/digest/sections.js";
 import type { EventsFile } from "../src/types/index.js";
 
 import { event } from "./helpers.js";
