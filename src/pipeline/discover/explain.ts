@@ -6,12 +6,21 @@
  * (panel, angielskie etykiety) i inny odbiorca, a oba projekty to osobne instalacje npm.
  */
 import { DECISION_ICON, OUTCOME_ICON } from "../../reporting/icons.js";
-import type { DiscoverRunReport, FetchProbe, Source, SourcesFile } from "../../types/index.js";
+import type {
+  DiscoverRunReport, FetchProbe, Source, SourceProvenance, SourcesFile,
+} from "../../types/index.js";
 
 const fmtProbe = (p: FetchProbe): string =>
   `${p.ok ? "OK" : "PADŁ"} · HTTP ${p.httpStatus ?? "—"} · ${p.contentType ?? "?"} · ` +
   `${p.chars ?? "?"} zn. · ${p.ms} ms${p.finalUrl ? ` · przekierowanie → ${p.finalUrl}` : ""}` +
   `${p.err ? ` · ${p.err}` : ""}`;
+
+function printSearchHit(hit: NonNullable<SourceProvenance["hit"]>): void {
+  console.log(`  wynik search:`);
+  console.log(`      tytuł: ${hit.title ?? "—"}`);
+  console.log(`      url:   ${hit.url ?? "—"}`);
+  console.log(`      opis:  ${hit.desc ?? "—"}`);
+}
 
 function printProvenance(src: Source): void {
   const p = src.provenance;
@@ -19,18 +28,77 @@ function printProvenance(src: Source): void {
     console.log("  proweniencja: BRAK — źródło dodane ręcznie albo przed wprowadzeniem śledzenia.");
     return;
   }
+  const conf = p.confidence !== undefined ? ` · confidence ${p.confidence}` : "";
   console.log(`  przebieg:    ${p.run} (gmina: ${p.town})`);
-  console.log(`  model:       ${p.model}${p.confidence !== undefined ? ` · confidence ${p.confidence}` : ""}`);
+  console.log(`  model:       ${p.model}${conf}`);
   if (p.why) console.log(`  dlaczego:    ${p.why}`);
   console.log(`  z zapytania: ${p.query ?? "— (brak dopasowania do wyniku wyszukiwarki)"}`);
-  if (p.hit) {
-    console.log(`  wynik search:`);
-    console.log(`      tytuł: ${p.hit.title ?? "—"}`);
-    console.log(`      url:   ${p.hit.url ?? "—"}`);
-    console.log(`      opis:  ${p.hit.desc ?? "—"}`);
-  }
+  if (p.hit) printSearchHit(p.hit);
   if (p.firstFetch) console.log(`  1. pobranie: ${fmtProbe(p.firstFetch)}`);
   if (p.archive?.length) console.log(`  archiwum:    ${p.archive.join("\n               ")}`);
+}
+
+/** Historia weryfikacji źródła, chronologicznie — „od kiedy ten adres jest martwy". */
+function printHistory(src: Source, runs: DiscoverRunReport[]): void {
+  const history = runs
+    .flatMap((r) => r.verifications.filter((v) => v.id === src.id).map((v) => ({ r, v })))
+    .sort((a, b) => a.r.startedAt.localeCompare(b.r.startedAt));
+  if (!history.length) return;
+  console.log("  historia weryfikacji:");
+  for (const { r, v } of history) {
+    const probe = v.probe ? ` · ${fmtProbe(v.probe)}` : v.httpStatus ? ` · HTTP ${v.httpStatus}` : "";
+    console.log(`      ${r.startedAt.slice(0, 10)} ${OUTCOME_ICON[v.outcome]} ${v.outcome}` +
+      `${probe}${v.newUrl ? ` · → ${v.newUrl}` : ""}` +
+      `${v.err ? ` · ${v.err}` : ""}${v.note ? ` · ${v.note}` : ""}`);
+  }
+}
+
+/** Wszystko, co wiemy o źródle, które JEST w rejestrze. */
+function printSource(src: Source, runs: DiscoverRunReport[]): void {
+  const state = src.dead ? "💀 martwy" : src.verified ? "✅ zweryfikowany" : "niezweryfikowany";
+  console.log(`\n═══ ${src.id} — ${src.name}`);
+  console.log(`  url:         ${src.url}`);
+  console.log(`  gmina/typ:   ${src.town} · ${src.type} · fetch:${src.fetch}`);
+  console.log(`  stan:        ${state}` +
+    `${src.checked ? ` (ostatnio sprawdzony ${src.checked})` : ""}` +
+    `${src.discovered ? ` · dodane: ${src.discovered}` : ""}`);
+  if (src.notes) console.log(`  notatki:     ${src.notes}`);
+  if (src.previous_urls?.length) console.log(`  stare URL-e: ${src.previous_urls.join(", ")}`);
+  printProvenance(src);
+  printHistory(src, runs);
+}
+
+/**
+ * Ledger propozycji — jedyne miejsce, w którym widać, czemu czegoś NIE MA na liście
+ * (duplikat / niska pewność / niepoprawny rekord).
+ */
+function printProposals(q: string, runs: DiscoverRunReport[], anyMatch: boolean): void {
+  const proposals = runs.flatMap((r) =>
+    r.towns.flatMap((t) =>
+      t.proposals
+        .filter((p) =>
+          p.id.toLowerCase().includes(q) || p.url.toLowerCase().includes(q) ||
+          p.name.toLowerCase().includes(q))
+        .map((p) => ({ at: r.startedAt, town: t.town, p })),
+    ),
+  );
+  if (!proposals.length) {
+    if (anyMatch) return;
+    console.log("Żaden przebieg w discover-runs.json nie proponował takiego adresu.");
+    console.log("Możliwe przyczyny: nie było go w wynikach wyszukiwarki, gmina nie była objęta discovery,");
+    console.log("albo przebieg, który go rozpatrywał, wypadł już z historii (ostatnie 24).");
+    return;
+  }
+  console.log(`\n═══ propozycje w przebiegach (${proposals.length})`);
+  for (const { at, town, p } of proposals) {
+    console.log(
+      `  ${at.slice(0, 10)} ${town} ${DECISION_ICON[p.decision]} ${p.decision} — ${p.name} (${p.url})`,
+    );
+    if (p.confidence !== undefined) console.log(`      confidence: ${p.confidence}`);
+    if (p.why) console.log(`      dlaczego:   ${p.why}`);
+    if (p.reason) console.log(`      powód:      ${p.reason}`);
+    if (p.query) console.log(`      z zapytania: ${p.query}`);
+  }
 }
 
 /**
@@ -45,53 +113,6 @@ export function explain(needle: string, cfg: SourcesFile, runs: DiscoverRunRepor
   );
 
   if (matches.length === 0) console.log(`W rejestrze nie ma źródła pasującego do "${needle}".`);
-
-  for (const src of matches) {
-    console.log(`\n═══ ${src.id} — ${src.name}`);
-    console.log(`  url:         ${src.url}`);
-    console.log(`  gmina/typ:   ${src.town} · ${src.type} · fetch:${src.fetch}`);
-    console.log(`  stan:        ${src.dead ? "💀 martwy" : src.verified ? "✅ zweryfikowany" : "niezweryfikowany"}` +
-      `${src.checked ? ` (ostatnio sprawdzony ${src.checked})` : ""}` +
-      `${src.discovered ? ` · dodane: ${src.discovered}` : ""}`);
-    if (src.notes) console.log(`  notatki:     ${src.notes}`);
-    if (src.previous_urls?.length) console.log(`  stare URL-e: ${src.previous_urls.join(", ")}`);
-    printProvenance(src);
-
-    const history = runs
-      .flatMap((r) => r.verifications.filter((v) => v.id === src.id).map((v) => ({ r, v })))
-      .sort((a, b) => a.r.startedAt.localeCompare(b.r.startedAt));
-    if (history.length) {
-      console.log("  historia weryfikacji:");
-      for (const { r, v } of history) {
-        console.log(`      ${r.startedAt.slice(0, 10)} ${OUTCOME_ICON[v.outcome]} ${v.outcome}` +
-          `${v.probe ? ` · ${fmtProbe(v.probe)}` : v.httpStatus ? ` · HTTP ${v.httpStatus}` : ""}` +
-          `${v.newUrl ? ` · → ${v.newUrl}` : ""}${v.err ? ` · ${v.err}` : ""}${v.note ? ` · ${v.note}` : ""}`);
-      }
-    }
-  }
-
-  // propozycje (także odrzucone) — jedyne miejsce, w którym widać, czemu czegoś NIE MA na liście
-  const proposals = runs.flatMap((r) =>
-    r.towns.flatMap((t) =>
-      t.proposals
-        .filter((p) =>
-          p.id.toLowerCase().includes(q) || p.url.toLowerCase().includes(q) ||
-          p.name.toLowerCase().includes(q))
-        .map((p) => ({ at: r.startedAt, town: t.town, p })),
-    ),
-  );
-  if (proposals.length) {
-    console.log(`\n═══ propozycje w przebiegach (${proposals.length})`);
-    for (const { at, town, p } of proposals) {
-      console.log(`  ${at.slice(0, 10)} ${town} ${DECISION_ICON[p.decision]} ${p.decision} — ${p.name} (${p.url})`);
-      if (p.confidence !== undefined) console.log(`      confidence: ${p.confidence}`);
-      if (p.why) console.log(`      dlaczego:   ${p.why}`);
-      if (p.reason) console.log(`      powód:      ${p.reason}`);
-      if (p.query) console.log(`      z zapytania: ${p.query}`);
-    }
-  } else if (matches.length === 0) {
-    console.log("Żaden przebieg w discover-runs.json nie proponował takiego adresu.");
-    console.log("Możliwe przyczyny: nie było go w wynikach wyszukiwarki, gmina nie była objęta discovery,");
-    console.log("albo przebieg, który go rozpatrywał, wypadł już z historii (ostatnie 24).");
-  }
+  for (const src of matches) printSource(src, runs);
+  printProposals(q, runs, matches.length > 0);
 }
