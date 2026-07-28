@@ -1,0 +1,160 @@
+@let r = result();
+@let s = r.run;
+
+<div class="probe-head">
+  <span tuiBadge [appearance]="statusMeta[s.status].appearance">
+    {{ statusMeta[s.status].label }}
+  </span>
+  @if (r.forced) {
+    <span tuiBadge size="s" appearance="warning" title="cache pominięty — model był wołany">
+      force
+    </span>
+  } @else if (s.changed === false) {
+    <span tuiBadge size="s" appearance="neutral" title="treść bez zmian — wynik odtworzony z cache">
+      from cache
+    </span>
+  }
+  <span class="muted">
+    {{ s.events }} events · {{ s.llm.calls }} LLM calls · {{ usd(s.llm.costUsd) }} ·
+    {{ ms(r.ms) }}
+  </span>
+</div>
+
+@if (s.err) {
+  <div class="error-box">
+    <tui-icon icon="@tui.triangle-alert" />
+    <span>{{ s.err }}</span>
+  </div>
+}
+
+<section class="facts">
+  <div class="fact">
+    <span>HTTP</span><strong>{{ s.httpStatus ?? '—' }}</strong>
+  </div>
+  <div class="fact">
+    <span>Chars</span><strong>{{ s.chars !== undefined ? num(s.chars) : '—' }}</strong>
+  </div>
+  <div class="fact">
+    <span>Changed</span
+    ><strong>{{ s.changed === true ? 'yes' : s.changed === false ? 'no' : '—' }}</strong>
+  </div>
+  <div class="fact">
+    <span>Geo</span><strong>{{ s.geo.hits }} / {{ s.geo.misses }}</strong>
+  </div>
+  <div class="fact">
+    <span>Tokens</span
+    ><strong>{{ tok(s.llm.promptTokens) }} / {{ tok(s.llm.completionTokens) }}</strong>
+  </div>
+</section>
+
+@if (s.followups.length) {
+  <h3>Followups ({{ s.followups.length }})</h3>
+  <ul class="flat">
+    @for (f of s.followups; track f.url) {
+      <li>
+        <span
+          tuiBadge
+          size="s"
+          [appearance]="
+            f.outcome === 'ok' ? 'positive' : f.outcome === 'unchanged' ? 'neutral' : 'negative'
+          "
+        >
+          {{ f.outcome }}
+        </span>
+        <code>{{ f.kind }}</code>
+        <a tuiLink [href]="f.url" target="_blank" rel="noopener">{{ f.url }}</a>
+        <span class="muted">→ {{ f.events }} events</span>
+        @if (f.err) {
+          <span class="warn">{{ f.err }}</span>
+        }
+      </li>
+    }
+  </ul>
+}
+
+<h3>Decision trail</h3>
+<ol class="steps">
+  @for (st of r.trail.steps; track $index) {
+    <li class="step" [attr.data-tone]="stepMeta[st.step].tone">
+      <tui-icon [icon]="stepMeta[st.step].icon" />
+      <span class="at">{{ ms(st.ms) }}</span>
+      <div class="body">
+        <span class="note">{{ st.note }}</span>
+        @if (detailPairs(st).length) {
+          <span class="detail">
+            @for (d of detailPairs(st); track d.k) {
+              <code>{{ d.k }}={{ d.v }}</code>
+            }
+          </span>
+        }
+      </div>
+    </li>
+  }
+</ol>
+
+<h3>
+  Events ({{ r.events.length }})
+  <span class="muted hint">before dedupe and before PII redaction — local only</span>
+</h3>
+@if (!r.events.length) {
+  <p class="muted">Nothing extracted from this source right now.</p>
+}
+<ul class="flat">
+  @for (e of r.events; track $index) {
+    <li class="row">
+      <button tuiButton size="xs" appearance="flat" (click)="toggleEvent($index)">
+        {{ openEvent() === $index ? 'Hide' : 'JSON' }}
+      </button>
+      <strong>{{ e.title }}</strong>
+      <span class="muted">
+        {{ e.date_start }}{{ e.time_start ? ' ' + e.time_start : ''
+        }}{{ e.venue ? ' · ' + e.venue : '' }}
+      </span>
+      @if (e.is_noise) {
+        <span tuiBadge size="s" appearance="warning">noise</span>
+      }
+      @if (openEvent() === $index) {
+        <pre class="raw">{{ json(e) }}</pre>
+      }
+    </li>
+  }
+</ul>
+
+@if (r.llm.length) {
+  <h3>
+    Model calls ({{ r.llm.length }})
+    <span class="muted hint">prompt and reply as sent — the archive is not involved</span>
+  </h3>
+  <ul class="flat">
+    @for (c of r.llm; track $index) {
+      <li class="row">
+        <button tuiButton size="xs" appearance="flat" (click)="toggleCall($index)">
+          {{ openCall() === $index ? 'Hide' : 'Show' }}
+        </button>
+        <span class="muted">{{ callLine(c) }}</span>
+        @if (!c.ok) {
+          <span tuiBadge size="s" appearance="negative">{{ c.err ?? 'failed' }}</span>
+        }
+        @if (openCall() === $index) {
+          <div class="call">
+            <h4>system</h4>
+            <pre class="raw">{{ c.system }}</pre>
+            <h4>user</h4>
+            <pre class="raw">{{ c.user }}</pre>
+            <h4>response</h4>
+            <pre class="raw">{{ c.response }}</pre>
+          </div>
+        }
+      </li>
+    }
+  </ul>
+}
+
+@if (r.errors.length) {
+  <h3>Pipeline errors ({{ r.errors.length }})</h3>
+  <ul class="flat">
+    @for (e of r.errors; track $index) {
+      <li class="warn">{{ e.followup ? e.followup + ' — ' : '' }}{{ e.err }}</li>
+    }
+  </ul>
+}

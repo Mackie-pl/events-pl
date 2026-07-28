@@ -4,37 +4,23 @@ import { RouterLink } from '@angular/router';
 import { TuiButton, TuiIcon, TuiLink, TuiLoader, TuiTitle } from '@taiga-ui/core';
 import { TuiBadge, TuiChip } from '@taiga-ui/kit';
 
-import { ArchiveService } from '../../archive';
+import { BridgeService } from '../../bridge';
 import { DataService } from '../../data';
-import { STATUS_META, fmtDateTime, fmtMs, fmtNum, fmtTokens, fmtUsd } from '../../format';
-import type { AuditKind, AuditStep, EventItem, EventRef } from '../../types';
+import {
+  STATUS_META, STEP_META, fmtDateTime, fmtMs, fmtNum, fmtTokens, fmtUsd,
+} from '../../format';
+import type { AuditStep, EventItem, EventRef, ProbeResult } from '../../types';
+
+import { ProbeResultView } from './probe-result';
 
 const PREVIEW_KEY = 'events-pl-panel:preview';
 
-/**
- * Ikona i wydźwięk kroku śladu. Wydźwięk (nie kolor) — chodzi o „czy to była decyzja
- * kosztowna / oszczędna / stratna", a nie o ozdobę: po tym skanuje się timeline wzrokiem.
- */
-const STEP_META: Record<AuditKind, { icon: string; tone: 'plain' | 'spend' | 'save' | 'loss' }> = {
-  skip: { icon: '@tui.circle-slash', tone: 'plain' },
-  fetch: { icon: '@tui.download', tone: 'plain' },
-  'fetch.fallback': { icon: '@tui.refresh-cw', tone: 'spend' },
-  content: { icon: '@tui.file-diff', tone: 'plain' },
-  'cache.hit': { icon: '@tui.database', tone: 'save' },
-  llm: { icon: '@tui.sparkles', tone: 'spend' },
-  'event.dropped': { icon: '@tui.trash-2', tone: 'loss' },
-  'followup.proposed': { icon: '@tui.list-plus', tone: 'plain' },
-  followup: { icon: '@tui.corner-down-right', tone: 'plain' },
-  'fb.harvest': { icon: '@tui.link', tone: 'plain' },
-  geo: { icon: '@tui.map-pin', tone: 'plain' },
-  'dedupe.dropped': { icon: '@tui.merge', tone: 'loss' },
-  pii: { icon: '@tui.shield', tone: 'plain' },
-  done: { icon: '@tui.flag', tone: 'plain' },
-};
-
 @Component({
   selector: 'app-source',
-  imports: [RouterLink, TuiButton, TuiIcon, TuiLink, TuiLoader, TuiTitle, TuiBadge, TuiChip],
+  imports: [
+    RouterLink, TuiButton, TuiIcon, TuiLink, TuiLoader, TuiTitle, TuiBadge, TuiChip,
+    ProbeResultView,
+  ],
   templateUrl: './source.html',
   styleUrl: './source.less',
 })
@@ -43,7 +29,7 @@ export class SourcePage {
   readonly sourceId = input.required<string>();
 
   protected readonly data = inject(DataService);
-  protected readonly archive = inject(ArchiveService);
+  protected readonly bridge = inject(BridgeService);
   private readonly sanitizer = inject(DomSanitizer);
 
   protected readonly ms = fmtMs;
@@ -154,11 +140,48 @@ export class SourcePage {
     this.openedPath.set(path);
     this.archiveBody.set(null);
     this.archiveLoading.set(true);
-    this.archive.object(path).subscribe((text) => {
+    this.bridge.object(path).subscribe((text) => {
       // ignoruj odpowiedź, jeśli w międzyczasie kliknięto inny obiekt
       if (this.openedPath() !== path) return;
       this.archiveBody.set(text);
       this.archiveLoading.set(false);
+    });
+  }
+
+  // --- sonda na żądanie (lokalny most) ---
+
+  /** Wynik ostatniej sondy; kasowany przy zmianie źródła, żeby nie wisiał nad cudzą stroną. */
+  protected readonly probe = linkedSignal<ProbeResult | null>(() => {
+    this.sourceId();
+    return null;
+  });
+
+  protected readonly probeError = linkedSignal<string | null>(() => {
+    this.sourceId();
+    return null;
+  });
+
+  protected readonly probing = signal(false);
+
+  /**
+   * `force` pomija cache: gwarantuje pobranie i wywołanie modelu, czyli KOSZTUJE.
+   * Bez niego niezmieniona strona wraca z cache w ułamku sekundy i niczego nie sprawdza —
+   * co jest tanie i bezużyteczne dokładnie wtedy, gdy chcesz zobaczyć, co model dziś zrobi.
+   */
+  protected runProbe(force: boolean): void {
+    if (this.probing()) return;
+    this.probing.set(true);
+    this.probeError.set(null);
+    const id = this.sourceId();
+    this.bridge.probe(id, force).subscribe((r) => {
+      // odpowiedź na źródło, z którego już wyszliśmy, nie ma gdzie się pokazać
+      if (this.sourceId() !== id) return;
+      this.probing.set(false);
+      if ('error' in r) {
+        this.probeError.set(r.error);
+        return;
+      }
+      this.probe.set(r);
     });
   }
 

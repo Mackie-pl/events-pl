@@ -120,6 +120,11 @@ export class DataService {
 
   /** Ślad jednego źródła w jednym przebiegu; brak = przebieg sprzed audit.json albo źródło milczało. */
   trailFor(startedAt: string, sourceId: string): SourceTrail | undefined {
+    // `defaultValue` obsługuje stan ŁADOWANIA, nie BŁĘDU: na zasobie w błędzie `.value()` rzuca.
+    // A audit.json pojawia się w repo dopiero po pierwszym przebiegu z tą wersją potoku, więc
+    // do tego czasu raw.githubusercontent odpowiada 404 — i wyjątek leci w środku detekcji zmian,
+    // wywracając CAŁĄ stronę źródła, nie samą sekcję śladu.
+    if (this.audit.error()) return undefined;
     return this.audit
       .value()
       .find((t) => t.run === startedAt)

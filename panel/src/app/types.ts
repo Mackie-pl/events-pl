@@ -7,6 +7,9 @@
 // z powrotem — reszta panelu importuje typy z jednego miejsca.
 export * from './types-audit';
 
+// Sonda na żądanie: dane spoza repo (lokalny most), ale opisane tymi samymi kształtami.
+export * from './types-probe';
+
 export type FetchStrategy =
   'plain' | 'headless' | 'pdf' | 'api' | 'fb' | 'fb_group' | 'fb_event' | 'rss';
 

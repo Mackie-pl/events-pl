@@ -8,6 +8,29 @@
     <span class="muted">/</span>
     <span>{{ s.id }}</span>
     <span class="spacer"></span>
+    @if (bridge.available() === true) {
+      <!-- tylko przy działającym moście: wdrożony panel nie ma jak (i nie ma prawa) pobierać stron -->
+      <button
+        tuiButton
+        size="s"
+        appearance="primary"
+        [disabled]="probing()"
+        (click)="runProbe(false)"
+        title="Run this one source now. Unchanged content comes back from cache — free."
+      >
+        {{ probing() ? 'Checking…' : 'Check now' }}
+      </button>
+      <button
+        tuiButton
+        size="s"
+        appearance="secondary"
+        [disabled]="probing()"
+        (click)="runProbe(true)"
+        title="Skip the cache: fetch again and call the model. Costs money."
+      >
+        Force
+      </button>
+    }
     <button tuiButton size="s" appearance="secondary" (click)="togglePreview()">
       {{ showPreview() ? 'Hide preview' : 'Show preview' }}
     </button>
@@ -39,6 +62,30 @@
           <tui-icon icon="@tui.triangle-alert" />
           <span>{{ s.err }}</span>
         </div>
+      }
+
+      @if (probing()) {
+        <div class="probing">
+          <tui-loader size="s" />
+          <span class="muted">
+            Fetching and (unless cached) asking the model — this can take a minute.
+          </span>
+        </div>
+      }
+      @if (probeError(); as err) {
+        <div class="error-box">
+          <tui-icon icon="@tui.triangle-alert" />
+          <span>{{ err }}</span>
+        </div>
+      }
+      @if (probe(); as p) {
+        <h2 class="probe-title">
+          Live check
+          <span class="muted hint">
+            just ran on your machine · not saved anywhere · {{ dt(p.startedAt) }}
+          </span>
+        </h2>
+        <app-probe-result [result]="p" />
       }
 
       <section class="facts">
@@ -115,16 +162,17 @@
         <section class="archive">
           <h2>
             Archive ({{ archivePaths().length }})
-            @if (archive.available() !== true) {
+            @if (!bridge.archiveReadable()) {
               <span class="muted hint">
-                private — run <code>npm run archive-server</code> locally to read contents
+                private — run <code>npm run panel-server</code> locally (with SUPABASE_* in .env)
+                to read contents
               </span>
             }
           </h2>
           <ul>
             @for (p of archivePaths(); track p) {
               <li>
-                @if (archive.available() === true) {
+                @if (bridge.archiveReadable()) {
                   <button tuiButton size="xs" appearance="flat" (click)="toggleArchive(p)">
                     {{ openedPath() === p ? 'Hide' : archiveLabel(p) }}
                   </button>

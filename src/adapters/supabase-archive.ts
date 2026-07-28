@@ -81,7 +81,21 @@ export function keyLooksPublic(key: string): boolean {
   }
 }
 
+/**
+ * Wyłącznik na czas sondy jednego źródła (pipeline/extract/probe-source.ts).
+ *
+ * Sonda odsyła prompt, odpowiedź modelu i pobraną treść wprost do panelu — wysyłanie tego
+ * samego do bucketa dokłada tylko obiekty nie do odróżnienia od przebiegów crona, akurat
+ * w archiwum, którego jedynym zadaniem jest tłumaczenie tych przebiegów.
+ */
+let suppressed = false;
+
+export function suppressArchive(on: boolean): void {
+  suppressed = on;
+}
+
 const cfg = (): { url: string; key: string } | null => {
+  if (suppressed) return null;
   const url = process.env["SUPABASE_URL"];
   const key = supabaseKey();
   return url && key ? { url: url.replace(/\/+$/, ""), key } : null;
