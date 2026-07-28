@@ -7,7 +7,7 @@ import { TuiBadge, TuiChip } from '@taiga-ui/kit';
 import { ArchiveService } from '../../archive';
 import { DataService } from '../../data';
 import { STATUS_META, fmtDateTime, fmtMs, fmtNum, fmtTokens, fmtUsd } from '../../format';
-import type { EventItem } from '../../types';
+import type { EventItem, EventRef } from '../../types';
 
 const PREVIEW_KEY = 'events-pl-panel:preview';
 
@@ -43,17 +43,47 @@ export class SourcePage {
     this.data.sources.value()?.sources.find((s) => s.id === this.sourceId()),
   );
 
-  /** Events extracted from this source — always from the latest events.json. */
-  protected readonly events = computed(() =>
-    this.data.events.value().events.filter((e) => e.source_id === this.sourceId()),
+  /**
+   * What this source produced IN THIS RUN, before dedupe — recorded in runs.json, so it stays
+   * true for historical runs. Older runs predate the field: fall back to filtering the latest
+   * events.json, which is what this page used to do for every run.
+   */
+  protected readonly produced = computed<EventRef[]>(() => {
+    const s = this.sourceRun();
+    if (!s) return [];
+    if (s.produced) return s.produced;
+    return this.data.events
+      .value()
+      .events.filter((e) => e.source_id === this.sourceId())
+      .map((e) => ({ title: e.title, date: e.date_start, url: e.source_url }));
+  });
+
+  /** True when the run itself carries event identity — otherwise we're guessing from today's file. */
+  protected readonly hasProduced = computed(() => this.sourceRun()?.produced !== undefined);
+
+  protected readonly mergedAway = computed(
+    () => this.produced().filter((r) => r.mergedInto).length,
   );
 
   protected readonly isLatestRun = computed(() => this.data.isLatest(this.runId()));
 
+  /** Full records by "title|date" — the only key shared between a ref and events.json. */
+  private readonly fullByKey = computed(
+    () => new Map(this.data.events.value().events.map((e) => [`${e.title}|${e.date_start}`, e])),
+  );
+
+  /**
+   * Full record for a ref, when there is one. A ref that lost dedupe, or belongs to a run older
+   * than the current events.json, has no counterpart — the archive holds those.
+   */
+  protected full(ref: EventRef): EventItem | undefined {
+    return this.fullByKey().get(`${ref.title}|${ref.date}`);
+  }
+
   /** Selected event; resets when the source changes. */
-  protected readonly selected = linkedSignal<EventItem | null>(() => {
+  protected readonly selected = linkedSignal<EventRef | null>(() => {
     // Depend on the event list so selection resets on navigation.
-    this.events();
+    this.produced();
     return null;
   });
 
@@ -94,7 +124,7 @@ export class SourcePage {
   protected readonly showPreview = signal(localStorage.getItem(PREVIEW_KEY) !== '0');
 
   protected readonly previewUrl = computed(
-    () => this.selected()?.source_url ?? this.sourceRun()?.url ?? '',
+    () => this.selected()?.url ?? this.sourceRun()?.url ?? '',
   );
 
   protected readonly safePreviewUrl = computed<SafeResourceUrl | null>(() => {
@@ -103,8 +133,8 @@ export class SourcePage {
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   });
 
-  protected select(event: EventItem): void {
-    this.selected.set(this.selected() === event ? null : event);
+  protected select(ref: EventRef): void {
+    this.selected.set(this.selected() === ref ? null : ref);
     this.showRawJson.set(false);
   }
 

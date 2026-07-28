@@ -30,9 +30,9 @@ src/actions/discover.ts  ·  --why <id> = skąd to źródło
 | `src/storage/` | **port składowania** — `DocStore`/`CollectionStore` + implementacja na plikach JSON. Jedyne miejsce znające ścieżki; przejście na bazę to druga implementacja i podmiana wiązań w `storage/index.ts` |
 | `src/shared/` | ścieżki, hash, tekst, daty, URL-e, formatowanie błędów |
 | `src/types/` | typy podzielone po dziedzinach + jedyny barrel w repo (`types/index.ts`) |
-| `test/` | testy `node:test` (93 przypadki): pii, url/slug/daty, dedupe, facebook, digest, koszty, retencja, podsumowania, walidacja propozycji |
+| `test/` | testy `node:test` (111 przypadków): pii, url/slug/daty, dedupe (+ raport scalania), facebook, digest, koszty, retencja, podsumowania, walidacja propozycji |
 | `discover-runs.json` | observability etapu 1: każde zapytanie search + wyniki, **każda propozycja modelu wraz z decyzją** (także odrzucenia), geo (Overpass), tokeny/koszt LLM per gmina / źródło / typ zadania (discovery vs weryfikacja); ostatnie 24 przebiegi (szczegóły dla 4 najnowszych) |
-| `runs.json` | observability etapu 2: przebieg źródło po źródle (status, HTTP, followupy, tokeny/koszt per zadanie, rekordy Bright Data, ścieżki archiwum); **ostatnie 7 dni** (min. 2, maks. 30 przebiegów) |
+| `runs.json` | observability etapu 2: przebieg źródło po źródle (status, HTTP, followupy, tokeny/koszt per zadanie, rekordy Bright Data, ścieżki archiwum) oraz **`produced` — które konkretnie wydarzenia dało źródło w tym przebiegu**, wraz z przegranymi dedupe (`mergedInto`); **ostatnie 7 dni** (min. 2, maks. 30 przebiegów) |
 | `costs.json` | księga wydatków obu etapów: linia na (przebieg × kategoria) z wolumenem, stawką i najdroższymi pozycjami; 90 dni. Zasila zakładkę **Money** |
 | `eslint.shared.js` | wspólne progi rozmiaru dla potoku i panelu (max 350 linii kodu na plik, 120 znaków na linię) — pilnowane przez `ci.yml` |
 | `template.html` | frontend (wiek dziecka, tagi zagnieżdżone, weekend, mapa OSM); `reporting/render-index.ts` wstrzykuje JSON |
@@ -406,6 +406,8 @@ do podglądu używaj `npx tsx` bez `--env-file`.
 - FB: linki do wydarzeń + otwarte grupy przez Bright Data (sekcja wyżej). Fanpage (`fetch:"fb"`)
   wciąż pomijane w daily — inny dataset; grupy zamknięte świadomie poza zakresem (ban risk).
 - Dedupe: heurystyka tytuł+data; LLM-owy dedupe (`DEDUPE_SYSTEM`) gotowy w prompts.ts, niepodpięty.
+  Zwycięzcę wybiera długość JSON-a („bogatszy rekord"), więc `source_id` tego samego wydarzenia
+  potrafi się zmieniać z dnia na dzień — teraz widać to w panelu jako `merged → <źródło>`.
 - Weryfikacja URL-i: `discover --verify` (miesięczny cron `discover.yml`) sprawdza każdy URL, naprawia
   przez search+LLM (historia w `previous_urls`), nienaprawialne znakuje `dead:true` (daily pomija jako
   `skipped-dead` do następnej udanej naprawy). Adresy FB są pomijane (login wall ≠ martwy URL),

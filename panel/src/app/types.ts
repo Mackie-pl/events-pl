@@ -174,6 +174,19 @@ export interface BdUsage {
   byDataset?: Record<string, number>;
 }
 
+/**
+ * Tożsamość wydarzenia w obrębie przebiegu — pełny rekord jest w events.json (najnowszy dzień)
+ * albo w prywatnym archiwum. Panel dokleja szczegóły przez join po `title|date`.
+ */
+export interface EventRef {
+  title: string;
+  /** YYYY-MM-DD */
+  date: string;
+  url: string;
+  /** id źródła, którego rekord wygrał dedupe; brak = ten poszedł do events.json */
+  mergedInto?: string;
+}
+
 export interface SourceRun {
   id: string;
   name: string;
@@ -186,6 +199,8 @@ export interface SourceRun {
   chars?: number;
   changed?: boolean;
   events: number;
+  /** które to były wydarzenia (przed dedupe); brak = zero wydarzeń albo przebieg sprzed tej wersji */
+  produced?: EventRef[];
   followups: FollowupRun[];
   geo: { hits: number; misses: number };
   llm: LlmUsage;

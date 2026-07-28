@@ -20,6 +20,7 @@ import { redactEvents, redactText } from "../pipeline/pii.js";
 import { recordCosts } from "../reporting/cost-ledger.js";
 import { buildDailyCosts } from "../reporting/daily-costs.js";
 import { buildReport, dailyRunsStore } from "../reporting/daily-report.js";
+import { attachProduced } from "../reporting/event-refs.js";
 import { summaryLine, writeDailySummary } from "../reporting/daily-summary.js";
 import { renderHtml } from "../reporting/render-index.js";
 import { BD_USAGE_LOG } from "../shared/paths.js";
@@ -41,6 +42,8 @@ async function run(): Promise<void> {
   const errors: PipelineError[] = [];
   const sourceRuns: SourceRun[] = [];
   let allEvents: EventItem[] = [];
+  // co dało każde źródło, zanim dedupe wybrał zwycięzców — jedyny moment, w którym to wiadomo
+  const producedBy = new Map<SourceRun, EventItem[]>();
   // linki do wydarzeń FB zebrane po drodze (treści stron, followupy, posty grup) — rozwiązywane zbiorczo na końcu
   const fbEventUrls = new Set<string>();
 
@@ -66,16 +69,19 @@ async function run(): Promise<void> {
     }
     const { events, run: sr } = await processSource(src, state, errors, fbEventUrls);
     sourceRuns.push(sr);
+    producedBy.set(sr, events);
     allEvents.push(...events);
   }
 
   if (bdEnabled() && fbEventUrls.size) {
     const { events, run: fbRun } = await resolveFbEvents([...fbEventUrls], state, errors);
     sourceRuns.push(fbRun);
+    producedBy.set(fbRun, events);
     allEvents.push(...events);
   }
 
-  allEvents = dedupe(allEvents);
+  const merged = dedupe(allEvents);
+  allEvents = merged.events;
 
   // pełna wersja (z kontaktami) do prywatnego archiwum — MUSI polecieć przed redakcją
   await archiveEventsFull({ generated: new Date().toISOString().slice(0, 10), startedAt, events: allEvents, errors });
@@ -92,6 +98,8 @@ async function run(): Promise<void> {
     if (sr.err) sr.err = redactText(sr.err, pii);
     for (const fu of sr.followups) if (fu.err) fu.err = redactText(fu.err, pii);
   }
+  // dopiero teraz: refy niosą tytuły, więc muszą powstać z rekordów PO redakcji
+  attachProduced(producedBy, merged.dropped);
 
   const out: EventsFile = { generated: new Date().toISOString().slice(0, 10), events: allEvents, errors };
   if (bdEnabled()) out.brightdata = bdUsage;

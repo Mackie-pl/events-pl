@@ -17,6 +17,27 @@ export interface FollowupRun {
   err?: string;
 }
 
+/**
+ * Tożsamość jednego wydarzenia w obrębie przebiegu — tyle, ile trzeba, by wskazać je
+ * w events.json i pokazać w panelu, bez wkładania do runs.json drugiej kopii wszystkich pól.
+ * Pełny rekord (sprzed redakcji PII) żyje w prywatnym archiwum z dnia ekstrakcji.
+ *
+ * Bez tego `SourceRun.events` był samą liczbą: „to źródło dało 10 wydarzeń" — których,
+ * wiedziało tylko events.json, i to wyłącznie dla najnowszego przebiegu.
+ */
+export interface EventRef {
+  title: string;
+  /** YYYY-MM-DD */
+  date: string;
+  /** URL konkretnego wydarzenia — dla followupa inny niż adres źródła */
+  url: string;
+  /**
+   * id źródła, którego rekord wygrał dedupe (bywa nim to samo źródło — duplikat u siebie).
+   * Brak = rekord przeszedł do events.json.
+   */
+  mergedInto?: string;
+}
+
 export interface SourceRun {
   id: string;
   name: string;
@@ -32,6 +53,11 @@ export interface SourceRun {
   changed?: boolean;
   /** wydarzenia zachowane z tego źródła (łącznie z followupami) */
   events: number;
+  /**
+   * Które to były wydarzenia — stan PRZED dedupe, więc suma po źródłach bywa większa
+   * niż events.json. Brak pola = źródło nic nie dało (albo przebieg sprzed tej wersji).
+   */
+  produced?: EventRef[];
   followups: FollowupRun[];
   geo: { hits: number; misses: number };
   llm: LlmUsage;

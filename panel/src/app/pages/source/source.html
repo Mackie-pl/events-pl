@@ -147,127 +147,160 @@
 
       <section class="events">
         <h2>
-          Event results ({{ events().length }})
-          @if (!isLatestRun()) {
+          Event results ({{ produced().length }})
+          @if (mergedAway()) {
+            <span class="muted hint">{{ mergedAway() }} merged away by dedupe</span>
+          }
+          @if (!hasProduced()) {
             <span class="warn hint">
-              from latest events.json ({{ data.events.value().generated }}) — per-run events aren't
-              stored
+              from latest events.json ({{ data.events.value().generated }}) — this run predates
+              per-run event records
             </span>
           }
         </h2>
 
-        @if (!events().length) {
-          <p class="muted">No events in events.json for this source.</p>
+        @if (!produced().length) {
+          <p class="muted">This source produced no events in this run.</p>
         }
 
-        @for (e of events(); track e.title + e.date_start) {
-          <article class="event" [class.selected]="selected() === e" [class.noise]="e.is_noise">
+        @for (ref of produced(); track ref.title + ref.date + $index) {
+          @let e = full(ref);
+          <article
+            class="event"
+            [class.selected]="selected() === ref"
+            [class.noise]="e?.is_noise"
+            [class.merged]="!!ref.mergedInto"
+          >
             <div
               class="event-head"
               role="button"
               tabindex="0"
-              (click)="select(e)"
-              (keydown.enter)="select(e)"
+              (click)="select(ref)"
+              (keydown.enter)="select(ref)"
             >
-              <strong>{{ e.title }}</strong>
+              <strong>{{ ref.title }}</strong>
               <span class="muted">
-                {{ e.date_start }}{{ e.date_end ? ' → ' + e.date_end : '' }} {{ e.time_start ?? ''
-                }}{{ e.time_end ? '–' + e.time_end : '' }}
+                {{ ref.date }}{{ e?.date_end ? ' → ' + e?.date_end : '' }} {{ e?.time_start ?? ''
+                }}{{ e?.time_end ? '–' + e?.time_end : '' }}
               </span>
-              @if (e.is_noise) {
+              @if (ref.mergedInto) {
+                <span
+                  tuiBadge
+                  size="s"
+                  appearance="neutral"
+                  [title]="'kept under ' + ref.mergedInto"
+                >
+                  merged → {{ ref.mergedInto }}
+                </span>
+              }
+              @if (e?.is_noise) {
                 <span tuiBadge size="s" appearance="warning">noise</span>
               }
-              @if (e.family_friendly === true) {
+              @if (e?.family_friendly === true) {
                 <span tuiBadge size="s" appearance="positive">family</span>
-              } @else if (e.family_friendly === 'maybe') {
+              } @else if (e?.family_friendly === 'maybe') {
                 <span tuiBadge size="s" appearance="neutral">family?</span>
               }
             </div>
 
-            @if (selected() === e) {
+            @if (selected() === ref) {
               <div class="event-detail">
-                <dl>
-                  <dt>Venue</dt>
-                  <dd>{{ e.venue ?? '—' }}{{ e.town ? ', ' + e.town : '' }}</dd>
-                  <dt>Price</dt>
-                  <dd>
-                    {{ price(e)
-                    }}{{ e.price.note && price(e) !== e.price.note ? ' · ' + e.price.note : '' }}
-                  </dd>
-                  <dt>Age</dt>
-                  <dd>{{ age(e) }}</dd>
-                  <dt>Registration</dt>
-                  <dd>{{ e.registration ?? '—' }}</dd>
-                  <dt>Conditional</dt>
-                  <dd>{{ e.conditional ?? '—' }}</dd>
-                  @if (e.container) {
-                    <dt>Container</dt>
-                    <dd>{{ e.container }}</dd>
-                  }
-                  <dt>Geo</dt>
-                  <dd>
-                    @if (e.geo) {
-                      <a
-                        tuiLink
-                        href="https://www.openstreetmap.org/?mlat={{ e.geo.lat }}&mlon={{
-                          e.geo.lon
-                        }}#map=16/{{ e.geo.lat }}/{{ e.geo.lon }}"
-                        target="_blank"
-                        rel="noopener"
-                      >
-                        {{ e.geo.lat }}, {{ e.geo.lon }}
-                      </a>
+                @if (!e) {
+                  <p class="muted">
+                    @if (ref.mergedInto) {
+                      Merged into <code>{{ ref.mergedInto }}</code> — the full record lives under
+                      that source. This row records that the event was seen here too.
                     } @else {
-                      —
+                      Not in the current events.json ({{ data.events.value().generated }}) — the
+                      full record for this run is in the private archive above.
                     }
-                  </dd>
-                  <dt>Source URL</dt>
-                  <dd>
-                    <a tuiLink [href]="e.source_url" target="_blank" rel="noopener">
-                      {{ e.source_url }}
-                    </a>
-                  </dd>
-                </dl>
-
-                @if (e.tags.length) {
-                  <div class="tags">
-                    @for (t of e.tags; track t) {
-                      <span tuiChip size="xs">{{ t }}</span>
+                    <br />
+                    <a tuiLink [href]="ref.url" target="_blank" rel="noopener">{{ ref.url }}</a>
+                  </p>
+                } @else {
+                  <dl>
+                    <dt>Venue</dt>
+                    <dd>{{ e.venue ?? '—' }}{{ e.town ? ', ' + e.town : '' }}</dd>
+                    <dt>Price</dt>
+                    <dd>
+                      {{ price(e)
+                      }}{{ e.price.note && price(e) !== e.price.note ? ' · ' + e.price.note : '' }}
+                    </dd>
+                    <dt>Age</dt>
+                    <dd>{{ age(e) }}</dd>
+                    <dt>Registration</dt>
+                    <dd>{{ e.registration ?? '—' }}</dd>
+                    <dt>Conditional</dt>
+                    <dd>{{ e.conditional ?? '—' }}</dd>
+                    @if (e.container) {
+                      <dt>Container</dt>
+                      <dd>{{ e.container }}</dd>
                     }
-                  </div>
-                }
-
-                @if (e.sub_slots?.length) {
-                  <table class="slots">
-                    <thead>
-                      <tr>
-                        <th>Time</th>
-                        <th>Label</th>
-                        <th>Age</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      @for (slot of e.sub_slots; track slot.time + slot.label) {
-                        <tr>
-                          <td>{{ slot.time }}</td>
-                          <td>{{ slot.label }}</td>
-                          <td>{{ slot.age?.label ?? '—' }}</td>
-                        </tr>
+                    <dt>Geo</dt>
+                    <dd>
+                      @if (e.geo) {
+                        <a
+                          tuiLink
+                          href="https://www.openstreetmap.org/?mlat={{ e.geo.lat }}&mlon={{
+                            e.geo.lon
+                          }}#map=16/{{ e.geo.lat }}/{{ e.geo.lon }}"
+                          target="_blank"
+                          rel="noopener"
+                        >
+                          {{ e.geo.lat }}, {{ e.geo.lon }}
+                        </a>
+                      } @else {
+                        —
                       }
-                    </tbody>
-                  </table>
-                }
+                    </dd>
+                    <dt>Source URL</dt>
+                    <dd>
+                      <a tuiLink [href]="e.source_url" target="_blank" rel="noopener">
+                        {{ e.source_url }}
+                      </a>
+                    </dd>
+                  </dl>
 
-                <button
-                  tuiButton
-                  size="xs"
-                  appearance="flat"
-                  (click)="showRawJson.set(!showRawJson())"
-                >
-                  {{ showRawJson() ? 'Hide raw JSON' : 'Raw JSON' }}
-                </button>
-                @if (showRawJson()) {
-                  <pre class="raw">{{ json(e) }}</pre>
+                  @if (e.tags.length) {
+                    <div class="tags">
+                      @for (t of e.tags; track t) {
+                        <span tuiChip size="xs">{{ t }}</span>
+                      }
+                    </div>
+                  }
+
+                  @if (e.sub_slots?.length) {
+                    <table class="slots">
+                      <thead>
+                        <tr>
+                          <th>Time</th>
+                          <th>Label</th>
+                          <th>Age</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (slot of e.sub_slots; track slot.time + slot.label) {
+                          <tr>
+                            <td>{{ slot.time }}</td>
+                            <td>{{ slot.label }}</td>
+                            <td>{{ slot.age?.label ?? '—' }}</td>
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  }
+
+                  <button
+                    tuiButton
+                    size="xs"
+                    appearance="flat"
+                    (click)="showRawJson.set(!showRawJson())"
+                  >
+                    {{ showRawJson() ? 'Hide raw JSON' : 'Raw JSON' }}
+                  </button>
+                  @if (showRawJson()) {
+                    <pre class="raw">{{ json(e) }}</pre>
+                  }
                 }
               </div>
             }
