@@ -1,0 +1,51 @@
+/**
+ * Ślad decyzyjny (audit.json) — mirrors ../../../src/types/audit.ts.
+ *
+ * Osobny plik od types.ts, bo tamten dobił do progu 350 linii. Reeksport z types.ts
+ * zostaje, żeby reszta panelu dalej importowała wszystko z jednego miejsca.
+ */
+
+/** Zamknięty słownik kroków — panel dobiera do rodzaju ikonę i kolor. */
+export type AuditKind =
+  | 'skip'
+  | 'fetch'
+  | 'fetch.fallback'
+  | 'content'
+  | 'cache.hit'
+  | 'llm'
+  | 'event.dropped'
+  | 'followup.proposed'
+  | 'followup'
+  | 'fb.harvest'
+  | 'geo'
+  | 'dedupe.dropped'
+  | 'pii'
+  | 'done';
+
+export type AuditDetail = Record<string, string | number | boolean | null | undefined>;
+
+export interface AuditStep {
+  /** ms od startu przebiegu */
+  ms: number;
+  step: AuditKind;
+  note: string;
+  detail?: AuditDetail;
+}
+
+export interface SourceTrail {
+  /** id źródła albo '(run)' dla kroków całego przebiegu */
+  id: string;
+  steps: AuditStep[];
+  /** ile kroków ucięto po przekroczeniu limitu */
+  truncated?: number;
+}
+
+export interface RunTrail {
+  /** startedAt przebiegu — klucz wspólny z runs.json */
+  run: string;
+  day: string;
+  sources: SourceTrail[];
+}
+
+/** Kroki spoza pojedynczego źródła: scalanie, redakcja, publikacja. */
+export const RUN_SCOPE = '(run)';

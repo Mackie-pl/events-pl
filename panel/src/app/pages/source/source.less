@@ -153,6 +153,59 @@
   }
 }
 
+/* Ślad decyzyjny: gęsta oś czasu — ma się skanować wzrokiem, nie czytać akapitami. */
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-left: 1px solid var(--tui-border-normal);
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 1.4rem 3.2rem 1fr;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.3rem 0 0.3rem 0.7rem;
+  font-size: 0.85rem;
+
+  tui-icon {
+    font-size: 0.95rem;
+    color: var(--tui-text-tertiary);
+  }
+
+  .at {
+    color: var(--tui-text-tertiary);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
+  .detail {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-left: 0.4rem;
+
+    code {
+      color: var(--tui-text-tertiary);
+      font-size: 0.78rem;
+    }
+  }
+
+  /* wydźwięk decyzji: co kosztowało, co oszczędziło, co zgubiliśmy po drodze */
+  &[data-tone='spend'] tui-icon {
+    color: var(--tui-status-warning);
+  }
+
+  &[data-tone='save'] tui-icon {
+    color: var(--tui-status-positive);
+  }
+
+  &[data-tone='loss'] tui-icon {
+    color: var(--tui-status-negative);
+  }
+}
+
 .event {
   padding: 0.7rem 0.9rem;
   border: 1px solid var(--tui-border-normal);

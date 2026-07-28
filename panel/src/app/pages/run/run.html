@@ -46,6 +46,20 @@
     />
   </div>
 
+  @if (runSteps().length) {
+    <section class="run-trail">
+      <h2>Run-level decisions</h2>
+      <ol class="steps">
+        @for (st of runSteps(); track $index) {
+          <li class="step">
+            <span class="at">{{ ms(st.ms) }}</span>
+            <span class="note">{{ st.note }}</span>
+          </li>
+        }
+      </ol>
+    </section>
+  }
+
   <div class="table-wrap">
     <table tuiTable class="sources-table">
       <thead tuiThead>

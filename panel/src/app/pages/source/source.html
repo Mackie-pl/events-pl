@@ -145,6 +145,43 @@
         </section>
       }
 
+      <section class="trail">
+        <h2>
+          Decision trail
+          @if (trail()?.truncated; as cut) {
+            <span class="warn hint">{{ cut }} steps dropped — per-source cap hit</span>
+          }
+        </h2>
+
+        @if (trailLoading()) {
+          <tui-loader size="s" />
+        } @else if (trail(); as t) {
+          <ol class="steps">
+            @for (st of t.steps; track $index) {
+              <li class="step" [attr.data-tone]="stepMeta[st.step].tone">
+                <tui-icon [icon]="stepMeta[st.step].icon" />
+                <span class="at">{{ ms(st.ms) }}</span>
+                <div class="body">
+                  <span class="note">{{ st.note }}</span>
+                  @if (detailPairs(st).length) {
+                    <span class="detail">
+                      @for (d of detailPairs(st); track d.k) {
+                        <code>{{ d.k }}={{ d.v }}</code>
+                      }
+                    </span>
+                  }
+                </div>
+              </li>
+            }
+          </ol>
+        } @else {
+          <p class="muted">
+            No trail for this run — audit.json keeps 7 days, and runs from before it existed have
+            none.
+          </p>
+        }
+      </section>
+
       <section class="events">
         <h2>
           Event results ({{ produced().length }})

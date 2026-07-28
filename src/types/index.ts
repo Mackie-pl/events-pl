@@ -3,6 +3,7 @@
  * zmiany list importowanych symboli w ośmiu modułach — zmienia się wyłącznie ścieżka.
  * Nowych barreli nie dodajemy: robią cykle i ukrywają rozmiar plików.
  */
+export type * from "./audit.js";
 export type * from "./cost.js";
 export type * from "./discover-run.js";
 export type * from "./event.js";

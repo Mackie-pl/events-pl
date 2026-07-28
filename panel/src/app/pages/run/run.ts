@@ -14,6 +14,7 @@ import {
   fmtTokens,
   fmtUsd,
 } from '../../format';
+import { RUN_SCOPE } from '../../types';
 import type { SourceRun, SourceStatus } from '../../types';
 
 type SortKey = 'name' | 'town' | 'status' | 'events' | 'chars' | 'costUsd' | 'ms' | 'followups';
@@ -52,6 +53,16 @@ export class RunPage {
   protected readonly statuses = ALL_STATUSES;
 
   protected readonly run = computed(() => this.data.runByStartedAt(this.runId()));
+
+  constructor() {
+    // decyzje spoza pojedynczego źródła (scalanie, redakcja, publikacja) siedzą w audit.json
+    this.data.requestAudit();
+  }
+
+  /** Kroki zakresu przebiegu — nie należą do żadnego źródła, więc nie ma ich na stronie źródła. */
+  protected readonly runSteps = computed(
+    () => this.data.trailFor(this.runId(), RUN_SCOPE)?.steps ?? [],
+  );
 
   /** Pre-filled from the ?status= query param; user clicks take over afterwards. */
   protected readonly statusFilter = linkedSignal<SourceStatus | 'all'>(() => {

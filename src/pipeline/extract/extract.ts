@@ -1,5 +1,6 @@
 /** Wywołania modelu wyciągające wydarzenia z tekstu strony albo z plakatu. */
 import { MODEL_EXTRACT, chat, imagePart } from "../../adapters/openrouter.js";
+import { audit } from "../../shared/audit.js";
 import type { EventItem, ExtractionResult } from "../../types/index.js";
 import { POSTER_SYSTEM, extractionSystem } from "../prompts.js";
 
@@ -30,6 +31,12 @@ function keepDated(events: EventItem[]): EventItem[] {
   if (!Array.isArray(events)) return [];
   const kept = events.filter((e) => typeof e?.date_start === "string" && ISO_DATE.test(e.date_start));
   droppedNoDate += events.length - kept.length;
+  // ślad dostaje TYTUŁ, nie tylko licznik: „model znowu wrzucił zoo" widać dopiero po nazwie
+  for (const e of events) {
+    if (kept.includes(e)) continue;
+    audit("event.dropped", `„${e?.title ?? "(bez tytułu)"}" — brak daty startu, to atrakcja stała`,
+      { title: e?.title ?? null, date: (e as { date_start?: unknown })?.date_start as string ?? null });
+  }
   return kept;
 }
 
@@ -46,6 +53,7 @@ export function parseModelJson(s: string): ExtractionResult {
 }
 
 export async function extractEvents(text: string, sourceUrl: string): Promise<ExtractionResult> {
+  const sent = Math.min(text.length, MAX_INPUT_CHARS);
   const out = await chat({
     model: MODEL_EXTRACT,
     task: "extract",
@@ -53,7 +61,12 @@ export async function extractEvents(text: string, sourceUrl: string): Promise<Ex
     user: `ŹRÓDŁO: ${sourceUrl}\n\n${text.slice(0, MAX_INPUT_CHARS)}`,
     maxTokens: 4000,
   });
-  return parseModelJson(out);
+  const result = parseModelJson(out);
+  audit("llm", text.length > MAX_INPUT_CHARS
+    ? `ekstrakcja z ${sent} znaków (treść ucięta z ${text.length}) → ${result.events.length} wydarzeń`
+    : `ekstrakcja z ${sent} znaków → ${result.events.length} wydarzeń`,
+  { model: MODEL_EXTRACT, task: "extract", chars: sent, events: result.events.length, url: sourceUrl });
+  return result;
 }
 
 export async function extractPoster(
@@ -67,5 +80,8 @@ export async function extractPoster(
     user: [imagePart(img.data, img.mediaType), { type: "text", text: `ŹRÓDŁO: ${sourceUrl}` }],
     maxTokens: 2000,
   });
-  return parseModelJson(out);
+  const result = parseModelJson(out);
+  audit("llm", `odczyt plakatu (${img.mediaType}) → ${result.events.length} wydarzeń`,
+    { model: MODEL_EXTRACT, task: "poster", events: result.events.length, url: sourceUrl });
+  return result;
 }

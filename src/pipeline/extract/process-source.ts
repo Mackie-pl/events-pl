@@ -15,6 +15,7 @@ import {
   type Fetched, type FetchedImage, fetchImageB64, fetchHeadless, fetchPlain, validators,
 } from "../../adapters/page-fetch.js";
 import { archiveRaw, beginSource, sourcePaths } from "../../adapters/supabase-archive.js";
+import { audit } from "../../shared/audit.js";
 import { describeError } from "../../shared/errors.js";
 import { sha256 } from "../../shared/hash.js";
 import type {
@@ -60,8 +61,10 @@ async function fetchSource(
     try {
       const f = await fetchHeadless(url);
       run.note = `HTTP ${hs} → headless fallback ok`;
+      audit("fetch.fallback", `HTTP ${hs} wygląda na anty-bota — druga próba przez przeglądarkę: udana`);
       return f;
     } catch {
+      audit("fetch.fallback", `HTTP ${hs} — próba przez przeglądarkę też nieudana`);
       throw e; // brak playwrighta albo blokada również dla przeglądarki — raportuj pierwotny błąd
     }
   }
@@ -88,13 +91,23 @@ async function processFollowup(
     if (isImg) {
       const got = await fetchImageB64(url, validators(cached));
       if (got === null) { fr.outcome = "error"; fr.err = "pobranie obrazu nieudane"; return fr; }
-      if (got.notModified) { fr.outcome = "unchanged"; fr.events = cached?.events.length ?? 0; return fr; }
+      if (got.notModified) {
+        fr.outcome = "unchanged";
+        fr.events = cached?.events.length ?? 0;
+        audit("followup", `plakat bez zmian (304) — ${fr.events} wydarzeń z cache`, { url });
+        return fr;
+      }
       img = got;
       content = got.data;
       v = { ...(got.etag ? { etag: got.etag } : {}), ...(got.lastModified ? { lastModified: got.lastModified } : {}) };
     } else {
       const sub = await fetchPlain(url, validators(cached));
-      if (sub.kind === "not-modified") { fr.outcome = "unchanged"; fr.events = cached?.events.length ?? 0; return fr; }
+      if (sub.kind === "not-modified") {
+        fr.outcome = "unchanged";
+        fr.events = cached?.events.length ?? 0;
+        audit("followup", `podstrona bez zmian (304) — ${fr.events} wydarzeń z cache`, { url });
+        return fr;
+      }
       content = sub.text;
       v = { ...(sub.etag ? { etag: sub.etag } : {}), ...(sub.lastModified ? { lastModified: sub.lastModified } : {}) };
       await archiveRaw(`${src.id}__followup`, url, sub.text, sub.kind);
@@ -106,6 +119,7 @@ async function processFollowup(
       cache[url] = { ...cached, ...v, at: new Date().toISOString() };
       fr.outcome = "unchanged";
       fr.events = cached.events.length;
+      audit("followup", `ten sam hash treści — ${fr.events} wydarzeń z cache, bez modelu`, { url });
       return fr;
     }
 
@@ -115,12 +129,14 @@ async function processFollowup(
 
     cache[url] = { hash, events: added, at: new Date().toISOString(), ...v };
     fr.events = added.length;
+    audit("followup", `${fr.kind === "poster" ? "plakat" : "podstrona"} → ${added.length} wydarzeń`, { url });
     return fr;
   } catch (e) {
     const err = describeError(e);
     errors.push({ id: src.id, followup: url, err });
     fr.outcome = "error";
     fr.err = err;
+    audit("followup", `nieudany: ${err}`, { url });
     return fr;
   }
 }
@@ -169,9 +185,14 @@ export async function processSource(
     run.err = err;
     const hs = (e as { httpStatus?: number }).httpStatus;
     if (typeof hs === "number") run.httpStatus = hs;
+    audit("fetch", `pobranie nieudane: ${err}`, { url, strategy: src.fetch, httpStatus: hs });
+    audit("done", "źródło bez wydarzeń — błąd pobrania");
     return finalize([]);
   }
   run.httpStatus = fetched.httpStatus;
+  audit("fetch", `pobrane strategią „${src.fetch}" — HTTP ${fetched.httpStatus ?? "—"}`, {
+    url, strategy: src.fetch, httpStatus: fetched.httpStatus,
+  });
 
   // --- strona źródła: 304 albo ten sam hash => wydarzenia z cache, bez wywołania LLM ---
   let pageEvents: EventItem[];
@@ -182,19 +203,31 @@ export async function processSource(
     run.kind = "html";
     pageEvents = cached.events;
     followupUrls = state.followupsBySource?.[src.id] ?? [];
+    audit("content", "HTTP 304 — serwer potwierdził brak zmian, treści w ogóle nie pobieraliśmy");
+    audit("cache.hit", `${pageEvents.length} wydarzeń z cache (ekstrakcja z ${cached.at.slice(0, 10)})`,
+      { events: pageEvents.length, since: cached.at });
     // 304 = brak treści do przeszukania — linki do wydarzeń FB wracają ze stanu
     if (bdEnabled()) for (const u of state.fbUrlsBySource?.[src.id] ?? []) fbEventUrls.add(u);
   } else {
     run.kind = fetched.kind === "pdf" ? "pdf" : "html";
     run.chars = fetched.text.length;
     await archiveRaw(src.id, url, fetched.text, fetched.kind);
-    if (!fetched.text.trim()) { run.status = "empty"; return finalize([]); }
+    if (!fetched.text.trim()) {
+      run.status = "empty";
+      audit("content", "pobrana treść jest pusta — nie ma czego dawać modelowi");
+      audit("done", "źródło bez wydarzeń — pusta treść");
+      return finalize([]);
+    }
 
     // linki facebook.com/events/… w treści — rozwiązywane zbiorczo na końcu przebiegu
     if (bdEnabled()) {
       const found = harvestEventUrls(fetched.text);
       (state.fbUrlsBySource ??= {})[src.id] = found;
       for (const u of found) fbEventUrls.add(u);
+      if (found.length) {
+        audit("fb.harvest", `${found.length} linków do wydarzeń FB — do zbiorczego rozwiązania`,
+          { urls: found.length });
+      }
     }
 
     const hash = sha256(fetched.text);
@@ -209,13 +242,27 @@ export async function processSource(
       run.changed = false;
       pageEvents = cached.events;
       followupUrls = state.followupsBySource?.[src.id] ?? [];
+      audit("content", `${fetched.text.length} znaków, ten sam hash co poprzednio — bez wywołania modelu`,
+        { chars: fetched.text.length, hash: hash.slice(0, 12) });
+      audit("cache.hit", `${pageEvents.length} wydarzeń z cache (ekstrakcja z ${cached.at.slice(0, 10)})`,
+        { events: pageEvents.length, since: cached.at });
     } else {
       run.changed = true;
+      audit("content", `${fetched.text.length} znaków, hash inny niż poprzednio — idzie do modelu`,
+        { chars: fetched.text.length, hash: hash.slice(0, 12), was: cached?.hash.slice(0, 12) ?? null });
       const result = await extractEvents(fetched.text, url);
       pageEvents = [...(result.events ?? [])];
       cache[src.id] = { hash, events: pageEvents, at: new Date().toISOString(), ...v };
       state.hashes[src.id] = hash; // legacy, dla zgodności ze starym state.json
-      followupUrls = (result.followups ?? []).slice(0, MAX_FOLLOWUPS_PER_SOURCE).map((f) => f.url);
+      const proposed = (result.followups ?? []).map((f) => f.url);
+      followupUrls = proposed.slice(0, MAX_FOLLOWUPS_PER_SOURCE);
+      if (proposed.length) {
+        // ucięcie ponad limit było dotąd niewidoczne: raport pokazywał tylko to, co pobrano
+        audit("followup.proposed", proposed.length > followupUrls.length
+          ? `model wskazał ${proposed.length} odnośników — bierzemy ${followupUrls.length}, limit na źródło`
+          : `model wskazał ${followupUrls.length} odnośników do dociągnięcia`,
+        { proposed: proposed.length, taken: followupUrls.length });
+      }
       (state.followupsBySource ??= {})[src.id] = followupUrls;
     }
   }
@@ -235,6 +282,9 @@ export async function processSource(
     if (fr.outcome !== "error") events.push(...followupEvents(fuUrl, state));
   }
 
+  // krok na MIEJSCE, nie na wydarzenie: dziesięć wydarzeń w tej samej sali to jedno
+  // pytanie do geokodera i jedna informacja dla czytającego ślad
+  const geoSeen = new Set<string>();
   for (const ev of events) {
     ev.source_id = src.id;
     ev.town ??= src.town;
@@ -243,6 +293,12 @@ export async function processSource(
       const g = await geocode(ev.venue, ev.town ?? "", state.geo);
       ev.geo = g;
       if (g) run.geo.hits++; else run.geo.misses++;
+      const key = `${ev.venue}|${ev.town ?? ""}`;
+      if (!geoSeen.has(key)) {
+        geoSeen.add(key);
+        audit("geo", g ? `„${ev.venue}" → ${g.lat}, ${g.lon}` : `„${ev.venue}" — geokoder nie zna tego adresu`,
+          { venue: ev.venue, town: ev.town, hit: g !== null });
+      }
     }
   }
 
@@ -255,5 +311,7 @@ export async function processSource(
     run.status = events.length > 0 ? "ok" : "empty";
     if (!run.changed) run.cached = pageEvents.length;
   }
+  audit("done", `status „${run.status}" — ${events.length} wydarzeń idzie do scalania`,
+    { status: run.status, events: events.length, ms: Math.round(performance.now() - t0) });
   return finalize(events);
 }

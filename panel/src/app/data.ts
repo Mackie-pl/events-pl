@@ -1,7 +1,15 @@
 import { httpResource } from '@angular/common/http';
-import { Injectable, computed } from '@angular/core';
+import { Injectable, computed, signal } from '@angular/core';
 
-import type { CostLedger, DiscoverRunReport, EventsFile, RunReport, SourcesFile } from './types';
+import type {
+  CostLedger,
+  DiscoverRunReport,
+  EventsFile,
+  RunReport,
+  RunTrail,
+  SourceTrail,
+  SourcesFile,
+} from './types';
 
 /** Raw GitHub serves fresh JSON (CDN cache ~5 min) with permissive CORS. */
 const RAW_BASE = 'https://raw.githubusercontent.com/Mackie-pl/events-pl/main';
@@ -53,6 +61,22 @@ export class DataService {
     defaultValue: EMPTY_LEDGER,
   });
 
+  /**
+   * Ślad decyzyjny. Największy plik w zestawie, a potrzebny tylko wtedy, gdy ktoś schodzi
+   * do konkretnego źródła — więc URL jest `undefined`, dopóki strona o niego nie poprosi.
+   * httpResource z undefined nie wysyła żądania, a przełączenie sygnału startuje pobranie.
+   */
+  private readonly auditRequested = signal(false);
+
+  readonly audit = httpResource<RunTrail[]>(
+    () => (this.auditRequested() ? `${RAW_BASE}/audit.json` : undefined),
+    { defaultValue: [] },
+  );
+
+  requestAudit(): void {
+    this.auditRequested.set(true);
+  }
+
   /** Newest first. */
   readonly runsDesc = computed(() =>
     [...this.runs.value()].sort((a, b) => b.startedAt.localeCompare(a.startedAt)),
@@ -94,11 +118,20 @@ export class DataService {
     return this.latest()?.startedAt === startedAt;
   }
 
+  /** Ślad jednego źródła w jednym przebiegu; brak = przebieg sprzed audit.json albo źródło milczało. */
+  trailFor(startedAt: string, sourceId: string): SourceTrail | undefined {
+    return this.audit
+      .value()
+      .find((t) => t.run === startedAt)
+      ?.sources.find((s) => s.id === sourceId);
+  }
+
   reloadAll(): void {
     this.runs.reload();
     this.events.reload();
     this.sources.reload();
     this.discoverRuns.reload();
     this.costs.reload();
+    this.audit.reload();
   }
 }
