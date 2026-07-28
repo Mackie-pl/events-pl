@@ -172,6 +172,16 @@
   &.noise {
     opacity: 0.6;
   }
+
+  /* scalone przez dedupe — widoczne, ale wyraźnie drugoplanowe: to nie jest wpis z events.json */
+  &.merged {
+    border-style: dashed;
+
+    .event-head strong {
+      font-weight: 400;
+      color: var(--tui-text-secondary);
+    }
+  }
 }
 
 .event-head {
