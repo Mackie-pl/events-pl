@@ -103,3 +103,34 @@
 .bold {
   font-weight: 700;
 }
+
+/* Decyzje spoza źródeł — krótka lista nad tabelą, bo dotyczą całego przebiegu. */
+.run-trail {
+  margin: 0 0 1rem;
+
+  h2 {
+    font-size: 0.95rem;
+    margin: 0 0 0.4rem;
+  }
+
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 0.7rem;
+    border-left: 1px solid var(--tui-border-normal);
+  }
+
+  .step {
+    display: flex;
+    gap: 0.6rem;
+    padding: 0.2rem 0;
+    font-size: 0.85rem;
+  }
+
+  .at {
+    color: var(--tui-text-tertiary);
+    font-variant-numeric: tabular-nums;
+    min-width: 3.5rem;
+    text-align: right;
+  }
+}

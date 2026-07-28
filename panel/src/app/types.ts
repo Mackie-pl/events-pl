@@ -3,6 +3,10 @@
  * Keep in sync when the pipeline schema changes.
  */
 
+// Ślad decyzyjny mieszka osobno (ten plik dobił do progu 350 linii), ale wchodzi tu
+// z powrotem — reszta panelu importuje typy z jednego miejsca.
+export * from './types-audit';
+
 export type FetchStrategy =
   'plain' | 'headless' | 'pdf' | 'api' | 'fb' | 'fb_group' | 'fb_event' | 'rss';
 

@@ -14,8 +14,8 @@ miasto + promień                            sources.json
     martwy URL → Brave + HAIKU → naprawa     → geocode (Nominatim, darmowe, cache)
     (stary adres → previous_urls) albo        → dedupe (heurystyka + LLM)
     dead:true (daily pomija)                  → events.json → index.html
-  → discover-runs.json (observability)   src/actions/daily.ts → runs.json (observability)
-src/actions/discover.ts  ·  --why <id> = skąd to źródło
+  → discover-runs.json (observability)   src/actions/daily.ts → runs.json + audit.json
+src/actions/discover.ts  ·  --why <id> = skąd to źródło      (metryki + ślad decyzyjny)
 ```
 
 ## Pliki
@@ -28,15 +28,16 @@ src/actions/discover.ts  ·  --why <id> = skąd to źródło
 | `src/pipeline/` | logika dziedzinowa: `discover/` (discovery gmin, walidacja propozycji, `--why`), `verify/` (sonda + naprawa URL-i), `extract/` (ekstrakcja, followupy, wydarzenia FB), `digest/`, `dedupe`, `pii`, `facebook`, `prompts` |
 | `src/reporting/` | agregaty, koszty, podsumowania Actions, redakcja PII, polityki retencji raportów |
 | `src/storage/` | **port składowania** — `DocStore`/`CollectionStore` + implementacja na plikach JSON. Jedyne miejsce znające ścieżki; przejście na bazę to druga implementacja i podmiana wiązań w `storage/index.ts` |
-| `src/shared/` | ścieżki, hash, tekst, daty, URL-e, formatowanie błędów |
+| `src/shared/` | ścieżki, hash, tekst, daty, URL-e, formatowanie błędów + `audit.ts` — zbieracz śladu decyzyjnego (stan modułowy jak liczniki zużycia; w shared/, bo emitują do niego wszystkie warstwy) |
 | `src/types/` | typy podzielone po dziedzinach + jedyny barrel w repo (`types/index.ts`) |
-| `test/` | testy `node:test` (111 przypadków): pii, url/slug/daty, dedupe (+ raport scalania), facebook, digest, koszty, retencja, podsumowania, walidacja propozycji |
+| `test/` | testy `node:test` (121 przypadków): pii, url/slug/daty, dedupe (+ raport scalania), ślad decyzyjny, facebook, digest, koszty, retencja, podsumowania, walidacja propozycji |
 | `discover-runs.json` | observability etapu 1: każde zapytanie search + wyniki, **każda propozycja modelu wraz z decyzją** (także odrzucenia), geo (Overpass), tokeny/koszt LLM per gmina / źródło / typ zadania (discovery vs weryfikacja); ostatnie 24 przebiegi (szczegóły dla 4 najnowszych) |
 | `runs.json` | observability etapu 2: przebieg źródło po źródle (status, HTTP, followupy, tokeny/koszt per zadanie, rekordy Bright Data, ścieżki archiwum) oraz **`produced` — które konkretnie wydarzenia dało źródło w tym przebiegu**, wraz z przegranymi dedupe (`mergedInto`); **ostatnie 7 dni** (min. 2, maks. 30 przebiegów) |
+| `audit.json` | **ślad decyzyjny** etapu 2: krok po kroku, źródło po źródle — czemu poszło do modelu albo z cache, co ucięto na limicie followupów, które wydarzenie odrzucono i dlaczego, co przegrało scalanie. Zamknięty słownik kroków (`src/types/audit.ts`), notka po polsku + detale. Ta sama retencja co `runs.json` (7 dni), ~46 kB na przebieg. Panel pobiera go **dopiero na stronie źródła** — nie przy wejściu |
 | `costs.json` | księga wydatków obu etapów: linia na (przebieg × kategoria) z wolumenem, stawką i najdroższymi pozycjami; 90 dni. Zasila zakładkę **Money** |
 | `eslint.shared.js` | wspólne progi rozmiaru dla potoku i panelu (max 350 linii kodu na plik, 120 znaków na linię) — pilnowane przez `ci.yml` |
 | `template.html` | frontend (wiek dziecka, tagi zagnieżdżone, weekend, mapa OSM); `reporting/render-index.ts` wstrzykuje JSON |
-| `panel/` | panel observability (Angular 22 + Taiga UI): **Day** (przegląd dnia → source runs → eventy + iframe podglądu), **Discovery** (proweniencja rejestru → przebiegi discover) i **Money** (wydatki dzień po dniu wg kategorii); deploy na GH Pages pod `/panel/` przez `deploy-pages.yml` (Settings → Pages → Source: GitHub Actions) |
+| `panel/` | panel observability (Angular 22 + Taiga UI): **Day** (przegląd dnia → source runs → eventy + ślad decyzyjny + iframe podglądu), **Discovery** (proweniencja rejestru → przebiegi discover) i **Money** (wydatki dzień po dniu wg kategorii); deploy na GH Pages pod `/panel/` przez `deploy-pages.yml` (Settings → Pages → Source: GitHub Actions) |
 
 ## Setup
 

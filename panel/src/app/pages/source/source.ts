@@ -7,9 +7,30 @@ import { TuiBadge, TuiChip } from '@taiga-ui/kit';
 import { ArchiveService } from '../../archive';
 import { DataService } from '../../data';
 import { STATUS_META, fmtDateTime, fmtMs, fmtNum, fmtTokens, fmtUsd } from '../../format';
-import type { EventItem, EventRef } from '../../types';
+import type { AuditKind, AuditStep, EventItem, EventRef } from '../../types';
 
 const PREVIEW_KEY = 'events-pl-panel:preview';
+
+/**
+ * Ikona i wydźwięk kroku śladu. Wydźwięk (nie kolor) — chodzi o „czy to była decyzja
+ * kosztowna / oszczędna / stratna", a nie o ozdobę: po tym skanuje się timeline wzrokiem.
+ */
+const STEP_META: Record<AuditKind, { icon: string; tone: 'plain' | 'spend' | 'save' | 'loss' }> = {
+  skip: { icon: '@tui.circle-slash', tone: 'plain' },
+  fetch: { icon: '@tui.download', tone: 'plain' },
+  'fetch.fallback': { icon: '@tui.refresh-cw', tone: 'spend' },
+  content: { icon: '@tui.file-diff', tone: 'plain' },
+  'cache.hit': { icon: '@tui.database', tone: 'save' },
+  llm: { icon: '@tui.sparkles', tone: 'spend' },
+  'event.dropped': { icon: '@tui.trash-2', tone: 'loss' },
+  'followup.proposed': { icon: '@tui.list-plus', tone: 'plain' },
+  followup: { icon: '@tui.corner-down-right', tone: 'plain' },
+  'fb.harvest': { icon: '@tui.link', tone: 'plain' },
+  geo: { icon: '@tui.map-pin', tone: 'plain' },
+  'dedupe.dropped': { icon: '@tui.merge', tone: 'loss' },
+  pii: { icon: '@tui.shield', tone: 'plain' },
+  done: { icon: '@tui.flag', tone: 'plain' },
+};
 
 @Component({
   selector: 'app-source',
@@ -88,6 +109,26 @@ export class SourcePage {
   });
 
   protected readonly showRawJson = signal(false);
+
+  // --- ślad decyzyjny (audit.json) ---
+
+  constructor() {
+    // pobranie startuje dopiero stąd: audit.json jest duży, a potrzebny wyłącznie tutaj
+    this.data.requestAudit();
+  }
+
+  protected readonly trail = computed(() => this.data.trailFor(this.runId(), this.sourceId()));
+
+  protected readonly trailLoading = computed(() => this.data.audit.isLoading());
+
+  protected readonly stepMeta = STEP_META;
+
+  /** Detale jako pary do wyświetlenia — pomijamy puste, żeby nie robić szumu z null-i. */
+  protected detailPairs(step: AuditStep): { k: string; v: string }[] {
+    return Object.entries(step.detail ?? {})
+      .filter(([, v]) => v !== null && v !== undefined && v !== '')
+      .map(([k, v]) => ({ k, v: String(v) }));
+  }
 
   /** Ścieżki w prywatnym archiwum; treść pobieralna tylko przez lokalny most. */
   protected readonly archivePaths = computed(() => this.sourceRun()?.archive ?? []);

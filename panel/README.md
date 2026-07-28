@@ -12,13 +12,18 @@ cache) — no backend, hostable on any static host.
 | route                          | view                                                                                             |
 | ------------------------------ | ------------------------------------------------------------------------------------------------ |
 | `/`                            | day overview: latest run stats, status breakdown, pipeline errors, run history (~2 days kept)     |
-| `/run/:startedAt`              | all source runs of one pipeline run: sortable/filterable table with full per-source metrics       |
-| `/run/:startedAt/source/:id`   | one source: fetch/LLM/geo details, followups, extracted events + live iframe preview on the right |
+| `/run/:startedAt`              | all source runs of one pipeline run: sortable/filterable table, run-level decisions on top        |
+| `/run/:startedAt/source/:id`   | one source: fetch/LLM/geo details, followups, **decision trail**, events + live iframe preview     |
 
-Notes: hash-based routing (`/#/run/...`) so deep links work on GitHub Pages; per-run events
-aren't stored by the pipeline, so the source page always shows events from the latest
-`events.json` (flagged in the UI when viewing an older run); many sites send
+Notes: hash-based routing (`/#/run/...`) so deep links work on GitHub Pages; many sites send
 `X-Frame-Options` — the preview pane then stays blank, use the "Open" button.
+
+The source page reads events from `runs.json` (`SourceRun.produced`), so an older run shows what
+it actually produced, including records that later lost dedupe (`merged → <source>`). Runs recorded
+before that field existed fall back to filtering the latest `events.json`, flagged in the UI.
+
+The decision trail comes from `audit.json`, which is **only fetched once you open a source page** —
+it is the largest file in the set and useless on the overview.
 
 ## Commands
 

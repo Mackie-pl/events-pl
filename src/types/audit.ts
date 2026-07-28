@@ -1,0 +1,65 @@
+/** Ślad decyzyjny przebiegu (audit.json) — krok po kroku, źródło po źródle. */
+
+/**
+ * Zamknięty słownik kroków. Zamknięty celowo: panel dobiera do rodzaju ikonę i kolor,
+ * a dopuszczenie wolnego tekstu zamieniłoby ślad w logi — czyli w to, czym ten plik
+ * ma NIE być. Nowy rodzaj decyzji = nowa pozycja tutaj, świadomie.
+ */
+export type AuditKind =
+  /** źródło w ogóle nietknięte (fanpage FB / URL oznaczony jako martwy) */
+  | "skip"
+  /** pobranie strony źródła */
+  | "fetch"
+  /** 403/429 przy zwykłym fetchu → druga próba przez przeglądarkę */
+  | "fetch.fallback"
+  /** werdykt porównania treści: 304 / ten sam hash / zmiana */
+  | "content"
+  /** wydarzenia odtworzone z cache, bez wywołania modelu */
+  | "cache.hit"
+  /** wywołanie modelu (ekstrakcja tekstu albo plakat) */
+  | "llm"
+  /** wydarzenie odrzucone przez potok (dziś: brak daty startu) */
+  | "event.dropped"
+  /** model wskazał podstrony / PDF-y / plakaty do dociągnięcia */
+  | "followup.proposed"
+  /** wynik jednego followupa */
+  | "followup"
+  /** linki facebook.com/events/… wyłuskane z treści */
+  | "fb.harvest"
+  /** geokodowanie miejsca (Nominatim + cache) */
+  | "geo"
+  /** rekord przegrał scalanie duplikatów */
+  | "dedupe.dropped"
+  /** redakcja danych kontaktowych przed publikacją */
+  | "pii"
+  /** domknięcie: status źródła i tyle wydarzeń poszło dalej */
+  | "done";
+
+/** Wartości płaskie — ślad ma być czytelny w surowym JSON-ie, nie być dumpem stanu. */
+export type AuditDetail = Record<string, string | number | boolean | null | undefined>;
+
+export interface AuditStep {
+  /** ms od startu przebiegu — krócej niż ISO i od razu mówi „kiedy w przebiegu" */
+  ms: number;
+  step: AuditKind;
+  /** jedno zdanie po polsku: DECYZJA, nie stan. To jest właściwa treść śladu. */
+  note: string;
+  /** dodatki, które panel formatuje albo linkuje (url, koszt, liczby) */
+  detail?: AuditDetail;
+}
+
+export interface SourceTrail {
+  /** id źródła albo RUN_SCOPE dla kroków całego przebiegu (dedupe, redakcja, publikacja) */
+  id: string;
+  steps: AuditStep[];
+  /** ile kroków ucięto po przekroczeniu limitu; brak = ślad kompletny */
+  truncated?: number;
+}
+
+export interface RunTrail {
+  /** startedAt przebiegu — ten sam klucz, co w runs.json i costs.json */
+  run: string;
+  /** YYYY-MM-DD */
+  day: string;
+  sources: SourceTrail[];
+}

@@ -21,6 +21,8 @@ export const EVENTS_PATH = join(ROOT, "events.json");
 export const STATE_PATH = join(ROOT, "state.json");
 /** Raporty przebiegów daily (7 dni). */
 export const RUNS_PATH = join(ROOT, "runs.json");
+/** Ślad decyzyjny przebiegów daily (7 dni, równolegle do runs.json). */
+export const AUDIT_PATH = join(ROOT, "audit.json");
 /** Raporty przebiegów discover (24 sztuki). */
 export const DISCOVER_RUNS_PATH = join(ROOT, "discover-runs.json");
 /** Księga kosztów (90 dni) — łączy etap 1 i 2, bo rachunek przychodzi jeden. */
