@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-27T07:05:33.762Z",
+ "updated": "2026-07-28T06:28:46.137Z",
  "rates": {
   "bdPerRecord": 0.0015,
   "bravePerQuery": 0,
@@ -206,6 +206,79 @@
    "usd": 0,
    "estimated": true,
    "units": 1.59,
+   "unit": "MB"
+  },
+  {
+   "day": "2026-07-28",
+   "at": "2026-07-28T06:28:46.124Z",
+   "stage": "daily",
+   "run": "2026-07-28T06:21:40.490Z",
+   "category": "llm-extract",
+   "usd": 0.462362,
+   "estimated": false,
+   "units": 24,
+   "unit": "calls",
+   "tokensIn": 205717,
+   "tokensOut": 51329,
+   "top": [
+    {
+     "id": "poznan-kultura-rss",
+     "usd": 0.061792,
+     "units": 3
+    },
+    {
+     "id": "czerwonak-city",
+     "usd": 0.059421,
+     "units": 2
+    },
+    {
+     "id": "komorniki-gok",
+     "usd": 0.057125,
+     "units": 3
+    },
+    {
+     "id": "komorniki-city",
+     "usd": 0.053018,
+     "units": 4
+    },
+    {
+     "id": "tarnowo-gok",
+     "usd": 0.038276,
+     "units": 2
+    }
+   ]
+  },
+  {
+   "day": "2026-07-28",
+   "at": "2026-07-28T06:28:46.124Z",
+   "stage": "daily",
+   "run": "2026-07-28T06:21:40.490Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 69,
+   "unit": "fetches"
+  },
+  {
+   "day": "2026-07-28",
+   "at": "2026-07-28T06:28:46.124Z",
+   "stage": "daily",
+   "run": "2026-07-28T06:21:40.490Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 3,
+   "unit": "lookups"
+  },
+  {
+   "day": "2026-07-28",
+   "at": "2026-07-28T06:28:46.124Z",
+   "stage": "daily",
+   "run": "2026-07-28T06:21:40.490Z",
+   "category": "storage",
+   "usd": 0,
+   "estimated": true,
+   "units": 1.518,
    "unit": "MB"
   }
  ]
