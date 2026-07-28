@@ -23,21 +23,21 @@ src/actions/discover.ts  ·  --why <id> = skąd to źródło      (metryki + śl
 | plik | rola |
 |---|---|
 | `sources.json` | rejestr źródeł Poznań +15 km (etap 1 wykonany ręcznie 2026-07-20; 46 źródeł, 13 gmin) + `provenance` przy każdym źródle dodanym automatycznie |
-| `src/actions/` | wejścia potoku — `daily`, `discover`, `digest`, `backfill-costs`, `archive-server`. Same main() + orkiestracja, zero logiki dziedzinowej |
+| `src/actions/` | wejścia potoku — `daily`, `discover`, `digest`, `backfill-costs`, `probe` (sprawdzenie jednego źródła na żądanie), `panel-server` (lokalny most panelu). Same main() + orkiestracja, zero logiki dziedzinowej |
 | `src/adapters/` | wyjścia do świata: `openrouter`, `brave`, `overpass`, `nominatim`, `page-fetch`, `brightdata`, `supabase-archive`, `telegram`, `resend`, `http` |
 | `src/pipeline/` | logika dziedzinowa: `discover/` (discovery gmin, walidacja propozycji, `--why`), `verify/` (sonda + naprawa URL-i), `extract/` (ekstrakcja, followupy, wydarzenia FB), `digest/`, `dedupe`, `pii`, `facebook`, `prompts` |
 | `src/reporting/` | agregaty, koszty, podsumowania Actions, redakcja PII, polityki retencji raportów |
 | `src/storage/` | **port składowania** — `DocStore`/`CollectionStore` + implementacja na plikach JSON. Jedyne miejsce znające ścieżki; przejście na bazę to druga implementacja i podmiana wiązań w `storage/index.ts` |
 | `src/shared/` | ścieżki, hash, tekst, daty, URL-e, formatowanie błędów + `audit.ts` — zbieracz śladu decyzyjnego (stan modułowy jak liczniki zużycia; w shared/, bo emitują do niego wszystkie warstwy) |
 | `src/types/` | typy podzielone po dziedzinach + jedyny barrel w repo (`types/index.ts`) |
-| `test/` | testy `node:test` (121 przypadków): pii, url/slug/daty, dedupe (+ raport scalania), ślad decyzyjny, facebook, digest, koszty, retencja, podsumowania, walidacja propozycji |
+| `test/` | testy `node:test` (127 przypadków): pii, url/slug/daty, dedupe (+ raport scalania), ślad decyzyjny, sonda (czyszczenie cache pod `--force`, wyłącznik archiwum), facebook, digest, koszty, retencja, podsumowania, walidacja propozycji |
 | `discover-runs.json` | observability etapu 1: każde zapytanie search + wyniki, **każda propozycja modelu wraz z decyzją** (także odrzucenia), geo (Overpass), tokeny/koszt LLM per gmina / źródło / typ zadania (discovery vs weryfikacja); ostatnie 24 przebiegi (szczegóły dla 4 najnowszych) |
 | `runs.json` | observability etapu 2: przebieg źródło po źródle (status, HTTP, followupy, tokeny/koszt per zadanie, rekordy Bright Data, ścieżki archiwum) oraz **`produced` — które konkretnie wydarzenia dało źródło w tym przebiegu**, wraz z przegranymi dedupe (`mergedInto`); **ostatnie 7 dni** (min. 2, maks. 30 przebiegów) |
 | `audit.json` | **ślad decyzyjny** etapu 2: krok po kroku, źródło po źródle — czemu poszło do modelu albo z cache, co ucięto na limicie followupów, które wydarzenie odrzucono i dlaczego, co przegrało scalanie. Zamknięty słownik kroków (`src/types/audit.ts`), notka po polsku + detale. Ta sama retencja co `runs.json` (7 dni), ~46 kB na przebieg. Panel pobiera go **dopiero na stronie źródła** — nie przy wejściu |
 | `costs.json` | księga wydatków obu etapów: linia na (przebieg × kategoria) z wolumenem, stawką i najdroższymi pozycjami; 90 dni. Zasila zakładkę **Money** |
 | `eslint.shared.js` | wspólne progi rozmiaru dla potoku i panelu (max 350 linii kodu na plik, 120 znaków na linię) — pilnowane przez `ci.yml` |
 | `template.html` | frontend (wiek dziecka, tagi zagnieżdżone, weekend, mapa OSM); `reporting/render-index.ts` wstrzykuje JSON |
-| `panel/` | panel observability (Angular 22 + Taiga UI): **Day** (przegląd dnia → source runs → eventy + ślad decyzyjny + iframe podglądu), **Discovery** (proweniencja rejestru → przebiegi discover) i **Money** (wydatki dzień po dniu wg kategorii); deploy na GH Pages pod `/panel/` przez `deploy-pages.yml` (Settings → Pages → Source: GitHub Actions) |
+| `panel/` | panel observability (Angular 22 + Taiga UI): **Day** (przegląd dnia → source runs → eventy + ślad decyzyjny + iframe podglądu + **Check now**: sonda jednego źródła na żądanie, przy działającym `npm run panel-server`), **Discovery** (proweniencja rejestru → przebiegi discover) i **Money** (wydatki dzień po dniu wg kategorii); deploy na GH Pages pod `/panel/` przez `deploy-pages.yml` (Settings → Pages → Source: GitHub Actions) |
 
 ## Setup
 
@@ -349,25 +349,72 @@ a błąd archiwum nigdy nie wywraca pipeline'u (to observability, nie produkt).
 Supabase nie ma lifecycle rules — retencję (`ARCHIVE_RETENTION_DAYS`, domyślnie 90 dni)
 trzeba egzekwować cyklicznym czyszczeniem starych prefiksów; **jeszcze niezaimplementowane**.
 
-### Podgląd archiwum w panelu (tylko lokalnie)
+### Lokalny most panelu: podgląd archiwum + sonda źródeł
 
-`runs.json` niesie **ścieżki** obiektów (`SourceRun.archive`) — same ścieżki nie są wrażliwe,
-więc wdrożony panel pokazuje listę i informację, że treść jest prywatna. Do treści potrzebny
-jest lokalny most, bo klucz sekretny nie może trafić do statycznego bundla:
+Panel na GH Pages to statyczny bundle — wszystko, co potrafi zrobić sam, potrafi też każdy
+odwiedzający. Dwie rzeczy muszą więc zostać na twojej maszynie: **klucz do archiwum** i
+**uruchamianie potoku** (pobranie strony + płatne wywołanie modelu). Robi je jeden proces:
 
 ```bash
-# terminal 1 — most (klucz czytany z .env, nasłuch tylko na 127.0.0.1)
-npm run archive-server
+# terminal 1 — most (klucz z .env, nasłuch tylko na 127.0.0.1)
+npm run panel-server
 
 # terminal 2 — panel z localhosta
 cd panel && npm start
 ```
 
-Panel sam wykrywa most (`/health`) i odsłania przyciski do podglądu obiektów; bez mostu sekcja
-zostaje wyszarzona. CORS przepuszcza **wyłącznie** `localhost`/`127.0.0.1` — wdrożony panel na
-GH Pages nie dogada się z mostem nawet przy uruchomionym serwerze, więc żadna publiczna strona
-nie przeskanuje twojego localhosta. Most akceptuje tylko prefiksy `raw/`, `llm/`, `events/`
-(bez `..`), więc nie da się przez niego czytać dowolnych obiektów z projektu.
+Panel sam wykrywa most (`/health`) i odsłania przyciski; bez mostu chowa je i pokazuje
+`runs.json` jak dotąd. Archiwum jest przy tym **opcjonalne** — bez `SUPABASE_*` most i tak
+wstaje, bo sonda niczego od Supabase nie potrzebuje.
+
+**Podgląd archiwum.** `runs.json` niesie **ścieżki** obiektów (`SourceRun.archive`) — same
+ścieżki nie są wrażliwe, więc wdrożony panel pokazuje listę i informację, że treść jest prywatna.
+Most akceptuje tylko prefiksy `raw/`, `llm/`, `events/` (bez `..`), więc nie da się przez niego
+czytać dowolnych obiektów z projektu.
+
+**Bezpieczeństwo.** CORS przepuszcza **wyłącznie** `localhost`/`127.0.0.1`, a sonda dodatkowo
+sprawdza nagłówek `Origin` i przyjmuje tylko `POST`. To nie jest ta sama ochrona co CORS: CORS
+blokuje *odczyt odpowiedzi*, nie samo żądanie — bez sprawdzenia `Origin` dowolna otwarta karta
+mogłaby po cichu odpalać płatne wywołania modelu na twoim localhoście.
+
+## Sonda: sprawdź jedno źródło na żądanie
+
+Żeby zobaczyć, co potok robi z jednym adresem, nie trzeba czekać do 6:00 ani puszczać 46 źródeł.
+Ten sam `processSource`, jedno źródło, natychmiast — z panelu (**Check now** / **Force** na stronie
+źródła) albo z terminala:
+
+```bash
+npm run probe -- kornik-kok            # cache w mocy: niezmieniona strona wraca z cache, $0
+npm run probe -- kornik-kok --force    # pomiń cache: pobierz od nowa i zawołaj model (PŁATNE)
+```
+
+**Sonda niczego nie zapisuje** — ani `events.json`, ani `state.json`, ani `runs.json`/`costs.json`/
+`audit.json`. Klik w panelu nie ma prawa ruszyć plików w repo: brudziłby drzewo robocze i wchodził
+do najbliższego commita, a zapisany cache ekstrakcji zafałszowałby najbliższy przebieg crona
+(„niezmienione" mimo że nikt tej treści nie opublikował). Wynik żyje w odpowiedzi HTTP i znika
+po odświeżeniu strony.
+
+Co daje, czego nie ma widok przebiegu:
+
+| | |
+|---|---|
+| **prompty i odpowiedzi modelu wprost** | bez chodzenia do archiwum — sonda nie wysyła ich do Supabase, tylko odsyła do panelu (`suppressArchive`) |
+| **wydarzenia przed dedupe i przed redakcją PII** | widać, co źródło naprawdę dało, a nie co przetrwało resztę potoku; dane zostają na localhoście |
+| **ślad decyzyjny na żywo** | ten sam timeline co `audit.json`, tyle że z tej chwili |
+
+`--force` czyści dla tego źródła walidatory HTTP, hash i zapamiętane wydarzenia — razem z
+followupami, bo plakat z cache dałby ten sam wynik co wczoraj. Cache **geokodera** zostaje
+nietknięty: Nominatim jest darmowy, ale limitowany do 1 zapytania na sekundę, a sonda sprawdza
+ekstrakcję, nie geokodowanie.
+
+Sonda nie obsługuje fanpage'y FB (`fetch:fb`) ani pojedynczych linków do wydarzeń (`fetch:fb_event`)
+— jedno i drugie rozwiązuje zbiorcze zapytanie do Bright Data na końcu **pełnego** przebiegu.
+Źródła oznaczone `dead` sprawdza normalnie: „czy ten adres wrócił do życia" to dokładnie ten
+przypadek, dla którego sonda powstała.
+
+Most puszcza **jedną sondę naraz** (druga dostaje HTTP 409). Ślad, licznik tokenów i recorder
+wywołań LLM to stan modułowy — dwie równoległe pomieszałyby sobie kroki i koszty; przy okazji
+przytrzymany przycisk nie zamieni się w dziesięć równoległych wywołań modelu.
 
 ## Jakość: progi rozmiaru i bramka CI
 

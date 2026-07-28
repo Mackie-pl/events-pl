@@ -1,4 +1,5 @@
 import type {
+  AuditKind,
   CostCategory,
   FetchProbe,
   ProposalDecision,
@@ -64,6 +65,33 @@ export const ALL_STATUSES: readonly SourceStatus[] = [
   'skipped-dead',
   'empty',
 ];
+
+// ---------------- ślad decyzyjny ----------------
+
+/**
+ * Ikona i wydźwięk kroku śladu. Wydźwięk (nie kolor) — chodzi o „czy to była decyzja
+ * kosztowna / oszczędna / stratna", a nie o ozdobę: po tym skanuje się timeline wzrokiem.
+ *
+ * W format.ts, a nie przy stronie źródła, bo ten sam słownik renderuje dwa ślady: przebiegu
+ * z audit.json i sondy na żądanie. Kopia oznaczałaby dwa różne wyglądy tego samego kroku.
+ */
+export const STEP_META: Record<AuditKind, { icon: string; tone: 'plain' | 'spend' | 'save' | 'loss' }> =
+  {
+    skip: { icon: '@tui.circle-slash', tone: 'plain' },
+    fetch: { icon: '@tui.download', tone: 'plain' },
+    'fetch.fallback': { icon: '@tui.refresh-cw', tone: 'spend' },
+    content: { icon: '@tui.file-diff', tone: 'plain' },
+    'cache.hit': { icon: '@tui.database', tone: 'save' },
+    llm: { icon: '@tui.sparkles', tone: 'spend' },
+    'event.dropped': { icon: '@tui.trash-2', tone: 'loss' },
+    'followup.proposed': { icon: '@tui.list-plus', tone: 'plain' },
+    followup: { icon: '@tui.corner-down-right', tone: 'plain' },
+    'fb.harvest': { icon: '@tui.link', tone: 'plain' },
+    geo: { icon: '@tui.map-pin', tone: 'plain' },
+    'dedupe.dropped': { icon: '@tui.merge', tone: 'loss' },
+    pii: { icon: '@tui.shield', tone: 'plain' },
+    done: { icon: '@tui.flag', tone: 'plain' },
+  };
 
 // ---------------- discovery (stage 1) ----------------
 

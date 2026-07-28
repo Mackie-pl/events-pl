@@ -1,0 +1,173 @@
+/* Wynik sondy siedzi w ramce z akcentem: to jedyna rzecz na stronie, która NIE pochodzi
+   z repo — powstała przed chwilą i zniknie po odświeżeniu. */
+:host {
+  display: block;
+  padding: 0.9rem 1.1rem 1.1rem;
+  border: 1px solid var(--tui-border-focus);
+  border-radius: 0.9rem;
+  background: var(--tui-background-neutral-1);
+  margin-bottom: 1.25rem;
+}
+
+h3 {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin: 1rem 0 0.4rem;
+  font-size: 0.95rem;
+}
+
+h4 {
+  margin: 0.6rem 0 0.2rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--tui-text-secondary);
+}
+
+.hint {
+  font-size: 0.78rem;
+  font-weight: 400;
+}
+
+.probe-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.error-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: 0.7rem;
+  background: var(--tui-status-negative-pale);
+  color: var(--tui-status-negative);
+  margin-top: 0.75rem;
+  word-break: break-word;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr));
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+
+  .fact {
+    display: flex;
+    flex-direction: column;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.6rem;
+    background: var(--tui-background-base);
+    border: 1px solid var(--tui-border-normal);
+
+    span {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--tui-text-secondary);
+    }
+
+    strong {
+      font-size: 0.95rem;
+    }
+  }
+}
+
+.flat {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.35rem;
+    word-break: break-word;
+    font-size: 0.9rem;
+  }
+}
+
+/* rozwinięcie idzie pod wiersz, na pełną szerokość — nie doklejone w linii */
+.row {
+  .raw,
+  .call {
+    flex-basis: 100%;
+  }
+}
+
+.raw {
+  margin: 0.3rem 0 0;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.5rem;
+  background: var(--tui-background-base);
+  border: 1px solid var(--tui-border-normal);
+  overflow: auto;
+  white-space: pre-wrap;
+  font-size: 0.78rem;
+  max-height: 22rem;
+}
+
+/* Ślad decyzyjny — te same reguły co na stronie źródła; komponent ma własny scope, więc
+   dziedziczenie nie wchodzi w grę, a wspólny plik LESS dla dwóch komponentów byłby gorszy
+   od dwudziestu linii powtórzenia. */
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-left: 1px solid var(--tui-border-normal);
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 1.4rem 3.2rem 1fr;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.25rem 0 0.25rem 0.7rem;
+  font-size: 0.85rem;
+
+  tui-icon {
+    font-size: 0.95rem;
+    color: var(--tui-text-tertiary);
+  }
+
+  .at {
+    color: var(--tui-text-tertiary);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
+  .detail {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-left: 0.4rem;
+
+    code {
+      color: var(--tui-text-tertiary);
+      font-size: 0.78rem;
+    }
+  }
+
+  &[data-tone='spend'] tui-icon {
+    color: var(--tui-status-warning);
+  }
+
+  &[data-tone='save'] tui-icon {
+    color: var(--tui-status-positive);
+  }
+
+  &[data-tone='loss'] tui-icon {
+    color: var(--tui-status-negative);
+  }
+}
+
+/* .muted jest globalne (styles.less); .warn żyje przy stronach, więc powtarzamy je lokalnie */
+.warn {
+  color: var(--tui-status-warning);
+}

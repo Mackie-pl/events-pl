@@ -11,13 +11,14 @@
     "daily": "tsx --env-file-if-exists=.env src/actions/daily.ts",
     "digest": "tsx --env-file-if-exists=.env src/actions/digest.ts",
     "discover": "tsx --env-file-if-exists=.env src/actions/discover.ts",
+    "probe": "tsx --env-file-if-exists=.env src/actions/probe.ts",
     "backfill-costs": "tsx --env-file-if-exists=.env src/actions/backfill-costs.ts",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "node --import tsx --test \"test/**/*.test.ts\"",
     "build": "tsc",
-    "archive-server": "tsx --env-file-if-exists=.env src/actions/archive-server.ts"
+    "panel-server": "tsx --env-file-if-exists=.env src/actions/panel-server.ts"
   },
   "dependencies": {
     "html-to-text": "^9.0.5",
