@@ -222,7 +222,7 @@ export interface SourceRun {
   /** wydarzenia odtworzone z cache (bez wywołania LLM) */
   cached?: number;
   /** wydarzenia odrzucone z braku daty startu (atrakcje stałe) */
-  droppedNoDate?: number;
+  droppedInvalid?: number;
   /** ścieżki obiektów w prywatnym archiwum; treść dostępna tylko przez lokalny serwer */
   archive?: string[];
   /** followupy sprawdzone mimo niezmienionej strony źródła */
@@ -246,7 +246,7 @@ export interface RunTotals extends LlmUsage {
   redactedPhones?: number;
   redactedEmails?: number;
   /** wydarzenia odrzucone z braku daty startu (atrakcje stałe: zoo, place zabaw) */
-  droppedNoDate?: number;
+  droppedInvalid?: number;
 }
 
 export interface RunReport {

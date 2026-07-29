@@ -24,7 +24,7 @@ import type {
 import { fbGroupPostsToText, harvestEventUrls, isEventUrl } from "../facebook.js";
 
 import {
-  droppedNoDateStats, extractEvents, extractPoster, resetDroppedNoDate,
+  droppedInvalidStats, extractEvents, extractPoster, resetDroppedInvalid,
 } from "./extract.js";
 
 const MAX_FOLLOWUPS_PER_SOURCE = 5;
@@ -150,15 +150,15 @@ export async function processSource(
 ): Promise<{ events: EventItem[]; run: SourceRun }> {
   const t0 = performance.now();
   resetUsage();
-  resetDroppedNoDate();
+  resetDroppedInvalid();
   beginSource(src.id);
   const bdBefore = bdSnapshot();
   const url = src.url.replace("{page}", "1");
   const run = newSourceRun(src, url, "empty");
   const finalize = (events: EventItem[]): { events: EventItem[]; run: SourceRun } => {
     run.events = events.length;
-    const dropped = droppedNoDateStats();
-    if (dropped) run.droppedNoDate = dropped;
+    const dropped = droppedInvalidStats();
+    if (dropped) run.droppedInvalid = dropped;
     run.llm = snapshotUsage();
     const tasks = snapshotTasks();
     if (Object.keys(tasks).length) run.llmByTask = tasks;
@@ -290,10 +290,10 @@ export async function processSource(
     ev.town ??= src.town;
     // geocode ma własny cache po "venue|town", więc wydarzenia z cache nie kosztują zapytań
     if (ev.venue) {
-      const g = await geocode(ev.venue, ev.town ?? "", state.geo);
+      const g = await geocode(ev.venue, ev.town, state.geo);
       ev.geo = g;
       if (g) run.geo.hits++; else run.geo.misses++;
-      const key = `${ev.venue}|${ev.town ?? ""}`;
+      const key = `${ev.venue}|${ev.town}`;
       if (!geoSeen.has(key)) {
         geoSeen.add(key);
         audit("geo", g ? `„${ev.venue}" → ${g.lat}, ${g.lon}` : `„${ev.venue}" — geokoder nie zna tego adresu`,

@@ -7,6 +7,7 @@
  */
 
 import { fetchUrl } from "./http.js";
+import { audit } from "../shared/audit.js";
 import { describeError } from "../shared/errors.js";
 import type { LlmTask, LlmUsage, TaskUsage } from "../types/index.js";
 
@@ -70,6 +71,59 @@ export interface ChatOptions {
   user: UserContent;
   maxTokens?: number;
   temperature?: number;
+  /** JSON Schema wymuszony na odpowiedzi (structured outputs); brak = zwykły tekst */
+  schema?: { name: string; schema: unknown };
+}
+
+/**
+ * Structured outputs (`response_format: json_schema`) — WYŁĄCZONE domyślnie.
+ *
+ * Nie dlatego, że są gorsze: znoszą wyłuskiwanie JSON-a regexem i gwarantują kształt.
+ * Dlatego, że MODEL_EXTRACT jest podmieniany z .env, obsługa zależy od modelu I od tego,
+ * jak OpenRouter tłumaczy to na API danego dostawcy, a sprawdzenie kosztuje płatne
+ * wywołanie. Włącz świadomie: STRUCTURED_OUTPUTS=1 (najpierw `npm run check:structured`).
+ */
+const STRUCTURED = process.env["STRUCTURED_OUTPUTS"] === "1";
+
+/**
+ * Dostawcy pomijani PRZY SCHEMACIE (slugi OpenRoutera, małymi literami). Domyślnie `azure`,
+ * bo sonda z 2026-07-28 wykazała, że tamtejszy workspace odbija structured outputs mimo
+ * zadeklarowanej obsługi. Zawężenie działa tylko na ścieżce ze schematem — zwykłe wywołania
+ * dalej routują się swobodnie, żeby nie tracić dostępności tam, gdzie problemu nie ma.
+ */
+const IGNORE_PROVIDERS = (process.env["STRUCTURED_IGNORE_PROVIDERS"] ?? "azure")
+  .split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
+
+/**
+ * Model odmówił schematu — do końca procesu jedziemy bez niego. Flaga jest modułowa
+ * i JEDNOKIERUNKOWA: gdyby wracała do stanu wyjściowego, każde źródło płaciłoby własne
+ * odbicie od 400, a przy kilkudziesięciu źródłach to kilkadziesiąt zmarnowanych wywołań.
+ */
+let structuredOff = false;
+
+/**
+ * Komunikat, którym dostawca odbił schemat. Trzymamy go osobno od śladu decyzyjnego:
+ * ślad zbiera się per źródło i per przebieg, a sonda (`npm run check:structured`) działa
+ * poza przebiegiem i bez niego nie miałaby czego pokazać — czyli mówiłaby „odrzucony"
+ * i nie mówiła DLACZEGO, a to jedyna informacja, po którą się ją uruchamia.
+ */
+let structuredError: string | null = null;
+
+/**
+ * Dostawca, który obsłużył ostatnie wywołanie. Nie ozdoba: routing OpenRoutera potrafi
+ * przerzucić ten sam model między Anthropic, Azure i Bedrockiem, a różnią się one obsługą
+ * parametrów — bez tej informacji błąd jednego z nich wygląda na błąd naszego requestu.
+ */
+let lastProvider: string | null = null;
+
+export const structuredActive = (): boolean => STRUCTURED && !structuredOff;
+export const structuredRejection = (): string | null => structuredError;
+export const servingProvider = (): string | null => lastProvider;
+
+/** Tylko dla sondy i testów: pozwala spróbować innego schematu w tym samym procesie. */
+export function resetStructured(): void {
+  structuredOff = false;
+  structuredError = null;
 }
 
 /** Pełne wejście/wyjście jednego wywołania — do prywatnego archiwum (archive.ts). */
@@ -110,10 +164,101 @@ async function record(rec: LlmCallRecord): Promise<void> {
 interface ChatCompletionResponse {
   choices?: Array<{ message?: { content?: string | null } }>;
   usage?: { prompt_tokens?: number; completion_tokens?: number; cost?: number };
-  error?: { message?: string; code?: number };
+  /** kto FAKTYCZNIE obsłużył request — ten sam model bywa serwowany z kilku źródeł */
+  provider?: string;
+  error?: {
+    message?: string;
+    code?: number;
+    /**
+     * Oryginalna odpowiedź dostawcy. OpenRouter w `message` wstawia często zaślepkę
+     * („Provider returned error") i cała treść błędu — np. które pole schematu jest nie tak —
+     * siedzi wyłącznie tutaj. Bez tego debugowanie sprowadza się do zgadywania.
+     */
+    metadata?: { raw?: unknown; provider_name?: string };
+  };
+}
+
+/** Komunikat błędu wraz z tym, co powiedział sam dostawca. */
+function errorText(json: ChatCompletionResponse): string {
+  const base = json.error?.message ?? "unknown error";
+  const raw = json.error?.metadata?.raw;
+  if (raw === undefined || raw === null) return base;
+  const detail = typeof raw === "string" ? raw : JSON.stringify(raw);
+  const provider = json.error?.metadata?.provider_name;
+  return `${base}${provider ? ` [${provider}]` : ""} — ${detail.slice(0, 500)}`;
 }
 
 const NO_USAGE = { promptTokens: 0, completionTokens: 0, costUsd: 0 };
+
+function buildBody(opts: ChatOptions, withSchema: boolean): string {
+  const body: Record<string, unknown> = {
+    model: opts.model,
+    max_tokens: opts.maxTokens ?? 4000,
+    temperature: opts.temperature ?? 0.2,
+    // zwróć koszt (USD) i tokeny w polu usage
+    usage: { include: true },
+    messages: [
+      { role: "system", content: opts.system },
+      { role: "user", content: opts.user },
+    ],
+  };
+  if (withSchema && opts.schema) {
+    // strict: bez tego dostawca traktuje schemat jak podpowiedź, a nie kontrakt
+    body["response_format"] = {
+      type: "json_schema",
+      json_schema: { name: opts.schema.name, strict: true, schema: opts.schema.schema },
+    };
+    /**
+     * Ten sam model OpenRouter serwuje z kilku źródeł (Anthropic, Azure, Bedrock, Vertex)
+     * i domyślnie wybiera je po dostępności — a structured outputs obsługuje tylko część.
+     * Bez tego request wpada losowo na endpoint bez obsługi i wraca 400, co wygląda
+     * jak błąd naszego schematu i nim NIE jest.
+     *
+     * Dwa zawężenia, bo jedno nie wystarcza:
+     *   require_parameters — routing tylko do endpointów DEKLARUJĄCYCH obsługę parametrów,
+     *   ignore — bo deklaracja to nie to samo co uprawnienie. Azure zgłasza obsługę
+     *     response_format, ale odbija ją na poziomie konta („structured_outputs not supported
+     *     in your workspace"); tego OpenRouter nie widzi i sam nie odfiltruje.
+     *
+     * Lista jest w .env, bo to własność KONTA, nie modelu — u kogoś innego Azure zadziała.
+     */
+    body["provider"] = {
+      require_parameters: true,
+      ...(IGNORE_PROVIDERS.length ? { ignore: IGNORE_PROVIDERS } : {}),
+    };
+  }
+  return JSON.stringify(body);
+}
+
+/** Jedno wywołanie HTTP wraz z rozpakowaniem odpowiedzi. Rzuca z gotowym komunikatem. */
+async function callOnce(
+  apiKey: string, opts: ChatOptions, withSchema: boolean,
+): Promise<ChatCompletionResponse> {
+  const res = await fetchUrl(OPENROUTER_URL, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+      // rankingi/atrybucja OpenRouter (opcjonalne, ale mile widziane):
+      "HTTP-Referer": "https://github.com/Mackie-pl/events-pl",
+      "X-Title": "events-pl",
+    },
+    body: buildBody(opts, withSchema),
+  }, 120_000, `OpenRouter ${opts.model}`);
+
+  const raw = await res.text();
+  let json: ChatCompletionResponse;
+  try {
+    json = JSON.parse(raw) as ChatCompletionResponse;
+  } catch {
+    // np. strona błędu 502 od proxy zamiast JSON-a
+    throw new Error(`OpenRouter ${opts.model}: HTTP ${res.status}, nie-JSON: ${raw.slice(0, 200)}`);
+  }
+  if (!res.ok || json.error) {
+    throw new Error(`OpenRouter ${opts.model}: HTTP ${res.status}: ${errorText(json)}`);
+  }
+  return json;
+}
 
 export async function chat(opts: ChatOptions): Promise<string> {
   const apiKey = process.env["OPENROUTER_API_KEY"];
@@ -126,50 +271,31 @@ export async function chat(opts: ChatOptions): Promise<string> {
   const failed = async (err: string): Promise<void> =>
     record({ ...base, response: "", usage: NO_USAGE, ms: ms(), ok: false, err });
 
-  let res: Response;
-  try {
-    res = await fetchUrl(OPENROUTER_URL, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-      // rankingi/atrybucja OpenRouter (opcjonalne, ale mile widziane):
-      "HTTP-Referer": "https://github.com/Mackie-pl/events-pl",
-      "X-Title": "events-pl",
-    },
-    body: JSON.stringify({
-      model: opts.model,
-      max_tokens: opts.maxTokens ?? 4000,
-      temperature: opts.temperature ?? 0.2,
-      // zwróć koszt (USD) i tokeny w polu usage
-      usage: { include: true },
-      messages: [
-        { role: "system", content: opts.system },
-        { role: "user", content: opts.user },
-      ],
-    }),
-    }, 120_000, `OpenRouter ${opts.model}`);
-  } catch (e) {
-    await failed(describeError(e));
-    throw e;
-  }
-
-  const raw = await res.text();
+  const withSchema = opts.schema !== undefined && structuredActive();
   let json: ChatCompletionResponse;
   try {
-    json = JSON.parse(raw) as ChatCompletionResponse;
-  } catch {
-    // np. strona błędu 502 od proxy zamiast JSON-a
-    const err = `OpenRouter ${opts.model}: HTTP ${res.status}, nie-JSON: ${raw.slice(0, 200)}`;
-    await failed(err);
-    throw new Error(err);
-  }
-  if (!res.ok || json.error) {
-    const err = `OpenRouter ${opts.model}: HTTP ${res.status}: ${json.error?.message ?? "unknown error"}`;
-    await failed(err);
-    throw new Error(err);
+    json = await callOnce(apiKey, opts, withSchema);
+  } catch (e) {
+    if (!withSchema) {
+      await failed(describeError(e));
+      throw e;
+    }
+    // Model albo dostawca nie przyjmuje response_format. Nie wywracamy przebiegu z tego
+    // powodu: schemat jest ulepszeniem, a nie warunkiem działania — potok potrafi czytać
+    // odpowiedź bez niego od zawsze. Gasimy flagę i powtarzamy raz, bez schematu.
+    structuredOff = true;
+    structuredError = describeError(e);
+    audit("llm", `model odrzucił structured outputs — dalej bez schematu (${structuredError})`,
+      { model: opts.model, task: opts.task });
+    try {
+      json = await callOnce(apiKey, opts, false);
+    } catch (retryErr) {
+      await failed(describeError(retryErr));
+      throw retryErr;
+    }
   }
 
+  lastProvider = json.provider ?? null;
   const usage = {
     promptTokens: json.usage?.prompt_tokens ?? 0,
     completionTokens: json.usage?.completion_tokens ?? 0,

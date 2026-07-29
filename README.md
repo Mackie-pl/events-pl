@@ -29,7 +29,7 @@ src/actions/discover.ts  ·  --why <id> = skąd to źródło      (metryki + śl
 | `src/reporting/` | agregaty, koszty, podsumowania Actions, redakcja PII, polityki retencji raportów |
 | `src/storage/` | **port składowania** — `DocStore`/`CollectionStore` + implementacja na plikach JSON. Jedyne miejsce znające ścieżki; przejście na bazę to druga implementacja i podmiana wiązań w `storage/index.ts` |
 | `src/shared/` | ścieżki, hash, tekst, daty, URL-e, formatowanie błędów + `audit.ts` — zbieracz śladu decyzyjnego (stan modułowy jak liczniki zużycia; w shared/, bo emitują do niego wszystkie warstwy) |
-| `src/types/` | typy podzielone po dziedzinach + jedyny barrel w repo (`types/index.ts`) |
+| `src/types/` | typy podzielone po dziedzinach + jedyny barrel w repo (`types/index.ts`). `event-schema.ts` wyłamuje się z „tylko typy" świadomie: to schemat TypeBox, z którego bierze się **naraz** typ `EventItem`, blok schematu w prompcie i `response_format` — jedno źródło prawdy zamiast trzech kopii, które się rozjeżdżały |
 | `test/` | testy `node:test` (127 przypadków): pii, url/slug/daty, dedupe (+ raport scalania), ślad decyzyjny, sonda (czyszczenie cache pod `--force`, wyłącznik archiwum), facebook, digest, koszty, retencja, podsumowania, walidacja propozycji |
 | `discover-runs.json` | observability etapu 1: każde zapytanie search + wyniki, **każda propozycja modelu wraz z decyzją** (także odrzucenia), geo (Overpass), tokeny/koszt LLM per gmina / źródło / typ zadania (discovery vs weryfikacja); ostatnie 24 przebiegi (szczegóły dla 4 najnowszych) |
 | `runs.json` | observability etapu 2: przebieg źródło po źródle (status, HTTP, followupy, tokeny/koszt per zadanie, rekordy Bright Data, ścieżki archiwum) oraz **`produced` — które konkretnie wydarzenia dało źródło w tym przebiegu**, wraz z przegranymi dedupe (`mergedInto`); **ostatnie 7 dni** (min. 2, maks. 30 przebiegów) |
@@ -55,6 +55,11 @@ npm run discover -- --verify    # sama weryfikacja/naprawa URL-i (tanio: Haiku; 
 npm run discover -- --why lubon-ok   # skąd to źródło się wzięło (nie kosztuje nic, nie rusza sieci)
 
 npm run typecheck               # tsc --noEmit (strict)
+
+# structured outputs (wymuszony JSON Schema na odpowiedzi) — domyślnie wyłączone.
+# Obsługa zależy od modelu I od tłumaczenia OpenRoutera, więc najpierw jedno wywołanie:
+npm run check:structured        # PŁATNE (~$0.001): mówi, czy MODEL_EXTRACT przyjmuje schemat
+# jeśli przyjmuje → STRUCTURED_OUTPUTS=1 w .env
 ```
 
 **Konfiguracja idzie przez `.env`** (wzór w `.env.example`, plik jest w `.gitignore`).

@@ -1,4 +1,19 @@
-/** Prompty dla obu etapów pipeline'u. */
+/**
+ * Prompty dla obu etapów pipeline'u.
+ *
+ * Blok schematu wydarzenia NIE jest tu pisany ręcznie — renderuje go renderSchemaBlock()
+ * z types/event-schema.ts. Wcześniej ten sam kształt istniał w trzech miejscach naraz
+ * (typ, prompt ekstrakcji, prompt plakatu) i się rozjeżdżał: POSTER_SYSTEM kazał modelowi
+ * trzymać się „tego samego schematu JSON", którego w ogóle nie miał w kontekście.
+ *
+ * Reguły MIĘDZYpolowe (kontenery, followupy, „bez daty = nie wydarzenie") zostają prozą.
+ * Schemat opisuje kształt jednego rekordu i tego się trzyma; wciskanie w niego reguł
+ * przekrojowych skończyłoby się opisami pól, których model nie ma jak zastosować.
+ */
+import { renderSchemaBlock } from "../shared/json-schema.js";
+import { EventSchema } from "../types/event-schema.js";
+
+const EVENT_BLOCK = renderSchemaBlock(EventSchema);
 
 // ============ STAGE 1: discovery (raz w miesiącu, mocny model) ============
 
@@ -49,38 +64,30 @@ export const extractionSystem = (todayIso: string): string =>
 Zwróć WYŁĄCZNIE poprawny JSON: {"events":[...],"followups":[...]}.
 
 Schemat wydarzenia:
-{
- "title": str,
- "date_start": "YYYY-MM-DD",            // wywnioskuj rok z kontekstu; pomiń wydarzenia zakończone przed ${todayIso}
- "date_end": "YYYY-MM-DD"|null,
- "time_start": "HH:MM"|null,
- "time_end": "HH:MM"|null,
- "venue": str|null,                      // pełna nazwa miejsca + adres jeśli podany
- "town": str|null,
- "price": {"free": bool|null, "amount_pln": num|null, "note": str|null},
- "age": {"min": int|null, "max": int|null, "label": str|null},   // "4+"→min:4; "roczniki 2015-2016"→przelicz na wiek; "dorośli"→min:18
- "family_friendly": true|false|"maybe",
- "tags": [str],                          // zagnieżdżone, np. "dzieci:dmuchańce", "warsztaty:ceramika", "muzyka:koncert", "sport:rower", "film:plener"
- "registration": str|null,               // telefon/link do zapisów jeśli jest
- "sub_slots": [{"time":"HH:MM","label":str,"age":{...}|null}]|null,  // etapy wydarzenia (np. 12-18 dzieci, 18-22 dorośli)
- "conditional": str|null,                // np. "przy deszczu przeniesione na 26.07"
- "source_url": str,
- "is_noise": bool                        // komisje rady, wybory sołeckie, przetargi, ogłoszenia urzędowe → true
-}
+${EVENT_BLOCK}
 
 WYDARZENIA-KONTENERY: jeśli tekst zawiera zbiorczy program (repertuar, "Akcja Lato", festiwal wielodniowy)
 z konkretnymi terminami — rozbij na osobne wydarzenia i ustaw "container": nazwa kontenera.
 Jeśli program jest POD LINKIEM (PDF, podstrona, plakat JPG) — NIE zgaduj; dodaj URL do "followups":
 [{"url": str, "reason": "program PDF"|"szczegóły wydarzenia"|"plakat"}]. Maks 5 followupów, tylko z tej samej domeny lub oficjalnych.
 
-Nie wymyślaj danych. null gdy brak. Daty przeszłe pomijaj.
+Nie wymyślaj danych. Brak informacji zapisuj tak, jak pokazuje schemat: null tam, gdzie w typie jest "|null",
+a pusty string "" w polach czysto tekstowych (venue, town, registration, conditional, container). Daty przeszłe pomijaj.
 
 BEZ DATY = NIE WYDARZENIE. Pomijaj atrakcje stałe i całoroczne (zoo, muzeum, plac zabaw,
 park linowy, basen, „czynne codziennie", oferta stała, cennik biletów) — od tego są mapy,
 nie ten serwis. Jeśli nie da się ustalić konkretnego "date_start", NIE dodawaj wpisu.`;
 
-export const POSTER_SYSTEM = `Na obrazie jest plakat wydarzenia (PL). Wyciągnij dane wg tego samego schematu JSON
-{"events":[...]}. Zwróć uwagę na: daty, godziny, miejsce, ceny, ograniczenia wiekowe, program wielogodzinny.
+/**
+ * Plakat leci do modelu BEZ promptu ekstrakcji (osobne wywołanie, osobny system), więc
+ * schemat musi być tutaj. Do 2026-07 go nie było — prompt odsyłał do „tego samego schematu",
+ * którego model w tym wywołaniu nigdy nie widział.
+ */
+export const POSTER_SYSTEM = `Na obrazie jest plakat wydarzenia (PL). Wyciągnij dane i zwróć WYŁĄCZNIE JSON
+{"events":[...],"followups":[]}. Schemat wydarzenia:
+${EVENT_BLOCK}
+
+Zwróć uwagę na: daty, godziny, miejsce, ceny, ograniczenia wiekowe, program wielogodzinny.
 Bez konkretnego "date_start" nie zwracaj wpisu — plakat oferty stałej pomiń.`;
 
 export const DEDUPE_SYSTEM = `Dostajesz listę wydarzeń z różnych źródeł. Znajdź duplikaty (to samo wydarzenie

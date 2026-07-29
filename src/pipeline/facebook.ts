@@ -101,15 +101,18 @@ export function fbEventToItem(rec: BdRecord, today: string): EventItem | null {
     date_end: end.date && end.date !== start.date ? end.date : null,
     time_start: start.time,
     time_end: end.time,
-    venue,
-    town,
+    // "" zamiast null w polach czysto tekstowych — kontrakt schematu, patrz orEmpty()
+    // w types/event-schema.ts (budżet 16 pól unijnych u dostawcy)
+    venue: venue ?? "",
+    town: town ?? "",
     price,
     age,
     family_friendly: "maybe",
     tags: [category ? `fb:${category.toLowerCase()}` : "fb:wydarzenie"],
-    registration: pick(rec, "ticket_url", "tickets_url", "external_url", "registration_url"),
+    registration: pick(rec, "ticket_url", "tickets_url", "external_url", "registration_url") ?? "",
     sub_slots: null,
-    conditional: null,
+    conditional: "",
+    container: "", // wydarzenie FB jest zawsze samodzielne — nie ma programu do rozbicia
     source_url: pick(rec, "url", "event_url", "input_url", "link") ?? "",
     is_noise: false,
     geo: null,
