@@ -12,6 +12,7 @@
     "digest": "tsx --env-file-if-exists=.env src/actions/digest.ts",
     "discover": "tsx --env-file-if-exists=.env src/actions/discover.ts",
     "probe": "tsx --env-file-if-exists=.env src/actions/probe.ts",
+    "check:structured": "tsx --env-file-if-exists=.env src/actions/check-structured.ts",
     "backfill-costs": "tsx --env-file-if-exists=.env src/actions/backfill-costs.ts",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
     "lint": "eslint .",
@@ -21,6 +22,7 @@
     "panel-server": "tsx --env-file-if-exists=.env src/actions/panel-server.ts"
   },
   "dependencies": {
+    "@sinclair/typebox": "^0.34.52",
     "html-to-text": "^9.0.5",
     "unpdf": "^0.12.1"
   },

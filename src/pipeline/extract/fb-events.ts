@@ -56,7 +56,7 @@ function partitionByCache(
 /** Współrzędne miejsca, jeśli w ogóle je znamy. Liczniki trafień idą do raportu przebiegu. */
 async function geocodeEvent(ev: EventItem, state: PipelineState, run: SourceRun): Promise<void> {
   if (!ev.venue) return;
-  const g = await geocode(ev.venue, ev.town ?? "", state.geo);
+  const g = await geocode(ev.venue, ev.town, state.geo);
   ev.geo = g;
   if (g) run.geo.hits++; else run.geo.misses++;
 }

@@ -50,7 +50,7 @@ const dailyReport = (over: Partial<RunReport> = {}): RunReport => ({
   totals: {
     calls: 2, promptTokens: 100, completionTokens: 20, costUsd: 0.01,
     sources: 1, ok: 1, unchanged: 0, errors: 0, skippedFb: 0, skippedDead: 0, empty: 0,
-    events: 3, followupsTried: 0, geoHits: 1, geoMisses: 0, droppedNoDate: 0,
+    events: 3, followupsTried: 0, geoHits: 1, geoMisses: 0, droppedInvalid: 0,
     redactedPhones: 2, redactedEmails: 1,
   },
   sources: [sourceRun()],

@@ -10,7 +10,7 @@ import {
   RUN_SCOPE, audit, auditFor, auditTrails, beginAuditRun, beginAuditSource,
 } from "../src/shared/audit.js";
 import { redactTrail } from "../src/reporting/audit-trail.js";
-import { parseModelJson, resetDroppedNoDate } from "../src/pipeline/extract/extract.js";
+import { parseModelJson, resetDroppedInvalid } from "../src/pipeline/extract/extract.js";
 import { newStats } from "../src/pipeline/pii.js";
 import type { SourceTrail } from "../src/types/index.js";
 
@@ -84,7 +84,7 @@ describe("emisja z potoku", () => {
         { title: "Nowe ZOO — całoroczna atrakcja", date_start: null, is_noise: false },
       ],
     }));
-    resetDroppedNoDate();
+    resetDroppedInvalid();
 
     assert.equal(r.events.length, 1);
     const steps = bySource("zamek")?.steps ?? [];
