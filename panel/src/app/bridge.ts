@@ -22,6 +22,8 @@ interface Health {
   ok?: boolean;
   /** Most stoi, ale bez SUPABASE_* — sonda działa, archiwum nie. */
   archive?: boolean;
+  /** Most umie oddać pliki danych z drzewa roboczego (`/file?name=…`). */
+  files?: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -37,6 +39,13 @@ export class BridgeService {
   /** Most bez konfiguracji Supabase: sonda tak, podgląd archiwum nie. */
   readonly archiveReadable = signal(false);
 
+  /**
+   * Most oddaje pliki danych z drzewa roboczego. Rozstrzyga, CZY panel patrzy na stan
+   * lokalny, czy na opublikowany — patrz `DataService.fileBase`. Osobno od `available`,
+   * bo starszy most (sprzed tej funkcji) odpowiada na /health bez pola `files`.
+   */
+  readonly servesFiles = signal(false);
+
   constructor() {
     this.checkHealth();
   }
@@ -48,6 +57,7 @@ export class BridgeService {
       .subscribe((r) => {
         this.available.set(r?.ok === true);
         this.archiveReadable.set(r?.archive === true);
+        this.servesFiles.set(r?.ok === true && r.files === true);
       });
   }
 

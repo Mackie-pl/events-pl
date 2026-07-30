@@ -377,6 +377,30 @@
   color: var(--tui-status-warning);
 }
 
+// Profil źródła (etap 1): gdzie wchodzić i co serwis oddaje maszynowo.
+.profile {
+  margin: 0.75rem 0;
+
+  h2 {
+    margin: 0.5rem 0 0.25rem;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--tui-text-secondary);
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 1.1rem;
+  }
+
+  li {
+    // adresy list bywają długie (z {page} i parametrami) — łamiemy zamiast rozpychać kolumnę
+    overflow-wrap: anywhere;
+    line-height: 1.5;
+  }
+}
+
 @media (max-width: 75rem) {
   .split {
     grid-template-columns: minmax(0, 1fr);

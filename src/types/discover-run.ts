@@ -1,18 +1,35 @@
 /** Raport przebiegu discover (discover-runs.json). */
 
 import type { CostEntry } from "./cost.js";
-import type { FetchProbe, FetchStrategy, SearchResult, SourceType } from "./source.js";
+import type {
+  EntryPoint, FetchProbe, FetchStrategy, ReachOutcome, SearchResult, SourceCapability, SourceType,
+} from "./source.js";
 import type { LlmUsage } from "./usage.js";
 
 // ---------------- observability: discover (miesięczny) ----------------
 
-/** Jedno zapytanie do wyszukiwarki (Brave) wraz z tym, co zwróciła. */
+/**
+ * Wynik JEDNEGO zapytania od dostawcy wyszukiwarki — kontrakt, który spełniają `serper.ts`,
+ * `google-cse.ts` i `brave.ts`.
+ *
+ * `fatal` niesie rozstrzygnięcie, którego nie da się odtworzyć wyżej: czy błąd jest trwały
+ * dla całego przebiegu (zły klucz, wyczerpane kredyty), czy to pojedyncze potknięcie.
+ * Dostawcy różnią się tu radykalnie — Google mówi to w `error.errors[].reason`, Serper
+ * w polu `message`, Brave samym kodem HTTP — i tylko oni wiedzą, jak to przeczytać.
+ */
+export interface SearchProviderOutcome {
+  results: SearchResult[];
+  /** niepusty = wyłącz wyszukiwarkę do końca przebiegu */
+  fatal?: string;
+}
+
+/** Jedno zapytanie do wyszukiwarki wraz z tym, co zwróciła. */
 export interface SearchCall {
   query: string;
   results: SearchResult[];
   ms: number;
   err?: string;
-  /** kod odpowiedzi Brave przy błędzie (429 = limit, 401 = klucz) */
+  /** kod odpowiedzi wyszukiwarki przy błędzie (429 = limit, 401/403 = klucz) */
   httpStatus?: number;
   /** zapytanie niewysłane (wyczerpany budżet albo wyłączona wyszukiwarka) */
   skipped?: boolean;
@@ -80,10 +97,14 @@ export interface TownDiscoveryRun {
 }
 
 /**
- * Weryfikacja URL jednego źródła.
- * ok: URL działa · fixed: naprawiony (stary w previous_urls) · dead: naprawa się nie udała,
- * źródło oznaczone dead:true · error: URL padł, ale naprawy nie próbowano (np. brak BRAVE_API_KEY)
- * — źródło nietknięte · skipped: nie weryfikujemy (fb).
+ * Weryfikacja i sprofilowanie jednego źródła.
+ * ok: URL działa · fixed: naprawiony (stary w previous_urls; także zmianą schematu/www albo
+ * przejściem na headless) · dead: adres nie do uratowania, źródło oznaczone dead:true ·
+ * error: padło, ale nie wiemy czy trwale — źródło nietknięte · skipped: nie weryfikujemy (fb).
+ *
+ * Uwaga na różnicę wobec wersji sprzed profilera: `dead` NIE wymaga już udziału wyszukiwarki.
+ * Domena, która nie rozwiązuje się w DNS, jest martwa niezależnie od tego, czy mamy klucz —
+ * wcześniej brak klucza kończył się `error` i daily dobijało się do niej codziennie.
  */
 export interface SourceVerification {
   id: string;
@@ -94,6 +115,16 @@ export interface SourceVerification {
   httpStatus?: number;
   err?: string;
   searches: SearchCall[];
+  /** werdykt drabiny osiągalności — mówi, KTÓRA naprawa ma sens */
+  reach?: ReachOutcome;
+  /** kolejne szczeble drabiny (adres → wynik), gdy pierwszy adres nie zadziałał */
+  ladder?: Array<{ url: string; outcome: ReachOutcome; httpStatus?: number; err?: string }>;
+  /** rozpoznane adresy list wydarzeń */
+  entrypoints?: EntryPoint[];
+  /** maszynowe wyjścia potwierdzone pobraniem */
+  capabilities?: SourceCapability[];
+  /** werdykt modelu o entrypoincie: czy to w ogóle strona z wydarzeniami */
+  verdict?: "events" | "news" | "none";
   /** URL zaproponowany przez LLM przy naprawie */
   candidate?: string;
   /** nowy URL po udanej naprawie */
@@ -114,7 +145,7 @@ export interface SourceVerification {
 
 export interface DiscoverTotals extends LlmUsage {
   towns: number;
-  /** liczba zapytań do Brave (limit darmowego tieru: 2000/mies.) */
+  /** liczba zapytań do wyszukiwarki (Google CSE: 100/dzień gratis, dalej $5/1000) */
   searches: number;
   /** zapytania zakończone błędem (429/401/timeout) — puste wyniki, nie „brak trafień" */
   searchErrors: number;

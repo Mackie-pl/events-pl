@@ -100,7 +100,7 @@ export function discoverCosts(r: DiscoverRunReport): CostEntry[] {
   if (r.totals.searches) {
     inputs.push({
       category: "search",
-      usd: r.totals.searches * rates.bravePerQuery,
+      usd: r.totals.searches * rates.searchPerQuery,
       estimated: true,
       units: r.totals.searches,
       unit: "queries",

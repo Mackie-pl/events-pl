@@ -1,5 +1,5 @@
 /** Discovery jednej gminy: zapytania do wyszukiwarki → triage modelem → wpisy do rejestru. */
-import { searchState, webSearch } from "../../adapters/brave.js";
+import { searchState, webSearch } from "../../adapters/search.js";
 import { MODEL_DISCOVER, chat, resetUsage, snapshotUsage } from "../../adapters/openrouter.js";
 import { archiveRaw, beginSource, sourcePaths } from "../../adapters/supabase-archive.js";
 import { describeError } from "../../shared/errors.js";
@@ -47,7 +47,7 @@ export async function discoverTown(town: string, reg: Registry, runStartedAt: st
 
     // surowe wejście modelu do prywatnego archiwum — „model tego nie widział" vs
     // „widział i zignorował" to dwie różne naprawy
-    await archiveRaw(`discover-${slug(town)}`, `brave://search?town=${encodeURIComponent(town)}`,
+    await archiveRaw(`discover-${slug(town)}`, `search://web?town=${encodeURIComponent(town)}`,
       JSON.stringify({ town, searches: run.searches }, null, 1), "search");
 
     const out = await chat({

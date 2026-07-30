@@ -1,8 +1,8 @@
 {
- "updated": "2026-07-29T06:34:36.755Z",
+ "updated": "2026-07-30T18:54:01.311Z",
  "rates": {
   "bdPerRecord": 0.0015,
-  "bravePerQuery": 0,
+  "searchPerQuery": 0.001,
   "storagePerGbMonth": 0,
   "scrapePerFetch": 0,
   "monthlyBudgetUsd": 15
@@ -353,6 +353,68 @@
    "estimated": true,
    "units": 1.752,
    "unit": "MB"
+  },
+  {
+   "day": "2026-07-30",
+   "at": "2026-07-30T18:54:01.302Z",
+   "stage": "discover",
+   "run": "2026-07-30T18:45:31.961Z",
+   "category": "llm-verify",
+   "usd": 0.145931,
+   "estimated": false,
+   "units": 54,
+   "unit": "calls",
+   "tokensIn": 119081,
+   "tokensOut": 5370,
+   "top": [
+    {
+     "id": "kornik-arboretum",
+     "usd": 0.006169,
+     "units": 2
+    },
+    {
+     "id": "kleszczewo-gokis",
+     "usd": 0.006162,
+     "units": 2
+    },
+    {
+     "id": "czerwonak-gok",
+     "usd": 0.006075,
+     "units": 2
+    },
+    {
+     "id": "mosina-osir",
+     "usd": 0.005673,
+     "units": 2
+    },
+    {
+     "id": "rokietnica-gok",
+     "usd": 0.005277,
+     "units": 2
+    }
+   ]
+  },
+  {
+   "day": "2026-07-30",
+   "at": "2026-07-30T18:54:01.302Z",
+   "stage": "discover",
+   "run": "2026-07-30T18:45:31.961Z",
+   "category": "search",
+   "usd": 0.026,
+   "estimated": true,
+   "units": 26,
+   "unit": "queries"
+  },
+  {
+   "day": "2026-07-30",
+   "at": "2026-07-30T18:54:01.302Z",
+   "stage": "discover",
+   "run": "2026-07-30T18:45:31.961Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 292,
+   "unit": "fetches"
   }
  ]
 }

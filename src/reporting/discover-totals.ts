@@ -1,5 +1,5 @@
 /** Agregaty przebiegu discover: liczniki werdyktów, zapytań i zużycia LLM. */
-import { searchState } from "../adapters/brave.js";
+import { searchState } from "../adapters/search.js";
 import type { DiscoverRunReport, DiscoverTotals, LlmUsage, SearchCall } from "../types/index.js";
 
 export function emptyTotals(): DiscoverTotals {

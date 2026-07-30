@@ -56,6 +56,30 @@
   font-size: 0.85rem;
 }
 
+// Znacznik źródła danych: main (GitHub) czy drzewo robocze przez lokalny most.
+.origin {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  border: 1px solid var(--tui-border-normal);
+  color: var(--tui-text-secondary);
+
+  tui-icon {
+    font-size: 0.9rem;
+  }
+
+  // stan lokalny jest WYRÓŻNIONY, bo to on jest niespodzianką: dane, których nikt poza
+  // tą maszyną nie widzi, nie mogą wyglądać jak opublikowane
+  &--local {
+    border-color: var(--tui-status-warning);
+    color: var(--tui-status-warning);
+  }
+}
+
 .content {
   flex: 1;
   padding: 1.25rem 1.5rem 3rem;

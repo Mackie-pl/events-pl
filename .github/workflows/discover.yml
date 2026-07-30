@@ -25,7 +25,7 @@ jobs:
       - run: npm run discover -- ${{ inputs.args || '--verify' }}
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-          BRAVE_API_KEY: ${{ secrets.BRAVE_API_KEY }}
+          SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
       - name: Commit results
         run: |
           git config user.name "events-bot"

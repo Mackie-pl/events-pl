@@ -19,6 +19,12 @@ export const probeStats = (): number => verifyFetches;
 export function resetProbeStats(): void { verifyFetches = 0; }
 
 /**
+ * Doliczenie pobrania wykonanego poza `probeUrl` — rozpoznanie entrypointów ściąga po kilka
+ * stron na źródło i bez tego cały ten wolumen znikałby z kategorii `scrape` w księdze kosztów.
+ */
+export function countFetch(): void { verifyFetches += 1; }
+
+/**
  * Jedno żądanie z pełnym opisem odpowiedzi. Sam kod statusu nie diagnozuje: 200 z 300 bajtami
  * to zaślepka, a 200 pod innym adresem niż pytany to przekierowanie na stronę główną
  * (czyli podstrona z wydarzeniami zniknęła, choć URL „działa").

@@ -17,7 +17,7 @@ export type CostCategory =
   | "llm-discover" // Sonnet: triage kandydatów (etap 1)
   | "llm-verify" // Haiku: naprawa martwych URL-i (etap 1)
   | "fb" // Bright Data: rekordy (wydarzenia FB + posty grup)
-  | "search" // Brave Search: zapytania (darmowy tier 2000/mies.)
+  | "search" // wyszukiwarka: zapytania (Google CSE 100/dzień gratis, Brave 2000/mies.)
   | "scrape" // pobrania HTTP + headless (własna maszyna / Actions)
   | "geo" // Nominatim: zapytania sieciowe (darmowe, 1 req/s)
   | "storage"; // Supabase Storage: wysłane obiekty (darmowy tier ~1 GB)
@@ -68,8 +68,8 @@ export interface CostEntry {
 export interface CostRates {
   /** $ za rekord Bright Data (rząd $1–1.5/1000; potwierdź w panelu BD) */
   bdPerRecord: number;
-  /** $ za zapytanie Brave ponad darmowy tier (2000/mies.) */
-  bravePerQuery: number;
+  /** $ za zapytanie wyszukiwarki ponad darmowy tier (Google: $5/1000 powyżej 100/dzień) */
+  searchPerQuery: number;
   /** $ za GB-miesiąc Supabase Storage (darmowy tier ~1 GB) */
   storagePerGbMonth: number;
   /** $ za jedno pobranie HTTP (własny hosting/proxy; GH Actions dla repo publicznego: 0) */

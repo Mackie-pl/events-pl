@@ -7,13 +7,18 @@ STAGE 1 (miesięcznie / nowe miasto)         STAGE 2 (codziennie)
 ─────────────────────────────────           ────────────────────────────────
 miasto + promień                            sources.json
   → Overpass API (gminy w promieniu)          → fetch (ETag/304 + hash treści)
-  → wyszukiwarka (Brave, darmowy tier)        → bez zmian? wydarzenia z cache, 0 LLM
+  → wyszukiwarka (Serper)                     → bez zmian? wydarzenia z cache, 0 LLM
   → SONNET: triage kandydatów                 → HAIKU: ekstrakcja → JSON
   → sources.json (+ provenance przy źródle)   → followups (1 hop): PDF-y programów,
-  → weryfikacja URL-i (też --verify solo):      podstrony, plakaty JPG (vision)
-    martwy URL → Brave + HAIKU → naprawa     → geocode (Nominatim, darmowe, cache)
-    (stary adres → previous_urls) albo        → dedupe (heurystyka + LLM)
-    dead:true (daily pomija)                  → events.json → index.html
+  → PROFILOWANIE (też --verify solo):           podstrony, plakaty JPG (vision)
+    drabina osiągalności (https↔http,        → geocode (Nominatim, darmowe, cache)
+      www, 403→headless) → reach              → dedupe (heurystyka + LLM)
+    entrypointy: gdzie serwis WYPISUJE        → events.json → index.html
+      wydarzenia (+ szablon linków, {page})
+    zdolności: RSS/WP-REST/tribe/iCal/JSON-LD
+    HAIKU: wybór entrypointu albo weto
+    dns-dead → dead:true (bez wyszukiwarki!)
+    404/500 → search + HAIKU → naprawa
   → discover-runs.json (observability)   src/actions/daily.ts → runs.json + audit.json
 src/actions/discover.ts  ·  --why <id> = skąd to źródło      (metryki + ślad decyzyjny)
 ```
@@ -24,8 +29,9 @@ src/actions/discover.ts  ·  --why <id> = skąd to źródło      (metryki + śl
 |---|---|
 | `sources.json` | rejestr źródeł Poznań +15 km (etap 1 wykonany ręcznie 2026-07-20; 46 źródeł, 13 gmin) + `provenance` przy każdym źródle dodanym automatycznie |
 | `src/actions/` | wejścia potoku — `daily`, `discover`, `digest`, `backfill-costs`, `probe` (sprawdzenie jednego źródła na żądanie), `panel-server` (lokalny most panelu). Same main() + orkiestracja, zero logiki dziedzinowej |
-| `src/adapters/` | wyjścia do świata: `openrouter`, `brave`, `overpass`, `nominatim`, `page-fetch`, `brightdata`, `supabase-archive`, `telegram`, `resend`, `http` |
-| `src/pipeline/` | logika dziedzinowa: `discover/` (discovery gmin, walidacja propozycji, `--why`), `verify/` (sonda + naprawa URL-i), `extract/` (ekstrakcja, followupy, wydarzenia FB), `digest/`, `dedupe`, `pii`, `facebook`, `prompts` |
+| `src/adapters/` | wyjścia do świata: `openrouter`, `search` (fasada) + `serper`/`google-cse`/`brave`, `overpass`, `nominatim`, `page-fetch`, `brightdata`, `supabase-archive`, `telegram`, `resend`, `http` |
+| `src/pipeline/` | logika dziedzinowa: `discover/` (discovery gmin, walidacja propozycji, `entrypoint`, `capabilities`, `--why`), `verify/` (drabina osiągalności, profil, naprawa URL-i), `extract/` (ekstrakcja, followupy, wydarzenia FB), `digest/`, `dedupe`, `pii`, `facebook`, `prompts` |
+| `src/shared/` | narzędzia bez zależności: `url-template` (zwijanie adresów do szablonów — serce rozpoznania list), `links`, `dates`, `text`, `url`, `hash`, `audit`, `errors`, `json-schema` |
 | `src/reporting/` | agregaty, koszty, podsumowania Actions, redakcja PII, polityki retencji raportów |
 | `src/storage/` | **port składowania** — `DocStore`/`CollectionStore` + implementacja na plikach JSON. Jedyne miejsce znające ścieżki; przejście na bazę to druga implementacja i podmiana wiązań w `storage/index.ts` |
 | `src/shared/` | ścieżki, hash, tekst, daty, URL-e, formatowanie błędów + `audit.ts` — zbieracz śladu decyzyjnego (stan modułowy jak liczniki zużycia; w shared/, bo emitują do niego wszystkie warstwy) |
@@ -49,7 +55,7 @@ npm install playwright && npx playwright install chromium
 cp .env.example .env            # (PowerShell: copy .env.example .env) → uzupełnij klucze
 npm run daily                   # → events.json + index.html
 
-# raz w miesiącu / nowe miasto (wymaga BRAVE_API_KEY w .env):
+# raz w miesiącu / nowe miasto (wymaga SERPER_API_KEY w .env):
 npm run discover -- "Poznań" 15 # pełne discovery + weryfikacja URL-i
 npm run discover -- --verify    # sama weryfikacja/naprawa URL-i (tanio: Haiku; cron w discover.yml)
 npm run discover -- --why lubon-ok   # skąd to źródło się wzięło (nie kosztuje nic, nie rusza sieci)
@@ -128,7 +134,7 @@ mogą pójść nie tak:
 | `llm-discover` | Sonnet: triage kandydatów (etap 1) | j.w. |
 | `llm-verify` | Haiku: naprawa martwych URL-i | j.w. |
 | `fb` | Bright Data: rekordy wydarzeń i postów grup | **szacunek**: `rekordy × BD_COST_PER_RECORD` |
-| `search` | Brave: zapytania | **szacunek** (darmowy tier 2000/mies. → stawka 0) |
+| `search` | wyszukiwarka: zapytania | **szacunek** (Serper: 2500 gratis, dalej `SEARCH_COST_PER_QUERY`, domyślnie $0.001) |
 | `scrape` · `geo` · `storage` | pobrania HTTP, Nominatim, Supabase Storage | **szacunek** (dziś 0) |
 
 Kategorie o stawce zero **też są zapisywane**, z wolumenem. Darmowy tier to koszt zero
@@ -220,6 +226,39 @@ Wiadomości: HTML, po jednej na sekcję (JUTRO / WEEKEND), auto-cięcie przy lim
 
 Wspólne: `DIGEST_CHILD_AGE=5` — filtr wg wieku dziecka. Bez żadnych kluczy `npm run digest` robi dry-run na stdout.
 
+## Etap 1 jako profiler źródła
+
+`Source` nie jest adresem, tylko **profilem**: gdzie wchodzić, czym pobierać i co serwis oddaje
+maszynowo. Wszystkie trzy pytania rozstrzyga się raz, przy discovery — nie co rano.
+
+**Drabina osiągalności** (`pipeline/verify/reach.ts`) zamiast jednej sondy i jednego boola.
+Jeden probe mieszał ze sobą diagnozy wymagające przeciwnych napraw — pomiar na rejestrze z lipca 2026:
+
+| objaw | co to naprawdę znaczy | co robi drabina |
+|---|---|---|
+| `ENOTFOUND` | domena nie istnieje | `dead: true` **od razu, bez wyszukiwarki** |
+| `certificate has expired` | serwis żyje, TLS nie | próba `http://`, potem `www` |
+| `HTTP 403/429` | anty-bot, treść jest | jedna próba przez przeglądarkę → `fetch: "headless"` |
+| `HTTP 404/500` | serwer żyje, zasobu nie ma | naprawa przez search + Haiku |
+| 200, ale <500 B | parking/zaślepka | jak wyżej |
+
+**Entrypointy** (`pipeline/discover/entrypoint.ts`) — adres, pod którym serwis WYPISUJE wydarzenia.
+Wchodzenie codziennie przez stronę główną oznaczało podawanie modelowi menu i banera cookies,
+podczas gdy lista siedzi pod stałym `/aktualnosci`. Rozpoznanie jest algorytmiczne: odnośniki
+z korzenia punktowane po ścieżce i kotwicy → pobranie kilku najlepszych → **gęstość listy**
+(`shared/url-template.ts`: ile odnośników zwija się do jednego szablonu, np. `/wydarzenia/{slug}`)
+→ jedno tanie wywołanie Haiku, które wybiera albo mówi „to nie jest strona z wydarzeniami"
+(`ENTRYPOINT_LLM=always|ambiguous|never`).
+
+**Zdolności** (`pipeline/discover/capabilities.ts`) — RSS, WP REST, The Events Calendar, iCal, JSON-LD.
+Reguła zapisu brzmi: **liczy się pobranie, nie istnienie endpointu**. Na żywych serwisach
+The Events Calendar odpowiadał `{"total":0}`, Modern Events Calendar `[]`, a WP REST z typem `event`
+oddawał wpisy bez terminu (`acf: []`) — wszystkie trzy przeszłyby test „zwraca 200". Stąd
+`itemsSeen` i osobno `datesParsed`; data publikacji wpisu się nie liczy.
+
+Rozpoznanie na 15 serwisach: **zero JSON-LD `Event`, zero `<time datetime>`, zero microdanych** —
+dlatego ekstrakcja modelem zostaje, a sonda zdolności jest szukaniem wyjątków, nie regułą.
+
 ## Observability etapu 1: dlaczego ten adres jest na liście?
 
 Rejestr źródeł buduje model na podstawie wyników wyszukiwarki, więc po miesiącach nikt nie pamięta,
@@ -253,8 +292,18 @@ mówią to wprost zamiast udawać. Zapisywana jest od pierwszego automatycznego 
 
 - raport i zmiany w `sources.json` zapisują się **także po wyjątku** (`partial: true` + `err` w raporcie);
   wyjątek przy naprawie jednego źródła nie przerywa weryfikacji pozostałych,
-- Brave: 429/401 wyłącza wyszukiwarkę na resztę przebiegu (wcześniej limit wyglądał jak „brak wyników"),
-  a `DISCOVER_MAX_SEARCHES` (domyślnie 300) pilnuje darmowego tieru 2000/mies.,
+- wyszukiwarka: błąd trwały wyłącza ją na resztę przebiegu (wcześniej limit wyglądał jak „brak wyników").
+  Rozpoznanie „trwały czy potknięcie" zna tylko dostawca i każdy mówi to inaczej — Serper polem
+  `message` przy 402/403, Google w `error.errors[].reason`, Brave samym kodem — dlatego werdykt
+  (`SearchProviderOutcome.fatal`) wraca z adaptera, a nie jest zgadywany w fasadzie.
+  `DISCOVER_MAX_SEARCHES` (domyślnie 300) pilnuje rachunku: ~10 zapytań na gminę, więc Poznań +15 km
+  to ~130, a Warszawa z dzielnicami 200+ — darmowa pula Serpera (2500) starcza na kilkanaście przebiegów,
+- **`dead` nie zależy od wyszukiwarki, ale naprawa ma pierwszeństwo.** Domena nierozwiązywalna w DNS
+  jest oznaczana `dead` od razu, gdy nie ma czym szukać — wcześniej brak klucza kończył się
+  `outcome: "error"` z nietkniętym źródłem i sześć nieistniejących domen `daily` odpytywało codziennie.
+  Gdy wyszukiwarka JEST, naprawę próbujemy zawsze, także dla `dns-dead`: martwa domena nie znaczy
+  martwej instytucji. `gokis-kleszczewo.pl` nie istnieje, ale GOKiS Kleszczewo działa pod
+  `gokis.kleszczewo.pl` — i właśnie takie przypadki naprawa ma łapać,
 - padnięty Overpass → discovery samego miasta centralnego zamiast utraty całego przebiegu,
 - odpowiedź modelu jest **walidowana**, nie rzutowana: rekord bez URL-a odpada, nieznane `type`/`fetch`
   są normalizowane, a kolizja `id` dostaje sufiks — `id` jest kluczem cache ekstrakcji w `state.json`,
@@ -354,11 +403,12 @@ a błąd archiwum nigdy nie wywraca pipeline'u (to observability, nie produkt).
 Supabase nie ma lifecycle rules — retencję (`ARCHIVE_RETENTION_DAYS`, domyślnie 90 dni)
 trzeba egzekwować cyklicznym czyszczeniem starych prefiksów; **jeszcze niezaimplementowane**.
 
-### Lokalny most panelu: podgląd archiwum + sonda źródeł
+### Lokalny most panelu: dane z drzewa roboczego + podgląd archiwum + sonda źródeł
 
 Panel na GH Pages to statyczny bundle — wszystko, co potrafi zrobić sam, potrafi też każdy
-odwiedzający. Dwie rzeczy muszą więc zostać na twojej maszynie: **klucz do archiwum** i
-**uruchamianie potoku** (pobranie strony + płatne wywołanie modelu). Robi je jeden proces:
+odwiedzający. Trzy rzeczy muszą więc zostać na twojej maszynie: **klucz do archiwum**,
+**uruchamianie potoku** (pobranie strony + płatne wywołanie modelu) oraz **pliki, których
+jeszcze nie ma na GitHubie**. Robi je jeden proces:
 
 ```bash
 # terminal 1 — most (klucz z .env, nasłuch tylko na 127.0.0.1)
@@ -371,6 +421,22 @@ cd panel && npm start
 Panel sam wykrywa most (`/health`) i odsłania przyciski; bez mostu chowa je i pokazuje
 `runs.json` jak dotąd. Archiwum jest przy tym **opcjonalne** — bez `SUPABASE_*` most i tak
 wstaje, bo sonda niczego od Supabase nie potrzebuje.
+
+**Dane: `main` czy drzewo robocze.** Domyślnie panel czyta
+`raw.githubusercontent.com/…/main`, czyli stan OPUBLIKOWANY — bo wdrożony panel innego źródła
+nie ma. Skutek uboczny był jednak dotkliwy: przebieg puszczony lokalnie zapisuje do drzewa
+roboczego i **był niewidoczny aż do commita i pusha** (plus kilka minut cache CDN), czyli
+iteracja nad discovery wyglądała jak „zatwierdź, żeby zobaczyć, co zatwierdzasz".
+
+Gdy most stoi, pliki idą z niego (`GET /file?name=…`) i widać także niezacommitowane przebiegi.
+W nagłówku panelu jest znacznik **`local`** (wyróżniony) albo **`main`** — bez niego nie da się
+odróżnić jednego stanu od drugiego z samego ekranu, a to była pierwotna pomyłka.
+
+Most oddaje **jawną listę** plików (`sources.json`, `events.json`, `runs.json`, `audit.json`,
+`discover-runs.json`, `costs.json`) mapowaną nazwa → ścieżka. Nie sklejamy katalogu z parametrem,
+więc `?name=../.env` nie jest walidowane — ono po prostu nie istnieje w mapie.
+Dopóki most nie odpowie na `/health`, panel **nie wysyła żadnego żądania o dane**: inaczej każdy
+plik leciałby dwa razy, a użytkownik zdążyłby zobaczyć stan z `main` i mu uwierzyć.
 
 **Podgląd archiwum.** `runs.json` niesie **ścieżki** obiektów (`SourceRun.archive`) — same
 ścieżki nie są wrażliwe, więc wdrożony panel pokazuje listę i informację, że treść jest prywatna.
@@ -437,11 +503,13 @@ npm test            # node:test przez tsx, bez dodatkowych zależności
 ≤ 4 parametry · ≤ 3 zagnieżdżone callbacki. Liczone bez pustych linii i komentarzy — gęsty
 JSDoc w tym repo jest dokumentacją decyzji, nie długiem.
 
-**Ostrzeżenia:** długość i złożoność funkcji. Zostało osiem orkiestratorów wejścia/wyjścia
-(`run`, `main`, `webSearch`, `collect`, `chat`, `discoverTown`, `processSource`/`processFollowup`,
-`verifySource`), których nie da się sprawdzić bez płatnego przebiegu — lista i uzasadnienie
-są w `eslint.shared.js`. Wszystko, co dało się rozciąć pod osłoną testu albo wyjścia
-bajt-w-bajt, jest już rozcięte.
+**Ostrzeżenia:** długość i złożoność funkcji. Zostało pięć orkiestratorów wejścia/wyjścia
+(`run`, `collect`, `chat`, `discoverTown`, `processSource`/`processFollowup`), których nie da się
+sprawdzić bez płatnego przebiegu — lista i uzasadnienie są w `eslint.shared.js`. Wszystko, co dało
+się rozciąć pod osłoną testu albo wyjścia bajt-w-bajt, jest już rozcięte: przy rozbiciu etapu 1
+na profiler zeszły z listy `main` (rozdzielacz trybów + `runDiscovery`/`runStages`/`persist`),
+`verifySource` (`onReachable`/`onUnreachable` + `verify/profile.ts`) oraz `webSearch`
+(budżet przeniesiony do `adapters/search.ts`).
 
 Wyrocznie offline (darmowe, bez sieci), przydatne przy każdej zmianie w potoku:
 

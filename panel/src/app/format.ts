@@ -157,7 +157,7 @@ export const CATEGORY_META: Record<CostCategory, CategoryMeta> = {
   },
   'llm-verify': { label: 'LLM · verify', what: 'Haiku: naprawa martwych URL-i (etap 1)', slot: 4 },
   fb: { label: 'Facebook', what: 'Bright Data: rekordy wydarzeń i postów grup', slot: 5 },
-  search: { label: 'Search', what: 'Brave Search: zapytania (darmowy tier 2000/mies.)', slot: 6 },
+  search: { label: 'Search', what: 'wyszukiwarka: zapytania (Google CSE 100/dzień gratis)', slot: 6 },
   scrape: {
     label: 'Scraping',
     what: 'pobrania HTTP + headless (GH Actions: 0 zł dla repo publicznego)',

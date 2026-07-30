@@ -761,5 +761,3730 @@
    "costDiscoveryUsd": 0,
    "costVerifyUsd": 0
   }
+ },
+ {
+  "stage": "discover",
+  "mode": "verify",
+  "startedAt": "2026-07-30T18:45:31.961Z",
+  "finishedAt": "2026-07-30T18:54:01.301Z",
+  "durationMs": 509340,
+  "towns": [],
+  "verifications": [
+   {
+    "id": "poznan-city-api",
+    "name": "Poznań – miejski web service wydarzeń",
+    "town": "Poznań",
+    "url": "https://www.um.poznan.pl/web-service/events?wsdl",
+    "outcome": "dead",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 444,
+     "completionTokens": 70,
+     "costUsd": 0.000794
+    },
+    "ms": 3894,
+    "probe": {
+     "at": "2026-07-30T18:45:31.990Z",
+     "url": "https://www.um.poznan.pl/web-service/events?wsdl",
+     "ok": true,
+     "ms": 459,
+     "httpStatus": 200,
+     "contentType": "text/xml",
+     "finalUrl": "https://www.poznan.pl/web-service/events?wsdl",
+     "chars": 6154
+    },
+    "reach": "redirected",
+    "httpStatus": 200,
+    "newUrl": "https://www.poznan.pl/web-service/events?wsdl",
+    "note": "drabina: redirected → fetch:\"api\"",
+    "verdict": "none",
+    "err": "Adres to WSDL web service (interfejs techniczny), nie strona HTML z listą wydarzeń dla użytkownika.",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-poznan-city-api/0001-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "poznan-kultura",
+    "name": "kultura.poznan.pl – Kalendarium",
+    "town": "Poznań",
+    "url": "https://kultura.poznan.pl/mim/public/kultura/events.html?co=list&lang=pl&category=&p={page}",
+    "outcome": "fixed",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 3069,
+     "completionTokens": 128,
+     "costUsd": 0.003709
+    },
+    "ms": 4791,
+    "probe": {
+     "at": "2026-07-30T18:45:35.884Z",
+     "url": "https://kultura.poznan.pl/mim/public/kultura/events.html?co=list&lang=pl&category=&p=1",
+     "ok": true,
+     "ms": 454,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "finalUrl": "https://kultura.poznan.pl/mim/kultura/events.html?co=list&lang=pl&category=&p=1",
+     "chars": 91573
+    },
+    "reach": "redirected",
+    "httpStatus": 200,
+    "newUrl": "https://kultura.poznan.pl/mim/kultura/events.html?co=list&lang=pl&category=&p=1",
+    "note": "drabina: redirected",
+    "entrypoints": [
+     {
+      "url": "https://kultura.poznan.pl/mim/public/kultura/events.html?co=list&lang=pl&category=&p={page}",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/mim/kultura/events/{slug}.html",
+      "detailCount": 20,
+      "paginated": true
+     }
+    ],
+    "verdict": "events",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-poznan-kultura/0002-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "poznan-kultura-rss",
+    "name": "kultura.poznan.pl – RSS",
+    "town": "Poznań",
+    "url": "https://kultura.poznan.pl/mim/feeds/",
+    "outcome": "fixed",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 1954,
+     "completionTokens": 127,
+     "costUsd": 0.002589
+    },
+    "ms": 4250,
+    "probe": {
+     "at": "2026-07-30T18:45:40.675Z",
+     "url": "https://kultura.poznan.pl/mim/feeds/",
+     "ok": true,
+     "ms": 271,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "finalUrl": "https://www.poznan.pl/mim/feeds/",
+     "chars": 107423
+    },
+    "reach": "redirected",
+    "httpStatus": 200,
+    "newUrl": "https://www.poznan.pl/mim/feeds/",
+    "note": "drabina: redirected",
+    "entrypoints": [
+     {
+      "url": "https://www.poznan.pl/mim/public/events/events.html?co=list&lang=pl&category=&p={page}",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/mim/events/{slug}.html",
+      "detailCount": 21,
+      "paginated": true
+     }
+    ],
+    "verdict": "events",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-poznan-kultura-rss/0003-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "poznan-events",
+    "name": "poznan.pl – Co? Gdzie? Kiedy?",
+    "town": "Poznań",
+    "url": "https://www.poznan.pl/mim/events/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2574,
+     "completionTokens": 129,
+     "costUsd": 0.003219
+    },
+    "ms": 3930,
+    "probe": {
+     "at": "2026-07-30T18:45:44.925Z",
+     "url": "https://www.poznan.pl/mim/events/",
+     "ok": true,
+     "ms": 188,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 164773
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://www.poznan.pl/mim/events/seances/",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/mim/events/seances/{slug}.html",
+      "detailCount": 32
+     }
+    ],
+    "verdict": "events",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-poznan-events/0004-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "ck-zamek",
+    "name": "CK Zamek",
+    "town": "Poznań",
+    "url": "https://ckzamek.pl/wydarzenia/",
+    "outcome": "fixed",
+    "searches": [
+     {
+      "query": "\"CK Zamek\" Poznań",
+      "results": [
+       {
+        "title": "Centrum Kultury Zamek w Poznaniu",
+        "url": "https://ckzamek.pl/",
+        "desc": "W sierpniu Poznań ponownie stanie się centrum polskiej poezji performatywnej. ... Place CK ZAMEK; Hour g. 9 - 15; Datefrom 14.07.2026 to 4.08.2026. Wstęp wolny ..."
+       },
+       {
+        "title": "Centrum Kultury ZAMEK Poznań (@ckzamek)",
+        "url": "https://www.instagram.com/ckzamek/",
+        "desc": "WAKACJE NA DWORZE 14.07-4.08 W CK ZAMEK przenikają się i wzajemnie dopełniają sztuki wizualne, teatr, film, muzyka i literatura."
+       },
+       {
+        "title": "Centrum Kultury ZAMEK",
+        "url": "https://www.bilety24.pl/organizator/centrum-kultury-zamek-40.html",
+        "desc": "CK ZAMEK to otwarte miejsce, do którego można wejść aby uczestniczyć w wydarzeniach lub zwiedzać wnętrza zamkowe. Rocznie Zamek odwiedzany jest przez około ..."
+       },
+       {
+        "title": "Centrum Kultury Zamek",
+        "url": "https://www.poznan.pl/mim/main/-,p,11762,11774,12055.html",
+        "desc": "CK Zamek prowadzi szeroką działalność artystyczną i edukacyjną: jest jednocześnie galerią, kinem, salą koncertową, teatrem. CK Zamek jest także organizatorem i ..."
+       },
+       {
+        "title": "Centrum Kultury ZAMEK w Poznaniu | Poznan",
+        "url": "https://www.facebook.com/ckzamek/?locale=pl_PL",
+        "desc": "W CK ZAMEK przenikają się i wzajemnie dopełniają sztuki wizualne, teatr, film, muzyka i literatura. Ośrodek kulturalny · Umiarkowane ceny."
+       },
+       {
+        "title": "Centrum Kultury Zamek - bip.poznan.pl",
+        "url": "https://bip.poznan.pl/bip/centrum-kultury-zamek,1674/",
+        "desc": "Centrum Kultury Zamek (CK Zamek). Dostępne formaty API. API: XML · JSON. Kierownik/Dyrektor. Anna Hryniewiecka ul. Św. Marcin 80/82, 61-809 Poznań 61 646 52 76"
+       },
+       {
+        "title": "CK ZAMEK | 20% zniżki na zamkową STREFĘ ZABAWY",
+        "url": "https://okpoznan.pl/szczegoly-benefitu/9Y3J4xMbIHoAMwfYrJhH_ck-zamek-20-znizki-na-zamkowa-strefe-zabawy",
+        "desc": "CK ZAMEK | 20% zniżki na zamkową STREFĘ ZABAWY · CK ZAMEK · Święty Marcin 80/82 Poznań · [e-mail w źródle] · ckzamek.pl."
+       }
+      ],
+      "ms": 1261
+     },
+     {
+      "query": "CK Zamek Poznań wydarzenia",
+      "results": [
+       {
+        "title": "Centrum Kultury Zamek w Poznaniu",
+        "url": "https://ckzamek.pl/",
+        "desc": "www.poznan.pl https://bip.poznan.pl/bip/centrum-kultury-zamek,1674/. Przejdź ... Wydarzenia. Otwórz panel wydarzeń Wydarzenia. rozwiń. Szukaj wydarzeń ..."
+       },
+       {
+        "title": "Centrum Kultury Zamek | bilety na wydarzenia 2026",
+        "url": "https://www.ebilet.pl/miejsce/centrum-kultury-zamek?srsltid=AfmBOopzBNKRXAi2y7KY1Vum6-JpVC5sI-3A4eManDC-CuxDzgomO0c-",
+        "desc": "Zobacz na jakie wydarzenia zaprasza w najbliższym czasie Centrum Kultury Zamek. Kup bilety szybko i wygodnie na eBilet.pl."
+       },
+       {
+        "title": "Centrum Kultury Zamek | Kino Pałacowe",
+        "url": "https://ckzamek.bilety24.pl/",
+        "desc": "Wakacje na dworze. „Mamy to w nosie” – spektakl sensoryczny. Poznań 30.07.2026, g. 11:00 ; Przestrzenie Historyczne Zamku- Audioprzewodnik. Poznań 30.07.2026, g."
+       },
+       {
+        "title": "Centrum Kultury ZAMEK w Poznaniu | Poznan",
+        "url": "https://www.facebook.com/ckzamek/?locale=pl_PL",
+        "desc": "W CK ZAMEK przenikają się i wzajemnie dopełniają sztuki wizualne, teatr, film, muzyka i literatura. Ośrodek kulturalny · Umiarkowane ceny."
+       },
+       {
+        "title": "Centrum Kultury ZAMEK Poznań (@ckzamek)",
+        "url": "https://www.instagram.com/ckzamek/",
+        "desc": "WAKACJE NA DWORZE 14.07-4.08 W CK ZAMEK przenikają się i wzajemnie dopełniają sztuki wizualne, teatr, film, muzyka i literatura."
+       },
+       {
+        "title": "Centrum Kultury ZAMEK",
+        "url": "https://www.bilety24.pl/organizator/centrum-kultury-zamek-40.html",
+        "desc": "Każdego roku odbywa się tu około 2500 wydarzeń kulturalnych. W Centrum Kultury Zamek realizowane są spektakle teatralne, seanse filmowe, koncerty, spotkania ..."
+       },
+       {
+        "title": "Wydarzenia w Sala Wielka CK Zamek",
+        "url": "https://ticketclub.pl/miejsca/sala-wielka-ck-zamek-poznan-9/",
+        "desc": "Niezapomniany klimat i wyjątkowe brzmienia tylko w Sali Wielkiej CK Zamek. Sprawdź kalendarium wydarzeń i kup bilety w TicketClub.pl."
+       }
+      ],
+      "ms": 987
+     }
+    ],
+    "llm": {
+     "calls": 2,
+     "promptTokens": 2694,
+     "completionTokens": 115,
+     "costUsd": 0.003269
+    },
+    "ms": 11314,
+    "probe": {
+     "at": "2026-07-30T18:45:50.530Z",
+     "url": "https://ckzamek.pl/wydarzenia/",
+     "ok": false,
+     "ms": 282,
+     "httpStatus": 404,
+     "contentType": "text/html",
+     "err": "HTTP 404"
+    },
+    "reach": "http-error",
+    "ladder": [
+     {
+      "url": "https://ckzamek.pl/wydarzenia/",
+      "outcome": "http-error",
+      "httpStatus": 404,
+      "err": "HTTP 404"
+     },
+     {
+      "url": "http://ckzamek.pl/wydarzenia/",
+      "outcome": "http-error",
+      "httpStatus": 404,
+      "err": "HTTP 404"
+     },
+     {
+      "url": "https://www.ckzamek.pl/wydarzenia/",
+      "outcome": "http-error",
+      "httpStatus": 404,
+      "err": "HTTP 404"
+     },
+     {
+      "url": "http://www.ckzamek.pl/wydarzenia/",
+      "outcome": "http-error",
+      "httpStatus": 404,
+      "err": "HTTP 404"
+     }
+    ],
+    "httpStatus": 404,
+    "err": "HTTP 404",
+    "candidate": "https://ckzamek.pl/",
+    "candidateProbe": {
+     "at": "2026-07-30T18:45:55.479Z",
+     "url": "https://ckzamek.pl/",
+     "ok": true,
+     "ms": 455,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 146552
+    },
+    "newUrl": "https://ckzamek.pl/",
+    "entrypoints": [
+     {
+      "url": "https://ckzamek.pl/",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/podstrony/{slug}",
+      "detailCount": 64
+     }
+    ],
+    "verdict": "events",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-ck-zamek/0005-anthropic_claude-haiku-4.5.json",
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-ck-zamek/0006-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "estrada",
+    "name": "Estrada Poznańska (Lato z Estradą, Estrada w Centrum)",
+    "town": "Poznań",
+    "url": "https://estrada.poznan.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 1522,
+     "completionTokens": 94,
+     "costUsd": 0.001992
+    },
+    "ms": 24071,
+    "probe": {
+     "at": "2026-07-30T18:46:00.169Z",
+     "url": "https://estrada.poznan.pl/",
+     "ok": true,
+     "ms": 3405,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 115871
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://estrada.poznan.pl/",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/event/{slug}",
+      "detailCount": 27
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "wp-rest",
+      "url": "https://estrada.poznan.pl/wp-json/wp/v2/event?per_page=5",
+      "itemsSeen": 5,
+      "datesParsed": 0,
+      "checked": "2026-07-30"
+     }
+    ],
+    "verdict": "events",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-estrada/0007-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "brama-poznania",
+    "name": "Brama Poznania / Trakt Królewsko-Cesarski",
+    "town": "Poznań",
+    "url": "https://bramapoznania.pl/wydarzenia",
+    "outcome": "fixed",
+    "searches": [
+     {
+      "query": "\"Brama Poznania / Trakt Królewsko-Cesarski\" Poznań",
+      "results": [
+       {
+        "title": "Trakt Królewsko-Cesarski ma już 20 lat",
+        "url": "https://www.poznan.pl/mim/smartcity/infoteka,1016/trakt-krolewsko-cesarski-ma-juz-20-lat,273535.html",
+        "desc": "20 lecie traktu królewsko cesarskiego Brama Poznania trakt królewsko-cesarski trakt królewsko cesarski 20 lecie. Drukuj. Pokaż QR kod. Zobacz również. Zdjęcie ..."
+       },
+       {
+        "title": "jestesmynatrakcie / Brama Poznania / Trakt Królewsko-Cesarski ...",
+        "url": "https://www.youtube.com/watch?v=RkpP07eUNn4",
+        "desc": "#jestesmynatrakcie / Brama Poznania / Trakt Królewsko-Cesarski w Poznaniu. 75 views · 10 years ago ...more. Trakt Królewsko-Cesarski. 145. Subscribe."
+       },
+       {
+        "title": "🌿 Majówka 2025 🌿 Brama Poznania 🌿 Trakt Królewsko-Cesarski ...",
+        "url": "https://www.facebook.com/olikapl/posts/-maj%C3%B3wka-2025-brama-poznania-trakt-kr%C3%B3lewsko-cesarski-w-poznaniu-pozna%C5%84skie-cent/1276996720529314/",
+        "desc": "Majówka 2025 · Brama Poznania · Trakt Królewsko-Cesarski w Poznaniu · Poznańskie Centrum Dziedzictwa."
+       },
+       {
+        "title": "Poznańskie Centrum Dziedzictwa 1m 27s",
+        "url": "https://video.poznan.pl/wideo/kultura/poznanskie-centrum-dziedzictwa/",
+        "desc": "W ramach PCD działają: Brama Poznania, Trakt Królewsko-Cesarski, Centrum Szyfrów Enigma, Galeria Śluza i Fest Fyrtel oraz takie inicjatywy ..."
+       },
+       {
+        "title": "Brama Poznania, Centrum Szyfrów Enigma",
+        "url": "https://okpoznan.pl/partnerzy/fIXQkdvhoXUJgrTKYUOU",
+        "desc": "... Brama Poznania, Trakt Królewsko- Cesarski, Centrum Szyfrów Enigma, Fest Fyrtel i Galeria Śluza. Dane kontaktowe. Gdańska 2, Poznań. [e-mail w źródle] · www ..."
+       },
+       {
+        "title": "Oferta turystyczna Poznania - Badam Poznan",
+        "url": "https://badam.poznan.pl/iv_nasza-wspolpraca/03_turystyka/oferta-turystyczna-poznania-4/",
+        "desc": "Poznańskie Centrum Dziedzictwa (Centrum) – Brama Poznania, Trakt Królewsko-Cesarski, Centrum Szyfrów Enigma, Galeria Śluza, Fest Fyrtel; · Poznańska Lokalna ..."
+       },
+       {
+        "title": "Trakt Królewsko-Cesarski w Poznaniu",
+        "url": "https://www.facebook.com/trakt.poznan/posts/%F0%9D%90%8A%F0%9D%90%A2%F0%9D%90%9E%F0%9D%90%9D%F0%9D%90%B2%F0%9D%90%AC%CC%81-%F0%9D%90%8C%F0%9D%90%98-%F0%9D%90%93%F0%9D%90%9E%F0%9D%90%AB%F0%9D%90%9A%F0%9D%90%B3-%F0%9D%90%93%F0%9D%90%98-%F0%9D%90%86%F0%9D%90%AB%F0%9D%90%9A-%F0%9D%90%B0-%F0%9D%90%A9%F0%9D%90%B2%F0%9D%90%AD%F0%9D%90%9A%F0%9D%90%A7%F0%9D%90%A2%F0%9D%90%9A-%F0%9D%90%A2-%F0%9D%90%B3%F0%9D%90%9A%F0%9D%90%9D%F0%9D%90%9A%F0%9D%90%A7%F0%9D%90%A2%F0%9D%90%9Awystawa-w-brama-poznaniaprezentujemy-/1619292250158680/",
+        "desc": "Poznania, Poznaniu, Brama Poznania, Trakt Królewsko-Cesarski. Poznan. Greater Poland Voivodeship. Poland. Recent posts. Trakt Królewsko-Cesarski ..."
+       },
+       {
+        "title": "Poznańskie zabytki i rocznica Chrztu Polski",
+        "url": "https://radiopoznan.fm/informacje/1050/poznanskie-zabytki-i-rocznica-chrztu-polski",
+        "desc": "Robert Mirzyński, Brama Poznania Trakt Królewsko-Cesarski będzie się rozgałęział; 00:00Robert Mirzyński, Brama Poznania inne szlaki na Jeżyce, Wildę i Łazarz ..."
+       },
+       {
+        "title": "Archiwa Brama Poznania - Video Poznań",
+        "url": "https://video.poznan.pl/video-tag/brama-poznania/",
+        "desc": "... Brama Poznania, Trakt Królewsko-Cesarski, Centrum Szyfrów Enigma, Galeria Śluza i Fest Fyrtel oraz takie inicjatywy jak: Archiwum Społeczne Śródki czy ..."
+       }
+      ],
+      "ms": 1518
+     },
+     {
+      "query": "Brama Poznania / Trakt Królewsko-Cesarski Poznań wydarzenia",
+      "results": [
+       {
+        "title": "Trakt Królewsko - Cesarski w Poznaniu - Trakt Królewsko-Cesarski",
+        "url": "https://trakt.poznan.pl/",
+        "desc": "Multimedialna ekspozycja opowiadająca o dziejach wyspy katedralnej, początkach państwa polskiego i historii Poznania. To pierwsze w Polsce centrum interpretacji ..."
+       },
+       {
+        "title": "Trakt Królewsko-Cesarski w Poznaniu | Poznan",
+        "url": "https://www.facebook.com/trakt.poznan/?locale=pl_PL",
+        "desc": "Wystawa w Brama Poznania. Prezentujemy 20 wydarzeń i zjawisk, które miały wpływ na charakter i tożsamość współczesnego Poznania. Za każdym z nich kryją się ..."
+       },
+       {
+        "title": "Majówka w Bramie Poznania i na Trakcie Królewsko - Cesarskim",
+        "url": "https://bramapoznania.pl/article/473/majowka-w-bramie-poznania-i-na-trakcie-krolewsko-cesarskim",
+        "desc": "W 2026 roku świętujemy 20-lecie Traktu Królewsko-Cesarskiego! Z tej okazji zapraszamy do Bramy Poznania – miejsca, które powstało z idei Traktu i wyznacza ..."
+       },
+       {
+        "title": "Trakt Królewsko-Cesarski ma już 20 lat - Aktualności Poznań. Smart City ...",
+        "url": "https://www.poznan.pl/mim/smartcity/infoteka,1016/trakt-krolewsko-cesarski-ma-juz-20-lat,273535.html",
+        "desc": "Łącznie z okazji 20. urodzin Traktu Królewsko-Cesarskiego zaplanowano 20 spacerów. Odbywać się one będą od 21 marca do 5 września - zawsze w soboty, o godz. 11: ..."
+       },
+       {
+        "title": "Brama Poznania",
+        "url": "https://bramapoznania.pl/",
+        "desc": "Najbliższe wydarzenia W Bramie Poznania · Ekspozycja główna · Zwiedzanie Ostrowa Tumskiego · Brama otwarta na rzekę."
+       },
+       {
+        "title": "Trakt Królewsko - Cesarski",
+        "url": "https://bramapoznania.pl/trakt-krolewsko-cesarski",
+        "desc": "Start Trakt Królewsko - Cesarski. Trakt Królewsko - Cesarski. ul. Gdańska 2, 61-123 Poznań Informacja: (+48) 61 647 76 34. E-mail: [e-mail w źródle] ..."
+       },
+       {
+        "title": "Trakt Królewsko-Cesarski w Poznaniu",
+        "url": "https://pl.wikipedia.org/wiki/Trakt_Kr%C3%B3lewsko-Cesarski_w_Poznaniu",
+        "desc": "Trakt Królewsko-Cesarski w Poznaniu – główna trasa turystyczno-kulturowa przebiegająca przez Poznań. Łączy najpopularniejsze turystycznie obszary centrum ..."
+       },
+       {
+        "title": "Majówka w Bramie Poznania | 2026",
+        "url": "https://pcd.poznan.pl/article/706/maj-oacute-wka-w-bramie-poznania-nbsp-",
+        "desc": "Na weekend majowy przygotowaliśmy program pełen atrakcji: warsztaty, spacery, animacje dla dzieci oraz koncert. W ramach Majówki odbędzie się także premiera ..."
+       },
+       {
+        "title": "Tak spędzaliśmy zeszłoroczną Majówkę w Brama Poznania! Mamy ...",
+        "url": "https://www.facebook.com/trakt.poznan/videos/tak-sp%C4%99dzali%C5%9Bmy-zesz%C5%82oroczn%C4%85-maj%C3%B3wk%C4%99-w-brama-poznania-mamy-nadziej%C4%99-%C5%BCe-nasze-wsp/950620094235883/",
+        "desc": null
+       }
+      ],
+      "ms": 1356
+     }
+    ],
+    "llm": {
+     "calls": 2,
+     "promptTokens": 4330,
+     "completionTokens": 115,
+     "costUsd": 0.004905
+    },
+    "ms": 17171,
+    "probe": {
+     "at": "2026-07-30T18:46:26.434Z",
+     "url": "https://bramapoznania.pl/wydarzenia",
+     "ok": false,
+     "ms": 317,
+     "httpStatus": 404,
+     "contentType": "text/html",
+     "err": "HTTP 404"
+    },
+    "reach": "http-error",
+    "ladder": [
+     {
+      "url": "https://bramapoznania.pl/wydarzenia",
+      "outcome": "http-error",
+      "httpStatus": 404,
+      "err": "HTTP 404"
+     },
+     {
+      "url": "http://bramapoznania.pl/wydarzenia",
+      "outcome": "http-error",
+      "httpStatus": 404,
+      "err": "HTTP 404"
+     },
+     {
+      "url": "https://www.bramapoznania.pl/wydarzenia",
+      "outcome": "http-error",
+      "httpStatus": 404,
+      "err": "HTTP 404"
+     },
+     {
+      "url": "http://www.bramapoznania.pl/wydarzenia",
+      "outcome": "http-error",
+      "httpStatus": 404,
+      "err": "HTTP 404"
+     }
+    ],
+    "httpStatus": 404,
+    "err": "HTTP 404",
+    "candidate": "https://bramapoznania.pl/",
+    "candidateProbe": {
+     "at": "2026-07-30T18:46:31.368Z",
+     "url": "https://bramapoznania.pl/",
+     "ok": true,
+     "ms": 372,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 49264
+    },
+    "newUrl": "https://bramapoznania.pl/",
+    "entrypoints": [
+     {
+      "url": "https://bramapoznania.pl/kalendarium",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/event/{id}/{slug}",
+      "detailCount": 767
+     }
+    ],
+    "verdict": "events",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-brama-poznania/0008-anthropic_claude-haiku-4.5.json",
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-brama-poznania/0009-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "teatr-animacji",
+    "name": "Teatr Animacji (repertuar + wiek widzów)",
+    "town": "Poznań",
+    "url": "https://teatranimacji.pl/pl/repertuar",
+    "outcome": "dead",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 455,
+     "completionTokens": 90,
+     "costUsd": 0.000905
+    },
+    "ms": 3033,
+    "probe": {
+     "at": "2026-07-30T18:46:41.412Z",
+     "url": "https://teatranimacji.pl/pl/repertuar",
+     "ok": true,
+     "ms": 278,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 26299
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "verdict": "none",
+    "err": "Strona repertuaru nie wczytała się (Wczytywanie...) — nie można zweryfikować obecności listy wydarzeń z datami.",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-teatr-animacji/0010-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "biblraczynskich",
+    "name": "Biblioteka Raczyńskich – wydarzenia",
+    "town": "Poznań",
+    "url": "https://bracz.edu.pl/wydarzenia/",
+    "outcome": "fixed",
+    "searches": [
+     {
+      "query": "\"Biblioteka Raczyńskich – wydarzenia\" Poznań",
+      "results": [
+       {
+        "title": "Darmowe i tanie wydarzenia w Poznaniu w czerwcu 2026",
+        "url": "https://www.tiktok.com/@chce.ci.powiedziec/video/7646827458754268449",
+        "desc": "... Poznań, Biblioteka Raczyńskich wydarzenia, Noc Świętojańska Polana nad Wartą, koncert otwarcia Malta darmowy, warsztaty Hekate Poznań. To ..."
+       },
+       {
+        "title": "Darmowe i tanie wydarzenia w Poznaniu w lipcu 2026",
+        "url": "https://www.tiktok.com/@chce.ci.powiedziec/video/7657594767085292833",
+        "desc": "... Poznań, ParkRun Poznań, koncerty plenerowe Poznań, biblioteka Raczyńskich wydarzenia, Jarmark Rycerski Śródecki, Muzeum Historii Ubioru ..."
+       }
+      ],
+      "ms": 1166
+     },
+     {
+      "query": "Biblioteka Raczyńskich – wydarzenia Poznań wydarzenia",
+      "results": [
+       {
+        "title": "Aktualności",
+        "url": "https://bracz.edu.pl/aktualnosci-kulturalne/",
+        "desc": "Na lipcowym spotkaniu Wildeckiego Dyskusyjnego Klubu Książki będziemy rozmawiać o książce „Toń” Ishbel Szatrawskiej – opowieści o historii rodziny związanej ..."
+       },
+       {
+        "title": "Biblioteka Raczyńskich - Oficjalna strona Biblioteki ...",
+        "url": "https://bracz.edu.pl/",
+        "desc": "Aktualności ; Tęsknota za transcendencją. Rzeźba i rysunek Romana Kosmali. Wernisaż · 4 sierpnia 2026, 18:00 · Sprzedaż mebli ; Pamiętaj o podróżach. Azory – wyspy ..."
+       },
+       {
+        "title": "Biblioteka Raczyńskich | Poznan",
+        "url": "https://www.facebook.com/Biblioteka.Raczynskich/?locale=pl_PL",
+        "desc": "Sierpień u drzwi! Trzy spotkania CZYTATOWE, wystawa rzeźb i rysunków Romana Kosmali, escape room inspirowany powieścią Chmielewskiej, rozmowa o miejskim ..."
+       },
+       {
+        "title": "Kalendarz",
+        "url": "https://bracz.edu.pl/kalendarz/",
+        "desc": "Oficjalna strona Biblioteki Raczyńskich w Poznaniu. Toggle search form modal ... 61-739 Poznań tel. 61 88 58 962. REGON [tel. w źródle]. NIP 7781128507. Nr konta ..."
+       },
+       {
+        "title": "Nadchodzące wydarzenia w Bibliotece Raczyńskich",
+        "url": "https://centrumis.pl/marzec-w-bibliotece-raczynskich-2/?print=print",
+        "desc": "Oprowadzanie kuratorskie po wystawie czasowej Trójkąty miłosne u Sienkiewicza. Odsłona II: „Rodzina Połanieckich”. 16 marca, godz. 12.30; miejsce: Muzeum ..."
+       },
+       {
+        "title": "Archiwa koncert",
+        "url": "https://bracz.edu.pl/event/tag/koncert/",
+        "desc": "VI Międzynarodowy Festiwal Muzyczny „Duetomania” zagości w Bibliotece Raczyńskich w wyjątkowej odsłonie skierowanej do rodzin z dziećmi – i nie tylko."
+       },
+       {
+        "title": "Tag: zajęcia dla dzieci",
+        "url": "https://bracz.edu.pl/event/tag/zajecia-dla-dzieci/",
+        "desc": "Pan Przyroda, czyli Szymon Michalak i Biblioteka Raczyńskich zapraszają na warsztaty miłośników jaszczurek i dzikiej przyrody. Zajęcia dla dzieci w wieku 5+ z ..."
+       },
+       {
+        "title": "Archiwa Filia Sztuki",
+        "url": "https://bracz.edu.pl/event/category/filie-wydarzenia/filia-sztuki/",
+        "desc": "Kategoria: Filia Sztuki · Festiwal Tradycji Poznańskich. Wykład dr Alicji Przybyszewskiej o Marii Wicherkiewiczowej · CZYTATY 10/10. · Pamiętaj o podróżach."
+       },
+       {
+        "title": "Biblioteka Raczyńskich (@bibliotekaraczynskich) · Poznan",
+        "url": "https://www.instagram.com/bibliotekaraczynskich/",
+        "desc": "25 skrzyń, około tysiąca książek czeka na kiermasz, towarzyszący Festiwalowi Ludzie Książki! Już jutro i w sobotę będzie można nabyć książki wycofane ze zbiorów ..."
+       }
+      ],
+      "ms": 735
+     }
+    ],
+    "llm": {
+     "calls": 2,
+     "promptTokens": 3358,
+     "completionTokens": 111,
+     "costUsd": 0.003913
+    },
+    "ms": 36991,
+    "probe": {
+     "at": "2026-07-30T18:46:52.885Z",
+     "url": "https://bracz.edu.pl/wydarzenia/",
+     "ok": false,
+     "ms": 1214,
+     "httpStatus": 404,
+     "contentType": "text/html",
+     "err": "HTTP 404"
+    },
+    "reach": "http-error",
+    "ladder": [
+     {
+      "url": "https://bracz.edu.pl/wydarzenia/",
+      "outcome": "http-error",
+      "httpStatus": 404,
+      "err": "HTTP 404"
+     },
+     {
+      "url": "http://bracz.edu.pl/wydarzenia/",
+      "outcome": "http-error",
+      "httpStatus": 404,
+      "err": "HTTP 404"
+     },
+     {
+      "url": "https://www.bracz.edu.pl/wydarzenia/",
+      "outcome": "http-error",
+      "httpStatus": 404,
+      "err": "HTTP 404"
+     },
+     {
+      "url": "http://www.bracz.edu.pl/wydarzenia/",
+      "outcome": "http-error",
+      "httpStatus": 404,
+      "err": "HTTP 404"
+     }
+    ],
+    "httpStatus": 404,
+    "err": "HTTP 404",
+    "candidate": "https://bracz.edu.pl/kalendarz/",
+    "candidateProbe": {
+     "at": "2026-07-30T18:46:57.682Z",
+     "url": "https://bracz.edu.pl/kalendarz/",
+     "ok": true,
+     "ms": 1758,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 123206
+    },
+    "newUrl": "https://bracz.edu.pl/kalendarz/",
+    "entrypoints": [
+     {
+      "url": "https://bracz.edu.pl/kalendarz/",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/event/{id}/{id}/{id}",
+      "detailCount": 10
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://bracz.edu.pl/feed/",
+      "itemsSeen": 11,
+      "datesParsed": 11,
+      "checked": "2026-07-30"
+     },
+     {
+      "kind": "rss",
+      "url": "https://bracz.edu.pl/comments/feed/",
+      "itemsSeen": 1,
+      "datesParsed": 1,
+      "checked": "2026-07-30"
+     },
+     {
+      "kind": "wp-rest",
+      "url": "https://bracz.edu.pl/wp-json/wp/v2/tribe_venue?per_page=5",
+      "itemsSeen": 5,
+      "datesParsed": 0,
+      "checked": "2026-07-30"
+     },
+     {
+      "kind": "tribe",
+      "url": "https://bracz.edu.pl/wp-json/tribe/events/v1/events",
+      "itemsSeen": 11,
+      "datesParsed": 11,
+      "checked": "2026-07-30"
+     },
+     {
+      "kind": "ical",
+      "url": "https://bracz.edu.pl/kalendarz/?ical=1",
+      "itemsSeen": 2,
+      "datesParsed": 4,
+      "checked": "2026-07-30"
+     }
+    ],
+    "verdict": "events",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-biblraczynskich/0011-anthropic_claude-haiku-4.5.json",
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-biblraczynskich/0012-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "palmiarnia",
+    "name": "Palmiarnia Poznańska",
+    "town": "Poznań",
+    "url": "https://palmiarnia.poznan.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 1473,
+     "completionTokens": 103,
+     "costUsd": 0.001988
+    },
+    "ms": 9252,
+    "probe": {
+     "at": "2026-07-30T18:47:21.435Z",
+     "url": "https://palmiarnia.poznan.pl/",
+     "ok": true,
+     "ms": 929,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 140920
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://palmiarnia.poznan.pl/aktualnosci/",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/{slug}",
+      "detailCount": 23
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://palmiarnia.poznan.pl/feed/",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-07-30"
+     }
+    ],
+    "verdict": "news",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-palmiarnia/0013-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "nowe-zoo",
+    "name": "ZOO Poznań – wydarzenia",
+    "town": "Poznań",
+    "url": "https://zoo.poznan.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 1626,
+     "completionTokens": 98,
+     "costUsd": 0.002116
+    },
+    "ms": 16631,
+    "probe": {
+     "at": "2026-07-30T18:47:30.687Z",
+     "url": "https://zoo.poznan.pl/",
+     "ok": true,
+     "ms": 1378,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 167791
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://zoo.poznan.pl/category/aktualnosci/page/{page}",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/{id}/{id}/{id}/{slug}",
+      "detailCount": 10,
+      "paginated": true
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://zoo.poznan.pl/feed/",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-07-30"
+     },
+     {
+      "kind": "rss",
+      "url": "https://zoo.poznan.pl/comments/feed/",
+      "itemsSeen": 6,
+      "datesParsed": 6,
+      "checked": "2026-07-30"
+     },
+     {
+      "kind": "wp-rest",
+      "url": "https://zoo.poznan.pl/wp-json/wp/v2/tribe_venue?per_page=5",
+      "itemsSeen": 5,
+      "datesParsed": 0,
+      "checked": "2026-07-30"
+     }
+    ],
+    "verdict": "news",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-nowe-zoo/0014-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "dk-stokrotka",
+    "name": "Dom Kultury Stokrotka (Grunwald)",
+    "town": "Poznań",
+    "url": "https://www.facebook.com/DKStokrotka/",
+    "outcome": "skipped",
+    "searches": [],
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0,
+    "note": "fetch:\"fb\" — adresy FB nie odpowiadają na zwykły fetch"
+   },
+   {
+    "id": "dk-pod-lipami",
+    "name": "Dom Kultury Pod Lipami (Winogrady)",
+    "town": "Poznań",
+    "url": "https://www.psm-winogrady.pl/domy-kultury/",
+    "outcome": "dead",
+    "searches": [
+     {
+      "query": "\"Dom Kultury Pod Lipami (Winogrady)\" Poznań",
+      "results": [
+       {
+        "title": "The Best Camp Sp. z o.o. (@thebestcamp_poznan) · Poznan",
+        "url": "https://www.instagram.com/thebestcamp_poznan/",
+        "desc": "... POZNAŃ, Osiedlowy Dom Kultury \"Pod Lipami\", Winogrady ❤️ ❄️ TARNOWO PODGÓRNE, Gminny Ośrodek Kultury SEZAM ❤️ Rodzicu, nasze półkolonie to zawsze ..."
+       },
+       {
+        "title": "Janusz Dembski – Wikipedia, wolna encyklopedia",
+        "url": "https://pl.wikipedia.org/wiki/Janusz_Dembski",
+        "desc": "powołanie Osiedlowego Dom Kultury Pod Lipami (Winogrady),; otwarcie Izby Pamięci Kazimiery Iłłakowiczówny (ul. Gajowa),; otwarcie Izby Pamięci Jerzego Pertka ..."
+       }
+      ],
+      "ms": 1083
+     },
+     {
+      "query": "Dom Kultury Pod Lipami (Winogrady) Poznań wydarzenia",
+      "results": [
+       {
+        "title": "aktualności odk pod lipami",
+        "url": "https://psmwinogrady.pl/category/aktualnosci-odk-pod-lipami/",
+        "desc": "Scena Pod Lipami – Józef Wajdzik – “Nowe Brzmienie Klasyki” – koncert akordeonowy, czwartek, 20.08.2026r., godz. 18:00, bilety 50 zł. Opublikowano: środa 22 ..."
+       },
+       {
+        "title": "Osiedlowy Dom Kultury \"Pod Lipami\" | Poznan",
+        "url": "https://www.facebook.com/odkpodlipami/?locale=pl_PL",
+        "desc": "Zapraszamy na najbliższe wydarzenia do Osiedlowy Dom Kultury \"Pod Lipami\" 🎟️ 20.11 o 17:00 spektakl dla dzieci „Lekcja u Pana Kleksa” „Lekcja u Pana Kleksa” - ..."
+       },
+       {
+        "title": "PSM Winogrady | Poznańska Spółdzielnia Mieszkaniowa",
+        "url": "https://psmwinogrady.pl/kalendarium-wydarzen-kulturalnych/znacznik/winogrady-poznan/lista/?tribe-bar-date=2026-08-08&eventDisplay=past",
+        "desc": "Galeria Pod Lipami – Wystawa twórczości dzięciecej w wieku 6-12 lat, pt. Przestrzenie wyobraźni, godzina 18:00, wstęp wolny. 12 czerwca @ 18:00 ..."
+       },
+       {
+        "title": "Scena Pod Lipami",
+        "url": "https://psmwinogrady.pl/kalendarium-wydarzen-kulturalnych/kategoria/scena-pod-lipami/lista/?eventDisplay=past",
+        "desc": "SCENA “POD LIPAMI” – Nagle Teatr – “PO TRUPIE DO CELI” – 12.10.2025r., godzina 17:00. Osiedlowy Dom Kultury \"Pod Lipami\" Os. Pod Lipami 108A, Poznań."
+       },
+       {
+        "title": "poznań",
+        "url": "https://psmwinogrady.pl/kalendarium-wydarzen-kulturalnych/znacznik/poznan/lista/?tribe-bar-date=2026-08-09&eventDisplay=past",
+        "desc": "ODK „Pod Lipami” – Święto Os. · ODK „Pod Lipami” -Mistrzostwa w układaniu kostki Rubika – wstęp wolny · ODK „Pod Lipami” – WIECZÓR GIER ..."
+       },
+       {
+        "title": "Osiedlowy Dom Kultury \"Pod Lipami\" | Poznan",
+        "url": "https://www.facebook.com/osiedlowydomkulturypodlipami/",
+        "desc": "Zapraszamy! Data: 1.08.2026 Teatr MOZAIKA Spektakl \"Grajcie dudki, a wesoło!\" Poznań, Osiedlowy Dom Kultury Pod Lipami #dladzieci ..."
+       },
+       {
+        "title": "OFERTA I PLAN ZAJĘĆ ODK POD LIPAMI",
+        "url": "https://psmwinogrady.pl/category/oferta-i-plan-zajec-odk-pod-lipami/",
+        "desc": "OFERTA I PLAN ZAJĘĆ ODK POD LIPAMI · Warsztaty Cyrkowe dla dzieci · Judo dla dzieci · Zajęcia z robotyki z Go4Robot · Akademia Gier Cube w ODK Pod Lipami · Sploty ..."
+       },
+       {
+        "title": "Archiwum Wydarzenia",
+        "url": "https://psmwinogrady.pl/kalendarium-wydarzen-kulturalnych/lista/?tribe-bar-date=2026-07-25&eventDisplay=past",
+        "desc": "Galeria Pod Lipami – Wystawa twórczości dzięciecej w wieku 6-12 lat, pt. Przestrzenie wyobraźni, godzina 18:00, wstęp wolny. Osiedlowy Dom ..."
+       },
+       {
+        "title": "PSM Winogrady | Poznańska Spółdzielnia Mieszkaniowa",
+        "url": "https://psmwinogrady.pl/kalendarium-wydarzen-kulturalnych/znacznik/odkpodlipami/strona/2/?tribe-bar-date=2026-08-18&eventDisplay=past",
+        "desc": "ODK „Pod Lipami” – Powitanie Chińskiego Nowego Roku | 7.02, 17:00. 7 lutego @ 17:00 · 19:00 ; ODK Pod Lipami Bitwa na dowcipy + wieczór stand-up."
+       },
+       {
+        "title": "podlipami",
+        "url": "https://psmwinogrady.pl/kalendarium-wydarzen-kulturalnych/znacznik/podlipami/lista/?eventDisplay=past",
+        "desc": "Galeria Pod Lipami – Wystawa twórczości dzięciecej w wieku 6-12 lat, pt. Przestrzenie wyobraźni, godzina 18:00, wstęp wolny. 12 czerwca @ 18:00 ..."
+       }
+      ],
+      "ms": 1662
+     }
+    ],
+    "llm": {
+     "calls": 2,
+     "promptTokens": 3984,
+     "completionTokens": 178,
+     "costUsd": 0.004874
+    },
+    "ms": 11704,
+    "probe": {
+     "at": "2026-07-30T18:47:47.466Z",
+     "url": "https://www.psm-winogrady.pl/domy-kultury/",
+     "ok": false,
+     "ms": 12,
+     "err": "GET https://www.psm-winogrady.pl/domy-kultury/: TypeError: fetch failed ← getaddrinfo ENOTFOUND www.psm-winogrady.pl"
+    },
+    "reach": "dns-dead",
+    "ladder": [
+     {
+      "url": "https://www.psm-winogrady.pl/domy-kultury/",
+      "outcome": "dns-dead",
+      "err": "GET https://www.psm-winogrady.pl/domy-kultury/: TypeError: fetch failed ← getaddrinfo ENOTFOUND www.psm-winogrady.pl"
+     },
+     {
+      "url": "http://www.psm-winogrady.pl/domy-kultury/",
+      "outcome": "dns-dead",
+      "err": "GET http://www.psm-winogrady.pl/domy-kultury/: TypeError: fetch failed ← getaddrinfo ENOTFOUND www.psm-winogrady.pl"
+     },
+     {
+      "url": "https://psm-winogrady.pl/domy-kultury/",
+      "outcome": "dns-dead",
+      "err": "GET https://psm-winogrady.pl/domy-kultury/: TypeError: fetch failed ← getaddrinfo ENOTFOUND psm-winogrady.pl"
+     },
+     {
+      "url": "http://psm-winogrady.pl/domy-kultury/",
+      "outcome": "dns-dead",
+      "err": "GET http://psm-winogrady.pl/domy-kultury/: TypeError: fetch failed ← getaddrinfo ENOTFOUND psm-winogrady.pl"
+     }
+    ],
+    "err": "Strona zawiera aktualności spółdzielni mieszkaniowej, a nie listę wydarzeń kulturalnych Domu Kultury Pod Lipami z datami imprez.",
+    "candidate": "https://psmwinogrady.pl/category/aktualnosci-odk-pod-lipami/",
+    "candidateProbe": {
+     "at": "2026-07-30T18:47:51.950Z",
+     "url": "https://psmwinogrady.pl/category/aktualnosci-odk-pod-lipami/",
+     "ok": true,
+     "ms": 372,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 67810
+    },
+    "newUrl": "https://psmwinogrady.pl/category/aktualnosci-odk-pod-lipami/",
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://psmwinogrady.pl/feed",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-07-30"
+     },
+     {
+      "kind": "wp-rest",
+      "url": "https://psmwinogrady.pl/wp-json/wp/v2/tribe_venue?per_page=5",
+      "itemsSeen": 5,
+      "datesParsed": 0,
+      "checked": "2026-07-30"
+     },
+     {
+      "kind": "tribe",
+      "url": "https://psmwinogrady.pl/wp-json/tribe/events/v1/events",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-07-30"
+     }
+    ],
+    "verdict": "none",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-dk-pod-lipami/0015-anthropic_claude-haiku-4.5.json",
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-dk-pod-lipami/0016-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "dk-orbita",
+    "name": "Osiedlowy DK Orbita (os. Kosmonautów)",
+    "town": "Poznań",
+    "url": "https://www.psm-winogrady.pl/domy-kultury/",
+    "outcome": "dead",
+    "searches": [
+     {
+      "query": "\"Osiedlowy DK Orbita (os. Kosmonautów)\" Poznań",
+      "results": [],
+      "ms": 1447
+     },
+     {
+      "query": "Osiedlowy DK Orbita (os. Kosmonautów) Poznań wydarzenia",
+      "results": [
+       {
+        "title": "Osiedlowy Dom Kultury \"Orbita\" | Poznan",
+        "url": "https://www.facebook.com/odkorbitapoznan/?locale=pl_PL",
+        "desc": "31 lipca (piątek) ⏰ godz. 17:00 ODK Orbita Gospodarzem wydarzenia będzie Sławomir Sikora – artysta, który nie tylko zagra dla Państwa znane i lubiane utwory ..."
+       },
+       {
+        "title": "KONTAKT ODK Orbita",
+        "url": "https://psmwinogrady.pl/kontakt-odk-orbita/",
+        "desc": "KONTAKT ODK Orbita. Osiedlowy Dom Kultury „Orbita” Os. Kosmonautów paw. 118 61-641 Poznań e-mail: [e-mail w źródle] tel. 61 6303 328. Zespół ..."
+       },
+       {
+        "title": "Osiedlowy Dom Kultury \"Orbita\", Poznań, Wydarzenia",
+        "url": "https://empikbilety.pl/miejsce/osiedlowy-dom-kultury-orbita-2",
+        "desc": "Osiedlowy Dom Kultury \"Orbita\", Miejsce, Poznań, os. Kosmonautów 118, Poznań. ... Wydarzenia · Artyści · Miejsca · 0. /. miejsca. /. Osiedlowy Dom Kultury \"Orbita ..."
+       },
+       {
+        "title": "ODK „Orbita”",
+        "url": "https://psmwinogrady.pl/odk-orbita-os-kosmonautow-paw-118/",
+        "desc": "Lokalizacja: ODK „Orbita” os. Kosmonautów paw. 118. Powierzchnia: ok. 200m2 (Sala nr 104) Opis: Sala imprezowa, koncerty, spotkania, wykłady."
+       },
+       {
+        "title": "Osiedlowy Dom Kultury „Orbita” - zajęcia w lutym",
+        "url": "https://centrumis.pl/osiedlowy-dom-kultury-orbita-zajecia-w-lutym/",
+        "desc": "Osiedlowy Dom Kultury „Orbita” – zajęcia w lutym · 20 lutego, godz. 17.30-19.00 · miejsce: sala Osiedlowego Domu Kultury „Orbita” · bilety: 50 zł."
+       },
+       {
+        "title": "Osiedlowy Dom Kultury „Orbita” Os. Kosmonautów paw. 118",
+        "url": "https://www.facebook.com/groups/241900542530749/posts/24270322769261857/",
+        "desc": "OCR: Gimnastyka na krześle z elementami jogi dla SENIOREK SENIORÓW Catasana Zapraszam na nowe zajęcia ruchowe w ODK \"Orbita\", które pomogą ..."
+       },
+       {
+        "title": "Dom Kultury \"ORBITA\"",
+        "url": "https://www.poznan.pl/mim/cik/domy-kultury,poi,193/dom-kultury-orbita,56010.html",
+        "desc": "Dom Kultury. Adres: os. Kosmonautów 118 , 61-641 Poznań. Telefon: 61 630-33-28. E-mail: [e-mail w źródle]. WWW: psmwinogrady.pl/domy-kultury/odk-orbita ..."
+       },
+       {
+        "title": "oferta i plan zajęć odk orbita",
+        "url": "https://psmwinogrady.pl/category/oferta-i-plan-zajec-odk-orbita/",
+        "desc": "Powrót po przerwie – 4 września 2025! Czwartek, g. 11.30 oraz 12.30. Czytaj więcej. GIMNASTYKA PROZDROWOTNA. GIMNASTYKA PROZDROWOTNA. Wtorek, ..."
+       },
+       {
+        "title": "Festyn rodzinny już w sobotę na osiedlu Kosmonautów",
+        "url": "https://tvkwinogrady.pl/nagrania/odtwarzaj/41127",
+        "desc": "Festyn rodzinny już w sobotę na osiedlu Kosmonautów. Fundacja Członków PSM Winogrady zaprasza na kolejny coroczny festyn osiedlowy. Odbędzie się ..."
+       }
+      ],
+      "ms": 1038
+     }
+    ],
+    "llm": {
+     "calls": 2,
+     "promptTokens": 2352,
+     "completionTokens": 134,
+     "costUsd": 0.003022
+    },
+    "ms": 9273,
+    "probe": {
+     "at": "2026-07-30T18:47:59.092Z",
+     "url": "https://www.psm-winogrady.pl/domy-kultury/",
+     "ok": false,
+     "ms": 12,
+     "err": "GET https://www.psm-winogrady.pl/domy-kultury/: TypeError: fetch failed ← getaddrinfo ENOTFOUND www.psm-winogrady.pl"
+    },
+    "reach": "dns-dead",
+    "ladder": [
+     {
+      "url": "https://www.psm-winogrady.pl/domy-kultury/",
+      "outcome": "dns-dead",
+      "err": "GET https://www.psm-winogrady.pl/domy-kultury/: TypeError: fetch failed ← getaddrinfo ENOTFOUND www.psm-winogrady.pl"
+     },
+     {
+      "url": "http://www.psm-winogrady.pl/domy-kultury/",
+      "outcome": "dns-dead",
+      "err": "GET http://www.psm-winogrady.pl/domy-kultury/: TypeError: fetch failed ← getaddrinfo ENOTFOUND www.psm-winogrady.pl"
+     },
+     {
+      "url": "https://psm-winogrady.pl/domy-kultury/",
+      "outcome": "dns-dead",
+      "err": "GET https://psm-winogrady.pl/domy-kultury/: TypeError: fetch failed ← getaddrinfo ENOTFOUND psm-winogrady.pl"
+     },
+     {
+      "url": "http://psm-winogrady.pl/domy-kultury/",
+      "outcome": "dns-dead",
+      "err": "GET http://psm-winogrady.pl/domy-kultury/: TypeError: fetch failed ← getaddrinfo ENOTFOUND psm-winogrady.pl"
+     }
+    ],
+    "err": "Kandydat to strona spółdzielni mieszkaniowej PSM Winogrady, zawierająca strukturę organizacyjną i aktualności rad osiedli, ale nie listę wydarzeń DK Orbita z datami.",
+    "candidate": "https://psmwinogrady.pl/odk-orbita-os-kosmonautow-paw-118/",
+    "candidateProbe": {
+     "at": "2026-07-30T18:48:03.518Z",
+     "url": "https://psmwinogrady.pl/odk-orbita-os-kosmonautow-paw-118/",
+     "ok": true,
+     "ms": 320,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 61062
+    },
+    "newUrl": "https://psmwinogrady.pl/odk-orbita-os-kosmonautow-paw-118/",
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://psmwinogrady.pl/feed",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-07-30"
+     },
+     {
+      "kind": "wp-rest",
+      "url": "https://psmwinogrady.pl/wp-json/wp/v2/tribe_venue?per_page=5",
+      "itemsSeen": 5,
+      "datesParsed": 0,
+      "checked": "2026-07-30"
+     },
+     {
+      "kind": "tribe",
+      "url": "https://psmwinogrady.pl/wp-json/tribe/events/v1/events",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-07-30"
+     }
+    ],
+    "verdict": "none",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-dk-orbita/0017-anthropic_claude-haiku-4.5.json",
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-dk-orbita/0018-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "fyrtel-glowna",
+    "name": "Fyrtel Główna",
+    "town": "Poznań",
+    "url": "https://www.facebook.com/fyrtelglowna/",
+    "outcome": "skipped",
+    "searches": [],
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0,
+    "note": "fetch:\"fb\" — adresy FB nie odpowiadają na zwykły fetch"
+   },
+   {
+    "id": "lubon-city",
+    "name": "Miasto Luboń – aktualności",
+    "town": "Luboń",
+    "url": "https://lubon.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2659,
+     "completionTokens": 103,
+     "costUsd": 0.003174
+    },
+    "ms": 10069,
+    "probe": {
+     "at": "2026-07-30T18:48:08.296Z",
+     "url": "https://lubon.pl/",
+     "ok": true,
+     "ms": 1184,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 145479
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://lubon.pl/artykuly/350/wydarzenia",
+      "kind": "listing",
+      "confidence": 0.6,
+      "via": "heuristic",
+      "detailPattern": "/artykuly/{id}/{slug}",
+      "detailCount": 63
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://lubon.pl/atom",
+      "itemsSeen": 100,
+      "datesParsed": 100,
+      "checked": "2026-07-30"
+     },
+     {
+      "kind": "rss",
+      "url": "https://lubon.pl/rss",
+      "itemsSeen": 100,
+      "datesParsed": 100,
+      "checked": "2026-07-30"
+     }
+    ],
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-lubon-city/0019-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "lubon-ok",
+    "name": "Ośrodek Kultury w Luboniu",
+    "town": "Luboń",
+    "url": "https://www.oklubon.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 3228,
+     "completionTokens": 129,
+     "costUsd": 0.003873
+    },
+    "ms": 6118,
+    "probe": {
+     "at": "2026-07-30T18:48:18.364Z",
+     "url": "https://www.oklubon.pl/",
+     "ok": true,
+     "ms": 678,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 121732
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://www.oklubon.pl/wydarzenia",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/wydarzenia/{slug}",
+      "detailCount": 23
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://www.oklubon.pl/feed",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-07-30"
+     }
+    ],
+    "verdict": "events",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-lubon-ok/0020-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "lubon-ok-fb",
+    "name": "OK Luboń – Facebook",
+    "town": "Luboń",
+    "url": "https://www.facebook.com/OsrodekKulturyLubon/",
+    "outcome": "skipped",
+    "searches": [],
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0,
+    "note": "fetch:\"fb\" — adresy FB nie odpowiadają na zwykły fetch"
+   },
+   {
+    "id": "lubon-plaza",
+    "name": "Plaża miejska Luboń (kalendarz venue)",
+    "town": "Luboń",
+    "url": "https://www.facebook.com/plazamiejskalubon/",
+    "outcome": "skipped",
+    "searches": [],
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0,
+    "note": "fetch:\"fb\" — adresy FB nie odpowiadają na zwykły fetch"
+   },
+   {
+    "id": "lubon-biblioteka",
+    "name": "Biblioteka Miejska w Luboniu",
+    "town": "Luboń",
+    "url": "https://biblub.com.pl/",
+    "outcome": "fixed",
+    "searches": [
+     {
+      "query": "\"Biblioteka Miejska w Luboniu\" Luboń",
+      "results": [
+       {
+        "title": "Biblioteka Miejska w Luboniu - Luboń",
+        "url": "https://biblub.com/",
+        "desc": "11.00 w Bibliotece Miejskiej w… 1 2 3 … 5 Następna ». Kontakt. Biblioteka Miejska w Luboniu. ul. Żabikowska 42. 62-030 Luboń. tel: 61 813 09 72. e-mail ..."
+       },
+       {
+        "title": "Biblioteka Miejska w Luboniu | Lubon",
+        "url": "https://www.facebook.com/biblioteka.lubon/?locale=pl_PL",
+        "desc": "Już niebawem, w jednym z Waszych i naszych ulubionych miejsc na mapie Lubonia - Biblioteka Miejska w Luboniu nasza Fundacja zabierze Was w sensoryczną podróż."
+       },
+       {
+        "title": "Biblioteka Miejska w Luboniu zaprasza i informuje:",
+        "url": "https://lubon.pl/artykul/15/1246/biblioteka-miejska-w-luboniu-zaprasza-i-informuje",
+        "desc": "Zapraszamy na naszą stronę internetową: www.biblub.com i FB: www.facebook.com/Biblioteka-Miejska-w-Luboniu Informujemy, że od lipca zmianie ulegają godziny ..."
+       },
+       {
+        "title": "Biblioteka Miejska w Luboniu, Luboń, Wydarzenia",
+        "url": "https://empikbilety.pl/miejsce/biblioteka-miejska-w-luboniu",
+        "desc": "Biblioteka Miejska w Luboniu, Miejsce, Luboń, Żabikowska 42, Luboń."
+       },
+       {
+        "title": "Biblioteka Miejska w Luboniu (@biblub) · Lubon",
+        "url": "https://www.instagram.com/biblub/",
+        "desc": "Biblioteka Miejska w Luboniu. 696 followers. 892 following. ⭐ KSIĄŻKI ⭐ Spotkania ⭐ Warsztaty ⭐ Kino KAMERAlne ⭐ Spektakle #biblub TikTok ..."
+       },
+       {
+        "title": "Biblioteka Miejska w Luboniu, Luboń, Wydarzenia",
+        "url": "https://goingapp.pl/miejsce/biblioteka-miejska-w-luboniu",
+        "desc": "Biblioteka Miejska w Luboniu, Miejsce, Luboń, Żabikowska 42, Luboń."
+       },
+       {
+        "title": "Biblioteka Miejska w Luboniu Filia nr 4",
+        "url": "https://mapy.com/pl/?source=osm&id=1062686626",
+        "desc": "Biblioteka Miejska w Luboniu Filia nr 4. Biblioteka. Jana III Sobieskiego 80, 62-030 Luboń - Lasek, gmina Powiat poznański, Polska. Trasa. Zapisz. Prześlij."
+       },
+       {
+        "title": "Biblioteka Miejska w Luboniu | Lubon",
+        "url": "https://www.facebook.com/biblioteka.lubon/about/?locale=pl_PL",
+        "desc": "Biblioteka Miejska w Luboniu, Luboń. 3540 osób lubi to · 194 osoby mówią o tym · 415 użytkowników tu było. Strona Biblioteki Miejskiej w Luboniu."
+       }
+      ],
+      "ms": 2009
+     },
+     {
+      "query": "Biblioteka Miejska w Luboniu Luboń wydarzenia",
+      "results": [
+       {
+        "title": "Biblioteka Miejska w Luboniu | Lubon",
+        "url": "https://www.facebook.com/biblioteka.lubon/?locale=pl_PL",
+        "desc": "W tym czasie dzieje się u nas naprawdę dużo: zajęcia plastyczne, wydarzenia dla mieszkańców, spotkania klubowe… czyli dokładnie to, co dziś znamy i ..."
+       },
+       {
+        "title": "Biblioteka Miejska w Luboniu - Luboń",
+        "url": "https://biblub.com/",
+        "desc": "MENU. Biblioteka. Aktualności · 80-lecie Biblioteki Miejskiej w Luboniu · Bibliotekarze polecają · Archiwum · O nas · Bamberka z muralu · Godziny otwarcia."
+       },
+       {
+        "title": "Biblioteka Miejska w Luboniu, Luboń, Wydarzenia",
+        "url": "https://empikbilety.pl/miejsce/biblioteka-miejska-w-luboniu",
+        "desc": "Biblioteka Miejska w Luboniu Luboń, Żabikowska 42 Sprawdź wydarzenia Dla organizatorów"
+       },
+       {
+        "title": "SOWA OPAC : Bibioteka Miejska w Luboniu",
+        "url": "https://www.lubon-mbp.sowa.pl/",
+        "desc": "Bibioteka Miejska w Luboniu · Pod Trzema Cyrklami · Wiatr zmian · Myszka i morze : wakacje wśród natury · Pod włoskim niebem · Rodzeństwo."
+       },
+       {
+        "title": "Biblioteka Miejska w Luboniu zaprasza i informuje:",
+        "url": "https://lubon.pl/artykul/15/1246/biblioteka-miejska-w-luboniu-zaprasza-i-informuje",
+        "desc": "Informujemy, że od lipca zmianie ulegają godziny otwarcia Biblioteki Miejskiej w Luboniu! Nowe godziny otwarcia: Poniedziałek, wtorek, środa: 12.00-19.00"
+       },
+       {
+        "title": "Biblioteka Miejska w Luboniu (@biblub) · Lubon",
+        "url": "https://www.instagram.com/biblub/",
+        "desc": "Wieczór jazzowy w Bibliotece Miejskiej w Luboniu. W ramach Tygodnia Bibliotek zapraszamy na koncert Felix Robin Standards Trio! Już 7 maja (środa), o godzinie ..."
+       },
+       {
+        "title": "Biblioteka Miejska w Luboniu, Luboń, Wydarzenia",
+        "url": "https://goingapp.pl/miejsce/biblioteka-miejska-w-luboniu",
+        "desc": "Biblioteka Miejska w Luboniu, Miejsce, Luboń, Żabikowska 42, Luboń. 42 Sprawdź wydarzenia 0 obserwuje Obserwuj Going. osoby niepełnoletniej w wydarzeniu"
+       },
+       {
+        "title": "Biblioteka Miejska w Luboniu, Żabikowska 42, Luboń 62-030",
+        "url": "https://mapa.targeo.pl/biblioteka-miejska-w-luboniu-zabikowska-42-62-030-lubon~14027153/biblioteka/adres",
+        "desc": "Ulica: Żabikowska. Numer budynku: 42. Kod pocztowy: 62-030. Miejscowość: Luboń. Gmina: Luboń. Powiat: poznański. Województwo: wielkopolskie ..."
+       },
+       {
+        "title": "Czekamy na Was do godziny 19.00! Zarówno Biblioteka ...",
+        "url": "https://www.facebook.com/biblioteka.lubon/videos/czekamy-na-was-do-godziny-1900-zar%C3%B3wno-biblioteka-g%C5%82%C3%B3wna-jak-i-filia-3-/1762797117848764/",
+        "desc": "Czekamy na Was do godziny 19.00! Zarówno Biblioteka Główna, jak i Filia 3."
+       },
+       {
+        "title": "Akademia Samodzielności – warsztaty dla rodziców",
+        "url": "https://biblub.com/biblioteka-poleca/wydarzenia-w-bibliotece/akademia-samodzielnosci-warsztaty-dla-rodzicow/",
+        "desc": "Zapraszamy na nowy cykl spotkań Akademia Samodzielności – warsztaty dla rodziców, którzy chcą lepiej rozumieć swoje dzieci i skuteczniej radzić sobie z ..."
+       }
+      ],
+      "ms": 3006
+     }
+    ],
+    "llm": {
+     "calls": 2,
+     "promptTokens": 4259,
+     "completionTokens": 150,
+     "costUsd": 0.0050089999999999996
+    },
+    "ms": 19392,
+    "probe": {
+     "at": "2026-07-30T18:48:24.541Z",
+     "url": "https://biblub.com.pl/",
+     "ok": false,
+     "ms": 13,
+     "err": "GET https://biblub.com.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND biblub.com.pl"
+    },
+    "reach": "dns-dead",
+    "ladder": [
+     {
+      "url": "https://biblub.com.pl/",
+      "outcome": "dns-dead",
+      "err": "GET https://biblub.com.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND biblub.com.pl"
+     },
+     {
+      "url": "http://biblub.com.pl/",
+      "outcome": "dns-dead",
+      "err": "GET http://biblub.com.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND biblub.com.pl"
+     },
+     {
+      "url": "https://www.biblub.com.pl/",
+      "outcome": "dns-dead",
+      "err": "GET https://www.biblub.com.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND www.biblub.com.pl"
+     },
+     {
+      "url": "http://www.biblub.com.pl/",
+      "outcome": "dns-dead",
+      "err": "GET http://www.biblub.com.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND www.biblub.com.pl"
+     }
+    ],
+    "err": "GET https://biblub.com.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND biblub.com.pl",
+    "candidate": "https://biblub.com/",
+    "candidateProbe": {
+     "at": "2026-07-30T18:48:31.125Z",
+     "url": "https://biblub.com/",
+     "ok": true,
+     "ms": 1951,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 68113
+    },
+    "newUrl": "https://biblub.com/",
+    "entrypoints": [
+     {
+      "url": "https://biblub.com/category/aktualnosci/page/{page}",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/aktualnosci/{slug}",
+      "detailCount": 6,
+      "paginated": true
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://biblub.com/feed",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-07-30"
+     }
+    ],
+    "verdict": "news",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-lubon-biblioteka/0021-anthropic_claude-haiku-4.5.json",
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-lubon-biblioteka/0022-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "puszczykowo-city",
+    "name": "Puszczykowo – instytucje kultury",
+    "town": "Puszczykowo",
+    "url": "https://puszczykowo.pl/strefa-miejska/kultura/instytucje-kultury",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 3001,
+     "completionTokens": 148,
+     "costUsd": 0.003741
+    },
+    "ms": 15829,
+    "probe": {
+     "at": "2026-07-30T18:48:43.874Z",
+     "url": "https://puszczykowo.pl/strefa-miejska/kultura/instytucje-kultury",
+     "ok": true,
+     "ms": 1080,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 21558
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://puszczykowo.pl/strefa-miejska/kultura/wydarzenia-kulturalne",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/wydarzenia/{slug}",
+      "detailCount": 8
+     }
+    ],
+    "verdict": "events",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-puszczykowo-city/0023-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "puszczykowo-bmcak",
+    "name": "Biblioteka Miejska CAK Puszczykowo",
+    "town": "Puszczykowo",
+    "url": "https://www.biblioteka.puszczykowo.pl/",
+    "outcome": "dead",
+    "searches": [
+     {
+      "query": "\"Biblioteka Miejska CAK Puszczykowo\" Puszczykowo",
+      "results": [],
+      "ms": 1402
+     },
+     {
+      "query": "Biblioteka Miejska CAK Puszczykowo Puszczykowo wydarzenia",
+      "results": [
+       {
+        "title": "Miejska Biblioteka Publiczna im. Małgorzaty Musierowicz ...",
+        "url": "https://puszczykowo.pl/strefa-miejska/kultura/instytucje-kultury/miejska-biblioteka-publiczna-im-malgorzaty-musierowicz-centrum-animacji-kultury",
+        "desc": "Miejska Biblioteka Publiczna im. Małgorzaty Musierowicz Centrum Animacji Kultury. ul. Rynek 15, 62-040 Puszczykowo. tel. (61) 819 46 49"
+       },
+       {
+        "title": "Biblioteka Miejska Centrum Animacji Kultury w Puszczykowie",
+        "url": "https://www.facebook.com/BibliotekaPuszczykowo/?locale=pl_PL",
+        "desc": "Fundacja PARK I Stowarzyszenie Puszczykowo- Châteaugiron zapraszają na II Piknik Polsko-Francuski już 11 lipca w Puszczykowie!. Miasto Puszczykowo."
+       },
+       {
+        "title": "Biblioteka Miejska im. Małgorzaty Musierowicz Centrum ...",
+        "url": "https://www.puszczykowo-mbp.sowa.pl/",
+        "desc": "Biblioteka Miejska im. Małgorzaty Musierowicz Centrum Animacji Kultury w Puszczykowie · Pomoc domowa · Mama i tata idą na randkę · Gołoborze · Ostatni taniec · Noc ..."
+       },
+       {
+        "title": "Filia Biblioteki :: Puszczykowo",
+        "url": "https://puszczykowo.pl/strefa-miejska/kultura/instytucje-kultury/filia-biblioteki",
+        "desc": "Filia Biblioteki. ul. Nowe Osiedle 22 62-040 Puszczykowo. tel. [tel. w źródle] www.biblioteka.iq.pl. Godziny otwarcia: wtorek - środa 13.00 - 18.00 ..."
+       },
+       {
+        "title": "Biblioteka Miejska im Małgorzaty Musierowicz w ...",
+        "url": "https://mapa.targeo.pl/biblioteka-miejska-im-malgorzaty-musierowicz-w-puszczykowie-rynek-15-62-040-puszczykowo~14027152/biblioteka/adres",
+        "desc": "Rynek 15, 62-040 Puszczykowo · Zamknięte. Poniedziałek, 7:00 - 15:00. Wtorek, 10:00 - 18:00. Środa, 10:00 - 18:00. Czwartek, 10:00 - 18:00. Piątek, 7:00 - 15:00."
+       },
+       {
+        "title": "Biblioteka Miejska Centrum Animacji Kultury w Puszczykowie",
+        "url": "https://www.facebook.com/BibliotekaPuszczykowo/posts/ju%C5%BC-niebawem-czeka-nas-xxii-og%C3%B3lnopolski-tydzie%C5%84-bibliotek-w-tym-roku-pod-has%C5%82em/1118595360303212/",
+        "desc": "10.00-13.00 PACHLI TARG 14.05.25r. /środa/ godz. 16.00-17.00 MAŁE OPOWIEŚCI - SKĄD SIĘ BIORĄ KSIĄŻKI animacje czytelnicze dla dzieci (od 5 r.ż.) ..."
+       },
+       {
+        "title": "CAK Puszczykowo - - hertmanus.pl",
+        "url": "https://hertmanus.pl/tag/cak-puszczykowo/",
+        "desc": "Zapraszamy na POKAZ I WARSZTATY MALOWANIA NA WODZIE w Bibliotece Miejskiej i Centrum Animacji Kultury w Puszczykowie 26 kwietnia 2019."
+       },
+       {
+        "title": "Biblioteka Miejska im. Małgorzaty Musierowicz CAK w ...",
+        "url": "https://puszczykowo.pl/aktualnosci/biblioteka-miejska-im-malgorzaty-musierowicz-cak-w-puszczykowie-zamknieta",
+        "desc": "Biblioteka Miejska im. Małgorzaty Musierowicz CAK w Puszczykowie zamknięta. Drukuj. Wydarzenia. 06.07.2026, 10:30 - 13:30 Piracka Wyprawa ..."
+       },
+       {
+        "title": "Dni Puszczykowa 2026 teren przy Hala widowiskowo ...",
+        "url": "https://www.facebook.com/BibliotekaPuszczykowo/videos/%F0%9D%90%83%F0%9D%90%A7%F0%9D%90%A2-%F0%9D%90%8F%F0%9D%90%AE%F0%9D%90%AC%F0%9D%90%B3%F0%9D%90%9C%F0%9D%90%B3%F0%9D%90%B2%F0%9D%90%A4%F0%9D%90%A8%F0%9D%90%B0%F0%9D%90%9A-%F0%9D%9F%90%F0%9D%9F%8E%F0%9D%9F%90%F0%9D%9F%94-teren-przy-hala-widowiskowo-sportowa-w-puszczykowiezaplanuj/1488395515816673/",
+        "desc": "Zapraszamy #DniPuszczykowa #puszczykowo #Lato2026 #turbo #queensymfonicznie #djGregory #poprostukajtek #krzysztofknapek ... Biblioteka Miejska GCK ..."
+       }
+      ],
+      "ms": 1597
+     }
+    ],
+    "llm": {
+     "calls": 2,
+     "promptTokens": 2806,
+     "completionTokens": 98,
+     "costUsd": 0.003296
+    },
+    "ms": 8282,
+    "probe": {
+     "at": "2026-07-30T18:48:59.752Z",
+     "url": "https://www.biblioteka.puszczykowo.pl/",
+     "ok": false,
+     "ms": 1,
+     "err": "GET https://www.biblioteka.puszczykowo.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND www.biblioteka.puszczykowo.pl"
+    },
+    "reach": "dns-dead",
+    "ladder": [
+     {
+      "url": "https://www.biblioteka.puszczykowo.pl/",
+      "outcome": "dns-dead",
+      "err": "GET https://www.biblioteka.puszczykowo.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND www.biblioteka.puszczykowo.pl"
+     },
+     {
+      "url": "http://www.biblioteka.puszczykowo.pl/",
+      "outcome": "dns-dead",
+      "err": "GET http://www.biblioteka.puszczykowo.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND www.biblioteka.puszczykowo.pl"
+     },
+     {
+      "url": "https://biblioteka.puszczykowo.pl/",
+      "outcome": "dns-dead",
+      "err": "GET https://biblioteka.puszczykowo.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND biblioteka.puszczykowo.pl"
+     },
+     {
+      "url": "http://biblioteka.puszczykowo.pl/",
+      "outcome": "dns-dead",
+      "err": "GET http://biblioteka.puszczykowo.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND biblioteka.puszczykowo.pl"
+     }
+    ],
+    "err": "Kandydat to katalog zbiorów bibliotecznych bez sekcji z listą wydarzeń, imprez czy aktualności.",
+    "candidate": "https://www.puszczykowo-mbp.sowa.pl/",
+    "candidateProbe": {
+     "at": "2026-07-30T18:49:04.626Z",
+     "url": "https://www.puszczykowo-mbp.sowa.pl/",
+     "ok": true,
+     "ms": 457,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 143206
+    },
+    "newUrl": "https://www.puszczykowo-mbp.sowa.pl/",
+    "verdict": "none",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-puszczykowo-bmcak/0024-anthropic_claude-haiku-4.5.json",
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-puszczykowo-bmcak/0025-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "mosina-city",
+    "name": "Gmina Mosina – kalendarz wydarzeń",
+    "town": "Mosina",
+    "url": "https://www.mosina.pl/wydarzenia?page={page}",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 3368,
+     "completionTokens": 137,
+     "costUsd": 0.004053
+    },
+    "ms": 20475,
+    "probe": {
+     "at": "2026-07-30T18:49:07.985Z",
+     "url": "https://www.mosina.pl/wydarzenia?page=1",
+     "ok": true,
+     "ms": 1142,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 404284
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://www.mosina.pl/wydarzenia?page={page}",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/wydarzenia/{slug}",
+      "detailCount": 9,
+      "paginated": true
+     }
+    ],
+    "verdict": "events",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-mosina-city/0026-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "mosina-mok",
+    "name": "Mosiński Ośrodek Kultury",
+    "town": "Mosina",
+    "url": "https://www.kultura.gmina.pl/aktualnosci/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2072,
+     "completionTokens": 148,
+     "costUsd": 0.002812
+    },
+    "ms": 15030,
+    "probe": {
+     "at": "2026-07-30T18:49:28.461Z",
+     "url": "https://www.kultura.gmina.pl/aktualnosci/",
+     "ok": true,
+     "ms": 1105,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 206271
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://www.kultura.gmina.pl/aktualnosci/page/{page}",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/{slug}",
+      "detailCount": 22,
+      "paginated": true
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://www.kultura.gmina.pl/feed/",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-07-30"
+     }
+    ],
+    "verdict": "news",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-mosina-mok/0027-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "mosina-osir",
+    "name": "OSiR Mosina – wydarzenia + programy PDF",
+    "town": "Mosina",
+    "url": "https://osirmosina.pl/wydarzenia",
+    "outcome": "fixed",
+    "searches": [
+     {
+      "query": "\"OSiR Mosina – wydarzenia + programy PDF\" Mosina",
+      "results": [],
+      "ms": 1709
+     },
+     {
+      "query": "OSiR Mosina – wydarzenia + programy PDF Mosina wydarzenia",
+      "results": [
+       {
+        "title": "KALENDARZ – Ośrodek Sportu i Rekreacji w Mosinie",
+        "url": "https://osirmosina.pl/index.php/kalendarz/",
+        "desc": "KALENDARZ ; 27. 28. Wakacyjne wyjazdy · Wakacyjne wyjazdy. 08:45 -14:00. 2026-07-28. OSiR w Mosinie. lista wakacyjnych wyjazdów dla dzieci i młodzieży. w ..."
+       },
+       {
+        "title": "OSiR Mosina: Ośrodek Sportu i Rekreacji w Mosinie",
+        "url": "https://osirmosina.pl/",
+        "desc": "MISTRZOWIE NA LANDACH · 22 lipca, 2026 · Opublikowano w Uncategorized ; NINJACON – Festiwal klocków i fantastyki · 15 lipca, 2026 · Opublikowano w AKTUALNOŚCI ..."
+       },
+       {
+        "title": "IMPREZY SPORTOWE",
+        "url": "https://osirmosina.pl/index.php/imprezy-sportowe/",
+        "desc": "BIEŻĄCE WYDARZENIA. Od góry nazwa i data zawodów. Król Parku 20.09.2026 ... KALENDARZ · KĄPIELISKA · MTB WIÓREK · Król Parku · IMPREZY SPORTOWE · SPORT SZKOLNY ..."
+       },
+       {
+        "title": "Mosina",
+        "url": "https://www.facebook.com/OSiRMosina/?locale=pl_PL",
+        "desc": "Tradycyjnie, jak co roku OSiR w Mosinie organizuje spływ kajakowy rzeką Drawa na odcinku: Jezioro Dubie – Bogdanka (ok. 19 km) To doskonała okazja, by wspólnie ..."
+       },
+       {
+        "title": "Kategoria: AKTUALNOŚCI",
+        "url": "https://osirmosina.pl/index.php/category/aktualnosci/",
+        "desc": "BIEŻĄCE WYDARZENIA. Od góry nazwa i data zawodów. Król Parku 20.09.2026. Dystanse 5 km. Po prawej stronie nogi chłopaka oraz deskorolka. Po lewej stronie ..."
+       },
+       {
+        "title": "Strona 51 – OSiR Mosina",
+        "url": "https://osirmosina.pl/index.php/page/51/?start=55",
+        "desc": "Poniżej przedstawiamy program minutowy 17 Turnieju Formacji Tanecznych Mosina 2022. Zapraszamy do kibicowania! Na miejscu będzie mogli skorzystać z baru: ..."
+       },
+       {
+        "title": "BIP OSiR Mosina",
+        "url": "http://bip.osir.mosina.pl/osir/programy-realizacji-zadan-publicznych.html",
+        "desc": "OSiR realizuje zadania publiczne z zakresu kultury fizycznej jako zadania własne Gminy Mosina wynikające z przyjętego przez Radę Miejską w Mosinie Statutu OSiR."
+       },
+       {
+        "title": "Kategoria: Akcja Lato 2025",
+        "url": "https://osirmosina.pl/index.php/category/akcja-lato-2025/",
+        "desc": "Szkółka Deskorolki 21.08.2025 r. · 20 sierpnia, 2025 ; Szkółka BMX · 12 sierpnia, 2025 ; Wyjazdy w ramach Akcji Lato 2025 · 5 sierpnia, 2025 5 sierpnia, 2025 ; Kino ..."
+       },
+       {
+        "title": "KONTAKT",
+        "url": "https://osirmosina.pl/index.php/kontakt-2/",
+        "desc": "BIEŻĄCE WYDARZENIA. Od góry nazwa i data zawodów. Król Parku 20.09.2026 ... KALENDARZ · KĄPIELISKA · MTB WIÓREK · Król Parku · IMPREZY SPORTOWE · SPORT SZKOLNY ..."
+       }
+      ],
+      "ms": 2223
+     }
+    ],
+    "llm": {
+     "calls": 2,
+     "promptTokens": 4658,
+     "completionTokens": 203,
+     "costUsd": 0.005672999999999999
+    },
+    "ms": 12863,
+    "probe": {
+     "at": "2026-07-30T18:49:44.870Z",
+     "url": "https://osirmosina.pl/wydarzenia",
+     "ok": false,
+     "ms": 149,
+     "httpStatus": 404,
+     "contentType": "text/html",
+     "err": "HTTP 404"
+    },
+    "reach": "http-error",
+    "ladder": [
+     {
+      "url": "https://osirmosina.pl/wydarzenia",
+      "outcome": "http-error",
+      "httpStatus": 404,
+      "err": "HTTP 404"
+     },
+     {
+      "url": "http://osirmosina.pl/wydarzenia",
+      "outcome": "http-error",
+      "httpStatus": 404,
+      "err": "HTTP 404"
+     },
+     {
+      "url": "https://www.osirmosina.pl/wydarzenia",
+      "outcome": "http-error",
+      "httpStatus": 404,
+      "err": "HTTP 404"
+     },
+     {
+      "url": "http://www.osirmosina.pl/wydarzenia",
+      "outcome": "http-error",
+      "httpStatus": 404,
+      "err": "HTTP 404"
+     }
+    ],
+    "httpStatus": 404,
+    "err": "HTTP 404",
+    "candidate": "https://osirmosina.pl/index.php/kalendarz/",
+    "candidateProbe": {
+     "at": "2026-07-30T18:49:50.362Z",
+     "url": "https://osirmosina.pl/index.php/kalendarz/",
+     "ok": true,
+     "ms": 263,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 128205
+    },
+    "newUrl": "https://osirmosina.pl/index.php/kalendarz/",
+    "entrypoints": [
+     {
+      "url": "https://osirmosina.pl/index.php/kalendarz/",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/index.php/{slug}",
+      "detailCount": 31
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://osirmosina.pl/index.php/feed/",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-07-30"
+     },
+     {
+      "kind": "jsonld",
+      "url": "https://osirmosina.pl/index.php/kalendarz/",
+      "itemsSeen": 6,
+      "datesParsed": 6,
+      "checked": "2026-07-30"
+     }
+    ],
+    "verdict": "events",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-mosina-osir/0028-anthropic_claude-haiku-4.5.json",
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-mosina-osir/0029-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "mosina-biblioteka",
+    "name": "Mosińska Biblioteka Publiczna",
+    "town": "Mosina",
+    "url": "http://bibliotekamosina.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2952,
+     "completionTokens": 217,
+     "costUsd": 0.004037
+    },
+    "ms": 10391,
+    "probe": {
+     "at": "2026-07-30T18:49:56.354Z",
+     "url": "http://bibliotekamosina.pl/",
+     "ok": true,
+     "ms": 1090,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 130398
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "http://bibliotekamosina.pl/filie/czapury/aktualnosci-czapury",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/{slug}",
+      "detailCount": 11
+     }
+    ],
+    "verdict": "news",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-mosina-biblioteka/0030-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "mosina-galeria",
+    "name": "Galeria Sztuki w Mosinie",
+    "town": "Mosina",
+    "url": "https://www.galeriamosina.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 3511,
+     "completionTokens": 176,
+     "costUsd": 0.004391
+    },
+    "ms": 6993,
+    "probe": {
+     "at": "2026-07-30T18:50:06.745Z",
+     "url": "https://www.galeriamosina.pl/",
+     "ok": true,
+     "ms": 613,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 108675
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://www.galeriamosina.pl/index.php?option=com_content&view=category&id=8&Itemid=114",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm"
+     }
+    ],
+    "verdict": "events",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-mosina-galeria/0031-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "mosina-fb",
+    "name": "Gmina Mosina – Facebook",
+    "town": "Mosina",
+    "url": "https://www.facebook.com/gminamosina/",
+    "outcome": "skipped",
+    "searches": [],
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0,
+    "note": "fetch:\"fb\" — adresy FB nie odpowiadają na zwykły fetch"
+   },
+   {
+    "id": "komorniki-city",
+    "name": "Gmina Komorniki – kultura i sport",
+    "town": "Komorniki",
+    "url": "https://www.komorniki.pl/kultura-i-sport.html",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2762,
+     "completionTokens": 125,
+     "costUsd": 0.003387
+    },
+    "ms": 6630,
+    "probe": {
+     "at": "2026-07-30T18:50:13.738Z",
+     "url": "https://www.komorniki.pl/kultura-i-sport.html",
+     "ok": true,
+     "ms": 516,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 154888
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://www.komorniki.pl/kalendarz-wydarzen/",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/{slug}.html",
+      "detailCount": 65
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://www.komorniki.pl/rss/aktualnosci_pl.xml",
+      "itemsSeen": 1000,
+      "datesParsed": 1000,
+      "checked": "2026-07-30"
+     }
+    ],
+    "verdict": "events",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-komorniki-city/0032-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "komorniki-gok",
+    "name": "GOK Komorniki (DK Koło, Remiza Plewiska…)",
+    "town": "Komorniki",
+    "url": "https://gokkomorniki.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2768,
+     "completionTokens": 115,
+     "costUsd": 0.003343
+    },
+    "ms": 9170,
+    "probe": {
+     "at": "2026-07-30T18:50:20.368Z",
+     "url": "https://gokkomorniki.pl/",
+     "ok": true,
+     "ms": 1212,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 182485
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/{slug}.html",
+      "detailCount": 100
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://www.gokkomorniki.pl/rss/aktualnosci_pl.xml",
+      "itemsSeen": 368,
+      "datesParsed": 368,
+      "checked": "2026-07-30"
+     }
+    ],
+    "verdict": "events",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-komorniki-gok/0033-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "dopiewo-city",
+    "name": "Gmina Dopiewo",
+    "town": "Dopiewo",
+    "url": "https://dopiewo.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2746,
+     "completionTokens": 111,
+     "costUsd": 0.003301
+    },
+    "ms": 4680,
+    "probe": {
+     "at": "2026-07-30T18:50:29.538Z",
+     "url": "https://dopiewo.pl/",
+     "ok": true,
+     "ms": 249,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 96246
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://dopiewo.pl/wydarzenia?page={page}",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/wydarzenia/{date}/{slug}",
+      "detailCount": 5,
+      "paginated": true
+     }
+    ],
+    "verdict": "events",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-dopiewo-city/0034-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "dopiewo-gosir",
+    "name": "GOSiR Dopiewo / CRK Konarzewo",
+    "town": "Dopiewo",
+    "url": "https://gosir.dopiewo.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2239,
+     "completionTokens": 117,
+     "costUsd": 0.002824
+    },
+    "ms": 7733,
+    "probe": {
+     "at": "2026-07-30T18:50:34.219Z",
+     "url": "https://gosir.dopiewo.pl/",
+     "ok": true,
+     "ms": 2528,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 74957
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://gosir.dopiewo.pl/kalendarz",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/kategorie/{slug}",
+      "detailCount": 11
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://gosir.dopiewo.pl/rss.xml",
+      "itemsSeen": 2,
+      "datesParsed": 2,
+      "checked": "2026-07-30"
+     },
+     {
+      "kind": "rss",
+      "url": "https://gosir.dopiewo.pl/rss/wydarzenia_pl.xml",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-07-30"
+     },
+     {
+      "kind": "rss",
+      "url": "https://gosir.dopiewo.pl/rss/aktualnosci_pl.xml",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-07-30"
+     }
+    ],
+    "verdict": "events",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-dopiewo-gosir/0035-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "tarnowo-city",
+    "name": "Gmina Tarnowo Podgórne",
+    "town": "Tarnowo Podgórne",
+    "url": "https://www.tarnowo-podgorne.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2680,
+     "completionTokens": 122,
+     "costUsd": 0.00329
+    },
+    "ms": 16072,
+    "probe": {
+     "at": "2026-07-30T18:50:41.951Z",
+     "url": "https://www.tarnowo-podgorne.pl/",
+     "ok": true,
+     "ms": 1622,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 339002
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://www.tarnowo-podgorne.pl/wydarzenia/",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/wydarzenia/{slug}",
+      "detailCount": 6
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://www.tarnowo-podgorne.pl/feed/",
+      "itemsSeen": 6,
+      "datesParsed": 6,
+      "checked": "2026-07-30"
+     },
+     {
+      "kind": "wp-rest",
+      "url": "https://www.tarnowo-podgorne.pl/wp-json/wp/v2/wydarzenia?per_page=5",
+      "itemsSeen": 5,
+      "datesParsed": 0,
+      "checked": "2026-07-30"
+     }
+    ],
+    "verdict": "events",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-tarnowo-city/0036-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "tarnowo-gok",
+    "name": "GOK Sezam (Tarnowo Podgórne)",
+    "town": "Tarnowo Podgórne",
+    "url": "https://goksezam.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2682,
+     "completionTokens": 108,
+     "costUsd": 0.003222
+    },
+    "ms": 12258,
+    "probe": {
+     "at": "2026-07-30T18:50:58.023Z",
+     "url": "https://goksezam.pl/",
+     "ok": true,
+     "ms": 1147,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 130770
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://goksezam.pl/wydarzenia.html",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/{slug}.html",
+      "detailCount": 81
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://goksezam.pl/aktualnosci.xml",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-07-30"
+     }
+    ],
+    "verdict": "events",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-tarnowo-gok/0037-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "rokietnica-city",
+    "name": "Gmina Rokietnica",
+    "town": "Rokietnica",
+    "url": "https://rokietnica.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2894,
+     "completionTokens": 100,
+     "costUsd": 0.003394
+    },
+    "ms": 6347,
+    "probe": {
+     "at": "2026-07-30T18:51:10.281Z",
+     "url": "https://rokietnica.pl/",
+     "ok": true,
+     "ms": 536,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 179539
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://rokietnica.pl/kalendarz-wydarzen/",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/{slug}.html",
+      "detailCount": 44
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://rokietnica.pl/rss/aktualnosci_pl.xml",
+      "itemsSeen": 216,
+      "datesParsed": 216,
+      "checked": "2026-07-30"
+     },
+     {
+      "kind": "rss",
+      "url": "https://rokietnica.pl/rss/informacje_pl.xml",
+      "itemsSeen": 1,
+      "datesParsed": 1,
+      "checked": "2026-07-30"
+     }
+    ],
+    "verdict": "events",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-rokietnica-city/0038-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "rokietnica-gok",
+    "name": "GOK Rokietnica",
+    "town": "Rokietnica",
+    "url": "https://kultura.rokietnica.pl/",
+    "outcome": "fixed",
+    "searches": [
+     {
+      "query": "\"GOK Rokietnica\" Rokietnica",
+      "results": [
+       {
+        "title": "Gminny Ośrodek Kultury w Rokietnicy",
+        "url": "https://gokrokietnica.pl/",
+        "desc": "Rokietnica, 62-090. Godziny Poniedziałek – Sobota. Dane kontaktowe. Tel. kom. [tel. w źródle], [tel. w źródle]. e-mail – zajęcia: [e-mail w źródle]. e-mail biuro ..."
+       },
+       {
+        "title": "Gminny Ośrodek Kultury w Rokietnicy | Rokietnica",
+        "url": "https://www.facebook.com/gminnyosrodekkulturyrokietnica/?locale=pl_PL",
+        "desc": "Godz. 17:00, Sala GOK Rokietnica Na spektakl obowiązują zapisy: Biblioteka Gminna w Rokietnicy — tel. [tel. w źródle] Serdecznie zapraszamy!"
+       },
+       {
+        "title": "Kontakt",
+        "url": "https://gokrokietnica.pl/kontakt/",
+        "desc": "Rokietnica, 62-090. Godziny Poniedziałek – Sobota. Dane kontaktowe. Tel. kom. [tel. w źródle], [tel. w źródle]. e-mail – zajęcia: [e-mail w źródle]. e-mail biuro ..."
+       },
+       {
+        "title": "gok - Urząd Gminy Rokietnica",
+        "url": "http://bip.rokietnica.pl/public/get_file.php?id=342117",
+        "desc": "tel./fax (061) 814-51-71 www.gok.rokietnica.pl, e-mail: [e-mail w źródle] konto bankowe nr: 41 9043 1041 3041 0024 0233 0001."
+       },
+       {
+        "title": "Wydarzenia",
+        "url": "https://gokrokietnica.pl/category/wydarzenia/",
+        "desc": "Rokietnica, 62-090. Godziny Poniedziałek – Sobota. Dane kontaktowe. Tel. kom. [tel. w źródle], [tel. w źródle]. e-mail – zajęcia: [e-mail w źródle]. e-mail biuro ..."
+       },
+       {
+        "title": "Gminny Ośrodek Kultury w Rokietnicy - Rokietnica",
+        "url": "https://mapa.targeo.pl/gminny-osrodek-kultury-w-rokietnicy-szkolna-3a-62-090-rokietnica~14082318/przedsiebiorstwo-firma/adres",
+        "desc": "Szkolna 3a, 62-090 Rokietnica · www.gok.rokietnica.pl · NIP działalności: 7772561009. Data aktualizacji: 2016-11-11. Popraw powyższe dane punktu (jestem ..."
+       },
+       {
+        "title": "Gminny Ośrodek Kultury w Rokietnicy",
+        "url": "https://www.facebook.com/gminnyosrodekkulturyrokietnica/posts/1428283252677721/",
+        "desc": "[ Grafika informacyjna GOK Rokietnica z napisem: „Wszystkie zajęcia dodatkowe organizowane w GOK Rokietnica trwają do 20 czerwca 2026”. Na ..."
+       },
+       {
+        "title": "GMINNY OŚRODEK KULTURY W ROKIETNICY Profil firmy",
+        "url": "https://www.dnb.com/pl-pl/baza-firm/profile-firm.gminny_o%C5%9Brodek_kultury_w_rokietnicy.aba2969a9d9131e600500ac5a02fba78.html",
+        "desc": "62-090 Rokietnica. Telefon: Strona internetowa: gok.rokietnica.pl. Zatrudnienie (dana lokalizacja):. Modelowane Zatrudnienie (wszystkie lokalizacje):."
+       },
+       {
+        "title": "Warsztaty",
+        "url": "https://gokrokietnica.pl/category/warsztaty/",
+        "desc": "Rokietnica, 62-090. Godziny Poniedziałek – Sobota. Dane kontaktowe. Tel. kom. [tel. w źródle], [tel. w źródle]. e-mail – zajęcia: [e-mail w źródle]. e-mail biuro ..."
+       },
+       {
+        "title": "System IZL - Poznańska Liga Okręgowa (PAB) - 2025/26",
+        "url": "https://izl.michzimny.pl/202526/pab/team,4",
+        "desc": "GOK Rokietnica · >>. Runda 3 (21.11.2025). GOK Rokietnica · 19.32:0.68 +73 imp · Las - Drewno - Meble · >>. Runda 4 (05.12.2025). GOK Rokietnica · 4:16 -36 imp ..."
+       }
+      ],
+      "ms": 1557
+     },
+     {
+      "query": "GOK Rokietnica Rokietnica wydarzenia",
+      "results": [
+       {
+        "title": "Gminny Ośrodek Kultury w Rokietnicy | Rokietnica",
+        "url": "https://www.facebook.com/gminnyosrodekkulturyrokietnica/?locale=pl_PL",
+        "desc": "16:00 Polana Rumpuciowa w Rokietnicy (ul. Trakt Napoleoński, za stacją ORLEN) Na uczestników czekają: - przekąski - atrakcje dla dzieci Program wydarzenia: Godz ..."
+       },
+       {
+        "title": "Gminny Ośrodek Kultury w Rokietnicy",
+        "url": "https://gokrokietnica.pl/",
+        "desc": "Serdecznie zapraszamy na rajd rowerowy organizowany pod hasłem „Łączy nas rower”. 14.06.2026– Start: godzina 10:00- Szkoła Podstawowa Przyjaciół Ziemi Cerekwica ..."
+       },
+       {
+        "title": "Wydarzenia",
+        "url": "https://gokrokietnica.pl/category/wydarzenia/",
+        "desc": "Serdecznie zapraszamy na rajd rowerowy organizowany pod hasłem „Łączy nas rower”. 14.06.2026– Start: godzina 10:00- Szkoła Podstawowa Przyjaciół Ziemi ..."
+       },
+       {
+        "title": "Kontakt",
+        "url": "https://gokrokietnica.pl/kontakt/",
+        "desc": "Kontakt · TEL. KOM. [tel. w źródle], [tel. w źródle] · NR KONTA: 41 9043 1041 3041 0024 0233 0001 · e-mail – zajęcia: [e-mail w źródle] · e-mail biuro: t.wieczorek."
+       },
+       {
+        "title": "Gminny Ośrodek Kultury w Rokietnicy",
+        "url": "https://www.facebook.com/gminnyosrodekkulturyrokietnica/posts/1428283252677721/",
+        "desc": "Informujemy, że wszystkie zajęcia dodatkowe organizowane przez Gminny Ośrodek Kultury w Rokietnicy odbywają się do 20 czerwca 2026 r."
+       },
+       {
+        "title": "Gmina Rokietnica - Gmina Rokietnica",
+        "url": "https://rokietnica.pl/",
+        "desc": "Oficjalny serwis internetowy Gminy Rokietnica - aktualne wydarzenia, wiadomości, informacje praktyczne, biznes i wiele innych. Gmina perspektyw!"
+       },
+       {
+        "title": "Przedstawiamy krótka relacje z wczorajszego koncertu ...",
+        "url": "https://www.facebook.com/gminnyosrodekkulturyrokietnica/videos/przedstawiamy-kr%C3%B3tka-relacje-z-wczorajszego-koncertu/1083723950887481/",
+        "desc": "No photo description available. ROKIETNICA WOKÓŁ NAS. ROKIETNICA WOKÓŁ N... Local Business. May be an image of text ..."
+       },
+       {
+        "title": "Wydarzenia Rokietnica 2026/2027 | Imprezy i atrakcje",
+        "url": "https://biletyna.pl/Rokietnica?srsltid=AfmBOooS8bFJy7rj3Be5wpX51l7hPovx5lRBNu5QqmvXSJfGzSuzQHR_",
+        "desc": "Wydarzenia Rokietnica 2026/2027 ✔️. Sprawdź nasze bilety na aktualne Imprezy i atrkacje w: Rokietnica - Koncerty, Stand-Up, Kabarety, Teatr ➤ SPRAWDŹ!"
+       },
+       {
+        "title": "Wydarzenia - Biblioteka Gminna im. Marii Konopnickiej",
+        "url": "https://bibliotekarokietnica.pl/category/wydarzenia/",
+        "desc": "Wydarzenia · Piknik wakacyjny · Wyjątkowy koncert „Od Wiednia do San Remo” z okazji 80-lecia Biblioteki Gminnej im. Marii Konopnickiej w Rokietnicy · Spotkanie ..."
+       }
+      ],
+      "ms": 2205
+     }
+    ],
+    "llm": {
+     "calls": 2,
+     "promptTokens": 4597,
+     "completionTokens": 136,
+     "costUsd": 0.0052770000000000004
+    },
+    "ms": 18943,
+    "probe": {
+     "at": "2026-07-30T18:51:16.690Z",
+     "url": "https://kultura.rokietnica.pl/",
+     "ok": false,
+     "ms": 1,
+     "err": "GET https://kultura.rokietnica.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND kultura.rokietnica.pl"
+    },
+    "reach": "dns-dead",
+    "ladder": [
+     {
+      "url": "https://kultura.rokietnica.pl/",
+      "outcome": "dns-dead",
+      "err": "GET https://kultura.rokietnica.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND kultura.rokietnica.pl"
+     },
+     {
+      "url": "http://kultura.rokietnica.pl/",
+      "outcome": "dns-dead",
+      "err": "GET http://kultura.rokietnica.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND kultura.rokietnica.pl"
+     },
+     {
+      "url": "https://www.kultura.rokietnica.pl/",
+      "outcome": "dns-dead",
+      "err": "GET https://www.kultura.rokietnica.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND www.kultura.rokietnica.pl"
+     },
+     {
+      "url": "http://www.kultura.rokietnica.pl/",
+      "outcome": "dns-dead",
+      "err": "GET http://www.kultura.rokietnica.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND www.kultura.rokietnica.pl"
+     }
+    ],
+    "err": "GET https://kultura.rokietnica.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND kultura.rokietnica.pl",
+    "candidate": "https://gokrokietnica.pl/",
+    "candidateProbe": {
+     "at": "2026-07-30T18:51:22.202Z",
+     "url": "https://gokrokietnica.pl/",
+     "ok": true,
+     "ms": 1144,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 79439
+    },
+    "newUrl": "https://gokrokietnica.pl/",
+    "entrypoints": [
+     {
+      "url": "https://gokrokietnica.pl/category/wydarzenia/page/{page}",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/{id}/{id}/{id}/{slug}",
+      "detailCount": 10,
+      "paginated": true
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://gokrokietnica.pl/feed/",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-07-30"
+     }
+    ],
+    "verdict": "events",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-rokietnica-gok/0039-anthropic_claude-haiku-4.5.json",
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-rokietnica-gok/0040-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "suchylas-city",
+    "name": "Gmina Suchy Las",
+    "town": "Suchy Las",
+    "url": "https://www.suchylas.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 3027,
+     "completionTokens": 146,
+     "costUsd": 0.003757
+    },
+    "ms": 18168,
+    "probe": {
+     "at": "2026-07-30T18:51:35.571Z",
+     "url": "https://www.suchylas.pl/",
+     "ok": true,
+     "ms": 1523,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 168588
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://www.suchylas.pl/wydarzenia/category/kultura/",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/{slug}",
+      "detailCount": 14
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://www.suchylas.pl/feed/",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-07-30"
+     },
+     {
+      "kind": "rss",
+      "url": "https://www.suchylas.pl/comments/feed/",
+      "itemsSeen": 1,
+      "datesParsed": 1,
+      "checked": "2026-07-30"
+     },
+     {
+      "kind": "wp-rest",
+      "url": "https://www.suchylas.pl/wp-json/wp/v2/tribe_venue?per_page=5",
+      "itemsSeen": 5,
+      "datesParsed": 0,
+      "checked": "2026-07-30"
+     },
+     {
+      "kind": "tribe",
+      "url": "https://www.suchylas.pl/wp-json/tribe/events/v1/events",
+      "itemsSeen": 8,
+      "datesParsed": 8,
+      "checked": "2026-07-30"
+     },
+     {
+      "kind": "ical",
+      "url": "https://www.suchylas.pl/wydarzenia/category/kultura/?ical=1",
+      "itemsSeen": 1,
+      "datesParsed": 3,
+      "checked": "2026-07-30"
+     },
+     {
+      "kind": "jsonld",
+      "url": "https://www.suchylas.pl/wydarzenia/category/kultura/",
+      "itemsSeen": 8,
+      "datesParsed": 8,
+      "checked": "2026-07-30"
+     }
+    ],
+    "verdict": "events",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-suchylas-city/0041-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "suchylas-ckbp",
+    "name": "CKiBP Suchy Las (Centrum Kultury i Biblioteka)",
+    "town": "Suchy Las",
+    "url": "https://www.osrodekkultury.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2051,
+     "completionTokens": 126,
+     "costUsd": 0.002681
+    },
+    "ms": 21648,
+    "probe": {
+     "at": "2026-07-30T18:51:53.739Z",
+     "url": "https://www.osrodekkultury.pl/",
+     "ok": true,
+     "ms": 2520,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 114287
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://www.osrodekkultury.pl/",
+      "kind": "listing",
+      "confidence": 0.6,
+      "via": "heuristic",
+      "detailPattern": "/wydarzenia/{slug}",
+      "detailCount": 6
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://osrodekkultury.pl/feed/",
+      "itemsSeen": 1,
+      "datesParsed": 1,
+      "checked": "2026-07-30"
+     },
+     {
+      "kind": "rss",
+      "url": "https://www.osrodekkultury.pl/rss.xml",
+      "itemsSeen": 50,
+      "datesParsed": 0,
+      "checked": "2026-07-30"
+     }
+    ],
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-suchylas-ckbp/0042-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "czerwonak-city",
+    "name": "Gmina Czerwonak",
+    "town": "Czerwonak",
+    "url": "https://www.czerwonak.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 1904,
+     "completionTokens": 126,
+     "costUsd": 0.002534
+    },
+    "ms": 8565,
+    "probe": {
+     "at": "2026-07-30T18:52:15.387Z",
+     "url": "https://www.czerwonak.pl/",
+     "ok": true,
+     "ms": 763,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 252459
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://www.czerwonak.pl/pl/mieszkaniec/kalendarz",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/pl/mieszkaniec/pl/mieszkaniec/{slug}/{id}/kwietnia/sport/{slug}/{id}",
+      "detailCount": 35
+     }
+    ],
+    "verdict": "events",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-czerwonak-city/0043-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "czerwonak-gok",
+    "name": "GOK Sokół (Czerwonak)",
+    "town": "Czerwonak",
+    "url": "https://goksokol.pl/",
+    "outcome": "fixed",
+    "searches": [
+     {
+      "query": "\"GOK Sokół (Czerwonak)\" Czerwonak",
+      "results": [
+       {
+        "title": "GOK Sokół -Czerwonak",
+        "url": "https://gok-sokol.pl/miejsca/gok-sokol-czerwonak/",
+        "desc": "GOK Sokół -Czerwonak. Siedziba główna Gminnego Ośrodka Kultury Sokół ul. Gdyńska 47, 62-004 Czerwonak tel. kom. [tel. w źródle] sekretariat czynny w poniedziałki ..."
+       },
+       {
+        "title": "Gminny Ośrodek Kultury \"Sokół\" | Czerwonak",
+        "url": "https://www.facebook.com/goksokol/",
+        "desc": "id=957081 *** Organizator: GOK Sokół, Czerwonak, zobacz więcej Sponsorzy ... Przystań AKWEN Marina Czerwonak · Czerwonak. 23 people interested · PLOT ..."
+       },
+       {
+        "title": "GOK Sokół -Czerwonak",
+        "url": "https://gok-sokol.pl/category/gok-sokol/",
+        "desc": "GOK Sokół -Czerwonak. siedziba główna Gminnego Ośrodka Kultury Sokół ul. Gdyńska 47, 62-004 Czerwonak tel. 61 652 60 30 sekretariat czynny od 8:00 do 16:00."
+       },
+       {
+        "title": "Gminny Ośrodek Kultury \"Sokół\" | Czerwonak",
+        "url": "https://www.facebook.com/goksokol/?locale=en_US",
+        "desc": "... GOK Sokół – Czerwonak Animacja poklatkowa i tkactwo 20–24 lipca 2026 r. 10:00–14:00 Dzieci w wieku 7–10 lat 380 zł (350 zł z aktywną C.Kartą) ..."
+       },
+       {
+        "title": "GOK Sokół -Czerwonak – Strona 5",
+        "url": "https://gok-sokol.pl/category/gok-sokol/page/5/",
+        "desc": "GOK Sokół -Czerwonak. siedziba główna Gminnego Ośrodka Kultury Sokół ul. Gdyńska 47, 62-004 Czerwonak tel. 61 652 60 30 sekretariat czynny od 8:00 do 16:00."
+       },
+       {
+        "title": "GOK Sokół Czerwonak (@GOKsokol) / Posts and Replies / X",
+        "url": "https://twitter.com/GOKsokol/with_replies",
+        "desc": "Website: http://www.gok-sokol.pl. Joined: Jan 22, 2015. 1Posts. 2Following. 13Followers. Posts and Replies. GOK Sokół Czerwonak profile. GOK Sokół Czerwonak."
+       },
+       {
+        "title": "PRZEDMIAR ROBÓT 005-14-004",
+        "url": "https://pbip.czerwonak.pl/przedmiar%20doj%C5%9Bcie%20do%20budynku-utwardzenie%20terenu5058.pdf?id=130197",
+        "desc": "GOK \"SOKÓŁ\" Czerwonak. Zagospodarowanie terenu przy klubie \"Kogucik\" w ... 62-004 Czerwonak, ul. Gdyńska 47 fma SOFTBUD. Poznań. *. PRZEDMIAR 005-14-004."
+       },
+       {
+        "title": "Gminny Ośrodek Kultury \"Sokół\"",
+        "url": "https://www.facebook.com/goksokol/photos/1589105412651488/",
+        "desc": "Zapisy oraz szczegóły: https://gok-sokol. pl/wakacje2026/ GOK Sokół – Czerwonak Animacja poklatkowa i tkactwo ♟ Akademia szachowa ..."
+       },
+       {
+        "title": "Jakub Merda - Zawodnicy",
+        "url": "https://pzbil.pl/zawodnicy/1186/jakub-merda/",
+        "desc": "Sukcesy zawodnika ; 1, GOK Sokół Czerwonak, Mistrzostwa Polski - Kielce, JS, 14-bil ; 2, GOK Sokół Czerwonak, Mistrzostwa Polski - Kielce, JS, 9-bil ..."
+       },
+       {
+        "title": "GOK Sokół -Czerwonak – Strona 3",
+        "url": "https://gok-sokol.pl/category/gok-sokol/page/3/",
+        "desc": "GOK Sokół -Czerwonak. siedziba główna Gminnego Ośrodka Kultury Sokół ul. Gdyńska 47, 62-004 Czerwonak tel. 61 652 60 30 sekretariat czynny od 8:00 do 16:00."
+       }
+      ],
+      "ms": 1322
+     },
+     {
+      "query": "GOK Sokół (Czerwonak) Czerwonak wydarzenia",
+      "results": [
+       {
+        "title": "GOK Sokół - Czerwonak",
+        "url": "https://gok-sokol.pl/",
+        "desc": "Szczegóły wydarzenia. Gminny Ośrodek Kultury Sokół serdecznie zaprasza na szóstą edycję cyklu plenerowych koncertów „Mobilna Kultura” – wyjątkowych, kameralnych ..."
+       },
+       {
+        "title": "Aktualności",
+        "url": "https://gok-sokol.pl/category/aktualnosci/",
+        "desc": "Aktualności · Nie Dokazuj! · Komunikat 17.07.2026 · Kino po sąsiedzku · Mobilna Kultura – cykl koncertów letnich · Twórcze Lato z GOK Sokół · LALA – spektakl Teatru ..."
+       },
+       {
+        "title": "Gminny Ośrodek Kultury \"Sokół\" | Czerwonak",
+        "url": "https://www.facebook.com/goksokol/?locale=pl_PL",
+        "desc": "W naszej głównej siedzibie w Czerwonaku rozpoczęła się dziś Akademia Szachowa w ramach Twórcze lato z GOK Sokół. Zajęcia prowadzi Grzegorz Zając. Dzieci z ..."
+       },
+       {
+        "title": "Gminny Ośrodek Kultury \"Sokół\"",
+        "url": "https://www.bilety24.pl/organizator/gminny-osrodek-kultury-sokol-769.html",
+        "desc": "Muzyczny Czerwonak – filmowe przeboje nad Wartą Widowisko światło i dźwięk przy kładce pieszo-rowerowej w Czerwonaku 5 września 2026 r. | godz. 19.30 Koncert ..."
+       },
+       {
+        "title": "Zapisy – GOK Sokół",
+        "url": "https://gok-sokol.pl/zapisy/",
+        "desc": "Imprezy. XXIX Wojewódzki Festiwal Piosenki Przedszkolaków. Czerwonak 2026 · XI Wielkanocny Targ Wiejski · DNI GMINY CZERWONAK 2025 · Mobilna Kultura – koncerty ..."
+       },
+       {
+        "title": "Kontakt – GOK Sokół",
+        "url": "https://gok-sokol.pl/kontakt/",
+        "desc": "Przylesie 5/U1, 62-004 Czerwonak tel. [tel. w źródle]. Klub czynny od 16:00 do 20 ... Organizacja imprez: [tel. w źródle]. Biuro czynne od 10:00 do 16:00."
+       },
+       {
+        "title": "GOK SOKÓŁ (@goksokol) · Czerwonak",
+        "url": "https://www.instagram.com/goksokol/?hl=pl",
+        "desc": "Zapraszamy na Dni Gminy Czerwonak 2026, które odbędą się w dniach 29-30 maja na terenie przyległym do Przystani Akwen Marina w Czerwonaku oraz 31 maja w Centrum ..."
+       },
+       {
+        "title": "Klub Seniora w Czerwonaku",
+        "url": "https://gok-sokol.pl/category/klub-seniora-w-czerwonaku/",
+        "desc": "Koncert Tenorów Vincero z towarzyszeniem Adam Wojtasik Band · 30 marca 2026 ; Mniszka spektakl Skansenu Teatralnego · 30 marca 2026 ; XI Wielkanocny Targ Wiejski."
+       },
+       {
+        "title": "Zakończenie sezonu GOK Sokół - koncert i wernisaż",
+        "url": "https://czerwonak.pl/pl/mieszkaniec/k-kalendarz/2025/czerwca/kultura/zakonczenie-sezonu-gok-sokol-koncert-i-wernisaz/8603",
+        "desc": "Zakończenie sezonu GOK Sokół - koncert i wernisaż · Termin wydarzenia: 2025-06-10 17:00 do 2025-06-10 18:00 · Kategoria: Kultura · Miejsce: Centrum ..."
+       }
+      ],
+      "ms": 1349
+     }
+    ],
+    "llm": {
+     "calls": 2,
+     "promptTokens": 4685,
+     "completionTokens": 278,
+     "costUsd": 0.006075
+    },
+    "ms": 17496,
+    "probe": {
+     "at": "2026-07-30T18:52:23.996Z",
+     "url": "https://goksokol.pl/",
+     "ok": false,
+     "ms": 14,
+     "err": "GET https://goksokol.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND goksokol.pl"
+    },
+    "reach": "dns-dead",
+    "ladder": [
+     {
+      "url": "https://goksokol.pl/",
+      "outcome": "dns-dead",
+      "err": "GET https://goksokol.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND goksokol.pl"
+     },
+     {
+      "url": "http://goksokol.pl/",
+      "outcome": "dns-dead",
+      "err": "GET http://goksokol.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND goksokol.pl"
+     },
+     {
+      "url": "https://www.goksokol.pl/",
+      "outcome": "dns-dead",
+      "err": "GET https://www.goksokol.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND www.goksokol.pl"
+     },
+     {
+      "url": "http://www.goksokol.pl/",
+      "outcome": "dns-dead",
+      "err": "GET http://www.goksokol.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND www.goksokol.pl"
+     }
+    ],
+    "err": "GET https://goksokol.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND goksokol.pl",
+    "candidate": "https://gok-sokol.pl/",
+    "candidateProbe": {
+     "at": "2026-07-30T18:52:28.610Z",
+     "url": "https://gok-sokol.pl/",
+     "ok": true,
+     "ms": 1531,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 326568
+    },
+    "newUrl": "https://gok-sokol.pl/",
+    "entrypoints": [
+     {
+      "url": "https://gok-sokol.pl/wp-admin/admin-ajax.php?action=eventon_ics_download&event_id=27886&sunix=20260706T070000Z&eunix=20260814T120000Z&loca=&locn=",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm"
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://gok-sokol.pl/feed/",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-07-30"
+     },
+     {
+      "kind": "ical",
+      "url": "https://gok-sokol.pl/wp-admin/admin-ajax.php?action=eventon_ics_download&event_id=27886&sunix=20260706T070000Z&eunix=20260814T120000Z&loca=&locn=&ical=1",
+      "itemsSeen": 1,
+      "datesParsed": 1,
+      "checked": "2026-07-30"
+     }
+    ],
+    "verdict": "events",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-czerwonak-gok/0044-anthropic_claude-haiku-4.5.json",
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-czerwonak-gok/0045-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "swarzedz-city",
+    "name": "Miasto i Gmina Swarzędz",
+    "town": "Swarzędz",
+    "url": "https://www.swarzedz.pl/",
+    "outcome": "dead",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2049,
+     "completionTokens": 77,
+     "costUsd": 0.002434
+    },
+    "ms": 3202,
+    "probe": {
+     "at": "2026-07-30T18:52:41.448Z",
+     "url": "https://www.swarzedz.pl/",
+     "ok": true,
+     "ms": 174,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 74535
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "verdict": "none",
+    "err": "Wszyscy kandydaci to strony główne/ogólne bez listy wydarzeń; brak odnośników do podstron z kalendarzem imprez.",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-swarzedz-city/0046-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "swarzedz-ok",
+    "name": "Ośrodek Kultury w Swarzędzu",
+    "town": "Swarzędz",
+    "url": "https://www.ok-swarzedz.pl/",
+    "outcome": "fixed",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2225,
+     "completionTokens": 159,
+     "costUsd": 0.00302
+    },
+    "ms": 27400,
+    "probe": {
+     "at": "2026-07-30T18:52:44.651Z",
+     "url": "https://www.ok-swarzedz.pl/",
+     "ok": true,
+     "ms": 5796,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "finalUrl": "https://ok-swarzedz.pl/category/aktualnosci/",
+     "chars": 255032
+    },
+    "reach": "redirected",
+    "httpStatus": 200,
+    "newUrl": "https://ok-swarzedz.pl/category/aktualnosci/",
+    "note": "drabina: redirected",
+    "entrypoints": [
+     {
+      "url": "https://ok-swarzedz.pl/category/aktualnosci/page/{page}",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/tag/{slug}",
+      "detailCount": 25,
+      "paginated": true
+     }
+    ],
+    "verdict": "news",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-swarzedz-ok/0047-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "kornik-city",
+    "name": "Miasto i Gmina Kórnik",
+    "town": "Kórnik",
+    "url": "https://www.kornik.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2598,
+     "completionTokens": 99,
+     "costUsd": 0.003093
+    },
+    "ms": 7426,
+    "probe": {
+     "at": "2026-07-30T18:53:12.051Z",
+     "url": "https://www.kornik.pl/",
+     "ok": true,
+     "ms": 1275,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 283007
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://www.kornik.pl/kalendarium",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/{slug}",
+      "detailCount": 28
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://www.kornik.pl/rss.xml",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-07-30"
+     }
+    ],
+    "verdict": "events",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-kornik-city/0048-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "kornik-kok",
+    "name": "Kórnicki Ośrodek Kultury",
+    "town": "Kórnik",
+    "url": "https://kok.kornik.pl/",
+    "outcome": "fixed",
+    "searches": [
+     {
+      "query": "\"Kórnicki Ośrodek Kultury\" Kórnik",
+      "results": [
+       {
+        "title": "Kórnicki Ośrodek Kultury: Aktualności",
+        "url": "https://www.kornickiosrodekkultury.pl/",
+        "desc": "13 - 14 czerwca br. Kórnik, ul. Prowent. Więcej… Warsztaty plastyczne zdalnie ... Kórnicki Ośrodek Kultury. 62-035 Kórnik ul. Prowent 6; tel: 61 817 08 91 ..."
+       },
+       {
+        "title": "Kórnicki Ośrodek Kultury | Kórnik",
+        "url": "https://www.facebook.com/p/K%C3%B3rnicki-O%C5%9Brodek-Kultury-100064473258484/?locale=pl_PL",
+        "desc": "Kórnicki Ośrodek Kultury, Kórnik. 5289 likes · 182 talking about this · 499 were here. Pielęgnujemy Kulturę w Mieście i Gminie Kórnik."
+       },
+       {
+        "title": "Kórnicki Ośrodek Kultury - Biuletyn Informacji Publicznej - Kórnik",
+        "url": "https://bip.kornik.pl/kornicki-osrodek-kultury",
+        "desc": "Dane teleadresowe: Kórnicki Ośrodek Kultury. ul. Prowent 6 62-035 Kórnik. telefon: + 48 61 81 70 891 e-mail: [e-mail w źródle]."
+       },
+       {
+        "title": "Kórnicki Ośrodek Kultury (@kornickiosrodekkultury)",
+        "url": "https://www.instagram.com/kornickiosrodekkultury/",
+        "desc": "... Kórnik (dotyczy również stowarzyszeń) lub zamieszkałym i zameldowanym na terenie Gminy Kórnik. ... Koncert jubileuszowy na 5/4 ..."
+       },
+       {
+        "title": "Nasza polana jeszcze wygląda właśnie tak… Ale już w ten ...",
+        "url": "https://www.facebook.com/100064473258484/posts/nasza-polana-jeszcze-wygl%C4%85da-w%C5%82a%C5%9Bnie-tak-ale-ju%C5%BC-w-ten-weekend-wype%C5%82ni-si%C4%99-muzyk/1560533119439115/",
+        "desc": "Kórnicki Ośrodek Kultury is with Top Management and 9 others in Kórnik, Poland. Jun 9 Giulio Cercato . . Nasza polana jeszcze wygląda ..."
+       },
+       {
+        "title": "Kórnicki Ośrodek Kultury w Kórniku, Prowent 6, Kórnik 62- ...",
+        "url": "https://mapa.targeo.pl/kornicki-osrodek-kultury-w-korniku-prowent-6-62-035-kornik~14110669/przedsiebiorstwo-firma/adres",
+        "desc": "Kórnicki Ośrodek Kultury w Kórniku. Prowent 6, 62-035 Kórnik · www.kornickiosrodekkultury.pl · NIP działalności: 7773039054."
+       },
+       {
+        "title": "Kórnicki Ośrodek Kultury | Kórnik",
+        "url": "https://www.facebook.com/100064473258484/?locale=hi_IN",
+        "desc": "Kórnicki Ośrodek Kultury, Kórnik gmina, बृहत्तर पोलैंड वोईवोडीशिप, पोलैंड में Biblioteka Kórnicka और 2 अन्य लोगों के साथ हैं."
+       }
+      ],
+      "ms": 3118
+     },
+     {
+      "query": "Kórnicki Ośrodek Kultury Kórnik wydarzenia",
+      "results": [
+       {
+        "title": "Kórnicki Ośrodek Kultury: Aktualności",
+        "url": "https://www.kornickiosrodekkultury.pl/",
+        "desc": "XXXI Kórnickie Spotkania z Białą Damą 13-14 czerwca 2026 · Warsztaty plastyczne zdalnie · Warsztaty tańca nowoczesnego zdalne · Zdalne warsztaty Chór Zamku ..."
+       },
+       {
+        "title": "Kórnicki Ośrodek Kultury | Kórnik",
+        "url": "https://www.facebook.com/p/K%C3%B3rnicki-O%C5%9Brodek-Kultury-100064473258484/?locale=pl_PL",
+        "desc": "LETNI FESTIWAL MUZYKA Z KÓRNIKA XXI Przed nami kolejna edycja wyjątkowego muzycznego wydarzenia w Kórniku. Przed nami 5 wyjątkowych koncertów, które ..."
+       },
+       {
+        "title": "Kalendarz wydarzeń kulturalnych - Kórnik",
+        "url": "https://www.kornickiosrodekkultury.pl/kalendarz-wydarzen-kulturalnych",
+        "desc": "W KOK. Metafora plastyczna · Metafora muzyczna · Metafora taneczna · Metafora filmowa · Plan zajęć · Kalendarz wydarzeń · Do pobrania · BiP · Kontakt."
+       },
+       {
+        "title": "Kalendarium - Lipiec 2026 | Serwis Miasta i Gminy Kórnik",
+        "url": "https://kornik.pl/kalendarium",
+        "desc": "Letni Festiwal Muzyka z Kórnika 2026. Wydarzenie. Kornicki Ośrodek Kultury ul. Prowent 6, 62-035 Kórnik, Arboretum Kórnickie. Od: 2026-07-05, ..."
+       },
+       {
+        "title": "Kórnicki Ośrodek Kultury (@kornickiosrodekkultury)",
+        "url": "https://www.instagram.com/kornickiosrodekkultury/",
+        "desc": "To był dopiero prawdziwy BAL! Letni Festiwal Muzyka z Kórnika! 🎙️ Za nami wyjątkowy koncert „Niech żyje bal” – największe polskie przeboje lat 70. i 80."
+       },
+       {
+        "title": "Kórnicki Ośrodek Kultury | Kórnik",
+        "url": "https://www.facebook.com/337100432978895",
+        "desc": "Już w najbliższą niedzielę o godz. 18:00 serdecznie zapraszamy do Kórnickiego Arboretum na koncert Aleksandry Idkowskiej z zespołem. Spotkajmy się w tej ..."
+       },
+       {
+        "title": "czyli Manieczki na żywo, 🎵 największe hity Krzysztofa ...",
+        "url": "https://www.facebook.com/100064473258484/posts/nasza-polana-jeszcze-wygl%C4%85da-w%C5%82a%C5%9Bnie-tak-ale-ju%C5%BC-w-ten-weekend-wype%C5%82ni-si%C4%99-muzyk/1560533119439115/",
+        "desc": "⏳ Przed nami dwa dni pełne atrakcji: występy lokalnych zespołów i grup, ogłoszenie Białej Damy 2026/2027, koncert Agnieszki Chylińskiej, ..."
+       },
+       {
+        "title": "Kórnicki Ośrodek Kultury - Biuletyn Informacji Publicznej - Kórnik",
+        "url": "https://bip.kornik.pl/kornicki-osrodek-kultury",
+        "desc": "Dane teleadresowe: Kórnicki Ośrodek Kultury. ul. Prowent 6 62-035 Kórnik. telefon: + 48 61 81 70 891 e-mail: [e-mail w źródle]."
+       },
+       {
+        "title": "Plan zajęć 2025/2026",
+        "url": "https://www.kornickiosrodekkultury.pl/plan-zajec",
+        "desc": "14:00-17:00, KÓRNICKA ORKIESTRA DĘTA zajęcia indywidualne gry na instrumentach. Marek Galubiński ; 15:00-17:00. WARSZTATY WOKALNE DLA DZIECI I MŁODZIEŻY. Lidia ..."
+       }
+      ],
+      "ms": 1358
+     }
+    ],
+    "llm": {
+     "calls": 2,
+     "promptTokens": 3884,
+     "completionTokens": 146,
+     "costUsd": 0.004614
+    },
+    "ms": 11493,
+    "probe": {
+     "at": "2026-07-30T18:53:19.637Z",
+     "url": "https://kok.kornik.pl/",
+     "ok": false,
+     "ms": 42,
+     "err": "GET https://kok.kornik.pl/: TypeError: fetch failed ← certificate has expired"
+    },
+    "reach": "cert",
+    "ladder": [
+     {
+      "url": "https://kok.kornik.pl/",
+      "outcome": "cert",
+      "err": "GET https://kok.kornik.pl/: TypeError: fetch failed ← certificate has expired"
+     },
+     {
+      "url": "http://kok.kornik.pl/",
+      "outcome": "http-error",
+      "httpStatus": 404,
+      "err": "HTTP 404"
+     },
+     {
+      "url": "https://www.kok.kornik.pl/",
+      "outcome": "dns-dead",
+      "err": "GET https://www.kok.kornik.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND www.kok.kornik.pl"
+     },
+     {
+      "url": "http://www.kok.kornik.pl/",
+      "outcome": "dns-dead",
+      "err": "GET http://www.kok.kornik.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND www.kok.kornik.pl"
+     }
+    ],
+    "err": "GET https://kok.kornik.pl/: TypeError: fetch failed ← certificate has expired",
+    "candidate": "https://www.kornickiosrodekkultury.pl/",
+    "candidateProbe": {
+     "at": "2026-07-30T18:53:26.105Z",
+     "url": "https://www.kornickiosrodekkultury.pl/",
+     "ok": true,
+     "ms": 384,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 70659
+    },
+    "newUrl": "https://www.kornickiosrodekkultury.pl/",
+    "entrypoints": [
+     {
+      "url": "https://www.kornickiosrodekkultury.pl/?start={page}",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/{slug}",
+      "detailCount": 15,
+      "paginated": true
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://www.kornickiosrodekkultury.pl/?format=feed&amp;type=rss",
+      "itemsSeen": 6,
+      "datesParsed": 6,
+      "checked": "2026-07-30"
+     },
+     {
+      "kind": "rss",
+      "url": "https://www.kornickiosrodekkultury.pl/?format=feed&amp;type=atom",
+      "itemsSeen": 6,
+      "datesParsed": 6,
+      "checked": "2026-07-30"
+     }
+    ],
+    "verdict": "news",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-kornik-kok/0049-anthropic_claude-haiku-4.5.json",
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-kornik-kok/0050-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "kornik-arboretum",
+    "name": "Arboretum Kórnickie",
+    "town": "Kórnik",
+    "url": "https://www.idpan.poznan.pl/arboretum/",
+    "outcome": "dead",
+    "searches": [
+     {
+      "query": "\"Arboretum Kórnickie\" Kórnik",
+      "results": [
+       {
+        "title": "Arboretum Kórnickie | Kórnik",
+        "url": "https://www.facebook.com/arboretum.kornickie/?locale=pl_PL",
+        "desc": "Arboretum Kórnickie jest częścią Instytutu Dendrologii PAN. Jest to najstarsze Arboretum w Polsce. Education · $ · ..."
+       },
+       {
+        "title": "Arboretum Kórnickie - serwis turystyczny Gminy Kórnik",
+        "url": "https://kornik.travel/pl/obiekty/zwiedzanie/arboretum-kornickie",
+        "desc": "Arboretum Kórnickie zlokalizowane jest na terenie parku przyzamkowego, zajmuje powierzchnię 30 ha i jest dostępne jest dla zwiedzających przez cały rok."
+       },
+       {
+        "title": "Arboretum w Kórniku",
+        "url": "https://www.idpan.poznan.pl/pl/o-arboretum-i-lesie-doswiadczalnym/o-arboretum",
+        "desc": "Arboretum Kórnickie należy do Instytutu Dendrologii Polskiej Akademii Nauk. · Szczególnie bogato reprezentowane są brzozy (Betula), suchodrzewy (Lonicera), ..."
+       },
+       {
+        "title": "Arboretum Kórnickie - All You SHOULD Know Before ...",
+        "url": "https://www.tripadvisor.com/Attraction_Review-g946537-d4465136-Reviews-Arboretum_Kornickie-Kornik_Greater_Poland_Province_Central_Poland.html",
+        "desc": "Arboretum Kórnickie - All You SHOULD Know Before Going 2026 (with Reviews). Kornik."
+       },
+       {
+        "title": "Arboretum Kórnickie",
+        "url": "https://gardensearch.bgci.org/garden/4230",
+        "desc": "Arboretum Kórnickie. KORNIK, wielkopolskie, Poland. Garden Overview Leadership & Governance Living Collections Plant Conservation Education & Outreach"
+       },
+       {
+        "title": "Arboretum w Kórniku",
+        "url": "https://tobilet.pl/arboretum-w-korniku.html",
+        "desc": "Arboretum Kórnickie zlokalizowane jest na terenie parku przyzamkowego, zajmuje powierzchnię 30 ha i jest dostępne jest dla zwiedzających przez cały rok."
+       },
+       {
+        "title": "Arboretum Kórnickie, Kórnik",
+        "url": "https://www.youtube.com/watch?v=95n24esw87I",
+        "desc": "Produkcja: Stowarzyszenie Promocji i Rozwoju Motywator - http://www.motywator.o... Arboretum Kórnickie, Kórnik. @KsiegaMalychMuzeow28 likes ..."
+       },
+       {
+        "title": "Arboretum w Kórniku – Wikipedia, wolna encyklopedia",
+        "url": "https://pl.wikipedia.org/wiki/Arboretum_w_K%C3%B3rniku",
+        "desc": "Arboretum w Kórniku, czyli Arboretum Kórnickie – znajduje się w województwie wielkopolskim w powiecie poznańskim, w gminie Kórnik."
+       },
+       {
+        "title": "Arboretum Kórnickie – Aplikacje w Google Play",
+        "url": "https://play.google.com/store/apps/details?id=pl.audiotour.kornikarnumberguide&hl=pl",
+        "desc": "Arboretum Kórnickie ; Dla wszystkich. info ; Informacje o aplikacji · Aplikacja jest formą audioprzewodnika pozwalającego na zwiedzanie Kórnickiego Arboretum za ..."
+       }
+      ],
+      "ms": 1938
+     },
+     {
+      "query": "Arboretum Kórnickie Kórnik wydarzenia",
+      "results": [
+       {
+        "title": "Arboretum Kórnickie | Kórnik",
+        "url": "https://www.facebook.com/arboretum.kornickie/?locale=pl_PL",
+        "desc": "Arboretum Kórnickie. Jul 15 · Z KÓRNICKIM RODOWODEM – wyjątkowa wystawa kórnickich odmian drzew i krzewów, prezentacja Szkółek Kórnickich, która odbędzie się ..."
+       },
+       {
+        "title": "Imprezy edukacyjno-przyrodnicze - Kórnik",
+        "url": "https://www.idpan.poznan.pl/pl/edukacja-i-turystyka/imprezy-ed",
+        "desc": "Imprezy edukacyjno-przyrodnicze · Zwiastuny wiosny> · Kiedy znów zakwitną białe bzy> · Umajone Arboretum> · Dni azalii i różaneczników> · Barwy jesieni> · Kalendarz ..."
+       },
+       {
+        "title": "Kórnicki Ośrodek Kultury: Aktualności",
+        "url": "https://www.kornickiosrodekkultury.pl/",
+        "desc": "XXXI Kórnickie Spotkania z Białą Damą 13-14 czerwca 2026 · Warsztaty plastyczne zdalnie · Warsztaty tańca nowoczesnego zdalne · Zdalne warsztaty Chór Zamku ..."
+       },
+       {
+        "title": "Arboretum w Kórniku",
+        "url": "https://tobilet.pl/arboretum-w-korniku.html",
+        "desc": "Arboretum Kórnickie zlokalizowane jest na terenie parku przyzamkowego, zajmuje powierzchnię 30 ha i jest dostępne jest dla zwiedzających przez cały rok."
+       },
+       {
+        "title": "Kalendarium - Lipiec 2026 | Serwis Miasta i Gminy Kórnik",
+        "url": "https://kornik.pl/kalendarium",
+        "desc": "Wydarzenie. Kornicki Ośrodek Kultury ul. Prowent 6, 62-035 Kórnik, Arboretum Kórnickie. Od: 2026-07-05, godz. 20:00. Od: 2026-08-02, godz. 20:00. Gmina Kórnik ..."
+       },
+       {
+        "title": "Arboretum Kórnickie - serwis turystyczny Gminy Kórnik",
+        "url": "https://kornik.travel/pl/obiekty/zwiedzanie/arboretum-kornickie",
+        "desc": "Imprezy i wydarzenia ; lipiec – wrzesień, 10:00 - 18:00 ; październik, 10:00 - 17:00 ; listopad – marzec, 10:00 - 16:00 ..."
+       },
+       {
+        "title": "Arboretum Kórnickie (@arboretum.kornickie) - Mentions",
+        "url": "https://www.facebook.com/arboretum.kornickie/mentions/",
+        "desc": "Porozmawiamy m.in. o Wielkim Dniu Otwartym, który odbędzie się 19 lipca 2026 r. z okazji 200-lecia Arboretum Kórnickiego. To będzie doskonała okazja, by ..."
+       },
+       {
+        "title": "Arboretum Kórnickie",
+        "url": "https://botaniczna5.pl/locations/arboretum-kornickie/",
+        "desc": "Adres Zamkowa 1. Kórnik wielkopolskie. Poland. Najbliższe wydarzenia. Botaniczna Piątka Kórnik - edycja letnia 2026 - 30.08.2026 - 10:00 - 14:00 ..."
+       },
+       {
+        "title": "Letni Festiwal Muzyka z Kórnika 2026",
+        "url": "https://www.kornickiosrodekkultury.pl/letni-festiwal-muzyka-z-kornika-2026",
+        "desc": "Letni Festiwal Muzyka z Kórnika 2026. Niedziela 5 lipca br. godz. 19:00. Prowent,Kórnik. KONCERT INAUGURACYJNY. Koncert zespołu."
+       }
+      ],
+      "ms": 1257
+     }
+    ],
+    "llm": {
+     "calls": 2,
+     "promptTokens": 5504,
+     "completionTokens": 133,
+     "costUsd": 0.006169
+    },
+    "ms": 17875,
+    "probe": {
+     "at": "2026-07-30T18:53:32.271Z",
+     "url": "https://www.idpan.poznan.pl/arboretum/",
+     "ok": false,
+     "ms": 483,
+     "httpStatus": 500,
+     "contentType": "text/html",
+     "finalUrl": "https://www.idpan.poznan.pl/pl/arboretum",
+     "err": "HTTP 500"
+    },
+    "reach": "http-error",
+    "ladder": [
+     {
+      "url": "https://www.idpan.poznan.pl/arboretum/",
+      "outcome": "http-error",
+      "httpStatus": 500,
+      "err": "HTTP 500"
+     },
+     {
+      "url": "http://www.idpan.poznan.pl/arboretum/",
+      "outcome": "http-error",
+      "httpStatus": 500,
+      "err": "HTTP 500"
+     },
+     {
+      "url": "https://idpan.poznan.pl/arboretum/",
+      "outcome": "dns-dead",
+      "err": "GET https://idpan.poznan.pl/arboretum/: TypeError: fetch failed ← getaddrinfo ENOTFOUND idpan.poznan.pl"
+     },
+     {
+      "url": "http://idpan.poznan.pl/arboretum/",
+      "outcome": "dns-dead",
+      "err": "GET http://idpan.poznan.pl/arboretum/: TypeError: fetch failed ← getaddrinfo ENOTFOUND idpan.poznan.pl"
+     }
+    ],
+    "httpStatus": 500,
+    "err": "Wszyscy kandydaci to podstrony o strukturze instytutu, edukacji i arboretum — brak dedykowanej listy wydarzeń z datami.",
+    "candidate": "https://www.idpan.poznan.pl/pl/o-arboretum-i-lesie-doswiadczalnym/o-arboretum",
+    "candidateProbe": {
+     "at": "2026-07-30T18:53:38.014Z",
+     "url": "https://www.idpan.poznan.pl/pl/o-arboretum-i-lesie-doswiadczalnym/o-arboretum",
+     "ok": true,
+     "ms": 644,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 91001
+    },
+    "newUrl": "https://www.idpan.poznan.pl/pl/o-arboretum-i-lesie-doswiadczalnym/o-arboretum",
+    "verdict": "none",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-kornik-arboretum/0051-anthropic_claude-haiku-4.5.json",
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-kornik-arboretum/0052-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "kleszczewo-gokis",
+    "name": "GOKiS Kleszczewo",
+    "town": "Kleszczewo",
+    "url": "https://gokis-kleszczewo.pl/",
+    "outcome": "fixed",
+    "searches": [
+     {
+      "query": "\"GOKiS Kleszczewo\" Kleszczewo",
+      "results": [
+       {
+        "title": "Portal informacyjny GOKiS Kleszczewo - GOKiS Kleszczewo",
+        "url": "https://gokis.kleszczewo.pl/",
+        "desc": "Biuletyn informacji publicznej GOKiS Kleszczewo. Copyright by gokis.kleszczewo.pl. Powered by 2ClickPortal® - Portale nowej generacji. DO GÓRY. Zamknij popup."
+       },
+       {
+        "title": "Gminny Ośrodek Kultury i Sportu w Kleszczewie",
+        "url": "https://www.facebook.com/GOKiS.Kleszczewo/?locale=pl_PL",
+        "desc": ". Open now. . ul. Poznańska 6, Kleszczewo, Poland, 63-005. Links. . gokis.kleszczewo.pl. Contact info. . [tel. w źródle]. . [e-mail w źródle]."
+       },
+       {
+        "title": "Kontakt - GOKiS Kleszczewo",
+        "url": "https://gokis.kleszczewo.pl/kontakt.html",
+        "desc": "... Kleszczewo, ul. Poznańska 2, adres e-mail: [e-mail w źródle]). Dane kontaktowe inspektora ochrony danych: adres e-mail – [e-mail w źródle]. Dane ..."
+       },
+       {
+        "title": "Kontakt - Gminny Ośrodek Kultury i Sportu w Kleszczewie",
+        "url": "https://gokiskleszczewo.bilety24.pl/kontakt/",
+        "desc": "Poznańska 2, 63-005 Kleszczewo NIP: 777-26-55-868 +48 61 81 76 020 wew. 184[tel. w źródle] [e-mail w źródle] Sprzedaż internetowa Operatorem ..."
+       },
+       {
+        "title": "Wpadnij poczytać z nami książki w cieniu kleszczewskiego ...",
+        "url": "https://www.facebook.com/100064259997092/posts/wpadnij-poczyta%C4%87-z-nami-ksi%C4%85%C5%BCki-w-cieniu-kleszczewskiego-parku-nale%C5%BCy-ci-si%C4%99-ta-/1392382146247105/",
+        "desc": "... parku, należy Ci się ta chwila relaksu. Sobota, godziny 15-18. Szczegóły na www.gokis.kleszczewo.pl."
+       },
+       {
+        "title": "Kalendarz - GOKiS Kleszczewo",
+        "url": "https://gokis.kleszczewo.pl/kalendarz-wydarzen/",
+        "desc": "Zapisy przyjmujemy pod numerem [tel. w źródle] lub adresem e-mail: [e-mail w źródle]. Widzimy się na boisku, nie może Cię tam zabraknąć! Regulamin ..."
+       },
+       {
+        "title": "GOKiS Kleszczewo",
+        "url": "https://www.youtube.com/@gokiskleszczewo6099/playlists",
+        "desc": "GOKiS Kleszczewo. @gokiskleszczewo6099. 38 subscribers•36 videos. More about this channel ...more. More about this channel ... GOKiS Kleszczewo · Playlist."
+       },
+       {
+        "title": "GOKiS w Kleszczewie - Kleszczewo - BIP - Samorzad.pl",
+        "url": "http://kleszczewo.samorzad.pl/index.php?id=204",
+        "desc": "Poznańska 2, Kleszczewo. Kontakt. tel. (61) 817-60-20 wew. 109 lub 107. tel. kom. [tel. w źródle]. e-mail: [e-mail w źródle]. INFORMACJA I ..."
+       },
+       {
+        "title": "GOKiS Kleszczewo",
+        "url": "https://www.lm.pl/tagi/gokis-kleszczewo",
+        "desc": "GOKiS Kleszczewo · Zwycięzcy III Grand Prix Wielkopolski w tenisie stołowym. Kto triumfował? · III Grand Prix Wielkopolski w tenisie stołowym – triumf Tymona ..."
+       },
+       {
+        "title": "Gminny Ośrodek Kultury i Sportu w Kleszczewie",
+        "url": "https://www.facebook.com/GOKiS.Kleszczewo/?locale2=ja_JP",
+        "desc": "詳細. . 94%がおすすめ(レビュー11件). . 閉店・準備中. . ul. Poznańska 6, Kleszczewo, Poland, 63-005 ; リンク. . gokis.kleszczewo.pl ; 連絡先情報. . +48 ..."
+       }
+      ],
+      "ms": 1826
+     },
+     {
+      "query": "GOKiS Kleszczewo Kleszczewo wydarzenia",
+      "results": [
+       {
+        "title": "Kalendarz - GOKiS Kleszczewo",
+        "url": "https://gokis.kleszczewo.pl/kalendarz-wydarzen/",
+        "desc": "Już 4 lipca 2026 r. zapraszamy do Hali Widowiskowo-Sportowej w Kleszczewie przy ul. Poznańskiej 2, gdzie odbędzie się Gala Piosenki Biesiadnej – spotkanie pełne ..."
+       },
+       {
+        "title": "Gminny Ośrodek Kultury i Sportu w Kleszczewie",
+        "url": "https://www.facebook.com/GOKiS.Kleszczewo/?locale=pl_PL",
+        "desc": "Dożynki Gminne Gminy Kleszczewo 2026 Krerowo, 22.08.2026 - g. 14:00 Szczególne podziękowania dla społeczności Sołectwo Krerowo, Sołectwo Zimin, Sołectwo ..."
+       },
+       {
+        "title": "Portal informacyjny GOKiS Kleszczewo - GOKiS Kleszczewo",
+        "url": "https://gokis.kleszczewo.pl/",
+        "desc": "Oficjalny serwis internetowy Gminnego Ośrodka Kultury i Sportu w Kleszczewie - aktualne wydarzenia, wiadomości, informacje praktyczne i wiele innych."
+       },
+       {
+        "title": "Aktualności - Wydarzenia - GOKiS Kleszczewo",
+        "url": "https://gokis.kleszczewo.pl/aktualnosci/wydarzenia/",
+        "desc": "Oficjalny serwis internetowy Gminnego Ośrodka Kultury i Sportu w Kleszczewie - aktualne wydarzenia, wiadomości, informacje praktyczne i wiele innych."
+       },
+       {
+        "title": "Oferta zajęć - GOKiS Kleszczewo",
+        "url": "https://gokis.kleszczewo.pl/sekcje.html",
+        "desc": "Oferta zajęć · ZAPISY ONLINE · Zajęcia artystyczne · Zajęcia sportowe · Zajęcia bezpłatne · Zajęcia dla seniora · Zespoły śpiewacze. Wybierz interesujące Cię ..."
+       },
+       {
+        "title": "Gminny Ośrodek Kultury i Sportu w Kleszczewie",
+        "url": "https://gokiskleszczewo.bilety24.pl/",
+        "desc": "Witamy na stronie GOKiS w Kleszczewie! Strona umożliwia zakup biletów i zapis na zajęcia online - ul. Poznańska 2, 63-005 Kleszczewo. ... Aktualnie brak wydarzeń ..."
+       },
+       {
+        "title": "Półkolonie - DODATKOWE ZAPISY - Akcja Lato 2025",
+        "url": "https://gokis.kleszczewo.pl/aktualnosci/polkolonie-akcja-lato-2025.html",
+        "desc": "Cena za turnus: 390 zł (w tym codzienny posiłek). Półkolonie dofinansowane są ze środków Gminnej Komisji Rozwiązywania Problemów Alkoholowych."
+       },
+       {
+        "title": "Akcja Zima - półkolonie",
+        "url": "https://gokis.kleszczewo.pl/kalendarz-wydarzen/202-akcja-zima-polkolonie.html",
+        "desc": "Do wyboru jest jeden z dwóch turnusów (godziny 8:00 -15:00). - I turnus: 20-24.01.2025 - II turnus: 27-31.01.2025."
+       },
+       {
+        "title": "Gminny Ośrodek Kultury i Sportu w Kleszczewie",
+        "url": "https://www.facebook.com/GOKiS.Kleszczewo/?locale2=ja_JP",
+        "desc": "詳細. . 94%がおすすめ(レビュー11件). . 閉店・準備中. . ul. Poznańska 6, Kleszczewo, Poland, 63-005 ; リンク. . gokis.kleszczewo.pl ; 連絡先情報. . +48 ..."
+       }
+      ],
+      "ms": 1239
+     }
+    ],
+    "llm": {
+     "calls": 2,
+     "promptTokens": 5437,
+     "completionTokens": 145,
+     "costUsd": 0.006162
+    },
+    "ms": 12456,
+    "probe": {
+     "at": "2026-07-30T18:53:48.874Z",
+     "url": "https://gokis-kleszczewo.pl/",
+     "ok": false,
+     "ms": 1,
+     "err": "GET https://gokis-kleszczewo.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND gokis-kleszczewo.pl"
+    },
+    "reach": "dns-dead",
+    "ladder": [
+     {
+      "url": "https://gokis-kleszczewo.pl/",
+      "outcome": "dns-dead",
+      "err": "GET https://gokis-kleszczewo.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND gokis-kleszczewo.pl"
+     },
+     {
+      "url": "http://gokis-kleszczewo.pl/",
+      "outcome": "dns-dead",
+      "err": "GET http://gokis-kleszczewo.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND gokis-kleszczewo.pl"
+     },
+     {
+      "url": "https://www.gokis-kleszczewo.pl/",
+      "outcome": "dns-dead",
+      "err": "GET https://www.gokis-kleszczewo.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND www.gokis-kleszczewo.pl"
+     },
+     {
+      "url": "http://www.gokis-kleszczewo.pl/",
+      "outcome": "dns-dead",
+      "err": "GET http://www.gokis-kleszczewo.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND www.gokis-kleszczewo.pl"
+     }
+    ],
+    "err": "GET https://gokis-kleszczewo.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND gokis-kleszczewo.pl",
+    "candidate": "https://gokis.kleszczewo.pl/",
+    "candidateProbe": {
+     "at": "2026-07-30T18:53:53.380Z",
+     "url": "https://gokis.kleszczewo.pl/",
+     "ok": true,
+     "ms": 663,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 134470
+    },
+    "newUrl": "https://gokis.kleszczewo.pl/",
+    "entrypoints": [
+     {
+      "url": "https://gokis.kleszczewo.pl/kalendarz-wydarzen/",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/{slug}.html",
+      "detailCount": 9
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://gokis.kleszczewo.pl/rss/aktualnosci_pl.xml",
+      "itemsSeen": 318,
+      "datesParsed": 318,
+      "checked": "2026-07-30"
+     }
+    ],
+    "verdict": "events",
+    "archive": [
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-kleszczewo-gokis/0053-anthropic_claude-haiku-4.5.json",
+     "llm/2026-07-30/2026-07-30T18-45-31-961Z/verify-kleszczewo-gokis/0054-anthropic_claude-haiku-4.5.json"
+    ]
+   }
+  ],
+  "totals": {
+   "towns": 0,
+   "searches": 26,
+   "searchErrors": 0,
+   "searchesSkipped": 0,
+   "sourcesAdded": 0,
+   "proposalsRejected": 0,
+   "sourcesChecked": 41,
+   "ok": 22,
+   "fixed": 12,
+   "dead": 7,
+   "unrepaired": 0,
+   "skipped": 5,
+   "calls": 54,
+   "promptTokens": 119081,
+   "completionTokens": 5370,
+   "costUsd": 0.14593100000000003,
+   "costDiscoveryUsd": 0,
+   "costVerifyUsd": 0.14593100000000003,
+   "redactedPhones": 20,
+   "redactedEmails": 19
+  },
+  "argv": [
+   "--verify"
+  ],
+  "archiveEnabled": true,
+  "costs": [
+   {
+    "day": "2026-07-30",
+    "at": "2026-07-30T18:54:01.302Z",
+    "stage": "discover",
+    "run": "2026-07-30T18:45:31.961Z",
+    "category": "llm-verify",
+    "usd": 0.145931,
+    "estimated": false,
+    "units": 54,
+    "unit": "calls",
+    "tokensIn": 119081,
+    "tokensOut": 5370,
+    "top": [
+     {
+      "id": "kornik-arboretum",
+      "usd": 0.006169,
+      "units": 2
+     },
+     {
+      "id": "kleszczewo-gokis",
+      "usd": 0.006162,
+      "units": 2
+     },
+     {
+      "id": "czerwonak-gok",
+      "usd": 0.006075,
+      "units": 2
+     },
+     {
+      "id": "mosina-osir",
+      "usd": 0.005673,
+      "units": 2
+     },
+     {
+      "id": "rokietnica-gok",
+      "usd": 0.005277,
+      "units": 2
+     }
+    ]
+   },
+   {
+    "day": "2026-07-30",
+    "at": "2026-07-30T18:54:01.302Z",
+    "stage": "discover",
+    "run": "2026-07-30T18:45:31.961Z",
+    "category": "search",
+    "usd": 0.026,
+    "estimated": true,
+    "units": 26,
+    "unit": "queries"
+   },
+   {
+    "day": "2026-07-30",
+    "at": "2026-07-30T18:54:01.302Z",
+    "stage": "discover",
+    "run": "2026-07-30T18:45:31.961Z",
+    "category": "scrape",
+    "usd": 0,
+    "estimated": true,
+    "units": 292,
+    "unit": "fetches"
+   }
+  ]
  }
 ]

@@ -13,7 +13,7 @@
  *
  * Stawki (wszystkie opcjonalne, patrz .env.example):
  *   BD_COST_PER_RECORD          domyślnie 0.0015  ($1.5/1000 rekordów)
- *   BRAVE_COST_PER_QUERY        domyślnie 0       (darmowy tier 2000/mies.)
+ *   SEARCH_COST_PER_QUERY       domyślnie 0.001   (Serper: ~$1/1000 po darmowych 2500)
  *   SUPABASE_COST_PER_GB_MONTH  domyślnie 0       (darmowy tier ~1 GB)
  *   SCRAPE_COST_PER_FETCH       domyślnie 0       (GH Actions dla repo publicznego)
  *   COST_MONTHLY_BUDGET_USD     domyślnie 15      (linia odniesienia w panelu)
@@ -32,7 +32,7 @@ const num = (name: string, fallback: number): number => {
 
 export const costRates = (): CostRates => ({
   bdPerRecord: num("BD_COST_PER_RECORD", 0.0015),
-  bravePerQuery: num("BRAVE_COST_PER_QUERY", 0),
+  searchPerQuery: num("SEARCH_COST_PER_QUERY", 0.001),
   storagePerGbMonth: num("SUPABASE_COST_PER_GB_MONTH", 0),
   scrapePerFetch: num("SCRAPE_COST_PER_FETCH", 0),
   monthlyBudgetUsd: num("COST_MONTHLY_BUDGET_USD", 15),

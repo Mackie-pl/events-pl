@@ -1,52 +1,28 @@
 /**
- * Brave Search — jedyne płatne (poza darmowym tierem) wyjście etapu 1.
+ * Brave Search — alternatywny dostawca etapu 1 (`SEARCH_PROVIDER=brave`).
  *
- * Liczniki są modułowe, bo budżet obowiązuje CAŁY przebieg, nie pojedyncze wywołanie:
- * discoverTown, verifySource i buildTotals czytają ten sam stan. resetSearchState()
- * istnieje dla testów — w jednym procesie potoku nikt go nie woła.
+ * Przestał być domyślny, bo małe polskie instytucje kultury są w jego indeksie szczątkowo,
+ * a to one są celem discovery. Zostaje, bo darmowy tier 2000/mies. jest hojniejszy od
+ * Google'owych 100/dzień — dla jednej gminy albo dla ponownego przebiegu weryfikacji bywa
+ * tańszym wyborem.
+ *
+ * Budżet i wyłącznik przebiegu mieszkają w `search.ts` — tu jest wyłącznie jedno zapytanie.
  */
-import { setTimeout as sleep } from "node:timers/promises";
-
 import { describeError } from "../shared/errors.js";
 import { trim } from "../shared/text.js";
-import type { SearchCall, SearchResult } from "../types/index.js";
+import type { SearchCall, SearchProviderOutcome } from "../types/index.js";
 
 import { fetchUrl } from "./http.js";
 
-/** Bezpiecznik darmowego tieru Brave (2000/mies.) — pełne discovery 13 gmin to ~130 zapytań. */
-const SEARCH_BUDGET = Number(process.env["DISCOVER_MAX_SEARCHES"] ?? 300);
-/** Opis wyniku wyszukiwarki bywa akapitem — do raportu wystarczy pierwsze zdanie z hakiem. */
-const MAX_DESC_CHARS = 300;
-// nadpisywalne jak OPENROUTER_URL: pozwala wpiąć proxy albo mock w testach
 const BRAVE_URL = process.env["BRAVE_URL"] ?? "https://api.search.brave.com/res/v1/web/search";
+const MAX_DESC_CHARS = 300;
 
-/**
- * Licznik + wyłącznik. Brave przy przekroczeniu limitu odpowiada 429 z poprawnym JSON-em bez
- * `web.results` — poprzednia wersja czytała to jako „zero trafień", więc wyczerpany limit
- * wyglądał w raporcie identycznie jak gmina bez źródeł, a kolejne 100 zapytań i tak leciało.
- */
-let searchesUsed = 0;
-let searchDisabled: string | null = null;
-let searchesSkipped = 0;
+/** Darmowy tier Brave dopuszcza 1 zapytanie na sekundę. */
+export const RATE_LIMIT_MS = 1_100;
 
-export async function webSearch(query: string, log: SearchCall[]): Promise<SearchResult[]> {
+export async function search(query: string, call: SearchCall): Promise<SearchProviderOutcome> {
   const key = process.env["BRAVE_API_KEY"];
-  if (!key) throw new Error("Brak BRAVE_API_KEY");
-  const call: SearchCall = { query, results: [], ms: 0 };
-  log.push(call);
-
-  if (!searchDisabled && searchesUsed >= SEARCH_BUDGET) {
-    searchDisabled = `budżet ${SEARCH_BUDGET} zapytań wyczerpany (DISCOVER_MAX_SEARCHES)`;
-  }
-  if (searchDisabled) {
-    call.skipped = true;
-    call.err = searchDisabled;
-    searchesSkipped++;
-    return [];
-  }
-
-  searchesUsed++;
-  const t0 = performance.now();
+  if (!key) return { results: [], fatal: "brak BRAVE_API_KEY" };
   try {
     const res = await fetchUrl(
       `${BRAVE_URL}?${new URLSearchParams({ q: query, count: "8", country: "pl" }).toString()}`,
@@ -57,12 +33,9 @@ export async function webSearch(query: string, log: SearchCall[]): Promise<Searc
     if (!res.ok) {
       call.httpStatus = res.status;
       call.err = `HTTP ${res.status}: ${trim((await res.text()).replace(/\s+/g, " "), 200)}`;
-      if (res.status === 401 || res.status === 403 || res.status === 429) {
-        // klucz odrzucony albo limit — dalsze zapytania to pewne porażki i strata czasu
-        searchDisabled = `wyszukiwarka wyłączona po HTTP ${res.status} (klucz/limit)`;
-        console.warn(`Brave: ${call.err} — pomijam pozostałe zapytania w tym przebiegu`);
-      }
-      return [];
+      // klucz odrzucony albo limit — dalsze zapytania to pewne porażki i strata czasu
+      const fatal = res.status === 401 || res.status === 403 || res.status === 429;
+      return { results: [], ...(fatal ? { fatal: `wyszukiwarka wyłączona po HTTP ${res.status} (klucz/limit)` } : {}) };
     }
     type BraveHit = { title?: string; url?: string; description?: string };
     const json = (await res.json()) as { web?: { results?: BraveHit[] } };
@@ -71,22 +44,9 @@ export async function webSearch(query: string, log: SearchCall[]): Promise<Searc
       url: w.url ?? null,
       desc: w.description ? trim(w.description, MAX_DESC_CHARS) : null,
     }));
-    return call.results;
+    return { results: call.results };
   } catch (e) {
     call.err = describeError(e);
-    return [];
-  } finally {
-    call.ms = Math.round(performance.now() - t0);
-    if (!call.skipped) await sleep(1_100); // darmowy tier Brave: 1 zapytanie/s
+    return { results: [] };
   }
-}
-
-/** Stan budżetu wyszukiwarki — czytany przy budowaniu totals i kosztów. */
-export const searchState = (): { used: number; skipped: number; disabled: string | null } =>
-  ({ used: searchesUsed, skipped: searchesSkipped, disabled: searchDisabled });
-
-export function resetSearchState(): void {
-  searchesUsed = 0;
-  searchesSkipped = 0;
-  searchDisabled = null;
 }

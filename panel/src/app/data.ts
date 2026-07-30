@@ -1,6 +1,7 @@
 import { httpResource } from '@angular/common/http';
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 
+import { BridgeService } from './bridge';
 import type {
   CostLedger,
   DiscoverRunReport,
@@ -24,7 +25,7 @@ const EMPTY_LEDGER: CostLedger = {
   updated: '',
   rates: {
     bdPerRecord: 0.0015,
-    bravePerQuery: 0,
+    searchPerQuery: 0.005,
     storagePerGbMonth: 0,
     scrapePerFetch: 0,
     monthlyBudgetUsd: 15,
@@ -35,21 +36,49 @@ const EMPTY_LEDGER: CostLedger = {
 
 @Injectable({ providedIn: 'root' })
 export class DataService {
-  readonly runs = httpResource<RunReport[]>(() => `${RAW_BASE}/runs.json`, {
+  private readonly bridge = inject(BridgeService);
+
+  /**
+   * Skąd czytamy dane: z drzewa roboczego (lokalny most) czy z gałęzi `main` na GitHubie.
+   *
+   * Domyślnie GitHub, bo wdrożony panel innego źródła nie ma. Gdy jednak stoi `panel-server`,
+   * pliki idą z niego — przebieg puszczony lokalnie był wcześniej niewidoczny aż do commita
+   * i pusha, więc iteracja nad discovery wyglądała jak „zatwierdź, żeby zobaczyć, co zatwierdzasz".
+   *
+   * `null` znaczy „jeszcze nie wiadomo" i celowo WSTRZYMUJE pobrania: httpResource z adresem
+   * undefined nie wysyła żądania. Inaczej każdy plik leciałby dwa razy — najpierw z GitHuba,
+   * potem z mostu — a użytkownik zdążyłby zobaczyć nieaktualne dane i im uwierzyć.
+   */
+  private readonly fileBase = computed<string | null>(() => {
+    const up = this.bridge.available();
+    if (up === null) return null;
+    return up && this.bridge.servesFiles() ? `${this.bridge.base}/file` : RAW_BASE;
+  });
+
+  /** Czy patrzymy na stan lokalny — panel to pokazuje, żeby nikt nie mylił go z opublikowanym. */
+  readonly local = computed(() => this.fileBase() !== null && this.fileBase() !== RAW_BASE);
+
+  private file(name: string): string | undefined {
+    const base = this.fileBase();
+    if (base === null) return undefined;
+    return base === RAW_BASE ? `${RAW_BASE}/${name}` : `${base}?name=${name}`;
+  }
+
+  readonly runs = httpResource<RunReport[]>(() => this.file('runs.json'), {
     defaultValue: [],
   });
 
-  readonly events = httpResource<EventsFile>(() => `${RAW_BASE}/events.json`, {
+  readonly events = httpResource<EventsFile>(() => this.file('events.json'), {
     defaultValue: EMPTY_EVENTS,
   });
 
-  readonly sources = httpResource<SourcesFile | null>(() => `${RAW_BASE}/sources.json`, {
+  readonly sources = httpResource<SourcesFile | null>(() => this.file('sources.json'), {
     defaultValue: null,
   });
 
   /** Stage 1 (miesięczny): skąd wzięły się źródła w rejestrze. */
   readonly discoverRuns = httpResource<DiscoverRunReport[]>(
-    () => `${RAW_BASE}/discover-runs.json`,
+    () => this.file('discover-runs.json'),
     { defaultValue: [] },
   );
 
@@ -57,7 +86,7 @@ export class DataService {
    * Księga kosztów obu etapów (90 dni). Osobny plik od raportów przebiegów, bo trend
    * wydatków ma sens dopiero w skali miesiąca, a runs.json trzyma tylko 7 dni szczegółów.
    */
-  readonly costs = httpResource<CostLedger>(() => `${RAW_BASE}/costs.json`, {
+  readonly costs = httpResource<CostLedger>(() => this.file('costs.json'), {
     defaultValue: EMPTY_LEDGER,
   });
 
@@ -69,7 +98,7 @@ export class DataService {
   private readonly auditRequested = signal(false);
 
   readonly audit = httpResource<RunTrail[]>(
-    () => (this.auditRequested() ? `${RAW_BASE}/audit.json` : undefined),
+    () => (this.auditRequested() ? this.file('audit.json') : undefined),
     { defaultValue: [] },
   );
 
@@ -94,6 +123,9 @@ export class DataService {
 
   readonly loading = computed(
     () =>
+      // dopóki nie wiemy, skąd czytać, żaden zasób nie wystartował — ale to nadal ładowanie,
+      // a nie „brak danych"; bez tego strony mrugają pustym stanem przed pierwszym żądaniem
+      this.fileBase() === null ||
       this.runs.isLoading() ||
       this.events.isLoading() ||
       this.sources.isLoading() ||

@@ -51,6 +51,31 @@ export const DISCOVERY_QUERIES: readonly string[] = [
 
 // ============ STAGE 1b: weryfikacja/naprawa URL-i (miesięcznie, tani model) ============
 
+/**
+ * Wybór adresu, pod którym serwis WYPISUJE wydarzenia — jedno tanie wywołanie na źródło.
+ *
+ * Heurystyki znajdują kandydatów i mierzą je liczbą powtarzalnych odnośników, ale nie
+ * odróżnią „listy wydarzeń" od „listy przetargów": jedna i druga to trzydzieści linków
+ * o tym samym kształcie. Model dostaje więc DOWODY (ile odnośników, jaki szablon, próbka
+ * tekstu), a nie samo pytanie — i ma prawo powiedzieć „to nie jest strona z wydarzeniami".
+ *
+ * `verdict:"none"` jest tu najważniejszą odpowiedzią: to ono utrzymuje obietnicę, że rejestr
+ * dla nowego miasta da się przyjąć bez oglądania każdej strony z osobna.
+ */
+export const ENTRYPOINT_SYSTEM = `Dostajesz kandydatów na podstronę instytucji, która wypisuje WYDARZENIA
+(kalendarz, aktualności, repertuar, imprezy). Przy każdym: adres, liczba powtarzalnych odnośników
+do podstron, wykryty szablon tych odnośników i próbka tekstu strony.
+Wybierz JEDEN adres, pod którym najlepiej widać LISTĘ nadchodzących wydarzeń z datami.
+Preferuj stronę z wieloma wpisami i datami nad stroną pojedynczego wydarzenia lub opisem instytucji.
+Odrzuć: archiwa i relacje z minionych imprez, galerie zdjęć, przetargi/BIP, ogłoszenia urzędowe,
+cenniki i regulaminy.
+Zwróć WYŁĄCZNIE JSON:
+{"url":"<adres>","alt":["<inny sensowny adres>"],"verdict":"events|news|none","why":"<jedno zdanie po polsku>"}
+- "events": lista wydarzeń z terminami,
+- "news": aktualności, w których wydarzenia bywają wymieszane z ogłoszeniami (nadal użyteczne),
+- "none": żaden kandydat nie wypisuje wydarzeń — wtedy "url" ustaw na null.
+"why" trafia do rejestru i po miesiącach jest jedyną odpowiedzią na pytanie „czemu wchodzimy tym adresem?".`;
+
 export const REVERIFY_SYSTEM = `Instytucja kultury/sportu w Polsce ma martwy URL w naszym rejestrze źródeł wydarzeń.
 Dostajesz jej nazwę, miasto, stary URL i wyniki wyszukiwania. Wskaż aktualną OFICJALNĄ stronę tej instytucji
 (najlepiej podstronę z wydarzeniami/aktualnościami/kalendarzem). Odrzuć: agregatory biletowe, katalogi firm,

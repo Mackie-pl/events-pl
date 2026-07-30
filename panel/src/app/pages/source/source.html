@@ -123,6 +123,45 @@
         </div>
       </section>
 
+      @if (sourceMeta(); as meta) {
+        @if (meta.entrypoints?.length || meta.capabilities?.length) {
+          <section class="profile">
+            @if (meta.entrypoints?.length) {
+              <h2>Wejścia po wydarzenia</h2>
+              <ul>
+                @for (e of meta.entrypoints; track e.url) {
+                  <li>
+                    <a tuiLink [href]="e.url" target="_blank" rel="noopener">{{ e.url }}</a>
+                    <span class="muted">
+                      · {{ e.kind }} · {{ e.via }} ({{ e.confidence }})
+                      @if (e.detailPattern) {
+                        · <code>{{ e.detailPattern }}</code> ×{{ e.detailCount }}
+                      }
+                      @if (e.paginated) { · paginacja }
+                    </span>
+                  </li>
+                }
+              </ul>
+            }
+            @if (meta.capabilities?.length) {
+              <h2>Maszynowe wyjścia</h2>
+              <ul>
+                @for (c of meta.capabilities; track c.url) {
+                  <li>
+                    <code>{{ c.kind }}</code>
+                    <a tuiLink [href]="c.url" target="_blank" rel="noopener">{{ c.url }}</a>
+                    <span class="muted">· {{ c.itemsSeen }} rekordów, {{ c.datesParsed }} z datą</span>
+                    @if (!c.datesParsed) {
+                      <span class="warn">· bez terminów, nie nadaje się do ekstrakcji</span>
+                    }
+                  </li>
+                }
+              </ul>
+            }
+          </section>
+        }
+      }
+
       @if (sourceMeta()?.notes; as notes) {
         <p class="muted notes">{{ notes }}</p>
       }

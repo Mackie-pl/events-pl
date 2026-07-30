@@ -1,10 +1,10 @@
 /** Naprawa martwego URL-a: search po nazwie instytucji → propozycja taniego modelu. */
-import { webSearch } from "../../adapters/brave.js";
+import { webSearch } from "../../adapters/search.js";
 import { MODEL_EXTRACT, chat } from "../../adapters/openrouter.js";
 import type { SearchResult, Source, SourceVerification } from "../../types/index.js";
 import { REVERIFY_SYSTEM } from "../prompts.js";
 
-/** Szuka aktualnego URL instytucji (Brave + tani model). null = nie znaleziono. */
+/** Szuka aktualnego URL instytucji (wyszukiwarka + tani model). null = nie znaleziono. */
 export async function findReplacementUrl(src: Source, ver: SourceVerification): Promise<string | null> {
   const results: SearchResult[] = [];
   for (const q of [`"${src.name}" ${src.town}`, `${src.name} ${src.town} wydarzenia`]) {

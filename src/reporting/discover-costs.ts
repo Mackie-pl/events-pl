@@ -26,7 +26,7 @@ export function buildDiscoverCosts(report: DiscoverRunReport): CostEntry[] {
   llm("llm-verify", report.verifications.map((x) => ({ id: x.id, llm: x.llm })));
   inputs.push({
     category: "search",
-    usd: t.searches * rates.bravePerQuery,
+    usd: t.searches * rates.searchPerQuery,
     estimated: true,
     units: t.searches,
     unit: "queries",

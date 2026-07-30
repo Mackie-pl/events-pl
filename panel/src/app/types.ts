@@ -10,6 +10,11 @@ export * from './types-audit';
 // Sonda na żądanie: dane spoza repo (lokalny most), ale opisane tymi samymi kształtami.
 export * from './types-probe';
 
+// Profil źródła z etapu 1: osiągalność, entrypointy, maszynowe wyjścia.
+// Tu tylko `import`, bez `export *` jak wyżej: te typy są osiągalne przez pola `Source`,
+// więc nikt nie importuje ich po nazwie, a ten plik siedzi dokładnie na progu 350 linii kodu.
+import type { EntryPoint, ReachOutcome, SourceCapability } from './types-source';
+
 export type FetchStrategy =
   'plain' | 'headless' | 'pdf' | 'api' | 'fb' | 'fb_group' | 'fb_event' | 'rss';
 
@@ -42,6 +47,10 @@ export interface Source {
   previous_urls?: string[];
   /** URL martwy — daily pomija (skipped-dead) do czasu naprawy */
   dead?: boolean;
+  /** profil z etapu 1 — patrz types-source.ts */
+  reach?: ReachOutcome;
+  entrypoints?: EntryPoint[];
+  capabilities?: SourceCapability[];
   /** skąd się tu wzięło: zapytanie → wynik wyszukiwarki → decyzja modelu → pierwszy fetch */
   provenance?: SourceProvenance;
 }
@@ -305,7 +314,7 @@ export interface CostEntry {
 
 export interface CostRates {
   bdPerRecord: number;
-  bravePerQuery: number;
+  searchPerQuery: number;
   storagePerGbMonth: number;
   scrapePerFetch: number;
   monthlyBudgetUsd: number;

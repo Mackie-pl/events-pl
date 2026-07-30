@@ -1,9 +1,15 @@
 /**
- * Lokalny most panelu — wyłącznie na własnym PC. Robi dwie rzeczy, których statyczna
+ * Lokalny most panelu — wyłącznie na własnym PC. Robi trzy rzeczy, których statyczna
  * strona na GitHub Pages zrobić nie może:
  *
+ *   GET  /file?name=runs.json        oddaje plik z DRZEWA ROBOCZEGO, nie z gałęzi main
  *   GET  /object?path=…              czyta obiekt z prywatnego archiwum (Supabase Storage)
  *   POST /probe?source=<id>[&force=1] sprawdza JEDNO źródło tu i teraz, bez zapisu
+ *
+ * `/file` istnieje, bo panel domyślnie czyta raw.githubusercontent.com — czyli stan
+ * OPUBLIKOWANY. Przebieg puszczony lokalnie zapisuje do drzewa roboczego i był niewidoczny
+ * aż do commita i pusha (plus kilka minut cache CDN). Przy iteracji nad discovery to pętla
+ * „zatwierdź, żeby zobaczyć, co zatwierdzasz" — dokładnie odwrotnie, niż powinna wyglądać.
  *
  * Wspólny powód, dla którego to musi być osobny proces: panel to publiczny statyczny bundle.
  * Wszystko, co potrafi przeczytać bez logowania, przeczyta też każdy odwiedzający — więc klucz
@@ -21,11 +27,15 @@
  */
 import { createServer } from "node:http";
 import type { IncomingMessage, ServerResponse } from "node:http";
+import { readFile } from "node:fs/promises";
 
 import { authHeaders, keyLooksPublic, supabaseKey } from "../adapters/supabase-archive.js";
 import { fetchUrl } from "../adapters/http.js";
 import { ProbeError, probeSource } from "../pipeline/extract/probe-source.js";
 import { describeError } from "../shared/errors.js";
+import {
+  AUDIT_PATH, COSTS_PATH, DISCOVER_RUNS_PATH, EVENTS_PATH, RUNS_PATH, SOURCES_PATH,
+} from "../shared/paths.js";
 
 const PORT = Number(process.env["ARCHIVE_PORT"] ?? 8787);
 const BUCKET = process.env["SUPABASE_BUCKET"] ?? "archive";
@@ -37,6 +47,21 @@ const ARCHIVE = Boolean(SUPABASE_URL && KEY && !keyLooksPublic(KEY));
 
 /** Panel bywa serwowany z kilku miejsc lokalnych — pozwalamy tylko na nie. */
 const ALLOWED_ORIGIN = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
+
+/**
+ * Pliki danych oddawane pod `/file`. JAWNA MAPA nazwa → ścieżka, nie sklejanie katalogu
+ * z parametrem: przy sklejaniu każdy `..` albo ścieżka bezwzględna to wyciek dowolnego pliku
+ * z dysku do przeglądarki. Tu zbiór adresowalnych plików jest skończony i wypisany wprost,
+ * więc nie ma czego walidować ani co przeoczyć.
+ */
+const LOCAL_FILES: Readonly<Record<string, string>> = {
+  "sources.json": SOURCES_PATH,
+  "events.json": EVENTS_PATH,
+  "runs.json": RUNS_PATH,
+  "audit.json": AUDIT_PATH,
+  "discover-runs.json": DISCOVER_RUNS_PATH,
+  "costs.json": COSTS_PATH,
+};
 
 const cors = (origin: string | undefined): Record<string, string> =>
   origin && ALLOWED_ORIGIN.test(origin)
@@ -123,6 +148,32 @@ function routeObject(url: URL, res: ServerResponse, headers: Record<string, stri
   void handleObject(res, path, headers);
 }
 
+/**
+ * Plik danych z drzewa roboczego. Brak pliku to 404 z komunikatem, nie awaria mostu:
+ * `audit.json` pojawia się dopiero po pierwszym przebiegu, a `costs.json` po pierwszym
+ * z księgą kosztów — panel musi umieć pokazać resztę.
+ */
+async function handleFile(res: ServerResponse, name: string, headers: Record<string, string>): Promise<void> {
+  const path = LOCAL_FILES[name];
+  if (!path) {
+    json(res, 400, { error: `nieznany plik „${name}"; dozwolone: ${Object.keys(LOCAL_FILES).join(", ")}` }, headers);
+    return;
+  }
+  try {
+    const body = await readFile(path, "utf8");
+    // no-store: sens tego wejścia to ŚWIEŻY stan drzewa roboczego, a nie kopia sprzed przebiegu
+    res.writeHead(200, {
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "no-store",
+      ...headers,
+    });
+    res.end(body);
+  } catch (e) {
+    const code = (e as { code?: string }).code === "ENOENT" ? 404 : 500;
+    json(res, code, { error: describeError(e) }, headers);
+  }
+}
+
 function routeProbe(
   req: IncomingMessage, url: URL, res: ServerResponse, headers: Record<string, string>,
 ): void {
@@ -158,7 +209,12 @@ function route(req: IncomingMessage, res: ServerResponse): void {
     return;
   }
   if (url.pathname === "/health") {
-    json(res, 200, { ok: true, archive: ARCHIVE, bucket: BUCKET }, headers);
+    // `files: true` przełącza panel na drzewo robocze — patrz data.ts w panelu
+    json(res, 200, { ok: true, archive: ARCHIVE, bucket: BUCKET, files: true }, headers);
+    return;
+  }
+  if (url.pathname === "/file") {
+    void handleFile(res, url.searchParams.get("name") ?? "", headers);
     return;
   }
   if (url.pathname === "/object") return routeObject(url, res, headers);
@@ -169,6 +225,7 @@ function route(req: IncomingMessage, res: ServerResponse): void {
 
 createServer(route).listen(PORT, "127.0.0.1", () => {
   console.log(`Most panelu: http://127.0.0.1:${PORT} (tylko localhost)`);
+  console.log(`  dane: panel czyta pliki z DRZEWA ROBOCZEGO, nie z gałęzi main na GitHubie`);
   console.log(`  sonda źródeł: POST /probe?source=<id>[&force=1] — nic nie zapisuje`);
   console.log(ARCHIVE
     ? `  archiwum: bucket "${BUCKET}"`

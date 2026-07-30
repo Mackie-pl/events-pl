@@ -22,10 +22,65 @@ export type SourceType =
   | "api"
   | "pdf_program";
 
+/**
+ * Werdykt drabiny osiągalności. Jeden bool („ok / nie ok") mieszał ze sobą przypadki
+ * wymagające przeciwnych napraw: wygasły certyfikat i anty-bot to strony ŻYWE (wystarczy
+ * inny schemat albo przeglądarka), a `dns-dead` to adres nieistniejący, którego nie naprawi
+ * nic poza ponownym discovery.
+ */
+export type ReachOutcome =
+  | "ok"
+  | "redirected" // odpowiada, ale pod innym adresem niż pytany (schemat/www/przekierowanie)
+  | "anti-bot" // 403/429 dla zwykłego fetcha, treść jest — trzeba przeglądarki
+  | "cert" // TLS odrzucony (wygasły/niedopasowany certyfikat), http bywa sprawne
+  | "http-error" // serwer żyje, zasób nie (404/500) — kandydat do naprawy przez search
+  | "dns-dead" // domena nie rozwiązuje się — jedyne wyjście to re-discovery
+  | "placeholder"; // 200, ale treść poniżej MIN_BODY_CHARS (parking/zaślepka)
+
+/**
+ * Adres, pod którym źródło faktycznie WYPISUJE wydarzenia — w odróżnieniu od `Source.url`,
+ * które jest korzeniem serwisu. Wchodzenie codziennie przez stronę główną oznaczało
+ * podawanie modelowi menu i newslettera zamiast listy.
+ *
+ * Lista, bo część serwisów rozdziela „wydarzenia" od „aktualności" (i jedno bez drugiego
+ * gubi część imprez), choć w praktyce dominuje jeden wpis.
+ */
+export interface EntryPoint {
+  /** adres listy; może zawierać `{page}` — ten sam placeholder co w Source.url */
+  url: string;
+  kind: "listing" | "feed" | "api";
+  /** szablon adresu strony pojedynczego wydarzenia (np. "/wydarzenia/{slug}") */
+  detailPattern?: string;
+  /** ile linków pasowało do szablonu w chwili rozpoznania — dowód, nie deklaracja */
+  detailCount?: number;
+  paginated?: boolean;
+  confidence: number;
+  via: "heuristic" | "llm";
+}
+
+/**
+ * Maszynowe wyjście źródła, potwierdzone POBRANIEM, nie samym istnieniem endpointu.
+ *
+ * Rozpoznanie na żywych stronach: The Events Calendar odpowiadał `{"total":0}`, Modern Events
+ * Calendar `[]`, a WP REST z typem `event` oddawał wpisy bez daty (`acf: []`). Wszystkie trzy
+ * przeszłyby test „endpoint zwraca 200" i wszystkie trzy są bezużyteczne — stąd `itemsSeen`
+ * i `datesParsed` jako warunek zapisu, a nie jako ozdoba raportu.
+ */
+export interface SourceCapability {
+  kind: "rss" | "wp-rest" | "tribe" | "ical" | "jsonld";
+  url: string;
+  /** ile rekordów faktycznie wróciło; 0 → zdolności nie zapisujemy */
+  itemsSeen: number;
+  /** ile z nich miało czytelną datę; 0 → zostaje jako ślad, ale nie nadaje się do ekstrakcji */
+  datesParsed: number;
+  checked: string;
+}
+
 export interface Source {
   id: string;
   name: string;
   type: SourceType;
+  /** korzeń serwisu — klucz dedupe w rejestrze i nośnik proweniencji */
   url: string;
   town: string;
   fetch: FetchStrategy;
@@ -39,6 +94,12 @@ export interface Source {
   previous_urls?: string[];
   /** URL martwy i nienaprawialny — daily pomija (skipped-dead) do czasu naprawy */
   dead?: boolean;
+  /** gdzie wchodzić po wydarzenia (etap 1 ustala, etap 2 będzie konsumował) */
+  entrypoints?: EntryPoint[];
+  /** co serwis oddaje maszynowo — sprawdzane raz przy discovery, nie codziennie */
+  capabilities?: SourceCapability[];
+  /** werdykt ostatniej drabiny osiągalności */
+  reach?: ReachOutcome;
   /** skąd się tu wzięło: zapytanie → wynik wyszukiwarki → decyzja modelu → pierwszy fetch */
   provenance?: SourceProvenance;
 }

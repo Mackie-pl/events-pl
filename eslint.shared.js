@@ -20,22 +20,24 @@ export const sizeRules = {
 };
 
 /**
- * Progi ZŁOŻONOŚCI FUNKCJI. Na razie ostrzeżenia, nie błędy — stan na 2026-07-26.
+ * Progi ZŁOŻONOŚCI FUNKCJI. Na razie ostrzeżenia, nie błędy — stan na 2026-07-30.
  *
- * Zostało osiem funkcji ponad progiem i wszystkie są orkiestratorami wejścia/wyjścia:
+ * Ponad progiem zostały orkiestratory wejścia/wyjścia:
  *   actions/daily.ts        run
- *   actions/discover.ts     main
- *   adapters/brave.ts       webSearch
  *   adapters/brightdata.ts  collect
  *   adapters/openrouter.ts  chat
  *   pipeline/discover/discover-town.ts        discoverTown
  *   pipeline/extract/process-source.ts        processFollowup, processSource
- *   pipeline/verify/verify-source.ts          verifySource
  *
  * Dla żadnej z nich NIE MA darmowej wyroczni: sprawdzenie ich wymaga OpenRoutera,
- * Brave albo Bright Data, czyli płatnego przebiegu. Wszystko, co dało się rozciąć
- * pod osłoną testu albo wyjścia bajt-w-bajt, zostało rozcięte; te osiem zostaje
+ * wyszukiwarki albo Bright Data, czyli płatnego przebiegu. Wszystko, co dało się rozciąć
+ * pod osłoną testu albo wyjścia bajt-w-bajt, zostało rozcięte; reszta zostaje
  * ostrzeżeniem, dopóki nie dostaną testów z podstawionymi adapterami.
+ *
+ * Zeszły z listy przy rozbiciu etapu 1 na profiler (2026-07-30): `discover.ts main`
+ * (rozdzielacz trybów + runDiscovery/runStages/persist/printSummary),
+ * `verify-source.ts verifySource` (onReachable/onUnreachable/profile.ts)
+ * oraz `brave.ts webSearch` (budżet przeniesiony do adapters/search.ts).
  *
  * Podnoszenie progów „żeby było zielono" mija się z celem — próg ma boleć.
  */

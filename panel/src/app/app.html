@@ -14,6 +14,20 @@
         <a routerLink="/costs" routerLinkActive="active">Money</a>
       </nav>
       <span class="spacer"></span>
+      <!-- Skąd dane. Bez tego „czemu nie widzę swojego przebiegu?" jest nie do rozstrzygnięcia
+           z ekranu: panel wygląda identycznie, czy czyta drzewo robocze, czy gałąź main. -->
+      <span
+        class="origin"
+        [class.origin--local]="data.local()"
+        [title]="
+          data.local()
+            ? 'Dane z drzewa roboczego (panel-server) — także niezacommitowane przebiegi'
+            : 'Dane z gałęzi main na GitHubie. Uruchom `npm run panel-server`, żeby widzieć lokalne przebiegi'
+        "
+      >
+        <tui-icon [icon]="data.local() ? '@tui.hard-drive' : '@tui.cloud'" />
+        {{ data.local() ? 'local' : 'main' }}
+      </span>
       @if (data.sources.value(); as s) {
         <span class="muted region">{{ s.region.name }} · {{ s.sources.length }} sources</span>
       }
