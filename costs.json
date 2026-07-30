@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-29T06:34:36.755Z",
+ "updated": "2026-07-30T06:29:35.001Z",
  "rates": {
   "bdPerRecord": 0.0015,
   "bravePerQuery": 0,
@@ -352,6 +352,79 @@
    "usd": 0,
    "estimated": true,
    "units": 1.752,
+   "unit": "MB"
+  },
+  {
+   "day": "2026-07-30",
+   "at": "2026-07-30T06:29:34.986Z",
+   "stage": "daily",
+   "run": "2026-07-30T06:22:35.736Z",
+   "category": "llm-extract",
+   "usd": 0.365466,
+   "estimated": false,
+   "units": 20,
+   "unit": "calls",
+   "tokensIn": 177811,
+   "tokensOut": 37531,
+   "top": [
+    {
+     "id": "poznan-kultura-rss",
+     "usd": 0.062211,
+     "units": 4
+    },
+    {
+     "id": "swarzedz-city",
+     "usd": 0.050654,
+     "units": 2
+    },
+    {
+     "id": "tarnowo-gok",
+     "usd": 0.038294,
+     "units": 2
+    },
+    {
+     "id": "poznan-events",
+     "usd": 0.034109,
+     "units": 1
+    },
+    {
+     "id": "estrada",
+     "usd": 0.033921,
+     "units": 1
+    }
+   ]
+  },
+  {
+   "day": "2026-07-30",
+   "at": "2026-07-30T06:29:34.986Z",
+   "stage": "daily",
+   "run": "2026-07-30T06:22:35.736Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 72,
+   "unit": "fetches"
+  },
+  {
+   "day": "2026-07-30",
+   "at": "2026-07-30T06:29:34.986Z",
+   "stage": "daily",
+   "run": "2026-07-30T06:22:35.736Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 4,
+   "unit": "lookups"
+  },
+  {
+   "day": "2026-07-30",
+   "at": "2026-07-30T06:29:34.986Z",
+   "stage": "daily",
+   "run": "2026-07-30T06:22:35.736Z",
+   "category": "storage",
+   "usd": 0,
+   "estimated": true,
+   "units": 1.301,
    "unit": "MB"
   }
  ]
