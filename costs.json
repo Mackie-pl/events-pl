@@ -1,420 +1,431 @@
 {
- "updated": "2026-07-30T18:54:01.311Z",
- "rates": {
-  "bdPerRecord": 0.0015,
-  "searchPerQuery": 0.001,
-  "storagePerGbMonth": 0,
-  "scrapePerFetch": 0,
-  "monthlyBudgetUsd": 15
- },
- "retentionDays": 90,
- "entries": [
-  {
-   "day": "2026-07-23",
-   "at": "2026-07-23T06:32:12.814Z",
-   "stage": "daily",
-   "run": "2026-07-23T06:25:52.767Z",
-   "category": "llm-extract",
-   "usd": 0.47373,
-   "estimated": false,
-   "units": 27,
-   "unit": "calls",
-   "tokensIn": 219975,
-   "tokensOut": 50751,
-   "top": [
-    {
-     "id": "swarzedz-city",
-     "usd": 0.096801,
-     "units": 4
-    },
-    {
-     "id": "czerwonak-city",
-     "usd": 0.070746,
-     "units": 3
-    },
-    {
-     "id": "komorniki-city",
-     "usd": 0.054096,
-     "units": 4
-    },
-    {
-     "id": "tarnowo-gok",
-     "usd": 0.040952,
-     "units": 2
-    },
-    {
-     "id": "poznan-events",
-     "usd": 0.034136,
-     "units": 1
-    }
-   ],
-   "inferred": true
-  },
-  {
-   "day": "2026-07-24",
-   "at": "2026-07-24T05:55:31.233Z",
-   "stage": "discover",
-   "run": "2026-07-24T05:54:58.996Z",
-   "category": "scrape",
-   "usd": 0,
-   "estimated": true,
-   "units": 41,
-   "unit": "fetches",
-   "inferred": true
-  },
-  {
-   "day": "2026-07-26",
-   "at": "2026-07-26T06:44:07.354Z",
-   "stage": "daily",
-   "run": "2026-07-26T06:31:45.703Z",
-   "category": "llm-extract",
-   "usd": 0.838207,
-   "estimated": false,
-   "units": 59,
-   "unit": "calls",
-   "tokensIn": 396302,
-   "tokensOut": 88381,
-   "top": [
-    {
-     "id": "swarzedz-city",
-     "usd": 0.082543,
-     "units": 5
-    },
-    {
-     "id": "poznan-kultura-rss",
-     "usd": 0.071903,
-     "units": 4
-    },
-    {
-     "id": "czerwonak-city",
-     "usd": 0.070801,
-     "units": 3
-    },
-    {
-     "id": "komorniki-gok",
-     "usd": 0.070489,
-     "units": 4
-    },
-    {
-     "id": "lubon-city",
-     "usd": 0.066561,
-     "units": 3
-    }
+   "updated": "2026-07-30T06:29:35.001Z",
+   "rates": {
+      "bdPerRecord": 0.0015,
+      "searchPerQuery": 0.001,
+      "storagePerGbMonth": 0,
+      "scrapePerFetch": 0,
+      "monthlyBudgetUsd": 15
+   },
+   "retentionDays": 90,
+   "entries": [
+      {
+         "day": "2026-07-23",
+         "at": "2026-07-23T06:32:12.814Z",
+         "stage": "daily",
+         "run": "2026-07-23T06:25:52.767Z",
+         "category": "llm-extract",
+         "usd": 0.47373,
+         "estimated": false,
+         "units": 27,
+         "unit": "calls",
+         "tokensIn": 219975,
+         "tokensOut": 50751,
+         "top": [
+            {
+               "id": "swarzedz-city",
+               "usd": 0.096801,
+               "units": 4
+            },
+            {
+               "id": "czerwonak-city",
+               "usd": 0.070746,
+               "units": 3
+            },
+            {
+               "id": "komorniki-city",
+               "usd": 0.054096,
+               "units": 4
+            },
+            {
+               "id": "tarnowo-gok",
+               "usd": 0.040952,
+               "units": 2
+            },
+            {
+               "id": "poznan-events",
+               "usd": 0.034136,
+               "units": 1
+            }
+         ],
+         "inferred": true
+      },
+      {
+         "day": "2026-07-24",
+         "at": "2026-07-24T05:55:31.233Z",
+         "stage": "discover",
+         "run": "2026-07-24T05:54:58.996Z",
+         "category": "scrape",
+         "usd": 0,
+         "estimated": true,
+         "units": 41,
+         "unit": "fetches",
+         "inferred": true
+      },
+      {
+         "day": "2026-07-26",
+         "at": "2026-07-26T06:44:07.354Z",
+         "stage": "daily",
+         "run": "2026-07-26T06:31:45.703Z",
+         "category": "llm-extract",
+         "usd": 0.838207,
+         "estimated": false,
+         "units": 59,
+         "unit": "calls",
+         "tokensIn": 396302,
+         "tokensOut": 88381,
+         "top": [
+            {
+               "id": "swarzedz-city",
+               "usd": 0.082543,
+               "units": 5
+            },
+            {
+               "id": "poznan-kultura-rss",
+               "usd": 0.071903,
+               "units": 4
+            },
+            {
+               "id": "czerwonak-city",
+               "usd": 0.070801,
+               "units": 3
+            },
+            {
+               "id": "komorniki-gok",
+               "usd": 0.070489,
+               "units": 4
+            },
+            {
+               "id": "lubon-city",
+               "usd": 0.066561,
+               "units": 3
+            }
+         ]
+      },
+      {
+         "day": "2026-07-26",
+         "at": "2026-07-26T06:44:07.354Z",
+         "stage": "daily",
+         "run": "2026-07-26T06:31:45.703Z",
+         "category": "scrape",
+         "usd": 0,
+         "estimated": true,
+         "units": 78,
+         "unit": "fetches"
+      },
+      {
+         "day": "2026-07-26",
+         "at": "2026-07-26T06:44:07.354Z",
+         "stage": "daily",
+         "run": "2026-07-26T06:31:45.703Z",
+         "category": "geo",
+         "usd": 0,
+         "estimated": true,
+         "units": 15,
+         "unit": "lookups"
+      },
+      {
+         "day": "2026-07-26",
+         "at": "2026-07-26T06:44:07.354Z",
+         "stage": "daily",
+         "run": "2026-07-26T06:31:45.703Z",
+         "category": "storage",
+         "usd": 0,
+         "estimated": true,
+         "units": 2.257,
+         "unit": "MB"
+      },
+      {
+         "day": "2026-07-27",
+         "at": "2026-07-27T07:05:33.750Z",
+         "stage": "daily",
+         "run": "2026-07-27T06:58:19.789Z",
+         "category": "llm-extract",
+         "usd": 0.363998,
+         "estimated": false,
+         "units": 24,
+         "unit": "calls",
+         "tokensIn": 163243,
+         "tokensOut": 40151,
+         "top": [
+            {
+               "id": "poznan-kultura-rss",
+               "usd": 0.062253,
+               "units": 3
+            },
+            {
+               "id": "komorniki-city",
+               "usd": 0.058039,
+               "units": 4
+            },
+            {
+               "id": "dopiewo-city",
+               "usd": 0.045365,
+               "units": 3
+            },
+            {
+               "id": "komorniki-gok",
+               "usd": 0.042377,
+               "units": 4
+            },
+            {
+               "id": "tarnowo-gok",
+               "usd": 0.037013,
+               "units": 2
+            }
+         ]
+      },
+      {
+         "day": "2026-07-27",
+         "at": "2026-07-27T07:05:33.750Z",
+         "stage": "daily",
+         "run": "2026-07-27T06:58:19.789Z",
+         "category": "scrape",
+         "usd": 0,
+         "estimated": true,
+         "units": 78,
+         "unit": "fetches"
+      },
+      {
+         "day": "2026-07-27",
+         "at": "2026-07-27T07:05:33.750Z",
+         "stage": "daily",
+         "run": "2026-07-27T06:58:19.789Z",
+         "category": "geo",
+         "usd": 0,
+         "estimated": true,
+         "units": 2,
+         "unit": "lookups"
+      },
+      {
+         "day": "2026-07-27",
+         "at": "2026-07-27T07:05:33.750Z",
+         "stage": "daily",
+         "run": "2026-07-27T06:58:19.789Z",
+         "category": "storage",
+         "usd": 0,
+         "estimated": true,
+         "units": 1.59,
+         "unit": "MB"
+      },
+      {
+         "day": "2026-07-28",
+         "at": "2026-07-28T06:28:46.124Z",
+         "stage": "daily",
+         "run": "2026-07-28T06:21:40.490Z",
+         "category": "llm-extract",
+         "usd": 0.462362,
+         "estimated": false,
+         "units": 24,
+         "unit": "calls",
+         "tokensIn": 205717,
+         "tokensOut": 51329,
+         "top": [
+            {
+               "id": "poznan-kultura-rss",
+               "usd": 0.061792,
+               "units": 3
+            },
+            {
+               "id": "czerwonak-city",
+               "usd": 0.059421,
+               "units": 2
+            },
+            {
+               "id": "komorniki-gok",
+               "usd": 0.057125,
+               "units": 3
+            },
+            {
+               "id": "komorniki-city",
+               "usd": 0.053018,
+               "units": 4
+            },
+            {
+               "id": "tarnowo-gok",
+               "usd": 0.038276,
+               "units": 2
+            }
+         ]
+      },
+      {
+         "day": "2026-07-28",
+         "at": "2026-07-28T06:28:46.124Z",
+         "stage": "daily",
+         "run": "2026-07-28T06:21:40.490Z",
+         "category": "scrape",
+         "usd": 0,
+         "estimated": true,
+         "units": 69,
+         "unit": "fetches"
+      },
+      {
+         "day": "2026-07-28",
+         "at": "2026-07-28T06:28:46.124Z",
+         "stage": "daily",
+         "run": "2026-07-28T06:21:40.490Z",
+         "category": "geo",
+         "usd": 0,
+         "estimated": true,
+         "units": 3,
+         "unit": "lookups"
+      },
+      {
+         "day": "2026-07-28",
+         "at": "2026-07-28T06:28:46.124Z",
+         "stage": "daily",
+         "run": "2026-07-28T06:21:40.490Z",
+         "category": "storage",
+         "usd": 0,
+         "estimated": true,
+         "units": 1.518,
+         "unit": "MB"
+      },
+      {
+         "day": "2026-07-29",
+         "at": "2026-07-29T06:34:36.740Z",
+         "stage": "daily",
+         "run": "2026-07-29T06:26:39.241Z",
+         "category": "llm-extract",
+         "usd": 0.479813,
+         "estimated": false,
+         "units": 31,
+         "unit": "calls",
+         "tokensIn": 209298,
+         "tokensOut": 54103,
+         "top": [
+            {
+               "id": "komorniki-gok",
+               "usd": 0.072358,
+               "units": 6
+            },
+            {
+               "id": "komorniki-city",
+               "usd": 0.052656,
+               "units": 4
+            },
+            {
+               "id": "poznan-kultura-rss",
+               "usd": 0.051499,
+               "units": 2
+            },
+            {
+               "id": "dopiewo-city",
+               "usd": 0.038186,
+               "units": 2
+            },
+            {
+               "id": "tarnowo-gok",
+               "usd": 0.036934,
+               "units": 2
+            }
+         ]
+      },
+      {
+         "day": "2026-07-29",
+         "at": "2026-07-29T06:34:36.740Z",
+         "stage": "daily",
+         "run": "2026-07-29T06:26:39.241Z",
+         "category": "scrape",
+         "usd": 0,
+         "estimated": true,
+         "units": 81,
+         "unit": "fetches"
+      },
+      {
+         "day": "2026-07-29",
+         "at": "2026-07-29T06:34:36.740Z",
+         "stage": "daily",
+         "run": "2026-07-29T06:26:39.241Z",
+         "category": "geo",
+         "usd": 0,
+         "estimated": true,
+         "units": 4,
+         "unit": "lookups"
+      },
+      {
+         "day": "2026-07-29",
+         "at": "2026-07-29T06:34:36.740Z",
+         "stage": "daily",
+         "run": "2026-07-29T06:26:39.241Z",
+         "category": "storage",
+         "usd": 0,
+         "estimated": true,
+         "units": 1.752,
+         "unit": "MB"
+      },
+      {
+         "day": "2026-07-30",
+         "at": "2026-07-30T06:29:34.986Z",
+         "stage": "daily",
+         "run": "2026-07-30T06:22:35.736Z",
+         "category": "llm-extract",
+         "usd": 0.365466,
+         "estimated": false,
+         "units": 20,
+         "unit": "calls",
+         "tokensIn": 177811,
+         "tokensOut": 37531,
+         "top": [
+            {
+               "id": "poznan-kultura-rss",
+               "usd": 0.062211,
+               "units": 4
+            },
+            {
+               "id": "swarzedz-city",
+               "usd": 0.050654,
+               "units": 2
+            },
+            {
+               "id": "tarnowo-gok",
+               "usd": 0.038294,
+               "units": 2
+            },
+            {
+               "id": "poznan-events",
+               "usd": 0.034109,
+               "units": 1
+            },
+            {
+               "id": "estrada",
+               "usd": 0.033921,
+               "units": 1
+            }
+         ]
+      },
+      {
+         "day": "2026-07-30",
+         "at": "2026-07-30T06:29:34.986Z",
+         "stage": "daily",
+         "run": "2026-07-30T06:22:35.736Z",
+         "category": "scrape",
+         "usd": 0,
+         "estimated": true,
+         "units": 72,
+         "unit": "fetches"
+      },
+      {
+         "day": "2026-07-30",
+         "at": "2026-07-30T06:29:34.986Z",
+         "stage": "daily",
+         "run": "2026-07-30T06:22:35.736Z",
+         "category": "geo",
+         "usd": 0,
+         "estimated": true,
+         "units": 4,
+         "unit": "lookups"
+      },
+      {
+         "day": "2026-07-30",
+         "at": "2026-07-30T06:29:34.986Z",
+         "stage": "daily",
+         "run": "2026-07-30T06:22:35.736Z",
+         "category": "storage",
+         "usd": 0,
+         "estimated": true,
+         "units": 1.301,
+         "unit": "MB"
+      }
    ]
-  },
-  {
-   "day": "2026-07-26",
-   "at": "2026-07-26T06:44:07.354Z",
-   "stage": "daily",
-   "run": "2026-07-26T06:31:45.703Z",
-   "category": "scrape",
-   "usd": 0,
-   "estimated": true,
-   "units": 78,
-   "unit": "fetches"
-  },
-  {
-   "day": "2026-07-26",
-   "at": "2026-07-26T06:44:07.354Z",
-   "stage": "daily",
-   "run": "2026-07-26T06:31:45.703Z",
-   "category": "geo",
-   "usd": 0,
-   "estimated": true,
-   "units": 15,
-   "unit": "lookups"
-  },
-  {
-   "day": "2026-07-26",
-   "at": "2026-07-26T06:44:07.354Z",
-   "stage": "daily",
-   "run": "2026-07-26T06:31:45.703Z",
-   "category": "storage",
-   "usd": 0,
-   "estimated": true,
-   "units": 2.257,
-   "unit": "MB"
-  },
-  {
-   "day": "2026-07-27",
-   "at": "2026-07-27T07:05:33.750Z",
-   "stage": "daily",
-   "run": "2026-07-27T06:58:19.789Z",
-   "category": "llm-extract",
-   "usd": 0.363998,
-   "estimated": false,
-   "units": 24,
-   "unit": "calls",
-   "tokensIn": 163243,
-   "tokensOut": 40151,
-   "top": [
-    {
-     "id": "poznan-kultura-rss",
-     "usd": 0.062253,
-     "units": 3
-    },
-    {
-     "id": "komorniki-city",
-     "usd": 0.058039,
-     "units": 4
-    },
-    {
-     "id": "dopiewo-city",
-     "usd": 0.045365,
-     "units": 3
-    },
-    {
-     "id": "komorniki-gok",
-     "usd": 0.042377,
-     "units": 4
-    },
-    {
-     "id": "tarnowo-gok",
-     "usd": 0.037013,
-     "units": 2
-    }
-   ]
-  },
-  {
-   "day": "2026-07-27",
-   "at": "2026-07-27T07:05:33.750Z",
-   "stage": "daily",
-   "run": "2026-07-27T06:58:19.789Z",
-   "category": "scrape",
-   "usd": 0,
-   "estimated": true,
-   "units": 78,
-   "unit": "fetches"
-  },
-  {
-   "day": "2026-07-27",
-   "at": "2026-07-27T07:05:33.750Z",
-   "stage": "daily",
-   "run": "2026-07-27T06:58:19.789Z",
-   "category": "geo",
-   "usd": 0,
-   "estimated": true,
-   "units": 2,
-   "unit": "lookups"
-  },
-  {
-   "day": "2026-07-27",
-   "at": "2026-07-27T07:05:33.750Z",
-   "stage": "daily",
-   "run": "2026-07-27T06:58:19.789Z",
-   "category": "storage",
-   "usd": 0,
-   "estimated": true,
-   "units": 1.59,
-   "unit": "MB"
-  },
-  {
-   "day": "2026-07-28",
-   "at": "2026-07-28T06:28:46.124Z",
-   "stage": "daily",
-   "run": "2026-07-28T06:21:40.490Z",
-   "category": "llm-extract",
-   "usd": 0.462362,
-   "estimated": false,
-   "units": 24,
-   "unit": "calls",
-   "tokensIn": 205717,
-   "tokensOut": 51329,
-   "top": [
-    {
-     "id": "poznan-kultura-rss",
-     "usd": 0.061792,
-     "units": 3
-    },
-    {
-     "id": "czerwonak-city",
-     "usd": 0.059421,
-     "units": 2
-    },
-    {
-     "id": "komorniki-gok",
-     "usd": 0.057125,
-     "units": 3
-    },
-    {
-     "id": "komorniki-city",
-     "usd": 0.053018,
-     "units": 4
-    },
-    {
-     "id": "tarnowo-gok",
-     "usd": 0.038276,
-     "units": 2
-    }
-   ]
-  },
-  {
-   "day": "2026-07-28",
-   "at": "2026-07-28T06:28:46.124Z",
-   "stage": "daily",
-   "run": "2026-07-28T06:21:40.490Z",
-   "category": "scrape",
-   "usd": 0,
-   "estimated": true,
-   "units": 69,
-   "unit": "fetches"
-  },
-  {
-   "day": "2026-07-28",
-   "at": "2026-07-28T06:28:46.124Z",
-   "stage": "daily",
-   "run": "2026-07-28T06:21:40.490Z",
-   "category": "geo",
-   "usd": 0,
-   "estimated": true,
-   "units": 3,
-   "unit": "lookups"
-  },
-  {
-   "day": "2026-07-28",
-   "at": "2026-07-28T06:28:46.124Z",
-   "stage": "daily",
-   "run": "2026-07-28T06:21:40.490Z",
-   "category": "storage",
-   "usd": 0,
-   "estimated": true,
-   "units": 1.518,
-   "unit": "MB"
-  },
-  {
-   "day": "2026-07-29",
-   "at": "2026-07-29T06:34:36.740Z",
-   "stage": "daily",
-   "run": "2026-07-29T06:26:39.241Z",
-   "category": "llm-extract",
-   "usd": 0.479813,
-   "estimated": false,
-   "units": 31,
-   "unit": "calls",
-   "tokensIn": 209298,
-   "tokensOut": 54103,
-   "top": [
-    {
-     "id": "komorniki-gok",
-     "usd": 0.072358,
-     "units": 6
-    },
-    {
-     "id": "komorniki-city",
-     "usd": 0.052656,
-     "units": 4
-    },
-    {
-     "id": "poznan-kultura-rss",
-     "usd": 0.051499,
-     "units": 2
-    },
-    {
-     "id": "dopiewo-city",
-     "usd": 0.038186,
-     "units": 2
-    },
-    {
-     "id": "tarnowo-gok",
-     "usd": 0.036934,
-     "units": 2
-    }
-   ]
-  },
-  {
-   "day": "2026-07-29",
-   "at": "2026-07-29T06:34:36.740Z",
-   "stage": "daily",
-   "run": "2026-07-29T06:26:39.241Z",
-   "category": "scrape",
-   "usd": 0,
-   "estimated": true,
-   "units": 81,
-   "unit": "fetches"
-  },
-  {
-   "day": "2026-07-29",
-   "at": "2026-07-29T06:34:36.740Z",
-   "stage": "daily",
-   "run": "2026-07-29T06:26:39.241Z",
-   "category": "geo",
-   "usd": 0,
-   "estimated": true,
-   "units": 4,
-   "unit": "lookups"
-  },
-  {
-   "day": "2026-07-29",
-   "at": "2026-07-29T06:34:36.740Z",
-   "stage": "daily",
-   "run": "2026-07-29T06:26:39.241Z",
-   "category": "storage",
-   "usd": 0,
-   "estimated": true,
-   "units": 1.752,
-   "unit": "MB"
-  },
-  {
-   "day": "2026-07-30",
-   "at": "2026-07-30T18:54:01.302Z",
-   "stage": "discover",
-   "run": "2026-07-30T18:45:31.961Z",
-   "category": "llm-verify",
-   "usd": 0.145931,
-   "estimated": false,
-   "units": 54,
-   "unit": "calls",
-   "tokensIn": 119081,
-   "tokensOut": 5370,
-   "top": [
-    {
-     "id": "kornik-arboretum",
-     "usd": 0.006169,
-     "units": 2
-    },
-    {
-     "id": "kleszczewo-gokis",
-     "usd": 0.006162,
-     "units": 2
-    },
-    {
-     "id": "czerwonak-gok",
-     "usd": 0.006075,
-     "units": 2
-    },
-    {
-     "id": "mosina-osir",
-     "usd": 0.005673,
-     "units": 2
-    },
-    {
-     "id": "rokietnica-gok",
-     "usd": 0.005277,
-     "units": 2
-    }
-   ]
-  },
-  {
-   "day": "2026-07-30",
-   "at": "2026-07-30T18:54:01.302Z",
-   "stage": "discover",
-   "run": "2026-07-30T18:45:31.961Z",
-   "category": "search",
-   "usd": 0.026,
-   "estimated": true,
-   "units": 26,
-   "unit": "queries"
-  },
-  {
-   "day": "2026-07-30",
-   "at": "2026-07-30T18:54:01.302Z",
-   "stage": "discover",
-   "run": "2026-07-30T18:45:31.961Z",
-   "category": "scrape",
-   "usd": 0,
-   "estimated": true,
-   "units": 292,
-   "unit": "fetches"
-  }
- ]
 }
