@@ -31,12 +31,28 @@ const isDate = (v: unknown): boolean =>
   (typeof v === "string" || typeof v === "number") && !Number.isNaN(new Date(v).getTime())
   && String(v).length >= 6;
 
-/** Czy w rekordzie (dowolnie zagnieżdżonym) siedzi termin wydarzenia. */
-export function hasEventDate(record: unknown, depth = 0): boolean {
+/**
+ * Termin, który jeszcze NIE minął.
+ *
+ * Sama obecność daty nie wystarcza i to nie jest teoretyczna ostrożność: `lubon.pl/atom`
+ * miał `datesParsed` 100/100, bo gminne „aktualności" pełne są zdań w rodzaju „relacja
+ * z 5 lipca". Feed wyglądał na doskonałe wejście maszynowe i nie niósł ani jednego
+ * przyszłego wydarzenia. Zdolność ma odpowiadać na pytanie „czy da się stąd wziąć COŚ,
+ * co się dopiero odbędzie", więc data przeszła znaczy tyle samo co brak daty.
+ */
+const isFutureDate = (v: unknown, today = todayIso()): boolean => {
+  if (!isDate(v)) return false;
+  const d = new Date(v as string | number);
+  return d.toISOString().slice(0, 10) >= today;
+};
+
+/** Czy w rekordzie (dowolnie zagnieżdżonym) siedzi PRZYSZŁY termin wydarzenia. */
+export function hasEventDate(record: unknown, depth = 0, today = todayIso()): boolean {
   if (depth > 3 || record === null || typeof record !== "object") return false;
   return Object.entries(record as Record<string, unknown>).some(([key, value]) => {
     if (PUBLISH_KEYS.has(key)) return false;
-    return (EVENT_DATE_KEY.test(key) && isDate(value)) || hasEventDate(value, depth + 1);
+    return (EVENT_DATE_KEY.test(key) && isFutureDate(value, today))
+      || hasEventDate(value, depth + 1, today);
   });
 }
 
@@ -93,23 +109,53 @@ export function feedCandidates(html: string, root: string): string[] {
  * tym, co reguła tego modułu wyklucza. Liczenie `pubDate` dawało `datesParsed === itemsSeen`
  * dla każdego feedu na świecie — a gminne „aktualności" to w większości nie wydarzenia.
  */
-const MONTHS_PL = "stycz|lut|mar|kwiet|maj|czerw|lip|sierp|wrze|paździer|listopad|grud";
+const MONTHS_PL = ["stycz", "lut", "mar", "kwiet", "maj", "czerw",
+  "lip", "sierp", "wrze", "paździer", "listopad", "grud"] as const;
+
 const EVENT_DATE_IN_TEXT = new RegExp(
-  String.raw`\d{1,2}[./-]\d{1,2}[./-]\d{4}|\d{4}-\d{2}-\d{2}|\d{1,2}\s+(?:${MONTHS_PL})`, "i",
+  String.raw`(\d{1,2})[./-](\d{1,2})[./-](\d{4})`         // 05.09.2026
+  + String.raw`|(\d{4})-(\d{2})-(\d{2})`                   // 2026-09-05
+  + String.raw`|(\d{1,2})\s+(${MONTHS_PL.join("|")})`,     // 5 września
+  "gi",
 );
+
+const pad = (n: number): string => String(n).padStart(2, "0");
+
+/**
+ * Wszystkie daty z tekstu, w ISO. Zapis bez roku („5 września") czytamy w roku BIEŻĄCYM,
+ * a nie w najbliższym przyszłym — inaczej każda relacja z lipca wyglądałaby na zapowiedź
+ * na przyszły rok i filtr przyszłości nie odsiewałby niczego. Cena: zapowiedź styczniowa
+ * ogłoszona w grudniu wypada jako przeszła. Zaniżenie jest tu bezpieczne — zdolność co
+ * najwyżej nie zostanie użyta i źródło pójdzie zwykłą ścieżką przez model.
+ */
+export function eventDatesInText(text: string, today = todayIso()): string[] {
+  const out: string[] = [];
+  for (const m of text.matchAll(EVENT_DATE_IN_TEXT)) {
+    if (m[3]) out.push(`${m[3]}-${pad(Number(m[2]))}-${pad(Number(m[1]))}`);
+    else if (m[4]) out.push(`${m[4]}-${m[5]}-${m[6]}`);
+    else if (m[8]) {
+      const month = MONTHS_PL.findIndex((p) => m[8]?.toLowerCase().startsWith(p));
+      if (month >= 0) out.push(`${today.slice(0, 4)}-${pad(month + 1)}-${pad(Number(m[7]))}`);
+    }
+  }
+  return out;
+}
 
 const TITLE_RE = /<title\b[^>]*>([\s\S]*?)<\/title>/i;
 const BODY_RE = /<(?:description|summary|content)\b[^>]*>([\s\S]*?)<\/(?:description|summary|content)>/i;
 
-/** Czy w treści wpisu (tytuł + opis) widać termin wydarzenia. `<pubDate>` świadomie pomijamy. */
-export function itemHasEventDate(item: string): boolean {
+/**
+ * Czy w treści wpisu (tytuł + opis) widać termin wydarzenia, które się jeszcze NIE odbyło.
+ * `<pubDate>` świadomie pomijamy — patrz komentarz przy `isFutureDate`.
+ */
+export function itemHasEventDate(item: string, today = todayIso()): boolean {
   const parts: string[] = [];
   for (const re of [TITLE_RE, BODY_RE]) {
     const m = re.exec(item);
     if (m?.[1]) parts.push(m[1]);
   }
   const prose = parts.join(" ").replace(/<!\[CDATA\[|\]\]>/g, " ").replace(/<[^>]+>/g, " ");
-  return EVENT_DATE_IN_TEXT.test(prose);
+  return eventDatesInText(prose, today).some((d) => d >= today);
 }
 
 async function probeFeed(url: string): Promise<SourceCapability | null> {
@@ -117,7 +163,8 @@ async function probeFeed(url: string): Promise<SourceCapability | null> {
   if (!xml || !/<(?:rss|feed)\b/i.test(xml)) return null;
   const items = [...xml.matchAll(/<(item|entry)\b[\s\S]*?<\/\1>/gi)].map((m) => m[0]);
   if (!items.length) return null;
-  return cap("rss", url, items.length, items.filter(itemHasEventDate).length);
+  // arrow, nie referencja: `filter` podaje indeks jako drugi argument, a tam stoi `today`
+  return cap("rss", url, items.length, items.filter((i) => itemHasEventDate(i)).length);
 }
 
 /** WordPress REST: typ postu wyglądający na wydarzenia + faktyczne pobranie kolekcji. */

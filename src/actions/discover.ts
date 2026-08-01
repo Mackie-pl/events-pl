@@ -31,6 +31,7 @@ import {
 } from "../adapters/supabase-archive.js";
 import { discoverTown } from "../pipeline/discover/discover-town.js";
 import { explain } from "../pipeline/discover/explain.js";
+import { dropNote, reconcileEntrypoints } from "../pipeline/discover/entrypoint-yield.js";
 import { harvestById, reconcile } from "../pipeline/discover/reconcile.js";
 import { buildRegistry } from "../pipeline/discover/registry.js";
 import { verifySource } from "../pipeline/verify/verify-source.js";
@@ -45,7 +46,7 @@ import { redactDiscoverRun } from "../reporting/redact.js";
 import { todayIso } from "../shared/dates.js";
 import { describeError } from "../shared/errors.js";
 import { urlKey } from "../shared/url.js";
-import { doc } from "../storage/index.js";
+import { doc, stateStore } from "../storage/index.js";
 import type { DiscoverRunReport, RemovedSource, SourcesFile } from "../types/index.js";
 
 import { type DiscoverArgs, parseArgs } from "./discover-args.js";
@@ -107,6 +108,16 @@ async function runStages(
   // plon z zachowanego okna runs.json — wchodzi i do rozliczenia rejestru, i do weta wobec
   // werdyktu `dead`. Czytane RAZ, przed weryfikacją: to samo okno ma widzieć jedno i drugie
   const harvest = harvestById(await dailyRunsStore.all());
+
+  // Entrypointy rozliczamy PRZED weryfikacją: profiler i tak nadpisze listę, a wtedy wynik
+  // ostatniej ekstrakcji odnosiłby się już do innego zestawu adresów.
+  const stale = reconcileEntrypoints(cfg.sources, await stateStore.load());
+  report.totals.entrypointsDropped = stale.dropped.length;
+  for (const d of stale.dropped) {
+    const src = cfg.sources.find((s) => s.id === d.id);
+    if (src) src.notes = `${src.notes ? src.notes + " | " : ""}${dropNote(d.url, d.runs)}`;
+    console.log(`  ✂️ ${d.id}: wejście ${d.url} bez plonu przez ${d.runs} przebiegi — usunięte`);
+  }
 
   if (!opts.verifyOnly) {
     report.center = opts.center;

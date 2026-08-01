@@ -18,17 +18,22 @@ import { archiveRaw, beginSource, sourcePaths } from "../../adapters/supabase-ar
 import { audit } from "../../shared/audit.js";
 import { describeError } from "../../shared/errors.js";
 import { sha256 } from "../../shared/hash.js";
+import { urlKey } from "../../shared/url.js";
 import type {
   EventItem, FollowupRun, PipelineError, PipelineState, Source, SourceRun,
 } from "../../types/index.js";
 import { fbGroupPostsToText, harvestEventUrls, isEventUrl } from "../facebook.js";
 
 import { capabilitySource } from "./capability-source.js";
+import { entryUrl } from "./entry-url.js";
 import {
   droppedInvalidStats, extractEvents, extractPoster, resetDroppedInvalid,
 } from "./extract.js";
 
 const MAX_FOLLOWUPS_PER_SOURCE = 5;
+
+/** Ten sam adres wg reguł rejestru (bez schematu, `www.`, końcowego `/`). */
+const isSameUrl = (a: string, b: string): boolean => urlKey(a) === urlKey(b);
 
 export function newSourceRun(src: Source, url: string, status: SourceRun["status"]): SourceRun {
   return {
@@ -310,6 +315,27 @@ export async function processSource(
       }
       (state.followupsBySource ??= {})[src.id] = followupUrls;
     }
+  }
+
+  // --- wejście z etapu 1 dołącza do followupów ---
+  // Etap 1 ustala, GDZIE serwis wypisuje wydarzenia, i do tej pory nikt tego nie czytał:
+  // 26 z 41 pobieranych źródeł wchodziło korzeniem serwisu, a nie listą imprez.
+  //
+  // Wejście dokłada się do korzenia, a nie go zastępuje — bo pomiar (2026-08-01, sam fetch,
+  // bez modelu) pokazał, że wymiana bywa STRATĄ: lubon.pl ma na stronie głównej 6 różnych dat,
+  // a na `/artykuly/350/wydarzenia` zero; kultura.poznan.pl odpowiednio 5 i zero. Odwrotnie
+  // niż w komorniki.pl (1 na korzeniu, 11 pod kalendarzem). Skoro raz jedno, raz drugie,
+  // to wybór między nimi byłby zgadywaniem — a suma jest zawsze ≥ każdej ze stron z osobna.
+  // Mechanizm followupów robi dokładnie to i ma już cache po hashu, więc powtórka nic nie kosztuje.
+  const entry = entryUrl(src);
+  if (entry.entrypoint && !isSameUrl(entry.url, url) && !followupUrls.some((u) => isSameUrl(u, entry.url))) {
+    // na początek listy: limit MAX_FOLLOWUPS_PER_SOURCE nie może wypchnąć adresu,
+    // o którym WIEMY, że stoją pod nim wydarzenia, na rzecz propozycji modelu
+    followupUrls = [entry.url, ...followupUrls].slice(0, MAX_FOLLOWUPS_PER_SOURCE);
+    audit("followup.proposed",
+      `wejście z etapu 1 (${entry.entrypoint.kind}, ×${entry.entrypoint.detailCount ?? "?"} odnośników) ` +
+      "dołącza do followupów",
+      { url: entry.url, via: entry.entrypoint.via, confidence: entry.entrypoint.confidence });
   }
 
   // --- followupy: sprawdzane ZAWSZE, także gdy strona się nie zmieniła ---

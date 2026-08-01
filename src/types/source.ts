@@ -49,6 +49,19 @@ export interface EntryPoint {
   /** adres listy; może zawierać `{page}` — ten sam placeholder co w Source.url */
   url: string;
   kind: "listing" | "feed" | "api";
+  /**
+   * Model OGLĄDAŁ tego kandydata i go nie wskazał — adres pochodzi z samej heurystyki.
+   * Nie to samo co `via: "heuristic"`, które znaczy również „modelu nie pytaliśmy".
+   * Rozróżnienie jest potrzebne, bo tylko pierwszy przypadek zasługuje na sprawdzenie
+   * ekstrakcją: `lubon.pl/artykuly/350/wydarzenia` (63 odnośniki o kształcie artykułu CMS-a)
+   * wyglądał na listę dla obu sygnałów naraz i był zwykłym artykułem o cyklicznych imprezach.
+   */
+  unendorsed?: true;
+  /**
+   * Ile kolejnych przebiegów discover zastało ten adres bez ani jednego wydarzenia.
+   * Po `BARREN_LIMIT` entrypoint znika z rejestru — patrz `pipeline/discover/entrypoint-yield.ts`.
+   */
+  barrenRuns?: number;
   /** szablon adresu strony pojedynczego wydarzenia (np. "/wydarzenia/{slug}") */
   detailPattern?: string;
   /** ile linków pasowało do szablonu w chwili rozpoznania — dowód, nie deklaracja */

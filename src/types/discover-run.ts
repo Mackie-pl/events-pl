@@ -166,6 +166,8 @@ export interface DiscoverTotals extends LlmUsage {
   sourcesMissed: number;
   /** źródła zdegradowane w tym przebiegu (brak trafień + zero plonu) */
   sourcesDeactivated: number;
+  /** wejścia usunięte z rejestru po kolejnych przebiegach bez ani jednego wydarzenia */
+  entrypointsDropped: number;
   /** propozycje modelu odrzucone (duplikat / niska pewność / niepoprawny rekord) */
   proposalsRejected: number;
   sourcesChecked: number;

@@ -9,6 +9,8 @@
 import { BROWSER_HEADERS, fetchUrl } from "../../adapters/http.js";
 import { probeCapabilities } from "../discover/capabilities.js";
 import { resolveEntrypoints } from "../discover/entrypoint.js";
+import { auditionEntrypoints } from "../discover/entrypoint-audition.js";
+import { carryBarrenRuns } from "../discover/entrypoint-yield.js";
 import type { EntryPoint, Source, SourceCapability } from "../../types/index.js";
 
 import { countFetch } from "./probe.js";
@@ -18,6 +20,8 @@ export interface SourceProfile {
   capabilities: SourceCapability[];
   verdict?: "events" | "news" | "none";
   why?: string;
+  /** adresy odrzucone próbną ekstrakcją — bez tego odsiew byłby niewidoczny w raporcie */
+  rejectedEntrypoints?: Array<{ url: string; why: string }>;
 }
 
 /** Surowy HTML korzenia — profiler potrzebuje odnośników, więc nie może iść przez html-to-text. */
@@ -58,14 +62,18 @@ export async function profileSource(src: Source, url: string): Promise<SourcePro
     return { entrypoints: [], capabilities: await probeCapabilities(url, html) };
   }
 
-  const { entrypoints, verdict, why } = await resolveEntrypoints(src, url, html);
+  const resolved = await resolveEntrypoints(src, url, html);
+  // adres, którego model nie potwierdził, przechodzi próbną ekstrakcję ZANIM wejdzie do
+  // rejestru — inaczej `daily` płaci za niego co dzień, żeby co dzień dostać zero
+  const { entrypoints, rejected } = await auditionEntrypoints(resolved.entrypoints);
   const entry = entrypoints[0]?.url;
   const capabilities = await probeCapabilities(url, html, entry);
 
   return {
     entrypoints, capabilities,
-    ...(verdict ? { verdict } : {}),
-    ...(why ? { why } : {}),
+    ...(rejected.length ? { rejectedEntrypoints: rejected } : {}),
+    ...(resolved.verdict ? { verdict: resolved.verdict } : {}),
+    ...(resolved.why ? { why: resolved.why } : {}),
   };
 }
 
@@ -75,7 +83,9 @@ export async function profileSource(src: Source, url: string): Promise<SourcePro
  * z nieistniejących już działów.
  */
 export function applyProfile(src: Source, profile: SourceProfile): void {
-  if (profile.entrypoints.length) src.entrypoints = profile.entrypoints;
+  // licznik jałowych przebiegów przeżywa nadpisanie: to wiedza o ADRESIE zbierana miesiącami,
+  // a nie część opisu serwisu, więc zerowanie jej co przebieg unieważniałoby próg
+  if (profile.entrypoints.length) src.entrypoints = carryBarrenRuns(profile.entrypoints, src.entrypoints);
   else delete src.entrypoints;
   if (profile.capabilities.length) src.capabilities = profile.capabilities;
   else delete src.capabilities;

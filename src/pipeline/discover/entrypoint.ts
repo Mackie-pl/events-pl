@@ -243,9 +243,18 @@ export async function resolveEntrypoints(
   if (!needsModel(measured)) return { entrypoints: heuristic };
 
   const judged = await adjudicate(src, measured);
-  if (!judged) return { entrypoints: heuristic };
   // model widział te same strony co heurystyka — gdy nic nie wybrał, ale nie zawetował,
-  // zostaje wynik pomiaru; „none" jest jedyną odpowiedzią, która kasuje kandydatów
+  // zostaje wynik pomiaru; „none" jest jedyną odpowiedzią, która kasuje kandydatów.
+  //
+  // Taki adres znaczymy jednak `unendorsed`: zostaje w grze, ale przestaje uchodzić za
+  // potwierdzony. Bez tego rozróżnienia „model go wskazał" i „model go pominął, a my go
+  // i tak wzięli" wyglądały w rejestrze identycznie — i drugi przypadek nie miał jak
+  // nigdy wyjść na jaw, bo nic nie sprawdzało, czy ten adres cokolwiek daje.
+  if (!judged) return { entrypoints: markUnendorsed(heuristic) };
   if (judged.verdict === "none") return judged;
-  return { ...judged, entrypoints: judged.entrypoints.length ? judged.entrypoints : heuristic };
+  if (judged.entrypoints.length) return judged;
+  return { ...judged, entrypoints: markUnendorsed(heuristic) };
 }
+
+const markUnendorsed = (entrypoints: readonly EntryPoint[]): EntryPoint[] =>
+  entrypoints.map((e) => ({ ...e, unendorsed: true as const }));

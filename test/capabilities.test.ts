@@ -10,8 +10,11 @@ import { strict as assert } from "node:assert";
 import { describe, it } from "node:test";
 
 import {
-  feedCandidates, hasEventDate, itemHasEventDate, probeJsonLd,
+  eventDatesInText, feedCandidates, hasEventDate, itemHasEventDate, probeJsonLd,
 } from "../src/pipeline/discover/capabilities.js";
+
+/** Data odniesienia przypięta na sztywno — inaczej test przestawałby przechodzić z kalendarzem. */
+const TODAY = "2026-08-01";
 
 describe("hasEventDate — data WYDARZENIA, nie publikacji", () => {
   it("odrzuca wpis WP z samą datą publikacji", () => {
@@ -20,24 +23,25 @@ describe("hasEventDate — data WYDARZENIA, nie publikacji", () => {
       id: 85193, date: "2026-07-29T10:04:31", date_gmt: "2026-07-29T10:04:31",
       modified: "2026-07-29T10:04:31", title: { rendered: "Portal Film Fest | 23.08" },
       acf: [], meta: { _acf_changed: false },
-    }), false);
+    }, 0, TODAY), false);
   });
 
   it("przyjmuje wpis z terminem w polu wtyczki", () => {
-    assert.equal(hasEventDate({ id: 7, date: "2026-07-01T09:00:00", start_date: "2026-08-15 18:00:00" }), true);
+    const record = { id: 7, date: "2026-07-01T09:00:00", start_date: "2026-08-15 18:00:00" };
+    assert.equal(hasEventDate(record, 0, TODAY), true);
   });
 
   it("znajduje termin zagnieżdżony w meta", () => {
-    assert.equal(hasEventDate({ id: 7, meta: { mec_start_date: "2026-08-15" } }), true);
+    assert.equal(hasEventDate({ id: 7, meta: { mec_start_date: "2026-08-15" } }, 0, TODAY), true);
   });
 
   it("nie bierze byle liczby za datę", () => {
-    assert.equal(hasEventDate({ start_position: 3 }), false);
+    assert.equal(hasEventDate({ start_position: 3 }, 0, TODAY), false);
   });
 
   it("nie wchodzi w nieskończoną strukturę", () => {
     const deep = { a: { b: { c: { d: { start_date: "2026-08-15" } } } } };
-    assert.equal(hasEventDate(deep), false); // głębiej niż 3 poziomy — świadomie nie szukamy
+    assert.equal(hasEventDate(deep, 0, TODAY), false); // głębiej niż 3 poziomy — świadomie nie szukamy
   });
 });
 
@@ -52,30 +56,78 @@ describe("itemHasEventDate — RSS liczy termin z TREŚCI, nie z pubDate", () =>
     `<item><title>Tytuł</title><pubDate>Thu, 30 Jul 2026 21:24:07 +0200</pubDate>${inner}</item>`;
 
   it("sam pubDate to za mało — to data publikacji wpisu", () => {
-    assert.equal(itemHasEventDate(withPubDate("<description>Zapraszamy na warsztaty.</description>")), false);
+    assert.equal(itemHasEventDate(withPubDate("<description>Zapraszamy na warsztaty.</description>"), TODAY), false);
   });
 
   it("termin w opisie się liczy (gokkomorniki, lipiec 2026)", () => {
     assert.equal(itemHasEventDate(withPubDate(
       "<description><![CDATA[<p>wydarzenie odbędzie się w&nbsp;dniu 05.09.2026</p>]]></description>",
-    )), true);
+    ), TODAY), true);
   });
 
   it("termin w samym tytule też się liczy", () => {
-    assert.equal(itemHasEventDate("<item><title>Portal Film Fest 23.08.2026</title></item>"), true);
+    assert.equal(itemHasEventDate("<item><title>Portal Film Fest 23.08.2026</title></item>", TODAY), true);
   });
 
   it("rozpoznaje datę słowną po polsku", () => {
-    assert.equal(itemHasEventDate(withPubDate("<description>Koncert 15 września na rynku.</description>")), true);
+    const item = withPubDate("<description>Koncert 15 września na rynku.</description>");
+    assert.equal(itemHasEventDate(item, TODAY), true);
   });
 
   it("rozpoznaje zapis ISO", () => {
-    assert.equal(itemHasEventDate(withPubDate("<description>Start 2026-09-05 o 18:00.</description>")), true);
+    assert.equal(itemHasEventDate(withPubDate("<description>Start 2026-09-05 o 18:00.</description>"), TODAY), true);
   });
 
   it("Atom: entry z summary działa tak samo", () => {
-    assert.equal(itemHasEventDate("<entry><title>Piknik</title><summary>12.08.2026</summary></entry>"), true);
-    assert.equal(itemHasEventDate("<entry><title>Piknik</title><summary>bez terminu</summary></entry>"), false);
+    assert.equal(itemHasEventDate("<entry><title>Piknik</title><summary>12.08.2026</summary></entry>", TODAY), true);
+    assert.equal(itemHasEventDate("<entry><title>Piknik</title><summary>bez terminu</summary></entry>", TODAY), false);
+  });
+});
+
+/**
+ * Regresja druga, tej samej rodziny: po odcięciu `<pubDate>` `datesParsed` liczyło każdą datę
+ * w treści — także przeszłą. `lubon.pl/atom` dostawał 100/100, bo gminne „aktualności" są
+ * pełne zdań w rodzaju „relacja z 5 lipca". Feed wyglądał na doskonałe wejście maszynowe
+ * i nie niósł ani jednego przyszłego wydarzenia.
+ */
+describe("itemHasEventDate — termin ma być PRZYSZŁY", () => {
+  const item = (text: string): string => `<item><title>Tytuł</title><description>${text}</description></item>`;
+
+  it("relacja z przeszłego wydarzenia się NIE liczy", () => {
+    assert.equal(itemHasEventDate(item("Relacja z pikniku 5 lipca."), TODAY), false);
+    assert.equal(itemHasEventDate(item("Podsumowanie 12.06.2026."), TODAY), false);
+  });
+
+  it("zapowiedź na przyszłość się liczy", () => {
+    assert.equal(itemHasEventDate(item("Zapraszamy 20 sierpnia."), TODAY), true);
+    assert.equal(itemHasEventDate(item("Koncert 03.10.2026."), TODAY), true);
+  });
+
+  it("dzisiejszy termin jeszcze się liczy", () => {
+    assert.equal(itemHasEventDate(item("Start 2026-08-01 o 18:00."), TODAY), true);
+  });
+
+  it("wpis z datą przeszłą I przyszłą liczy się raz", () => {
+    // „jak co roku 5 lipca… w tym roku 20 sierpnia" — jedna przyszła wystarczy
+    assert.equal(itemHasEventDate(item("Jak 5 lipca, tak i 20 sierpnia."), TODAY), true);
+  });
+});
+
+describe("eventDatesInText — rozbiór zapisów", () => {
+  it("czyta trzy formaty zapisu", () => {
+    assert.deepEqual(eventDatesInText("05.09.2026 oraz 2026-10-11 i 7 grudnia", TODAY),
+      ["2026-09-05", "2026-10-11", "2026-12-07"]);
+  });
+
+  it("zapis bez roku czyta w roku bieżącym, nie w najbliższym przyszłym", () => {
+    // inaczej każda relacja z lipca wyglądałaby na zapowiedź na przyszły rok
+    assert.deepEqual(eventDatesInText("5 lipca", TODAY), ["2026-07-05"]);
+  });
+});
+
+describe("hasEventDate — termin przeszły to nie zdolność", () => {
+  it("wtyczka z zakończonym terminem nie liczy się jako data", () => {
+    assert.equal(hasEventDate({ id: 7, start_date: "2026-06-15 18:00:00" }, 0, TODAY), false);
   });
 });
 

@@ -90,6 +90,7 @@ const discoverReport = (over: Partial<DiscoverRunReport> = {}): DiscoverRunRepor
     calls: 2, promptTokens: 700, completionTokens: 250, costUsd: 0.052,
     towns: 1, searches: 1, searchErrors: 0, searchesSkipped: 0,
     sourcesAdded: 1, sourcesConfirmed: 0, sourcesMissed: 0, sourcesDeactivated: 0,
+    entrypointsDropped: 0,
     proposalsRejected: 1, sourcesChecked: 2,
     ok: 1, fixed: 1, dead: 0, unrepaired: 0, skipped: 0,
     costDiscoveryUsd: 0.05, costVerifyUsd: 0.002,

@@ -6,6 +6,7 @@ export function emptyTotals(): DiscoverTotals {
   return {
     towns: 0, searches: 0, searchErrors: 0, searchesSkipped: 0,
     sourcesAdded: 0, sourcesConfirmed: 0, sourcesMissed: 0, sourcesDeactivated: 0,
+    entrypointsDropped: 0,
     proposalsRejected: 0, sourcesChecked: 0,
     ok: 0, fixed: 0, dead: 0, unrepaired: 0, skipped: 0,
     calls: 0, promptTokens: 0, completionTokens: 0, costUsd: 0,
