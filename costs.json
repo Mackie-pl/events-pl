@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-01T06:06:21.726Z",
+ "updated": "2026-08-01T06:34:54.403Z",
  "rates": {
   "bdPerRecord": 0.0015,
   "searchPerQuery": 0.001,
@@ -550,6 +550,79 @@
    "estimated": true,
    "units": 199,
    "unit": "fetches"
+  },
+  {
+   "day": "2026-08-01",
+   "at": "2026-08-01T06:34:54.384Z",
+   "stage": "daily",
+   "run": "2026-08-01T06:23:57.322Z",
+   "category": "llm-extract",
+   "usd": 0.702611,
+   "estimated": false,
+   "units": 53,
+   "unit": "calls",
+   "tokensIn": 355041,
+   "tokensOut": 69514,
+   "top": [
+    {
+     "id": "brama-poznania",
+     "usd": 0.055461,
+     "units": 2
+    },
+    {
+     "id": "poznan-kultura-rss",
+     "usd": 0.051078,
+     "units": 2
+    },
+    {
+     "id": "komorniki-city",
+     "usd": 0.04707,
+     "units": 4
+    },
+    {
+     "id": "kleszczewo-gokis",
+     "usd": 0.040916,
+     "units": 5
+    },
+    {
+     "id": "komorniki-gok",
+     "usd": 0.040667,
+     "units": 3
+    }
+   ]
+  },
+  {
+   "day": "2026-08-01",
+   "at": "2026-08-01T06:34:54.384Z",
+   "stage": "daily",
+   "run": "2026-08-01T06:23:57.322Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 92,
+   "unit": "fetches"
+  },
+  {
+   "day": "2026-08-01",
+   "at": "2026-08-01T06:34:54.384Z",
+   "stage": "daily",
+   "run": "2026-08-01T06:23:57.322Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 21,
+   "unit": "lookups"
+  },
+  {
+   "day": "2026-08-01",
+   "at": "2026-08-01T06:34:54.384Z",
+   "stage": "daily",
+   "run": "2026-08-01T06:23:57.322Z",
+   "category": "storage",
+   "usd": 0,
+   "estimated": true,
+   "units": 2.475,
+   "unit": "MB"
   }
  ]
 }
