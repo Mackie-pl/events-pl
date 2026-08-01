@@ -18,14 +18,13 @@
    "url": "https://www.poznan.pl/web-service/events?wsdl",
    "town": "Poznań",
    "fetch": "api",
-   "verified": false,
+   "verified": true,
    "notes": "SOAP/XML, getEvents(dateFrom,dateTo), max 250 wyników | martwy URL (2026-07-30): Adres to WSDL web service (interfejs techniczny), nie strona HTML z listą wydarzeń dla użytkownika.",
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "previous_urls": [
     "https://www.um.poznan.pl/web-service/events?wsdl"
    ],
-   "reach": "redirected",
-   "dead": true
+   "reach": "ok"
   },
   {
    "id": "poznan-kultura",
@@ -36,20 +35,19 @@
    "fetch": "plain",
    "verified": true,
    "notes": "paginacja p=0..N; widok dzienny jest JS-only — używać listy",
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "previous_urls": [
     "https://kultura.poznan.pl/mim/public/kultura/events.html?co=list&lang=pl&category=&p={page}"
    ],
-   "reach": "redirected",
+   "reach": "ok",
    "entrypoints": [
     {
-     "url": "https://kultura.poznan.pl/mim/public/kultura/events.html?co=list&lang=pl&category=&p={page}",
+     "url": "https://kultura.poznan.pl/mim/kultura/seances/",
      "kind": "listing",
      "confidence": 0.9,
      "via": "llm",
-     "detailPattern": "/mim/kultura/events/{slug}.html",
-     "detailCount": 20,
-     "paginated": true
+     "detailPattern": "/mim/kultura/seances/{slug}.html",
+     "detailCount": 50
     }
    ]
   },
@@ -61,22 +59,11 @@
    "town": "Poznań",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "previous_urls": [
     "https://kultura.poznan.pl/mim/feeds/"
    ],
-   "reach": "redirected",
-   "entrypoints": [
-    {
-     "url": "https://www.poznan.pl/mim/public/events/events.html?co=list&lang=pl&category=&p={page}",
-     "kind": "listing",
-     "confidence": 0.9,
-     "via": "llm",
-     "detailPattern": "/mim/events/{slug}.html",
-     "detailCount": 21,
-     "paginated": true
-    }
-   ]
+   "reach": "ok"
   },
   {
    "id": "poznan-events",
@@ -86,7 +73,7 @@
    "town": "Poznań",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "reach": "ok",
    "entrypoints": [
     {
@@ -95,7 +82,7 @@
      "confidence": 0.9,
      "via": "llm",
      "detailPattern": "/mim/events/seances/{slug}.html",
-     "detailCount": 32
+     "detailCount": 40
     }
    ]
   },
@@ -111,7 +98,7 @@
     "https://ckzamek.pl/wydarzenia/"
    ],
    "reach": "ok",
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "notes": "URL naprawiony 2026-07-30 (stary w previous_urls)",
    "entrypoints": [
     {
@@ -132,7 +119,7 @@
    "town": "Poznań",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "reach": "ok",
    "entrypoints": [
     {
@@ -150,7 +137,7 @@
      "url": "https://estrada.poznan.pl/wp-json/wp/v2/event?per_page=5",
      "itemsSeen": 5,
      "datesParsed": 0,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     }
    ]
   },
@@ -166,18 +153,8 @@
     "https://bramapoznania.pl/wydarzenia"
    ],
    "reach": "ok",
-   "checked": "2026-07-30",
-   "notes": "URL naprawiony 2026-07-30 (stary w previous_urls)",
-   "entrypoints": [
-    {
-     "url": "https://bramapoznania.pl/kalendarium",
-     "kind": "listing",
-     "confidence": 0.9,
-     "via": "llm",
-     "detailPattern": "/event/{id}/{slug}",
-     "detailCount": 767
-    }
-   ]
+   "checked": "2026-08-01",
+   "notes": "URL naprawiony 2026-07-30 (stary w previous_urls) | 2026-08-01: Strona główna nie zawiera listy wydarzeń; loader wskazuje na dynamiczny content, który nie został zaindeksowany."
   },
   {
    "id": "teatr-animacji",
@@ -186,11 +163,10 @@
    "url": "https://teatranimacji.pl/pl/repertuar",
    "town": "Poznań",
    "fetch": "plain",
-   "verified": false,
-   "notes": "strona spektaklu ma pole WIEK | martwy URL (2026-07-30): Strona repertuaru nie wczytała się (Wczytywanie...) — nie można zweryfikować obecności listy wydarzeń z datami.",
-   "checked": "2026-07-30",
-   "reach": "ok",
-   "dead": true
+   "verified": true,
+   "notes": "strona spektaklu ma pole WIEK | martwy URL (2026-07-30): Strona repertuaru nie wczytała się (Wczytywanie...) — nie można zweryfikować obecności listy wydarzeń z datami. | 2026-08-01: Strona nie załadowała się (Wczytywanie...) — nie można ocenić zawartości; repertuar to lista spektakli, nie nadchodzących dat.",
+   "checked": "2026-08-01",
+   "reach": "ok"
   },
   {
    "id": "biblraczynskich",
@@ -204,7 +180,7 @@
     "https://bracz.edu.pl/wydarzenia/"
    ],
    "reach": "ok",
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "notes": "URL naprawiony 2026-07-30 (stary w previous_urls)",
    "entrypoints": [
     {
@@ -212,8 +188,8 @@
      "kind": "listing",
      "confidence": 0.9,
      "via": "llm",
-     "detailPattern": "/event/{id}/{id}/{id}",
-     "detailCount": 10
+     "detailPattern": "/{slug}",
+     "detailCount": 27
     }
    ],
    "capabilities": [
@@ -222,35 +198,35 @@
      "url": "https://bracz.edu.pl/feed/",
      "itemsSeen": 11,
      "datesParsed": 11,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     },
     {
      "kind": "rss",
      "url": "https://bracz.edu.pl/comments/feed/",
      "itemsSeen": 1,
      "datesParsed": 1,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     },
     {
      "kind": "wp-rest",
      "url": "https://bracz.edu.pl/wp-json/wp/v2/tribe_venue?per_page=5",
      "itemsSeen": 5,
      "datesParsed": 0,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     },
     {
      "kind": "tribe",
      "url": "https://bracz.edu.pl/wp-json/tribe/events/v1/events",
      "itemsSeen": 11,
      "datesParsed": 11,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     },
     {
      "kind": "ical",
      "url": "https://bracz.edu.pl/kalendarz/?ical=1",
-     "itemsSeen": 2,
-     "datesParsed": 4,
-     "checked": "2026-07-30"
+     "itemsSeen": 22,
+     "datesParsed": 24,
+     "checked": "2026-08-01"
     }
    ]
   },
@@ -262,7 +238,7 @@
    "town": "Poznań",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "reach": "ok",
    "entrypoints": [
     {
@@ -280,7 +256,7 @@
      "url": "https://palmiarnia.poznan.pl/feed/",
      "itemsSeen": 10,
      "datesParsed": 10,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     }
    ]
   },
@@ -346,37 +322,36 @@
    "url": "https://psmwinogrady.pl/category/aktualnosci-odk-pod-lipami/",
    "town": "Poznań",
    "fetch": "plain",
-   "verified": false,
+   "verified": true,
    "previous_urls": [
     "https://www.psm-winogrady.pl/domy-kultury/"
    ],
    "reach": "ok",
-   "checked": "2026-07-30",
-   "notes": "URL naprawiony 2026-07-30 (stary w previous_urls) | martwy URL (2026-07-30): Strona zawiera aktualności spółdzielni mieszkaniowej, a nie listę wydarzeń kulturalnych Domu Kultury Pod Lipami z datami imprez.",
+   "checked": "2026-08-01",
+   "notes": "URL naprawiony 2026-07-30 (stary w previous_urls) | martwy URL (2026-07-30): Strona zawiera aktualności spółdzielni mieszkaniowej, a nie listę wydarzeń kulturalnych Domu Kultury Pod Lipami z datami imprez. | 2026-08-01: Strona zawiera aktualności spółdzielni mieszkaniowej, a nie listę wydarzeń kulturalnych Domu Kultury — brak informacji o repertuarze, imprezach i terminach zajęć.",
    "capabilities": [
     {
      "kind": "rss",
      "url": "https://psmwinogrady.pl/feed",
      "itemsSeen": 10,
      "datesParsed": 10,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     },
     {
      "kind": "wp-rest",
      "url": "https://psmwinogrady.pl/wp-json/wp/v2/tribe_venue?per_page=5",
      "itemsSeen": 5,
      "datesParsed": 0,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     },
     {
      "kind": "tribe",
      "url": "https://psmwinogrady.pl/wp-json/tribe/events/v1/events",
      "itemsSeen": 10,
      "datesParsed": 10,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     }
-   ],
-   "dead": true
+   ]
   },
   {
    "id": "dk-orbita",
@@ -385,37 +360,36 @@
    "url": "https://psmwinogrady.pl/odk-orbita-os-kosmonautow-paw-118/",
    "town": "Poznań",
    "fetch": "plain",
-   "verified": false,
-   "notes": "potwierdzony jako miejsce wydarzeń w kultura.poznan.pl | URL naprawiony 2026-07-30 (stary w previous_urls) | martwy URL (2026-07-30): Kandydat to strona spółdzielni mieszkaniowej PSM Winogrady, zawierająca strukturę organizacyjną i aktualności rad osiedli, ale nie listę wydarzeń DK Orbita z datami.",
+   "verified": true,
+   "notes": "potwierdzony jako miejsce wydarzeń w kultura.poznan.pl | URL naprawiony 2026-07-30 (stary w previous_urls) | martwy URL (2026-07-30): Kandydat to strona spółdzielni mieszkaniowej PSM Winogrady, zawierająca strukturę organizacyjną i aktualności rad osiedli, ale nie listę wydarzeń DK Orbita z datami. | 2026-08-01: Kandydat to strona spółdzielni mieszkaniowej PSM Winogrady, zawierająca strukturę organizacyjną i aktualności rad osiedli, ale nie listę wydarzeń DK Orbita z terminami.",
    "previous_urls": [
     "https://www.psm-winogrady.pl/domy-kultury/"
    ],
    "reach": "ok",
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "capabilities": [
     {
      "kind": "rss",
      "url": "https://psmwinogrady.pl/feed",
      "itemsSeen": 10,
      "datesParsed": 10,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     },
     {
      "kind": "wp-rest",
      "url": "https://psmwinogrady.pl/wp-json/wp/v2/tribe_venue?per_page=5",
      "itemsSeen": 5,
      "datesParsed": 0,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     },
     {
      "kind": "tribe",
      "url": "https://psmwinogrady.pl/wp-json/tribe/events/v1/events",
      "itemsSeen": 10,
      "datesParsed": 10,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     }
-   ],
-   "dead": true
+   ]
   },
   {
    "id": "fyrtel-glowna",
@@ -434,7 +408,7 @@
    "town": "Luboń",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "reach": "ok",
    "entrypoints": [
     {
@@ -452,14 +426,14 @@
      "url": "https://lubon.pl/atom",
      "itemsSeen": 100,
      "datesParsed": 100,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     },
     {
      "kind": "rss",
      "url": "https://lubon.pl/rss",
      "itemsSeen": 100,
      "datesParsed": 100,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     }
    ]
   },
@@ -471,7 +445,7 @@
    "town": "Luboń",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "reach": "ok",
    "entrypoints": [
     {
@@ -489,7 +463,7 @@
      "url": "https://www.oklubon.pl/feed",
      "itemsSeen": 10,
      "datesParsed": 10,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     }
    ]
   },
@@ -524,7 +498,7 @@
     "https://biblub.com.pl/"
    ],
    "reach": "ok",
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "notes": "URL naprawiony 2026-07-30 (stary w previous_urls)",
    "entrypoints": [
     {
@@ -543,7 +517,7 @@
      "url": "https://biblub.com/feed",
      "itemsSeen": 10,
      "datesParsed": 10,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     }
    ]
   },
@@ -555,7 +529,7 @@
    "town": "Puszczykowo",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "reach": "ok",
    "entrypoints": [
     {
@@ -575,14 +549,13 @@
    "url": "https://www.puszczykowo-mbp.sowa.pl/",
    "town": "Puszczykowo",
    "fetch": "plain",
-   "verified": false,
+   "verified": true,
    "previous_urls": [
     "https://www.biblioteka.puszczykowo.pl/"
    ],
    "reach": "ok",
-   "checked": "2026-07-30",
-   "notes": "URL naprawiony 2026-07-30 (stary w previous_urls) | martwy URL (2026-07-30): Kandydat to katalog zbiorów bibliotecznych bez sekcji z listą wydarzeń, imprez czy aktualności.",
-   "dead": true
+   "checked": "2026-08-01",
+   "notes": "URL naprawiony 2026-07-30 (stary w previous_urls) | martwy URL (2026-07-30): Kandydat to katalog zbiorów bibliotecznych bez sekcji z listą wydarzeń, imprez czy aktualności. | 2026-08-01: Kandydat to katalog zbiorów bibliotecznych bez sekcji z listą wydarzeń, imprez czy aktualności."
   },
   {
    "id": "mosina-city",
@@ -615,7 +588,7 @@
    "town": "Mosina",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "reach": "ok",
    "entrypoints": [
     {
@@ -634,7 +607,7 @@
      "url": "https://www.kultura.gmina.pl/feed/",
      "itemsSeen": 10,
      "datesParsed": 10,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     }
    ]
   },
@@ -651,31 +624,21 @@
     "https://osirmosina.pl/wydarzenia"
    ],
    "reach": "ok",
-   "checked": "2026-07-30",
-   "entrypoints": [
-    {
-     "url": "https://osirmosina.pl/index.php/kalendarz/",
-     "kind": "listing",
-     "confidence": 0.9,
-     "via": "llm",
-     "detailPattern": "/index.php/{slug}",
-     "detailCount": 31
-    }
-   ],
+   "checked": "2026-08-01",
    "capabilities": [
     {
      "kind": "rss",
      "url": "https://osirmosina.pl/index.php/feed/",
      "itemsSeen": 10,
      "datesParsed": 10,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     },
     {
      "kind": "jsonld",
      "url": "https://osirmosina.pl/index.php/kalendarz/",
-     "itemsSeen": 6,
-     "datesParsed": 6,
-     "checked": "2026-07-30"
+     "itemsSeen": 11,
+     "datesParsed": 11,
+     "checked": "2026-08-01"
     }
    ]
   },
@@ -708,7 +671,7 @@
    "town": "Mosina",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "reach": "ok",
    "entrypoints": [
     {
@@ -736,7 +699,7 @@
    "town": "Komorniki",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "reach": "ok",
    "entrypoints": [
     {
@@ -754,7 +717,7 @@
      "url": "https://www.komorniki.pl/rss/aktualnosci_pl.xml",
      "itemsSeen": 1000,
      "datesParsed": 1000,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     }
    ]
   },
@@ -766,7 +729,7 @@
    "town": "Komorniki",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "reach": "ok",
    "entrypoints": [
     {
@@ -782,9 +745,9 @@
     {
      "kind": "rss",
      "url": "https://www.gokkomorniki.pl/rss/aktualnosci_pl.xml",
-     "itemsSeen": 368,
-     "datesParsed": 368,
-     "checked": "2026-07-30"
+     "itemsSeen": 369,
+     "datesParsed": 369,
+     "checked": "2026-08-01"
     }
    ]
   },
@@ -796,7 +759,7 @@
    "town": "Dopiewo",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "reach": "ok",
    "entrypoints": [
     {
@@ -805,7 +768,7 @@
      "confidence": 0.9,
      "via": "llm",
      "detailPattern": "/wydarzenia/{date}/{slug}",
-     "detailCount": 5,
+     "detailCount": 6,
      "paginated": true
     }
    ]
@@ -818,7 +781,7 @@
    "town": "Dopiewo",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "reach": "ok",
    "entrypoints": [
     {
@@ -836,21 +799,21 @@
      "url": "https://gosir.dopiewo.pl/rss.xml",
      "itemsSeen": 2,
      "datesParsed": 2,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     },
     {
      "kind": "rss",
      "url": "https://gosir.dopiewo.pl/rss/wydarzenia_pl.xml",
      "itemsSeen": 10,
      "datesParsed": 10,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     },
     {
      "kind": "rss",
      "url": "https://gosir.dopiewo.pl/rss/aktualnosci_pl.xml",
      "itemsSeen": 10,
      "datesParsed": 10,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     }
    ]
   },
@@ -862,7 +825,7 @@
    "town": "Tarnowo Podgórne",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "reach": "ok",
    "entrypoints": [
     {
@@ -880,14 +843,14 @@
      "url": "https://www.tarnowo-podgorne.pl/feed/",
      "itemsSeen": 6,
      "datesParsed": 6,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     },
     {
      "kind": "wp-rest",
      "url": "https://www.tarnowo-podgorne.pl/wp-json/wp/v2/wydarzenia?per_page=5",
      "itemsSeen": 5,
      "datesParsed": 0,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     }
    ]
   },
@@ -899,7 +862,7 @@
    "town": "Tarnowo Podgórne",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "reach": "ok",
    "entrypoints": [
     {
@@ -917,7 +880,7 @@
      "url": "https://goksezam.pl/aktualnosci.xml",
      "itemsSeen": 10,
      "datesParsed": 10,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     }
    ]
   },
@@ -929,7 +892,7 @@
    "town": "Rokietnica",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "reach": "ok",
    "entrypoints": [
     {
@@ -945,16 +908,16 @@
     {
      "kind": "rss",
      "url": "https://rokietnica.pl/rss/aktualnosci_pl.xml",
-     "itemsSeen": 216,
-     "datesParsed": 216,
-     "checked": "2026-07-30"
+     "itemsSeen": 217,
+     "datesParsed": 217,
+     "checked": "2026-08-01"
     },
     {
      "kind": "rss",
      "url": "https://rokietnica.pl/rss/informacje_pl.xml",
      "itemsSeen": 1,
      "datesParsed": 1,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     }
    ]
   },
@@ -970,7 +933,7 @@
     "https://kultura.rokietnica.pl/"
    ],
    "reach": "ok",
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "notes": "URL naprawiony 2026-07-30 (stary w previous_urls)",
    "entrypoints": [
     {
@@ -989,7 +952,7 @@
      "url": "https://gokrokietnica.pl/feed/",
      "itemsSeen": 10,
      "datesParsed": 10,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     }
    ]
   },
@@ -1066,7 +1029,7 @@
    "town": "Suchy Las",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "reach": "ok",
    "entrypoints": [
     {
@@ -1084,14 +1047,14 @@
      "url": "https://osrodekkultury.pl/feed/",
      "itemsSeen": 1,
      "datesParsed": 1,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     },
     {
      "kind": "rss",
      "url": "https://www.osrodekkultury.pl/rss.xml",
      "itemsSeen": 50,
      "datesParsed": 0,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     }
    ]
   },
@@ -1103,7 +1066,7 @@
    "town": "Czerwonak",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "reach": "ok",
    "entrypoints": [
     {
@@ -1162,11 +1125,10 @@
    "url": "https://www.swarzedz.pl/",
    "town": "Swarzędz",
    "fetch": "plain",
-   "verified": false,
-   "checked": "2026-07-30",
+   "verified": true,
+   "checked": "2026-08-01",
    "reach": "ok",
-   "notes": "martwy URL (2026-07-30): Wszyscy kandydaci to strony główne/ogólne bez listy wydarzeń; brak odnośników do podstron z kalendarzem imprez.",
-   "dead": true
+   "notes": "martwy URL (2026-07-30): Wszyscy kandydaci to strony główne/ogólne bez listy wydarzeń; brak odnośników do podstron z kalendarzem imprez. | 2026-08-01: Kandydaci zawierają tylko fragmenty nagłówka/stopki strony bez treści — brak listy wydarzeń, dat lub aktualności."
   },
   {
    "id": "swarzedz-ok",
@@ -1176,11 +1138,11 @@
    "town": "Swarzędz",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "previous_urls": [
     "https://www.ok-swarzedz.pl/"
    ],
-   "reach": "redirected",
+   "reach": "ok",
    "entrypoints": [
     {
      "url": "https://ok-swarzedz.pl/category/aktualnosci/page/{page}",
@@ -1201,16 +1163,16 @@
    "town": "Kórnik",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "reach": "ok",
    "entrypoints": [
     {
-     "url": "https://www.kornik.pl/kalendarium",
+     "url": "https://kornik.pl/kalendarium",
      "kind": "listing",
      "confidence": 0.9,
      "via": "llm",
-     "detailPattern": "/{slug}",
-     "detailCount": 28
+     "detailPattern": "/kalendarium/{slug}",
+     "detailCount": 3
     }
    ],
    "capabilities": [
@@ -1219,7 +1181,7 @@
      "url": "https://www.kornik.pl/rss.xml",
      "itemsSeen": 10,
      "datesParsed": 10,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     }
    ]
   },
@@ -1235,7 +1197,7 @@
     "https://kok.kornik.pl/"
    ],
    "reach": "ok",
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "notes": "URL naprawiony 2026-07-30 (stary w previous_urls)",
    "entrypoints": [
     {
@@ -1254,14 +1216,14 @@
      "url": "https://www.kornickiosrodekkultury.pl/?format=feed&amp;type=rss",
      "itemsSeen": 6,
      "datesParsed": 6,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     },
     {
      "kind": "rss",
      "url": "https://www.kornickiosrodekkultury.pl/?format=feed&amp;type=atom",
      "itemsSeen": 6,
      "datesParsed": 6,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     }
    ]
   },
@@ -1272,14 +1234,13 @@
    "url": "https://www.idpan.poznan.pl/pl/o-arboretum-i-lesie-doswiadczalnym/o-arboretum",
    "town": "Kórnik",
    "fetch": "plain",
-   "verified": false,
+   "verified": true,
    "previous_urls": [
     "https://www.idpan.poznan.pl/arboretum/"
    ],
    "reach": "ok",
-   "checked": "2026-07-30",
-   "notes": "URL naprawiony 2026-07-30 (stary w previous_urls) | martwy URL (2026-07-30): Wszyscy kandydaci to podstrony o strukturze instytutu, edukacji i arboretum — brak dedykowanej listy wydarzeń z datami.",
-   "dead": true
+   "checked": "2026-08-01",
+   "notes": "URL naprawiony 2026-07-30 (stary w previous_urls) | martwy URL (2026-07-30): Wszyscy kandydaci to podstrony o strukturze instytutu, edukacji i arboretum — brak dedykowanej listy wydarzeń z datami. | 2026-08-01: Wszyscy kandydaci to podstrony o strukturze instytutu, edukacji i arboretum — brak dedykowanej listy wydarzeń z datami."
   },
   {
    "id": "kleszczewo-gokis",
@@ -1293,7 +1254,7 @@
     "https://gokis-kleszczewo.pl/"
    ],
    "reach": "ok",
-   "checked": "2026-07-30",
+   "checked": "2026-08-01",
    "notes": "URL naprawiony 2026-07-30 (stary w previous_urls)",
    "entrypoints": [
     {
@@ -1311,7 +1272,7 @@
      "url": "https://gokis.kleszczewo.pl/rss/aktualnosci_pl.xml",
      "itemsSeen": 318,
      "datesParsed": 318,
-     "checked": "2026-07-30"
+     "checked": "2026-08-01"
     }
    ]
   }

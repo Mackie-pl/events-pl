@@ -4486,5 +4486,1905 @@
     "unit": "fetches"
    }
   ]
+ },
+ {
+  "stage": "discover",
+  "mode": "verify",
+  "startedAt": "2026-08-01T05:57:03.270Z",
+  "finishedAt": "2026-08-01T06:06:21.719Z",
+  "durationMs": 558449,
+  "towns": [],
+  "verifications": [
+   {
+    "id": "poznan-city-api",
+    "name": "Poznań – miejski web service wydarzeń",
+    "town": "Poznań",
+    "url": "https://www.poznan.pl/web-service/events?wsdl",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 3892,
+    "probe": {
+     "at": "2026-08-01T05:57:03.297Z",
+     "url": "https://www.poznan.pl/web-service/events?wsdl",
+     "ok": true,
+     "ms": 1548,
+     "httpStatus": 200,
+     "contentType": "text/xml",
+     "chars": 6154
+    },
+    "reach": "ok",
+    "httpStatus": 200
+   },
+   {
+    "id": "poznan-kultura",
+    "name": "kultura.poznan.pl – Kalendarium",
+    "town": "Poznań",
+    "url": "https://kultura.poznan.pl/mim/kultura/events.html?co=list&lang=pl&category=&p=1",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 3072,
+     "completionTokens": 127,
+     "costUsd": 0.003707
+    },
+    "ms": 10368,
+    "probe": {
+     "at": "2026-08-01T05:57:07.190Z",
+     "url": "https://kultura.poznan.pl/mim/kultura/events.html?co=list&lang=pl&category=&p=1",
+     "ok": true,
+     "ms": 1037,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 89635
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://kultura.poznan.pl/mim/kultura/seances/",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/mim/kultura/seances/{slug}.html",
+      "detailCount": 50
+     }
+    ],
+    "verdict": "events"
+   },
+   {
+    "id": "poznan-kultura-rss",
+    "name": "kultura.poznan.pl – RSS",
+    "town": "Poznań",
+    "url": "https://www.poznan.pl/mim/feeds/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 3258,
+    "probe": {
+     "at": "2026-08-01T05:57:17.557Z",
+     "url": "https://www.poznan.pl/mim/feeds/",
+     "ok": true,
+     "ms": 962,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 107423
+    },
+    "reach": "ok",
+    "httpStatus": 200
+   },
+   {
+    "id": "poznan-events",
+    "name": "poznan.pl – Co? Gdzie? Kiedy?",
+    "town": "Poznań",
+    "url": "https://www.poznan.pl/mim/events/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2577,
+     "completionTokens": 122,
+     "costUsd": 0.003187
+    },
+    "ms": 7003,
+    "probe": {
+     "at": "2026-08-01T05:57:20.815Z",
+     "url": "https://www.poznan.pl/mim/events/",
+     "ok": true,
+     "ms": 580,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 166302
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://www.poznan.pl/mim/events/seances/",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/mim/events/seances/{slug}.html",
+      "detailCount": 40
+     }
+    ],
+    "verdict": "events"
+   },
+   {
+    "id": "ck-zamek",
+    "name": "CK Zamek",
+    "town": "Poznań",
+    "url": "https://ckzamek.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 908,
+     "completionTokens": 107,
+     "costUsd": 0.001443
+    },
+    "ms": 5006,
+    "probe": {
+     "at": "2026-08-01T05:57:27.818Z",
+     "url": "https://ckzamek.pl/",
+     "ok": true,
+     "ms": 891,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 146362
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://ckzamek.pl/",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/podstrony/{slug}",
+      "detailCount": 64
+     }
+    ],
+    "verdict": "events"
+   },
+   {
+    "id": "estrada",
+    "name": "Estrada Poznańska (Lato z Estradą, Estrada w Centrum)",
+    "town": "Poznań",
+    "url": "https://estrada.poznan.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 1522,
+     "completionTokens": 94,
+     "costUsd": 0.001992
+    },
+    "ms": 25889,
+    "probe": {
+     "at": "2026-08-01T05:57:32.824Z",
+     "url": "https://estrada.poznan.pl/",
+     "ok": true,
+     "ms": 3989,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 115915
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://estrada.poznan.pl/",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/event/{slug}",
+      "detailCount": 27
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "wp-rest",
+      "url": "https://estrada.poznan.pl/wp-json/wp/v2/event?per_page=5",
+      "itemsSeen": 5,
+      "datesParsed": 0,
+      "checked": "2026-08-01"
+     }
+    ],
+    "verdict": "events"
+   },
+   {
+    "id": "brama-poznania",
+    "name": "Brama Poznania / Trakt Królewsko-Cesarski",
+    "town": "Poznań",
+    "url": "https://bramapoznania.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 460,
+     "completionTokens": 69,
+     "costUsd": 0.000805
+    },
+    "ms": 3823,
+    "probe": {
+     "at": "2026-08-01T05:57:58.713Z",
+     "url": "https://bramapoznania.pl/",
+     "ok": true,
+     "ms": 542,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 12069
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "verdict": "none",
+    "note": "model nie widzi tu wydarzeń: Strona główna nie zawiera listy wydarzeń; loader wskazuje na dynamiczny content, który nie został zaindeksowany. — źródło zostaje, rozstrzyga plon w daily"
+   },
+   {
+    "id": "teatr-animacji",
+    "name": "Teatr Animacji (repertuar + wiek widzów)",
+    "town": "Poznań",
+    "url": "https://teatranimacji.pl/pl/repertuar",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 455,
+     "completionTokens": 94,
+     "costUsd": 0.000925
+    },
+    "ms": 4400,
+    "probe": {
+     "at": "2026-08-01T05:58:02.536Z",
+     "url": "https://teatranimacji.pl/pl/repertuar",
+     "ok": true,
+     "ms": 369,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 26299
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "verdict": "none",
+    "note": "model nie widzi tu wydarzeń: Strona nie załadowała się (Wczytywanie...) — nie można ocenić zawartości; repertuar to lista spektakli, nie nadchodzących dat. — źródło zostaje, rozstrzyga plon w daily"
+   },
+   {
+    "id": "biblraczynskich",
+    "name": "Biblioteka Raczyńskich – wydarzenia",
+    "town": "Poznań",
+    "url": "https://bracz.edu.pl/kalendarz/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 1727,
+     "completionTokens": 137,
+     "costUsd": 0.002412
+    },
+    "ms": 23263,
+    "probe": {
+     "at": "2026-08-01T05:58:06.936Z",
+     "url": "https://bracz.edu.pl/kalendarz/",
+     "ok": true,
+     "ms": 1942,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 122214
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://bracz.edu.pl/kalendarz/",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/{slug}",
+      "detailCount": 27
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://bracz.edu.pl/feed/",
+      "itemsSeen": 11,
+      "datesParsed": 11,
+      "checked": "2026-08-01"
+     },
+     {
+      "kind": "rss",
+      "url": "https://bracz.edu.pl/comments/feed/",
+      "itemsSeen": 1,
+      "datesParsed": 1,
+      "checked": "2026-08-01"
+     },
+     {
+      "kind": "wp-rest",
+      "url": "https://bracz.edu.pl/wp-json/wp/v2/tribe_venue?per_page=5",
+      "itemsSeen": 5,
+      "datesParsed": 0,
+      "checked": "2026-08-01"
+     },
+     {
+      "kind": "tribe",
+      "url": "https://bracz.edu.pl/wp-json/tribe/events/v1/events",
+      "itemsSeen": 11,
+      "datesParsed": 11,
+      "checked": "2026-08-01"
+     },
+     {
+      "kind": "ical",
+      "url": "https://bracz.edu.pl/kalendarz/?ical=1",
+      "itemsSeen": 22,
+      "datesParsed": 24,
+      "checked": "2026-08-01"
+     }
+    ],
+    "verdict": "events"
+   },
+   {
+    "id": "palmiarnia",
+    "name": "Palmiarnia Poznańska",
+    "town": "Poznań",
+    "url": "https://palmiarnia.poznan.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 1473,
+     "completionTokens": 113,
+     "costUsd": 0.002038
+    },
+    "ms": 14618,
+    "probe": {
+     "at": "2026-08-01T05:58:30.199Z",
+     "url": "https://palmiarnia.poznan.pl/",
+     "ok": true,
+     "ms": 1412,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 140920
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://palmiarnia.poznan.pl/aktualnosci/",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/{slug}",
+      "detailCount": 23
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://palmiarnia.poznan.pl/feed/",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-08-01"
+     }
+    ],
+    "verdict": "news"
+   },
+   {
+    "id": "nowe-zoo",
+    "name": "ZOO Poznań – wydarzenia",
+    "town": "Poznań",
+    "url": "https://zoo.poznan.pl/",
+    "outcome": "error",
+    "searches": [],
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 52194,
+    "probe": {
+     "at": "2026-08-01T05:59:26.515Z",
+     "url": "https://zoo.poznan.pl/",
+     "ok": false,
+     "ms": 10495,
+     "err": "GET https://zoo.poznan.pl/: TypeError: fetch failed ← ConnectTimeoutError: Connect Timeout Error (attempted address: zoo.poznan.pl:443, timeout: 10000ms)"
+    },
+    "reach": "http-error",
+    "ladder": [
+     {
+      "url": "https://zoo.poznan.pl/",
+      "outcome": "http-error",
+      "err": "GET https://zoo.poznan.pl/: TypeError: fetch failed ← ConnectTimeoutError: Connect Timeout Error (attempted address: zoo.poznan.pl:443, timeout: 10000ms)"
+     },
+     {
+      "url": "http://zoo.poznan.pl/",
+      "outcome": "http-error",
+      "err": "GET http://zoo.poznan.pl/: TypeError: fetch failed ← ConnectTimeoutError: Connect Timeout Error (attempted address: zoo.poznan.pl:80, timeout: 10000ms)"
+     },
+     {
+      "url": "https://www.zoo.poznan.pl/",
+      "outcome": "http-error",
+      "err": "GET https://www.zoo.poznan.pl/: TypeError: fetch failed ← ConnectTimeoutError: Connect Timeout Error (attempted address: www.zoo.poznan.pl:443, timeout: 10000ms)"
+     },
+     {
+      "url": "http://www.zoo.poznan.pl/",
+      "outcome": "http-error",
+      "err": "GET http://www.zoo.poznan.pl/: TypeError: fetch failed ← ConnectTimeoutError: Connect Timeout Error (attempted address: www.zoo.poznan.pl:80, timeout: 10000ms)"
+     }
+    ],
+    "err": "GET https://zoo.poznan.pl/: TypeError: fetch failed ← ConnectTimeoutError: Connect Timeout Error (attempted address: zoo.poznan.pl:443, timeout: 10000ms); brak klucza wyszukiwarki — naprawa pominięta"
+   },
+   {
+    "id": "dk-stokrotka",
+    "name": "Dom Kultury Stokrotka (Grunwald)",
+    "town": "Poznań",
+    "url": "https://www.facebook.com/DKStokrotka/",
+    "outcome": "skipped",
+    "searches": [],
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0,
+    "note": "fetch:\"fb\" — adresy FB nie odpowiadają na zwykły fetch"
+   },
+   {
+    "id": "dk-pod-lipami",
+    "name": "Dom Kultury Pod Lipami (Winogrady)",
+    "town": "Poznań",
+    "url": "https://psmwinogrady.pl/category/aktualnosci-odk-pod-lipami/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2203,
+     "completionTokens": 152,
+     "costUsd": 0.002963
+    },
+    "ms": 8188,
+    "probe": {
+     "at": "2026-08-01T05:59:37.011Z",
+     "url": "https://psmwinogrady.pl/category/aktualnosci-odk-pod-lipami/",
+     "ok": true,
+     "ms": 858,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 67810
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://psmwinogrady.pl/feed",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-08-01"
+     },
+     {
+      "kind": "wp-rest",
+      "url": "https://psmwinogrady.pl/wp-json/wp/v2/tribe_venue?per_page=5",
+      "itemsSeen": 5,
+      "datesParsed": 0,
+      "checked": "2026-08-01"
+     },
+     {
+      "kind": "tribe",
+      "url": "https://psmwinogrady.pl/wp-json/tribe/events/v1/events",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-08-01"
+     }
+    ],
+    "verdict": "none",
+    "note": "model nie widzi tu wydarzeń: Strona zawiera aktualności spółdzielni mieszkaniowej, a nie listę wydarzeń kulturalnych Domu Kultury — brak informacji o repertuarze, imprezach i terminach zajęć. — źródło zostaje, rozstrzyga plon w daily"
+   },
+   {
+    "id": "dk-orbita",
+    "name": "Osiedlowy DK Orbita (os. Kosmonautów)",
+    "town": "Poznań",
+    "url": "https://psmwinogrady.pl/odk-orbita-os-kosmonautow-paw-118/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 1015,
+     "completionTokens": 94,
+     "costUsd": 0.001485
+    },
+    "ms": 5934,
+    "probe": {
+     "at": "2026-08-01T05:59:45.199Z",
+     "url": "https://psmwinogrady.pl/odk-orbita-os-kosmonautow-paw-118/",
+     "ok": true,
+     "ms": 384,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 61062
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://psmwinogrady.pl/feed",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-08-01"
+     },
+     {
+      "kind": "wp-rest",
+      "url": "https://psmwinogrady.pl/wp-json/wp/v2/tribe_venue?per_page=5",
+      "itemsSeen": 5,
+      "datesParsed": 0,
+      "checked": "2026-08-01"
+     },
+     {
+      "kind": "tribe",
+      "url": "https://psmwinogrady.pl/wp-json/tribe/events/v1/events",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-08-01"
+     }
+    ],
+    "verdict": "none",
+    "note": "model nie widzi tu wydarzeń: Kandydat to strona spółdzielni mieszkaniowej PSM Winogrady, zawierająca strukturę organizacyjną i aktualności rad osiedli, ale nie listę wydarzeń DK Orbita z terminami. — źródło zostaje, rozstrzyga plon w daily"
+   },
+   {
+    "id": "fyrtel-glowna",
+    "name": "Fyrtel Główna",
+    "town": "Poznań",
+    "url": "https://www.facebook.com/fyrtelglowna/",
+    "outcome": "skipped",
+    "searches": [],
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0,
+    "note": "fetch:\"fb\" — adresy FB nie odpowiadają na zwykły fetch"
+   },
+   {
+    "id": "lubon-city",
+    "name": "Miasto Luboń – aktualności",
+    "town": "Luboń",
+    "url": "https://lubon.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2659,
+     "completionTokens": 119,
+     "costUsd": 0.003254
+    },
+    "ms": 11135,
+    "probe": {
+     "at": "2026-08-01T05:59:51.133Z",
+     "url": "https://lubon.pl/",
+     "ok": true,
+     "ms": 1654,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 145480
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://lubon.pl/artykuly/350/wydarzenia",
+      "kind": "listing",
+      "confidence": 0.6,
+      "via": "heuristic",
+      "detailPattern": "/artykuly/{id}/{slug}",
+      "detailCount": 63
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://lubon.pl/atom",
+      "itemsSeen": 100,
+      "datesParsed": 100,
+      "checked": "2026-08-01"
+     },
+     {
+      "kind": "rss",
+      "url": "https://lubon.pl/rss",
+      "itemsSeen": 100,
+      "datesParsed": 100,
+      "checked": "2026-08-01"
+     }
+    ]
+   },
+   {
+    "id": "lubon-ok",
+    "name": "Ośrodek Kultury w Luboniu",
+    "town": "Luboń",
+    "url": "https://www.oklubon.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2046,
+     "completionTokens": 110,
+     "costUsd": 0.002596
+    },
+    "ms": 6643,
+    "probe": {
+     "at": "2026-08-01T06:00:02.268Z",
+     "url": "https://www.oklubon.pl/",
+     "ok": true,
+     "ms": 673,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 122083
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://www.oklubon.pl/wydarzenia",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/wydarzenia/{slug}",
+      "detailCount": 23
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://www.oklubon.pl/feed",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-08-01"
+     }
+    ],
+    "verdict": "events"
+   },
+   {
+    "id": "lubon-ok-fb",
+    "name": "OK Luboń – Facebook",
+    "town": "Luboń",
+    "url": "https://www.facebook.com/OsrodekKulturyLubon/",
+    "outcome": "skipped",
+    "searches": [],
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0,
+    "note": "fetch:\"fb\" — adresy FB nie odpowiadają na zwykły fetch"
+   },
+   {
+    "id": "lubon-plaza",
+    "name": "Plaża miejska Luboń (kalendarz venue)",
+    "town": "Luboń",
+    "url": "https://www.facebook.com/plazamiejskalubon/",
+    "outcome": "skipped",
+    "searches": [],
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0,
+    "note": "fetch:\"fb\" — adresy FB nie odpowiadają na zwykły fetch"
+   },
+   {
+    "id": "lubon-biblioteka",
+    "name": "Biblioteka Miejska w Luboniu",
+    "town": "Luboń",
+    "url": "https://biblub.com/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2008,
+     "completionTokens": 129,
+     "costUsd": 0.002653
+    },
+    "ms": 15842,
+    "probe": {
+     "at": "2026-08-01T06:00:08.911Z",
+     "url": "https://biblub.com/",
+     "ok": true,
+     "ms": 2519,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 68113
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://biblub.com/category/aktualnosci/page/{page}",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/aktualnosci/{slug}",
+      "detailCount": 6,
+      "paginated": true
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://biblub.com/feed",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-08-01"
+     }
+    ],
+    "verdict": "news"
+   },
+   {
+    "id": "puszczykowo-city",
+    "name": "Puszczykowo – instytucje kultury",
+    "town": "Puszczykowo",
+    "url": "https://puszczykowo.pl/strefa-miejska/kultura/instytucje-kultury",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 3000,
+     "completionTokens": 140,
+     "costUsd": 0.0037
+    },
+    "ms": 17047,
+    "probe": {
+     "at": "2026-08-01T06:00:24.753Z",
+     "url": "https://puszczykowo.pl/strefa-miejska/kultura/instytucje-kultury",
+     "ok": true,
+     "ms": 1448,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 21519
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://puszczykowo.pl/strefa-miejska/kultura/wydarzenia-kulturalne",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/wydarzenia/{slug}",
+      "detailCount": 8
+     }
+    ],
+    "verdict": "events"
+   },
+   {
+    "id": "puszczykowo-bmcak",
+    "name": "Biblioteka Miejska CAK Puszczykowo",
+    "town": "Puszczykowo",
+    "url": "https://www.puszczykowo-mbp.sowa.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 1069,
+     "completionTokens": 69,
+     "costUsd": 0.001414
+    },
+    "ms": 5414,
+    "probe": {
+     "at": "2026-08-01T06:00:41.800Z",
+     "url": "https://www.puszczykowo-mbp.sowa.pl/",
+     "ok": true,
+     "ms": 1653,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 143216
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "verdict": "none",
+    "note": "model nie widzi tu wydarzeń: Kandydat to katalog zbiorów bibliotecznych bez sekcji z listą wydarzeń, imprez czy aktualności. — źródło zostaje, rozstrzyga plon w daily"
+   },
+   {
+    "id": "mosina-city",
+    "name": "Gmina Mosina – kalendarz wydarzeń",
+    "town": "Mosina",
+    "url": "https://www.mosina.pl/wydarzenia?page={page}",
+    "outcome": "error",
+    "searches": [],
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 52087,
+    "probe": {
+     "at": "2026-08-01T06:01:28.808Z",
+     "url": "https://www.mosina.pl/wydarzenia?page=1",
+     "ok": false,
+     "ms": 10493,
+     "err": "GET https://www.mosina.pl/wydarzenia?page=1: TypeError: fetch failed ← ConnectTimeoutError: Connect Timeout Error (attempted address: www.mosina.pl:443, timeout: 10000ms)"
+    },
+    "reach": "http-error",
+    "ladder": [
+     {
+      "url": "https://www.mosina.pl/wydarzenia?page=1",
+      "outcome": "http-error",
+      "err": "GET https://www.mosina.pl/wydarzenia?page=1: TypeError: fetch failed ← ConnectTimeoutError: Connect Timeout Error (attempted address: www.mosina.pl:443, timeout: 10000ms)"
+     },
+     {
+      "url": "http://www.mosina.pl/wydarzenia?page=1",
+      "outcome": "http-error",
+      "err": "GET http://www.mosina.pl/wydarzenia?page=1: TypeError: fetch failed ← ConnectTimeoutError: Connect Timeout Error (attempted address: www.mosina.pl:80, timeout: 10000ms)"
+     },
+     {
+      "url": "https://mosina.pl/wydarzenia?page=1",
+      "outcome": "http-error",
+      "err": "GET https://mosina.pl/wydarzenia?page=1: TypeError: fetch failed ← ConnectTimeoutError: Connect Timeout Error (attempted address: mosina.pl:443, timeout: 10000ms)"
+     },
+     {
+      "url": "http://mosina.pl/wydarzenia?page=1",
+      "outcome": "http-error",
+      "err": "GET http://mosina.pl/wydarzenia?page=1: TypeError: fetch failed ← ConnectTimeoutError: Connect Timeout Error (attempted address: mosina.pl:80, timeout: 10000ms)"
+     }
+    ],
+    "err": "GET https://www.mosina.pl/wydarzenia?page=1: TypeError: fetch failed ← ConnectTimeoutError: Connect Timeout Error (attempted address: www.mosina.pl:443, timeout: 10000ms); brak klucza wyszukiwarki — naprawa pominięta"
+   },
+   {
+    "id": "mosina-mok",
+    "name": "Mosiński Ośrodek Kultury",
+    "town": "Mosina",
+    "url": "https://www.kultura.gmina.pl/aktualnosci/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2072,
+     "completionTokens": 145,
+     "costUsd": 0.002797
+    },
+    "ms": 14292,
+    "probe": {
+     "at": "2026-08-01T06:01:39.301Z",
+     "url": "https://www.kultura.gmina.pl/aktualnosci/",
+     "ok": true,
+     "ms": 902,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 206271
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://www.kultura.gmina.pl/aktualnosci/page/{page}",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/{slug}",
+      "detailCount": 22,
+      "paginated": true
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://www.kultura.gmina.pl/feed/",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-08-01"
+     }
+    ],
+    "verdict": "news"
+   },
+   {
+    "id": "mosina-osir",
+    "name": "OSiR Mosina – wydarzenia + programy PDF",
+    "town": "Mosina",
+    "url": "https://osirmosina.pl/index.php/kalendarz/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 3238,
+    "probe": {
+     "at": "2026-08-01T06:01:53.593Z",
+     "url": "https://osirmosina.pl/index.php/kalendarz/",
+     "ok": true,
+     "ms": 537,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 144505
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://osirmosina.pl/index.php/feed/",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-08-01"
+     },
+     {
+      "kind": "jsonld",
+      "url": "https://osirmosina.pl/index.php/kalendarz/",
+      "itemsSeen": 11,
+      "datesParsed": 11,
+      "checked": "2026-08-01"
+     }
+    ]
+   },
+   {
+    "id": "mosina-biblioteka",
+    "name": "Mosińska Biblioteka Publiczna",
+    "town": "Mosina",
+    "url": "http://bibliotekamosina.pl/",
+    "outcome": "error",
+    "searches": [],
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 52439,
+    "probe": {
+     "at": "2026-08-01T06:02:38.778Z",
+     "url": "http://bibliotekamosina.pl/",
+     "ok": false,
+     "ms": 10492,
+     "err": "GET http://bibliotekamosina.pl/: TypeError: fetch failed ← ConnectTimeoutError: Connect Timeout Error (attempted address: bibliotekamosina.pl:80, timeout: 10000ms)"
+    },
+    "reach": "http-error",
+    "ladder": [
+     {
+      "url": "http://bibliotekamosina.pl/",
+      "outcome": "http-error",
+      "err": "GET http://bibliotekamosina.pl/: TypeError: fetch failed ← ConnectTimeoutError: Connect Timeout Error (attempted address: bibliotekamosina.pl:80, timeout: 10000ms)"
+     },
+     {
+      "url": "https://bibliotekamosina.pl/",
+      "outcome": "http-error",
+      "err": "GET https://bibliotekamosina.pl/: TypeError: fetch failed ← ConnectTimeoutError: Connect Timeout Error (attempted address: bibliotekamosina.pl:443, timeout: 10000ms)"
+     },
+     {
+      "url": "http://www.bibliotekamosina.pl/",
+      "outcome": "http-error",
+      "err": "GET http://www.bibliotekamosina.pl/: TypeError: fetch failed ← ConnectTimeoutError: Connect Timeout Error (attempted address: www.bibliotekamosina.pl:80, timeout: 10000ms)"
+     },
+     {
+      "url": "https://www.bibliotekamosina.pl/",
+      "outcome": "http-error",
+      "err": "GET https://www.bibliotekamosina.pl/: TypeError: fetch failed ← ConnectTimeoutError: Connect Timeout Error (attempted address: www.bibliotekamosina.pl:443, timeout: 10000ms)"
+     }
+    ],
+    "err": "GET http://bibliotekamosina.pl/: TypeError: fetch failed ← ConnectTimeoutError: Connect Timeout Error (attempted address: bibliotekamosina.pl:80, timeout: 10000ms); brak klucza wyszukiwarki — naprawa pominięta"
+   },
+   {
+    "id": "mosina-galeria",
+    "name": "Galeria Sztuki w Mosinie",
+    "town": "Mosina",
+    "url": "https://www.galeriamosina.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 3511,
+     "completionTokens": 193,
+     "costUsd": 0.004476
+    },
+    "ms": 11275,
+    "probe": {
+     "at": "2026-08-01T06:02:49.270Z",
+     "url": "https://www.galeriamosina.pl/",
+     "ok": true,
+     "ms": 1081,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 109034
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://www.galeriamosina.pl/index.php?option=com_content&view=category&id=8&Itemid=114",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm"
+     }
+    ],
+    "verdict": "events"
+   },
+   {
+    "id": "mosina-fb",
+    "name": "Gmina Mosina – Facebook",
+    "town": "Mosina",
+    "url": "https://www.facebook.com/gminamosina/",
+    "outcome": "skipped",
+    "searches": [],
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0,
+    "note": "fetch:\"fb\" — adresy FB nie odpowiadają na zwykły fetch"
+   },
+   {
+    "id": "komorniki-city",
+    "name": "Gmina Komorniki – kultura i sport",
+    "town": "Komorniki",
+    "url": "https://www.komorniki.pl/kultura-i-sport.html",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2763,
+     "completionTokens": 127,
+     "costUsd": 0.003398
+    },
+    "ms": 11848,
+    "probe": {
+     "at": "2026-08-01T06:03:00.545Z",
+     "url": "https://www.komorniki.pl/kultura-i-sport.html",
+     "ok": true,
+     "ms": 1441,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 154695
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://www.komorniki.pl/kalendarz-wydarzen/",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/{slug}.html",
+      "detailCount": 65
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://www.komorniki.pl/rss/aktualnosci_pl.xml",
+      "itemsSeen": 1000,
+      "datesParsed": 1000,
+      "checked": "2026-08-01"
+     }
+    ],
+    "verdict": "events"
+   },
+   {
+    "id": "komorniki-gok",
+    "name": "GOK Komorniki (DK Koło, Remiza Plewiska…)",
+    "town": "Komorniki",
+    "url": "https://gokkomorniki.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2765,
+     "completionTokens": 142,
+     "costUsd": 0.003475
+    },
+    "ms": 17998,
+    "probe": {
+     "at": "2026-08-01T06:03:12.393Z",
+     "url": "https://gokkomorniki.pl/",
+     "ok": true,
+     "ms": 3006,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 181083
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/{slug}.html",
+      "detailCount": 100
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://www.gokkomorniki.pl/rss/aktualnosci_pl.xml",
+      "itemsSeen": 369,
+      "datesParsed": 369,
+      "checked": "2026-08-01"
+     }
+    ],
+    "verdict": "events"
+   },
+   {
+    "id": "dopiewo-city",
+    "name": "Gmina Dopiewo",
+    "town": "Dopiewo",
+    "url": "https://dopiewo.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2143,
+     "completionTokens": 96,
+     "costUsd": 0.002623
+    },
+    "ms": 5086,
+    "probe": {
+     "at": "2026-08-01T06:03:30.391Z",
+     "url": "https://dopiewo.pl/",
+     "ok": true,
+     "ms": 472,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 95754
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://dopiewo.pl/wydarzenia?page={page}",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/wydarzenia/{date}/{slug}",
+      "detailCount": 6,
+      "paginated": true
+     }
+    ],
+    "verdict": "events"
+   },
+   {
+    "id": "dopiewo-gosir",
+    "name": "GOSiR Dopiewo / CRK Konarzewo",
+    "town": "Dopiewo",
+    "url": "https://gosir.dopiewo.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2239,
+     "completionTokens": 109,
+     "costUsd": 0.002784
+    },
+    "ms": 5623,
+    "probe": {
+     "at": "2026-08-01T06:03:35.477Z",
+     "url": "https://gosir.dopiewo.pl/",
+     "ok": true,
+     "ms": 862,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 72937
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://gosir.dopiewo.pl/kalendarz",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/kategorie/{slug}",
+      "detailCount": 11
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://gosir.dopiewo.pl/rss.xml",
+      "itemsSeen": 2,
+      "datesParsed": 2,
+      "checked": "2026-08-01"
+     },
+     {
+      "kind": "rss",
+      "url": "https://gosir.dopiewo.pl/rss/wydarzenia_pl.xml",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-08-01"
+     },
+     {
+      "kind": "rss",
+      "url": "https://gosir.dopiewo.pl/rss/aktualnosci_pl.xml",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-08-01"
+     }
+    ],
+    "verdict": "events"
+   },
+   {
+    "id": "tarnowo-city",
+    "name": "Gmina Tarnowo Podgórne",
+    "town": "Tarnowo Podgórne",
+    "url": "https://www.tarnowo-podgorne.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2668,
+     "completionTokens": 121,
+     "costUsd": 0.003273
+    },
+    "ms": 20163,
+    "probe": {
+     "at": "2026-08-01T06:03:41.100Z",
+     "url": "https://www.tarnowo-podgorne.pl/",
+     "ok": true,
+     "ms": 3053,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 338829
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://www.tarnowo-podgorne.pl/wydarzenia/",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/wydarzenia/{slug}",
+      "detailCount": 6
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://www.tarnowo-podgorne.pl/feed/",
+      "itemsSeen": 6,
+      "datesParsed": 6,
+      "checked": "2026-08-01"
+     },
+     {
+      "kind": "wp-rest",
+      "url": "https://www.tarnowo-podgorne.pl/wp-json/wp/v2/wydarzenia?per_page=5",
+      "itemsSeen": 5,
+      "datesParsed": 0,
+      "checked": "2026-08-01"
+     }
+    ],
+    "verdict": "events"
+   },
+   {
+    "id": "tarnowo-gok",
+    "name": "GOK Sezam (Tarnowo Podgórne)",
+    "town": "Tarnowo Podgórne",
+    "url": "https://goksezam.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2676,
+     "completionTokens": 104,
+     "costUsd": 0.003196
+    },
+    "ms": 14253,
+    "probe": {
+     "at": "2026-08-01T06:04:01.263Z",
+     "url": "https://goksezam.pl/",
+     "ok": true,
+     "ms": 1418,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 130805
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://goksezam.pl/wydarzenia.html",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/{slug}.html",
+      "detailCount": 81
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://goksezam.pl/aktualnosci.xml",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-08-01"
+     }
+    ],
+    "verdict": "events"
+   },
+   {
+    "id": "rokietnica-city",
+    "name": "Gmina Rokietnica",
+    "town": "Rokietnica",
+    "url": "https://rokietnica.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2894,
+     "completionTokens": 120,
+     "costUsd": 0.003494
+    },
+    "ms": 9998,
+    "probe": {
+     "at": "2026-08-01T06:04:15.516Z",
+     "url": "https://rokietnica.pl/",
+     "ok": true,
+     "ms": 892,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 174227
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://rokietnica.pl/kalendarz-wydarzen/",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/{slug}.html",
+      "detailCount": 44
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://rokietnica.pl/rss/aktualnosci_pl.xml",
+      "itemsSeen": 217,
+      "datesParsed": 217,
+      "checked": "2026-08-01"
+     },
+     {
+      "kind": "rss",
+      "url": "https://rokietnica.pl/rss/informacje_pl.xml",
+      "itemsSeen": 1,
+      "datesParsed": 1,
+      "checked": "2026-08-01"
+     }
+    ],
+    "verdict": "events"
+   },
+   {
+    "id": "rokietnica-gok",
+    "name": "GOK Rokietnica",
+    "town": "Rokietnica",
+    "url": "https://gokrokietnica.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2138,
+     "completionTokens": 112,
+     "costUsd": 0.002698
+    },
+    "ms": 15156,
+    "probe": {
+     "at": "2026-08-01T06:04:25.515Z",
+     "url": "https://gokrokietnica.pl/",
+     "ok": true,
+     "ms": 1806,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 78832
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://gokrokietnica.pl/category/wydarzenia/page/{page}",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/{id}/{id}/{id}/{slug}",
+      "detailCount": 10,
+      "paginated": true
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://gokrokietnica.pl/feed/",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-08-01"
+     }
+    ],
+    "verdict": "events"
+   },
+   {
+    "id": "suchylas-city",
+    "name": "Gmina Suchy Las",
+    "town": "Suchy Las",
+    "url": "https://www.suchylas.pl/",
+    "outcome": "error",
+    "searches": [],
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 262,
+    "probe": {
+     "at": "2026-08-01T06:04:40.912Z",
+     "url": "https://www.suchylas.pl/",
+     "ok": false,
+     "ms": 21,
+     "httpStatus": 403,
+     "contentType": "text/html",
+     "err": "HTTP 403"
+    },
+    "reach": "anti-bot",
+    "httpStatus": 403,
+    "err": "HTTP 403; brak klucza wyszukiwarki — naprawa pominięta"
+   },
+   {
+    "id": "suchylas-ckbp",
+    "name": "CKiBP Suchy Las (Centrum Kultury i Biblioteka)",
+    "town": "Suchy Las",
+    "url": "https://www.osrodekkultury.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2051,
+     "completionTokens": 120,
+     "costUsd": 0.002651
+    },
+    "ms": 12273,
+    "probe": {
+     "at": "2026-08-01T06:04:40.933Z",
+     "url": "https://www.osrodekkultury.pl/",
+     "ok": true,
+     "ms": 1651,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 114287
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://www.osrodekkultury.pl/",
+      "kind": "listing",
+      "confidence": 0.6,
+      "via": "heuristic",
+      "detailPattern": "/wydarzenia/{slug}",
+      "detailCount": 6
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://osrodekkultury.pl/feed/",
+      "itemsSeen": 1,
+      "datesParsed": 1,
+      "checked": "2026-08-01"
+     },
+     {
+      "kind": "rss",
+      "url": "https://www.osrodekkultury.pl/rss.xml",
+      "itemsSeen": 50,
+      "datesParsed": 0,
+      "checked": "2026-08-01"
+     }
+    ]
+   },
+   {
+    "id": "czerwonak-city",
+    "name": "Gmina Czerwonak",
+    "town": "Czerwonak",
+    "url": "https://www.czerwonak.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 1904,
+     "completionTokens": 126,
+     "costUsd": 0.002534
+    },
+    "ms": 12507,
+    "probe": {
+     "at": "2026-08-01T06:04:53.206Z",
+     "url": "https://www.czerwonak.pl/",
+     "ok": true,
+     "ms": 1212,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 252573
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://www.czerwonak.pl/pl/mieszkaniec/kalendarz",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/pl/mieszkaniec/pl/mieszkaniec/{slug}/{id}/kwietnia/sport/{slug}/{id}",
+      "detailCount": 35
+     }
+    ],
+    "verdict": "events"
+   },
+   {
+    "id": "czerwonak-gok",
+    "name": "GOK Sokół (Czerwonak)",
+    "town": "Czerwonak",
+    "url": "https://gok-sokol.pl/",
+    "outcome": "error",
+    "searches": [],
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 1395,
+    "probe": {
+     "at": "2026-08-01T06:05:06.574Z",
+     "url": "https://gok-sokol.pl/",
+     "ok": false,
+     "ms": 534,
+     "httpStatus": 403,
+     "contentType": "text/html",
+     "err": "HTTP 403"
+    },
+    "reach": "anti-bot",
+    "httpStatus": 403,
+    "err": "HTTP 403; brak klucza wyszukiwarki — naprawa pominięta"
+   },
+   {
+    "id": "swarzedz-city",
+    "name": "Miasto i Gmina Swarzędz",
+    "town": "Swarzędz",
+    "url": "https://www.swarzedz.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2049,
+     "completionTokens": 75,
+     "costUsd": 0.002424
+    },
+    "ms": 6451,
+    "probe": {
+     "at": "2026-08-01T06:05:07.108Z",
+     "url": "https://www.swarzedz.pl/",
+     "ok": true,
+     "ms": 1038,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 74204
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "verdict": "none",
+    "note": "model nie widzi tu wydarzeń: Kandydaci zawierają tylko fragmenty nagłówka/stopki strony bez treści — brak listy wydarzeń, dat lub aktualności. — źródło zostaje, rozstrzyga plon w daily"
+   },
+   {
+    "id": "swarzedz-ok",
+    "name": "Ośrodek Kultury w Swarzędzu",
+    "town": "Swarzędz",
+    "url": "https://ok-swarzedz.pl/category/aktualnosci/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2225,
+     "completionTokens": 136,
+     "costUsd": 0.002905
+    },
+    "ms": 26384,
+    "probe": {
+     "at": "2026-08-01T06:05:13.559Z",
+     "url": "https://ok-swarzedz.pl/category/aktualnosci/",
+     "ok": true,
+     "ms": 6310,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 255032
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://ok-swarzedz.pl/category/aktualnosci/page/{page}",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/tag/{slug}",
+      "detailCount": 25,
+      "paginated": true
+     }
+    ],
+    "verdict": "news"
+   },
+   {
+    "id": "kornik-city",
+    "name": "Miasto i Gmina Kórnik",
+    "town": "Kórnik",
+    "url": "https://www.kornik.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2686,
+     "completionTokens": 99,
+     "costUsd": 0.003181
+    },
+    "ms": 7268,
+    "probe": {
+     "at": "2026-08-01T06:05:39.942Z",
+     "url": "https://www.kornik.pl/",
+     "ok": true,
+     "ms": 1139,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 282875
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://kornik.pl/kalendarium",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/kalendarium/{slug}",
+      "detailCount": 3
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://www.kornik.pl/rss.xml",
+      "itemsSeen": 10,
+      "datesParsed": 10,
+      "checked": "2026-08-01"
+     }
+    ],
+    "verdict": "events"
+   },
+   {
+    "id": "kornik-kok",
+    "name": "Kórnicki Ośrodek Kultury",
+    "town": "Kórnik",
+    "url": "https://www.kornickiosrodekkultury.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 1546,
+     "completionTokens": 108,
+     "costUsd": 0.002086
+    },
+    "ms": 7850,
+    "probe": {
+     "at": "2026-08-01T06:05:47.210Z",
+     "url": "https://www.kornickiosrodekkultury.pl/",
+     "ok": true,
+     "ms": 1444,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 70659
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://www.kornickiosrodekkultury.pl/?start={page}",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/{slug}",
+      "detailCount": 15,
+      "paginated": true
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://www.kornickiosrodekkultury.pl/?format=feed&amp;type=rss",
+      "itemsSeen": 6,
+      "datesParsed": 6,
+      "checked": "2026-08-01"
+     },
+     {
+      "kind": "rss",
+      "url": "https://www.kornickiosrodekkultury.pl/?format=feed&amp;type=atom",
+      "itemsSeen": 6,
+      "datesParsed": 6,
+      "checked": "2026-08-01"
+     }
+    ],
+    "verdict": "news"
+   },
+   {
+    "id": "kornik-arboretum",
+    "name": "Arboretum Kórnickie",
+    "town": "Kórnik",
+    "url": "https://www.idpan.poznan.pl/pl/o-arboretum-i-lesie-doswiadczalnym/o-arboretum",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 3261,
+     "completionTokens": 81,
+     "costUsd": 0.003666
+    },
+    "ms": 15789,
+    "probe": {
+     "at": "2026-08-01T06:05:55.059Z",
+     "url": "https://www.idpan.poznan.pl/pl/o-arboretum-i-lesie-doswiadczalnym/o-arboretum",
+     "ok": true,
+     "ms": 1850,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 89635
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "verdict": "none",
+    "note": "model nie widzi tu wydarzeń: Wszyscy kandydaci to podstrony o strukturze instytutu, edukacji i arboretum — brak dedykowanej listy wydarzeń z datami. — źródło zostaje, rozstrzyga plon w daily"
+   },
+   {
+    "id": "kleszczewo-gokis",
+    "name": "GOKiS Kleszczewo",
+    "town": "Kleszczewo",
+    "url": "https://gokis.kleszczewo.pl/",
+    "outcome": "ok",
+    "searches": [],
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2918,
+     "completionTokens": 125,
+     "costUsd": 0.003543
+    },
+    "ms": 10870,
+    "probe": {
+     "at": "2026-08-01T06:06:10.849Z",
+     "url": "https://gokis.kleszczewo.pl/",
+     "ok": true,
+     "ms": 937,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 129015
+    },
+    "reach": "ok",
+    "httpStatus": 200,
+    "entrypoints": [
+     {
+      "url": "https://gokis.kleszczewo.pl/kalendarz-wydarzen/",
+      "kind": "listing",
+      "confidence": 0.9,
+      "via": "llm",
+      "detailPattern": "/{slug}.html",
+      "detailCount": 9
+     }
+    ],
+    "capabilities": [
+     {
+      "kind": "rss",
+      "url": "https://gokis.kleszczewo.pl/rss/aktualnosci_pl.xml",
+      "itemsSeen": 318,
+      "datesParsed": 318,
+      "checked": "2026-08-01"
+     }
+    ],
+    "verdict": "events"
+   }
+  ],
+  "totals": {
+   "towns": 0,
+   "searches": 0,
+   "searchErrors": 0,
+   "searchesSkipped": 0,
+   "sourcesAdded": 0,
+   "proposalsRejected": 0,
+   "sourcesChecked": 41,
+   "ok": 36,
+   "fixed": 0,
+   "dead": 0,
+   "unrepaired": 5,
+   "skipped": 5,
+   "calls": 33,
+   "promptTokens": 70703,
+   "completionTokens": 3815,
+   "costUsd": 0.08977800000000001,
+   "costDiscoveryUsd": 0,
+   "costVerifyUsd": 0.08977800000000001,
+   "redactedPhones": 0,
+   "redactedEmails": 0
+  },
+  "argv": [
+   "--verify"
+  ],
+  "archiveEnabled": false,
+  "costs": [
+   {
+    "day": "2026-08-01",
+    "at": "2026-08-01T06:06:21.720Z",
+    "stage": "discover",
+    "run": "2026-08-01T05:57:03.270Z",
+    "category": "llm-verify",
+    "usd": 0.089778,
+    "estimated": false,
+    "units": 33,
+    "unit": "calls",
+    "tokensIn": 70703,
+    "tokensOut": 3815,
+    "top": [
+     {
+      "id": "mosina-galeria",
+      "usd": 0.004476,
+      "units": 1
+     },
+     {
+      "id": "poznan-kultura",
+      "usd": 0.003707,
+      "units": 1
+     },
+     {
+      "id": "puszczykowo-city",
+      "usd": 0.0037,
+      "units": 1
+     },
+     {
+      "id": "kornik-arboretum",
+      "usd": 0.003666,
+      "units": 1
+     },
+     {
+      "id": "kleszczewo-gokis",
+      "usd": 0.003543,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "day": "2026-08-01",
+    "at": "2026-08-01T06:06:21.720Z",
+    "stage": "discover",
+    "run": "2026-08-01T05:57:03.270Z",
+    "category": "scrape",
+    "usd": 0,
+    "estimated": true,
+    "units": 199,
+    "unit": "fetches"
+   }
+  ]
  }
 ]

@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-31T06:55:30.278Z",
+ "updated": "2026-08-01T06:06:21.726Z",
  "rates": {
   "bdPerRecord": 0.0015,
   "searchPerQuery": 0.001,
@@ -499,6 +499,57 @@
    "estimated": true,
    "units": 2.093,
    "unit": "MB"
+  },
+  {
+   "day": "2026-08-01",
+   "at": "2026-08-01T06:06:21.720Z",
+   "stage": "discover",
+   "run": "2026-08-01T05:57:03.270Z",
+   "category": "llm-verify",
+   "usd": 0.089778,
+   "estimated": false,
+   "units": 33,
+   "unit": "calls",
+   "tokensIn": 70703,
+   "tokensOut": 3815,
+   "top": [
+    {
+     "id": "mosina-galeria",
+     "usd": 0.004476,
+     "units": 1
+    },
+    {
+     "id": "poznan-kultura",
+     "usd": 0.003707,
+     "units": 1
+    },
+    {
+     "id": "puszczykowo-city",
+     "usd": 0.0037,
+     "units": 1
+    },
+    {
+     "id": "kornik-arboretum",
+     "usd": 0.003666,
+     "units": 1
+    },
+    {
+     "id": "kleszczewo-gokis",
+     "usd": 0.003543,
+     "units": 1
+    }
+   ]
+  },
+  {
+   "day": "2026-08-01",
+   "at": "2026-08-01T06:06:21.720Z",
+   "stage": "discover",
+   "run": "2026-08-01T05:57:03.270Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 199,
+   "unit": "fetches"
   }
  ]
 }
