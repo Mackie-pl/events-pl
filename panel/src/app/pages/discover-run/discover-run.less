@@ -33,6 +33,8 @@
 
 .geo,
 .towns,
+.reset,
+.trace,
 .proposals,
 .verifications {
   margin-bottom: 2rem;
@@ -49,19 +51,28 @@
   margin-bottom: 0.75rem;
 }
 
+// Zapasowy pas ratunkowy dla bardzo wąskich ekranów; przy typowej szerokości tabele
+// mieszczą się co do piksela, więc nic tu nie jeździ.
 .table-wrap {
   overflow-x: auto;
 }
 
+// Szerokości kolumn siedzą w <colgroup> w szablonie: bez `table-layout: fixed`
+// przeglądarka i tak rozepchnęłaby tabelę pod najdłuższy URL.
 .towns-table,
 .proposals-table,
+.reset-table,
 .verify-table {
   width: 100%;
-}
+  table-layout: fixed;
 
-.proposals-table,
-.verify-table {
-  min-width: 68rem;
+  td,
+  th {
+    // globalny styl trzyma komórki w jednej linii — tu chcemy odwrotnie: zawijać,
+    // bo to zawijanie zastępuje poziomy pasek przewijania
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
 }
 
 .clickable {
@@ -108,15 +119,8 @@
   }
 }
 
-.src {
-  max-width: 22rem;
-}
-
 .src-name {
   display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .src-id {
@@ -124,8 +128,47 @@
   font-size: 0.75rem;
 }
 
+.src-url {
+  display: block;
+  font-size: 0.75rem;
+}
+
+.block {
+  display: block;
+}
+
+// Znalezisko profilu w jednej linijce: rodzaj + dowód. Rozwinięcie ma resztę.
+.chip {
+  display: inline-block;
+  margin: 0.15rem 0.25rem 0 0;
+  padding: 0.05rem 0.35rem;
+  border-radius: 0.3rem;
+  font-size: 0.72rem;
+  background: var(--tui-background-neutral-1);
+  color: var(--tui-text-secondary);
+}
+
+.warn {
+  color: var(--tui-status-warning);
+}
+
+// Los trafienia trzyma się wizualnie swojego wyniku — wcięcie robi z listy wyników
+// pary „co znaleziono / co z tym zrobiono", zamiast dwóch niezależnych kolumn tekstu.
+.fate {
+  margin-top: 0.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+  font-size: 0.8rem;
+}
+
+.entry {
+  margin-left: 0.9rem;
+  font-size: 0.78rem;
+}
+
 .why {
-  max-width: 22rem;
   word-break: break-word;
 }
 
@@ -136,7 +179,6 @@
 
 .small {
   font-size: 0.78rem;
-  max-width: 14rem;
 }
 
 code {

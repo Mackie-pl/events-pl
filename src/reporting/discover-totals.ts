@@ -5,7 +5,8 @@ import type { DiscoverRunReport, DiscoverTotals, LlmUsage, SearchCall } from "..
 export function emptyTotals(): DiscoverTotals {
   return {
     towns: 0, searches: 0, searchErrors: 0, searchesSkipped: 0,
-    sourcesAdded: 0, proposalsRejected: 0, sourcesChecked: 0,
+    sourcesAdded: 0, sourcesConfirmed: 0, sourcesMissed: 0, sourcesDeactivated: 0,
+    proposalsRejected: 0, sourcesChecked: 0,
     ok: 0, fixed: 0, dead: 0, unrepaired: 0, skipped: 0,
     calls: 0, promptTokens: 0, completionTokens: 0, costUsd: 0,
     costDiscoveryUsd: 0, costVerifyUsd: 0,
@@ -28,6 +29,11 @@ function countSearches(t: DiscoverTotals, calls: SearchCall[]): void {
   }
 }
 
+/**
+ * `sourcesMissed` i `sourcesDeactivated` NIE są liczone tutaj — wpisuje je `reconcile`,
+ * bo wynikają z rejestru, a nie z raportu (przebieg nie zawiera wierszy dla źródeł,
+ * których nikt nie zaproponował; o to właśnie chodzi). Ta funkcja tylko ich nie zeruje.
+ */
 export function buildTotals(report: DiscoverRunReport): void {
   const t = report.totals;
   t.towns = report.towns.length;
@@ -35,7 +41,11 @@ export function buildTotals(report: DiscoverRunReport): void {
   for (const town of report.towns) {
     countSearches(t, town.searches);
     t.sourcesAdded += town.added;
-    t.proposalsRejected += town.proposals.filter((p) => p.decision !== "added").length;
+    t.sourcesConfirmed += town.confirmed;
+    // potwierdzenie nie jest odrzuceniem: adres wszedł do rejestru wcześniej i właśnie
+    // dostał dowód, że nadal jest znajdowany
+    t.proposalsRejected += town.proposals
+      .filter((p) => p.decision !== "added" && p.decision !== "confirmed").length;
     t.costDiscoveryUsd += town.llm.costUsd;
     addUsage(t, town.llm);
   }

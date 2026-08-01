@@ -62,7 +62,13 @@ export interface SourceProposal {
   confidence?: number;
   /** jednozdaniowe uzasadnienie modelu */
   why?: string;
-  decision: "added" | "duplicate" | "low-confidence" | "invalid";
+  /**
+   * `confirmed` to nie odmiana `duplicate`, tylko przeciwieństwo: adres już był w rejestrze,
+   * ale WŁAŚNIE go potwierdziliśmy trafieniem z wyszukiwarki i dopisaliśmy proweniencję.
+   * Wcześniej obie sytuacje wyglądały jak „duplikat, pomijamy" i 46 ręcznie wpisanych źródeł
+   * nie miało szans nigdy dorobić się odpowiedzi na „skąd to się tu wzięło".
+   */
+  decision: "added" | "confirmed" | "duplicate" | "low-confidence" | "invalid";
   /** powód odrzucenia albo opis normalizacji (np. "id zajęte → gok-lubon-2") */
   reason?: string;
   /** zapytanie, w którego wynikach był ten URL */
@@ -80,6 +86,8 @@ export interface TownDiscoveryRun {
   /** faktycznie dodane po merge (nowe URL-e, confidence >= 0.5) */
   added: number;
   addedIds: string[];
+  /** źródła już znane, potwierdzone trafieniem z wyszukiwarki w tym przebiegu */
+  confirmed: number;
   /** co model zaproponował i co z tym zrobiliśmy (także odrzucenia) */
   proposals: SourceProposal[];
   /**
@@ -152,6 +160,12 @@ export interface DiscoverTotals extends LlmUsage {
   /** zapytania niewysłane po wyczerpaniu budżetu DISCOVER_MAX_SEARCHES */
   searchesSkipped: number;
   sourcesAdded: number;
+  /** źródła już w rejestrze, które discovery potwierdziło trafieniem z wyszukiwarki */
+  sourcesConfirmed: number;
+  /** źródła w objętych gminach, których discovery w tym przebiegu NIE znalazło */
+  sourcesMissed: number;
+  /** źródła zdegradowane w tym przebiegu (brak trafień + zero plonu) */
+  sourcesDeactivated: number;
   /** propozycje modelu odrzucone (duplikat / niska pewność / niepoprawny rekord) */
   proposalsRejected: number;
   sourcesChecked: number;
@@ -166,6 +180,27 @@ export interface DiscoverTotals extends LlmUsage {
   /** ile numerów komórkowych / e-maili usunięto przed zapisem do publicznego repo */
   redactedPhones: number;
   redactedEmails: number;
+}
+
+/**
+ * Źródło skasowane przez `--reset` wraz z tym, czy discovery znalazło je z powrotem.
+ * To jest cały sens resetu: nie „wyczyść i zapomnij", tylko „wyczyść i pokaż, czego
+ * wyszukiwarka NIE potrafi odtworzyć" — te adresy albo wracają same, albo są dowodem,
+ * że trzymały się wyłącznie na ręcznym wpisie.
+ */
+export interface RemovedSource {
+  id: string;
+  name: string;
+  url: string;
+  town: string;
+  type: SourceType;
+  fetch: FetchStrategy;
+  /** było oznaczone `dead:true` już przed resetem */
+  dead?: boolean;
+  /** id, pod którym adres wrócił do rejestru w tym samym przebiegu (null = nie wrócił) */
+  returned?: string;
+  /** adres, pod którym wrócił, gdy różni się od skasowanego */
+  returnedUrl?: string;
 }
 
 export interface DiscoverRunReport {
@@ -192,4 +227,6 @@ export interface DiscoverRunReport {
   costs?: CostEntry[];
   /** szczegóły (wyniki search, propozycje) usunięte przy przycinaniu pliku */
   slimmed?: boolean;
+  /** rejestr skasowany przed przebiegiem (`--reset`) — z rozliczeniem, co wróciło */
+  reset?: { removed: RemovedSource[] };
 }

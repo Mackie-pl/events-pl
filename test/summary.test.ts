@@ -49,7 +49,8 @@ const dailyReport = (over: Partial<RunReport> = {}): RunReport => ({
   durationMs: 300_000,
   totals: {
     calls: 2, promptTokens: 100, completionTokens: 20, costUsd: 0.01,
-    sources: 1, ok: 1, unchanged: 0, errors: 0, skippedFb: 0, skippedDead: 0, empty: 0,
+    sources: 1, ok: 1, unchanged: 0, errors: 0,
+    skippedFb: 0, skippedDead: 0, skippedInactive: 0, empty: 0,
     events: 3, followupsTried: 0, geoHits: 1, geoMisses: 0, droppedInvalid: 0,
     redactedPhones: 2, redactedEmails: 1,
   },
@@ -66,7 +67,7 @@ const discoverReport = (over: Partial<DiscoverRunReport> = {}): DiscoverRunRepor
   towns: [{
     town: "Luboń",
     searches: [{ query: "dom kultury Luboń", results: [], ms: 300 }],
-    proposed: 2, added: 1, addedIds: ["gok-lubon"],
+    proposed: 2, added: 1, addedIds: ["gok-lubon"], confirmed: 0,
     proposals: [
       { id: "gok-lubon", name: "GOK Luboń", url: "https://gok.test/", town: "Luboń",
         decision: "added", confidence: 0.9, why: "kalendarz wydarzeń" },
@@ -88,7 +89,8 @@ const discoverReport = (over: Partial<DiscoverRunReport> = {}): DiscoverRunRepor
   totals: {
     calls: 2, promptTokens: 700, completionTokens: 250, costUsd: 0.052,
     towns: 1, searches: 1, searchErrors: 0, searchesSkipped: 0,
-    sourcesAdded: 1, proposalsRejected: 1, sourcesChecked: 2,
+    sourcesAdded: 1, sourcesConfirmed: 0, sourcesMissed: 0, sourcesDeactivated: 0,
+    proposalsRejected: 1, sourcesChecked: 2,
     ok: 1, fixed: 1, dead: 0, unrepaired: 0, skipped: 0,
     costDiscoveryUsd: 0.05, costVerifyUsd: 0.002,
     redactedPhones: 0, redactedEmails: 0,

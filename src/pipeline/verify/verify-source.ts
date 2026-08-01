@@ -32,6 +32,24 @@ function markDead(src: Source, why: string): void {
 }
 
 /**
+ * Weto plonu: źródło, które w zachowanym oknie runs.json dało wydarzenia, nie może zostać
+ * uznane za martwe.
+ *
+ * To nie jest ostrożność na wyrost, tylko wyjście ze spirali. `daily` pobiera stronę pełnym
+ * potokiem (strategia z `fetch`, nagłówki, w razie potrzeby przeglądarka), a weryfikacja
+ * sondą `probeUrl`. Gdy sonda przegrywa tam, gdzie potok wygrywa, źródło dostaje `dead:true`,
+ * `daily` przestaje je odpytywać (`skipped-dead`) — i jedyny dowód, że żyło, przestaje
+ * powstawać. Plon jest twardszy niż jakikolwiek werdykt sondy czy modelu, więc rozstrzyga.
+ */
+function harvestVeto(src: Source, ver: SourceVerification, harvested: number): boolean {
+  if (harvested <= 0) return false;
+  ver.outcome = "error";
+  ver.note = `sonda nie potwierdziła adresu, ale źródło dało ${harvested} wydarzeń ` +
+    "w oknie runs.json — nie oznaczamy jako martwe";
+  return true;
+}
+
+/**
  * Adres do zapisania w rejestrze po udanym sprawdzeniu.
  *
  * Dwie pułapki naraz:
@@ -110,6 +128,15 @@ async function attachProfile(
   if (profile.verdict !== "none") return;
 
   const why = profile.why ?? "model nie znalazł na tej stronie wydarzeń";
+  // Zdolność z datami przebija werdykt o STRONIE. Model ocenia HTML, a ekstrakcja i tak
+  // pójdzie przez `from-capability` — feed z terminami jest dowodem z pobrania, nie opinią.
+  // Bez tego `dk-pod-lipami` i `dk-orbita` wylądowały jako `dead` z działającym tribe 10/10.
+  const dated = profile.capabilities.find((c) => c.datesParsed > 0);
+  if (dated) {
+    ver.note = `model nie widzi wydarzeń na stronie (${why}), ale ${dated.kind} oddaje ` +
+      `${dated.datesParsed}/${dated.itemsSeen} z datami — źródło zostaje`;
+    return;
+  }
   if (isNew) {
     markDead(src, why);
     ver.outcome = "dead";
@@ -147,13 +174,13 @@ async function onReachable(
  * potwierdzać), cokolwiek innego → `error` (serwer odpowiadał, może wrócić).
  */
 async function onUnreachable(
-  src: Source, ver: SourceVerification, reach: Reachability, isNew: boolean,
+  src: Source, ver: SourceVerification, reach: Reachability, ctx: { isNew: boolean; harvested: number },
 ): Promise<void> {
   ver.err = reach.probe.err ?? reach.outcome;
   const canSearch = searchConfigured() && !searchState().disabled;
 
   if (canSearch && await repair(src, ver)) {
-    await attachProfile(src, ver, src.url, isNew);
+    await attachProfile(src, ver, src.url, ctx.isNew);
     return;
   }
   if (!canSearch && !HOPELESS.has(reach.outcome)) {
@@ -161,6 +188,7 @@ async function onUnreachable(
     ver.err = `${ver.err}; ${searchState().disabled ?? "brak klucza wyszukiwarki"} — naprawa pominięta`;
     return;
   }
+  if (harvestVeto(src, ver, ctx.harvested)) return;
   // naprawa nie dała adresu albo nie ma czym szukać, a objaw jest bezsporny
   markDead(src, ver.err);
   ver.outcome = "dead";
@@ -177,7 +205,24 @@ function skipFacebook(src: Source, ver: SourceVerification): void {
   // ślad zostaje w raporcie przebiegu (outcome: skipped + note)
 }
 
-export async function verifySource(src: Source, isNew: boolean): Promise<SourceVerification> {
+/** Przepisanie wyniku sondy do raportu — pięć pól, które i tak zawsze idą razem. */
+function recordProbe(
+  src: Source, ver: SourceVerification, reach: Reachability, isNew: boolean,
+): void {
+  ver.probe = reach.probe;
+  ver.reach = reach.outcome;
+  if (reach.ladder.length > 1) ver.ladder = reach.ladder;
+  if (reach.probe.httpStatus !== undefined) ver.httpStatus = reach.probe.httpStatus;
+  if (isNew && src.provenance) src.provenance.firstFetch = reach.probe;
+}
+
+/**
+ * @param harvested ile wydarzeń dało to źródło w zachowanym oknie runs.json — weto wobec
+ *   werdyktu `dead` (patrz `harvestVeto`). 0 dla źródeł nowych i dla wywołań spoza `discover`.
+ */
+export async function verifySource(
+  src: Source, isNew: boolean, harvested = 0,
+): Promise<SourceVerification> {
   const t0 = performance.now();
   resetUsage();
   beginSource(`verify-${src.id}`);
@@ -202,14 +247,10 @@ export async function verifySource(src: Source, isNew: boolean): Promise<SourceV
   try {
     const probed = src.url.replace("{page}", "1");
     const reach = await probeReachable(probed, src.fetch);
-    ver.probe = reach.probe;
-    ver.reach = reach.outcome;
-    if (reach.ladder.length > 1) ver.ladder = reach.ladder;
-    if (reach.probe.httpStatus !== undefined) ver.httpStatus = reach.probe.httpStatus;
-    if (isNew && src.provenance) src.provenance.firstFetch = reach.probe;
+    recordProbe(src, ver, reach, isNew);
 
     if (reach.probe.ok) await onReachable(src, ver, reach, { probed, isNew });
-    else await onUnreachable(src, ver, reach, isNew);
+    else await onUnreachable(src, ver, reach, { isNew, harvested });
     return finalize();
   } catch (e) {
     // Wyjątek w naprawie (padnięty OpenRouter, timeout) nie może zabrać ze sobą reszty rejestru

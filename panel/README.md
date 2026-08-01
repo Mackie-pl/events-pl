@@ -15,7 +15,9 @@ cache) — no backend, hostable on any static host.
 | `/run/:startedAt`              | all source runs of one pipeline run: sortable/filterable table, run-level decisions on top        |
 | `/run/:startedAt/source/:id`   | one source: fetch/LLM/geo details, followups, **decision trail**, events + live iframe preview     |
 
-Notes: hash-based routing (`/#/run/...`) so deep links work on GitHub Pages; many sites send
+Notes: clean paths (`/run/...`, no `#`). On GitHub Pages that works because the deploy step
+copies `index.html` to `panel/404.html` — Pages serves it for any path that is not a real file,
+the app boots and the router reads the URL. Drop that copy and deep links 404. Many sites send
 `X-Frame-Options` — the preview pane then stays blank, use the "Open" button.
 
 The source page reads events from `runs.json` (`SourceRun.produced`), so an older run shows what

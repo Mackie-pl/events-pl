@@ -43,6 +43,9 @@ jobs:
           mkdir -p _site/panel
           cp index.html events.json runs.json sources.json state.json discover-runs.json costs.json _site/ 2>/dev/null || true
           cp -r panel/dist/panel/browser/. _site/panel/
+          # Panel routuje bez `#`, więc /panel/discovery/<id> to dla Pages nieistniejący plik.
+          # 404.html = ten sam bundle: Pages go oddaje, aplikacja wstaje i czyta URL z paska.
+          cp _site/panel/index.html _site/panel/404.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

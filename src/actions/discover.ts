@@ -31,9 +31,11 @@ import {
 } from "../adapters/supabase-archive.js";
 import { discoverTown } from "../pipeline/discover/discover-town.js";
 import { explain } from "../pipeline/discover/explain.js";
+import { harvestById, reconcile } from "../pipeline/discover/reconcile.js";
 import { buildRegistry } from "../pipeline/discover/registry.js";
 import { verifySource } from "../pipeline/verify/verify-source.js";
 import { costLine, recordCosts } from "../reporting/cost-ledger.js";
+import { dailyRunsStore } from "../reporting/daily-report.js";
 import { buildDiscoverCosts } from "../reporting/discover-costs.js";
 import { discoverRunsStore } from "../reporting/discover-runs-store.js";
 import { writeDiscoverSummary } from "../reporting/discover-summary.js";
@@ -42,8 +44,11 @@ import { OUTCOME_ICON } from "../reporting/icons.js";
 import { redactDiscoverRun } from "../reporting/redact.js";
 import { todayIso } from "../shared/dates.js";
 import { describeError } from "../shared/errors.js";
+import { urlKey } from "../shared/url.js";
 import { doc } from "../storage/index.js";
-import type { DiscoverRunReport, SourcesFile } from "../types/index.js";
+import type { DiscoverRunReport, RemovedSource, SourcesFile } from "../types/index.js";
+
+import { type DiscoverArgs, parseArgs } from "./discover-args.js";
 
 
 // ---------------- main ----------------
@@ -65,26 +70,33 @@ const bootstrapSources = (center: string, radius: number) =>
 const loadCfg = (center: string, radius: number): Promise<SourcesFile> =>
   bootstrapSources(center, radius).load();
 
-type Args =
-  | { mode: "why"; needle: string }
-  | { mode: "run"; verifyOnly: boolean; center: string; radius: number }
-  | { mode: "usage"; err: string };
+type Args = DiscoverArgs;
 
-/** Rozbiór argv. Wydzielony, żeby walidacja dała się przeczytać (i przetestować) bez sieci. */
-export function parseArgs(args: readonly string[]): Args {
-  const whyAt = args.indexOf("--why");
-  if (whyAt !== -1) {
-    const needle = args[whyAt + 1];
-    return needle
-      ? { mode: "why", needle }
-      : { mode: "usage", err: 'Użycie: npm run discover -- --why "<id | fragment URL-a | fragment nazwy>"' };
+/**
+ * Rozliczenie rejestru po discovery: pudła, degradacje i domknięcie listy skasowanych
+ * przy `--reset`. Osobno od `runStages`, bo obie części są warunkowe i inaczej ta funkcja
+ * czytałaby się jak trzy przebiegi naraz.
+ */
+function reconcileRegistry(
+  report: DiscoverRunReport, cfg: SourcesFile, reg: ReturnType<typeof buildRegistry>,
+  ctx: { startedAt: string; towns: readonly string[]; harvest: ReadonlyMap<string, number> },
+): void {
+  const result = reconcile(cfg.sources, {
+    run: ctx.startedAt, towns: ctx.towns, harvest: ctx.harvest,
+  });
+  report.totals.sourcesMissed = result.missed;
+  report.totals.sourcesDeactivated = result.deactivated.length;
+  for (const id of result.deactivated) console.log(`  💤 ${id}: nieaktywne (brak trafień + zero plonu)`);
+  for (const id of result.reactivated) console.log(`  ⏰ ${id}: znowu znalezione — wraca do daily`);
+
+  // czy skasowane adresy wróciły same. To jedyny sposób, żeby odróżnić „rejestr trzymał się
+  // na ręcznym wpisie" od „discovery i tak by to znalazło"
+  for (const removed of report.reset?.removed ?? []) {
+    const back = reg.urls.get(urlKey(removed.url));
+    if (!back) continue;
+    removed.returned = back.id;
+    if (back.url !== removed.url) removed.returnedUrl = back.url;
   }
-  const [center = "Poznań", radiusArg = "15"] = args.filter((a) => !a.startsWith("--"));
-  const radius = Number.parseInt(radiusArg, 10);
-  if (!Number.isFinite(radius) || radius <= 0) {
-    return { mode: "usage", err: `Promień "${radiusArg}" nie jest dodatnią liczbą km.` };
-  }
-  return { mode: "run", verifyOnly: args.includes("--verify"), center, radius };
 }
 
 /** Właściwa praca przebiegu: discovery gmin (opcjonalne) + weryfikacja całego rejestru. */
@@ -92,6 +104,10 @@ async function runStages(
   report: DiscoverRunReport, cfg: SourcesFile, reg: ReturnType<typeof buildRegistry>,
   opts: { verifyOnly: boolean; center: string; radius: number; startedAt: string },
 ): Promise<void> {
+  // plon z zachowanego okna runs.json — wchodzi i do rozliczenia rejestru, i do weta wobec
+  // werdyktu `dead`. Czytane RAZ, przed weryfikacją: to samo okno ma widzieć jedno i drugie
+  const harvest = harvestById(await dailyRunsStore.all());
+
   if (!opts.verifyOnly) {
     report.center = opts.center;
     report.radiusKm = opts.radius;
@@ -101,10 +117,11 @@ async function runStages(
     for (const town of geo.towns) {
       report.towns.push(await discoverTown(town, reg, opts.startedAt));
     }
+    reconcileRegistry(report, cfg, reg, { startedAt: opts.startedAt, towns: geo.towns, harvest });
   }
   // weryfikacja wszystkich źródeł (także świeżo dodanych — dla nich to pierwszy fetch w życiu)
   for (const src of cfg.sources) {
-    const ver = await verifySource(src, reg.fresh.has(src.id));
+    const ver = await verifySource(src, reg.fresh.has(src.id), harvest.get(src.id) ?? 0);
     if (ver.outcome !== "ok" && ver.outcome !== "skipped") {
       const detail = ver.outcome === "fixed" ? `${ver.url} → ${ver.newUrl}` : ver.err;
       console.log(`  ${OUTCOME_ICON[ver.outcome]} ${ver.id}: ${detail}`);
@@ -131,6 +148,8 @@ function printSummary(report: DiscoverRunReport, sources: number): void {
   const t = report.totals;
   console.log(
     `Razem źródeł: ${sources} (+${t.sourcesAdded}, ${t.proposalsRejected} propozycji odrzuconych) · ` +
+    `rejestr: 🔗 ${t.sourcesConfirmed} potwierdzonych / ❓ ${t.sourcesMissed} bez trafienia / ` +
+    `💤 ${t.sourcesDeactivated} zdegradowanych · ` +
     `weryfikacja: ✅ ${t.ok} / 🔧 ${t.fixed} / 💀 ${t.dead} / ⚠️ ${t.unrepaired} / ⏭️ ${t.skipped} · ` +
     `${t.searches} zapytań ${searchProvider()} (${t.searchErrors} błędnych, ${t.searchesSkipped} pominiętych) · ` +
     `${t.calls} LLM · koszt ${costLine(report.costs ?? [])} · ` +
@@ -145,6 +164,11 @@ function printSummary(report: DiscoverRunReport, sources: number): void {
   }
   if (t.sourcesAdded) {
     console.log(`Dlaczego dany adres wszedł na listę: npm run discover -- --why "<id źródła>"`);
+  }
+  const lost = (report.reset?.removed ?? []).filter((r) => !r.returned);
+  if (lost.length) {
+    // to jest cały wynik pomiaru przy --reset: adresy, których wyszukiwarka nie odtwarza
+    console.log(`--reset: ${lost.length} adresów NIE wróciło: ${lost.map((r) => r.id).join(", ")}`);
   }
 }
 
@@ -164,16 +188,33 @@ function startRun(startedAt: string): void {
   }
 }
 
+/**
+ * Kasowanie rejestru przed przebiegiem. Świadomie NIE zachowujemy niczego poza spisem —
+ * projekt jest w fazie PoC, a wartość resetu polega właśnie na tym, że discovery musi
+ * odtworzyć rejestr wyłącznie z tego, co realnie stoi w sieci i da się znaleźć.
+ * Spis skasowanych zostaje w raporcie, więc widać, czego wyszukiwarka NIE odtworzyła.
+ */
+function resetRegistry(report: DiscoverRunReport, cfg: SourcesFile): void {
+  const removed: RemovedSource[] = cfg.sources.map((s) => ({
+    id: s.id, name: s.name, url: s.url, town: s.town, type: s.type, fetch: s.fetch,
+    ...(s.dead ? { dead: true } : {}),
+  }));
+  report.reset = { removed };
+  cfg.sources = [];
+  console.log(`--reset: rejestr wyczyszczony (${removed.length} źródeł) — discovery buduje go od nowa`);
+}
+
 async function runDiscovery(
   args: Extract<Args, { mode: "run" }>, argv: string[],
 ): Promise<void> {
-  const { center, radius, verifyOnly } = args;
+  const { center, radius, verifyOnly, reset } = args;
   const t0 = performance.now();
   const startedAt = new Date().toISOString();
   const report = newReport(startedAt, verifyOnly, argv);
 
   // wczytanie PRZED try: uszkodzony sources.json ma wywrócić przebieg, zanim cokolwiek nadpiszemy
   const cfg = await loadCfg(center, radius);
+  if (reset) resetRegistry(report, cfg);
   const reg = buildRegistry(cfg);
 
   startRun(startedAt);

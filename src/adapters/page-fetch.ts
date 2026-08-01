@@ -21,7 +21,7 @@ import { BROWSER_HEADERS, fetchUrl } from "./http.js";
 let fetches = 0;
 
 export type Fetched = {
-  kind: "html" | "pdf" | "skip" | "not-modified";
+  kind: "html" | "pdf" | "skip" | "not-modified" | "feed";
   text: string;
   httpStatus: number;
   etag?: string;
@@ -79,6 +79,20 @@ export async function fetchPlain(url: string, extraHeaders: Record<string, strin
     ],
   });
   return { kind: "html", text, httpStatus: status, ...v };
+}
+
+/**
+ * Treść BEZ przepuszczania przez html-to-text — dla wyjść maszynowych (JSON `tribe`, iCal).
+ * Osobna funkcja, a nie flaga w fetchPlain: konwersja na tekst jest tam sensownym domyślnym
+ * zachowaniem dla stron, a `htmlToText` na JSON-ie potrafi zjeść nawiasy i pozrywać klucze.
+ * Reszta (licznik pobrań, walidatory, 304, httpError) jest wspólna i celowo identyczna.
+ */
+export async function fetchRaw(url: string, extraHeaders: Record<string, string> = {}): Promise<Fetched> {
+  fetches += 1;
+  const res = await fetchUrl(url, { headers: { ...BROWSER_HEADERS, ...extraHeaders } }, 30_000);
+  if (res.status === 304) return { kind: "not-modified", text: "", httpStatus: 304 };
+  if (!res.ok) throw httpError(res.status, url);
+  return { kind: "feed", text: await res.text(), httpStatus: res.status, ...validatorsOf(res) };
 }
 
 export async function fetchHeadless(url: string): Promise<Fetched> {

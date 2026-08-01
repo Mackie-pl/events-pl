@@ -154,6 +154,31 @@ describe("weto modelu nie może kasować sprawdzonego źródła", () => {
   });
 });
 
+describe("weto plonu — źródło, które daje wydarzenia, nie może umrzeć", () => {
+  // Spirala, którą to zamyka: `daily` pobiera stronę pełnym potokiem, weryfikacja sondą.
+  // Gdy sonda przegrywa tam, gdzie potok wygrywa, źródło dostaje `dead:true`, daily przestaje
+  // je odpytywać (skipped-dead) i jedyny dowód, że żyło, przestaje powstawać.
+  it("ENOTFOUND nie zabija źródła, które plonowało w oknie runs.json", async () => {
+    stubNetwork({});
+    const src = source();
+    const ver = await verifySource(src, false, 39);
+
+    assert.equal(ver.reach, "dns-dead");
+    assert.equal(src.dead, undefined, "39 wydarzeń w tygodniu waży więcej niż nieudana sonda");
+    assert.equal(ver.outcome, "error", "zostaje do ponownego sprawdzenia, nie do pochówku");
+    assert.match(ver.note ?? "", /39 wydarzeń/);
+  });
+
+  it("zerowy plon nie blokuje werdyktu dead", async () => {
+    stubNetwork({});
+    const src = source();
+    const ver = await verifySource(src, false, 0);
+
+    assert.equal(ver.outcome, "dead");
+    assert.equal(src.dead, true);
+  });
+});
+
 describe("verifySource — Facebook", () => {
   it("adresy FB są pomijane bez dotykania rejestru", async () => {
     stubNetwork({});

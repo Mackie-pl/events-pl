@@ -54,6 +54,7 @@ export const STATUS_META: Record<SourceStatus, StatusMeta> = {
   error: { label: 'error', appearance: 'negative', icon: '@tui.triangle-alert' },
   'skipped-fb': { label: 'skipped fb', appearance: 'info', icon: '@tui.ban' },
   'skipped-dead': { label: 'skipped dead', appearance: 'negative', icon: '@tui.skull' },
+  'skipped-inactive': { label: 'skipped inactive', appearance: 'warning', icon: '@tui.moon' },
   empty: { label: 'empty', appearance: 'warning', icon: '@tui.circle-dashed' },
 };
 
@@ -63,6 +64,7 @@ export const ALL_STATUSES: readonly SourceStatus[] = [
   'error',
   'skipped-fb',
   'skipped-dead',
+  'skipped-inactive',
   'empty',
 ];
 
@@ -75,29 +77,35 @@ export const ALL_STATUSES: readonly SourceStatus[] = [
  * W format.ts, a nie przy stronie źródła, bo ten sam słownik renderuje dwa ślady: przebiegu
  * z audit.json i sondy na żądanie. Kopia oznaczałaby dwa różne wyglądy tego samego kroku.
  */
-export const STEP_META: Record<AuditKind, { icon: string; tone: 'plain' | 'spend' | 'save' | 'loss' }> =
-  {
-    skip: { icon: '@tui.circle-slash', tone: 'plain' },
-    fetch: { icon: '@tui.download', tone: 'plain' },
-    'fetch.fallback': { icon: '@tui.refresh-cw', tone: 'spend' },
-    content: { icon: '@tui.file-diff', tone: 'plain' },
-    'cache.hit': { icon: '@tui.database', tone: 'save' },
-    llm: { icon: '@tui.sparkles', tone: 'spend' },
-    'event.dropped': { icon: '@tui.trash-2', tone: 'loss' },
-    'followup.proposed': { icon: '@tui.list-plus', tone: 'plain' },
-    followup: { icon: '@tui.corner-down-right', tone: 'plain' },
-    'fb.harvest': { icon: '@tui.link', tone: 'plain' },
-    geo: { icon: '@tui.map-pin', tone: 'plain' },
-    'dedupe.dropped': { icon: '@tui.merge', tone: 'loss' },
-    pii: { icon: '@tui.shield', tone: 'plain' },
-    done: { icon: '@tui.flag', tone: 'plain' },
-  };
+export const STEP_META: Record<
+  AuditKind,
+  { icon: string; tone: 'plain' | 'spend' | 'save' | 'loss' }
+> = {
+  skip: { icon: '@tui.circle-slash', tone: 'plain' },
+  fetch: { icon: '@tui.download', tone: 'plain' },
+  'fetch.fallback': { icon: '@tui.refresh-cw', tone: 'spend' },
+  content: { icon: '@tui.file-diff', tone: 'plain' },
+  'cache.hit': { icon: '@tui.database', tone: 'save' },
+  capability: { icon: '@tui.plug', tone: 'save' },
+  'capability.parsed': { icon: '@tui.braces', tone: 'save' },
+  'capability.fallback': { icon: '@tui.corner-left-down', tone: 'spend' },
+  llm: { icon: '@tui.sparkles', tone: 'spend' },
+  'event.dropped': { icon: '@tui.trash-2', tone: 'loss' },
+  'followup.proposed': { icon: '@tui.list-plus', tone: 'plain' },
+  followup: { icon: '@tui.corner-down-right', tone: 'plain' },
+  'fb.harvest': { icon: '@tui.link', tone: 'plain' },
+  geo: { icon: '@tui.map-pin', tone: 'plain' },
+  'dedupe.dropped': { icon: '@tui.merge', tone: 'loss' },
+  pii: { icon: '@tui.shield', tone: 'plain' },
+  done: { icon: '@tui.flag', tone: 'plain' },
+};
 
 // ---------------- discovery (stage 1) ----------------
 
 /** Co model zaproponował i co się z tym stało. Odrzucenia są tu równie ważne jak dodania. */
 export const DECISION_META: Record<ProposalDecision, StatusMeta> = {
   added: { label: 'added', appearance: 'positive', icon: '@tui.plus' },
+  confirmed: { label: 'confirmed', appearance: 'success', icon: '@tui.link' },
   duplicate: { label: 'duplicate', appearance: 'neutral', icon: '@tui.copy' },
   'low-confidence': { label: 'low confidence', appearance: 'warning', icon: '@tui.gauge' },
   invalid: { label: 'invalid', appearance: 'negative', icon: '@tui.ban' },
@@ -105,6 +113,7 @@ export const DECISION_META: Record<ProposalDecision, StatusMeta> = {
 
 export const ALL_DECISIONS: readonly ProposalDecision[] = [
   'added',
+  'confirmed',
   'duplicate',
   'low-confidence',
   'invalid',
@@ -157,7 +166,11 @@ export const CATEGORY_META: Record<CostCategory, CategoryMeta> = {
   },
   'llm-verify': { label: 'LLM · verify', what: 'Haiku: naprawa martwych URL-i (etap 1)', slot: 4 },
   fb: { label: 'Facebook', what: 'Bright Data: rekordy wydarzeń i postów grup', slot: 5 },
-  search: { label: 'Search', what: 'wyszukiwarka: zapytania (Google CSE 100/dzień gratis)', slot: 6 },
+  search: {
+    label: 'Search',
+    what: 'wyszukiwarka: zapytania (Google CSE 100/dzień gratis)',
+    slot: 6,
+  },
   scrape: {
     label: 'Scraping',
     what: 'pobrania HTTP + headless (GH Actions: 0 zł dla repo publicznego)',

@@ -8,6 +8,7 @@
  * po kilka wariantów każdego pola.
  */
 import type { BdRecord } from "../adapters/brightdata.js";
+import { splitDateTime } from "../shared/dates.js";
 import type { AgeRange, EventItem, Price } from "../types/index.js";
 
 const EVENT_URL_RE = /(?:https?:\/\/)?(?:[\w-]+\.)?facebook\.com\/events\/(\d+)/gi;
@@ -34,23 +35,6 @@ function pick(rec: BdRecord, ...keys: string[]): string | null {
     if (typeof v === "number" && Number.isFinite(v)) return String(v);
   }
   return null;
-}
-
-/**
- * "2026-07-25T18:00:00Z" | "2026-07-25 18:00" | "1721930400"(unix) → {date, time}.
- * Godzinę emitujemy tylko gdy jest jawnie w napisie (unikamy przesunięć stref przy fallbacku).
- */
-function splitDateTime(raw: string | null): { date: string | null; time: string | null } {
-  if (!raw) return { date: null, time: null };
-  if (/^\d{10,13}$/.test(raw)) {
-    const ms = raw.length === 10 ? Number(raw) * 1000 : Number(raw);
-    const d = new Date(ms);
-    return Number.isNaN(d.getTime()) ? { date: null, time: null } : { date: d.toISOString().slice(0, 10), time: null };
-  }
-  const m = raw.match(/(\d{4}-\d{2}-\d{2})(?:[T ](\d{2}:\d{2}))?/);
-  if (m) return { date: m[1] ?? null, time: m[2] ?? null };
-  const d = new Date(raw);
-  return Number.isNaN(d.getTime()) ? { date: null, time: null } : { date: d.toISOString().slice(0, 10), time: null };
 }
 
 /** Wyłuskaj miasto z polskiego adresu ("ul. X 1, 61-000 Poznań" → "Poznań"). */

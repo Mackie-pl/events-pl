@@ -1,21 +1,25 @@
 /** Rejestr źródeł w pamięci: co już znamy, żeby nie wpuścić duplikatu ani nie nadpisać id. */
 import { urlKey } from "../../shared/url.js";
-import type { SourcesFile } from "../../types/index.js";
+import type { Source, SourcesFile } from "../../types/index.js";
 
 export interface Registry {
   cfg: SourcesFile;
-  /** urlKey wszystkich znanych adresów */
-  urls: Map<string, string>; // urlKey -> id źródła
+  /**
+   * urlKey → samo źródło, nie jego id. Mapa na id wystarczała, dopóki trafienie w duplikat
+   * kończyło się `continue`; odkąd potwierdzone źródło dostaje `lastSeenRun` i proweniencję,
+   * potrzebny jest rekord, a nie jego nazwa.
+   */
+  urls: Map<string, Source>;
   ids: Set<string>;
   /** id dodane w TYM przebiegu — ich weryfikacja to pierwszy fetch w życiu źródła */
   fresh: Set<string>;
 }
 
 export function buildRegistry(cfg: SourcesFile): Registry {
-  const urls = new Map<string, string>();
+  const urls = new Map<string, Source>();
   const ids = new Set<string>();
   for (const s of cfg.sources) {
-    urls.set(urlKey(s.url), s.id);
+    urls.set(urlKey(s.url), s);
     ids.add(s.id);
   }
   return { cfg, urls, ids, fresh: new Set() };

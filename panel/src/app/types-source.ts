@@ -16,6 +16,14 @@ export type ReachOutcome =
   | 'dns-dead' // domena nie rozwiązuje się — jedyne wyjście to re-discovery
   | 'placeholder'; // 200, ale treść poniżej progu (parking/zaślepka)
 
+/** Jeden szczebel drabiny: wypróbowany wariant adresu i to, co odpowiedział. */
+export interface ReachStep {
+  url: string;
+  outcome: ReachOutcome;
+  httpStatus?: number;
+  err?: string;
+}
+
 /** Adres listy wydarzeń. `detailCount` to dowód z chwili rozpoznania, nie deklaracja. */
 export interface EntryPoint {
   url: string;

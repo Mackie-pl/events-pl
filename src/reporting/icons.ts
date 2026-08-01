@@ -9,5 +9,5 @@ export const OUTCOME_ICON: Record<SourceVerification["outcome"], string> = {
 };
 
 export const DECISION_ICON: Record<SourceProposal["decision"], string> = {
-  added: "➕", duplicate: "♻️", "low-confidence": "🤏", invalid: "🚫",
+  added: "➕", confirmed: "🔗", duplicate: "♻️", "low-confidence": "🤏", invalid: "🚫",
 };

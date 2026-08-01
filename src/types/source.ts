@@ -94,6 +94,21 @@ export interface Source {
   previous_urls?: string[];
   /** URL martwy i nienaprawialny — daily pomija (skipped-dead) do czasu naprawy */
   dead?: boolean;
+  /**
+   * Ostatni przebieg discovery, w którego wynikach wyszukiwarki ten adres się pojawił
+   * (`startedAt`). Odróżnia „serwis zniknął z sieci" od „nikt go nigdy nie szukał":
+   * bez tego jedynym sposobem na śmierć źródła była drabina osiągalności.
+   */
+  lastSeenRun?: string;
+  /** ile kolejnych pełnych przebiegów discovery NIE znalazło tego adresu */
+  missedRuns?: number;
+  /**
+   * Zdegradowane: discovery przestało je znajdować I nic nie plonuje. Daily pomija
+   * (skipped-inactive), ale discover dalej je weryfikuje co miesiąc, więc powrót jest
+   * automatyczny. Świadomie NIE to samo co `dead` — tam mamy dowód z drabiny, tu tylko brak
+   * dowodu na życie.
+   */
+  inactive?: boolean;
   /** gdzie wchodzić po wydarzenia (etap 1 ustala, etap 2 będzie konsumował) */
   entrypoints?: EntryPoint[];
   /** co serwis oddaje maszynowo — sprawdzane raz przy discovery, nie codziennie */

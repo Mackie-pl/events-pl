@@ -5,7 +5,8 @@ import { costLine } from "./cost-ledger.js";
 import { writeSummary } from "./step-summary.js";
 
 const STATUS_ICON: Record<SourceRun["status"], string> = {
-  ok: "✅", unchanged: "♻️", error: "⚠️", "skipped-fb": "⏭️", "skipped-dead": "💀", empty: "∅",
+  ok: "✅", unchanged: "♻️", error: "⚠️", "skipped-fb": "⏭️", "skipped-dead": "💀",
+  "skipped-inactive": "💤", empty: "∅",
 };
 
 function headerLines(report: RunReport): string[] {

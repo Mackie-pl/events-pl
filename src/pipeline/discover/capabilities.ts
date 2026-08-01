@@ -87,16 +87,37 @@ export function feedCandidates(html: string, root: string): string[] {
   return [...out.values()];
 }
 
+/**
+ * Termin wydarzenia w treści wpisu — „05.09.2026", „5 września", „2026-09-05".
+ * Świadomie po TREŚCI, nie po `<pubDate>`: to ostatnie jest datą PUBLIKACJI, czyli dokładnie
+ * tym, co reguła tego modułu wyklucza. Liczenie `pubDate` dawało `datesParsed === itemsSeen`
+ * dla każdego feedu na świecie — a gminne „aktualności" to w większości nie wydarzenia.
+ */
+const MONTHS_PL = "stycz|lut|mar|kwiet|maj|czerw|lip|sierp|wrze|paździer|listopad|grud";
+const EVENT_DATE_IN_TEXT = new RegExp(
+  String.raw`\d{1,2}[./-]\d{1,2}[./-]\d{4}|\d{4}-\d{2}-\d{2}|\d{1,2}\s+(?:${MONTHS_PL})`, "i",
+);
+
+const TITLE_RE = /<title\b[^>]*>([\s\S]*?)<\/title>/i;
+const BODY_RE = /<(?:description|summary|content)\b[^>]*>([\s\S]*?)<\/(?:description|summary|content)>/i;
+
+/** Czy w treści wpisu (tytuł + opis) widać termin wydarzenia. `<pubDate>` świadomie pomijamy. */
+export function itemHasEventDate(item: string): boolean {
+  const parts: string[] = [];
+  for (const re of [TITLE_RE, BODY_RE]) {
+    const m = re.exec(item);
+    if (m?.[1]) parts.push(m[1]);
+  }
+  const prose = parts.join(" ").replace(/<!\[CDATA\[|\]\]>/g, " ").replace(/<[^>]+>/g, " ");
+  return EVENT_DATE_IN_TEXT.test(prose);
+}
+
 async function probeFeed(url: string): Promise<SourceCapability | null> {
   const xml = await getText(url);
   if (!xml || !/<(?:rss|feed)\b/i.test(xml)) return null;
   const items = [...xml.matchAll(/<(item|entry)\b[\s\S]*?<\/\1>/gi)].map((m) => m[0]);
   if (!items.length) return null;
-  const dated = items.filter((i) => {
-    const m = /<(?:pubDate|published|updated|dc:date)>([^<]+)</i.exec(i);
-    return m?.[1] ? isDate(m[1].trim()) : false;
-  }).length;
-  return cap("rss", url, items.length, dated);
+  return cap("rss", url, items.length, items.filter(itemHasEventDate).length);
 }
 
 /** WordPress REST: typ postu wyglądający na wydarzenia + faktyczne pobranie kolekcji. */

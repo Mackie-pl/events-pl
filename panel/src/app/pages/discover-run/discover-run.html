@@ -16,9 +16,20 @@
       @if (r.center) {
         · {{ r.center }} +{{ r.radiusKm }} km
       }
-      · {{ r.totals.sourcesAdded }} added · {{ r.totals.sourcesChecked }} checked ·
-      {{ usd(r.totals.costUsd) }} ({{ r.totals.calls }} LLM calls,
-      {{ tok(r.totals.promptTokens) }} in / {{ tok(r.totals.completionTokens) }} out)
+      · {{ r.totals.sourcesAdded }} added
+      @if (r.totals.sourcesConfirmed) {
+        · {{ r.totals.sourcesConfirmed }} confirmed
+      }
+      @if (r.totals.sourcesMissed) {
+        · {{ r.totals.sourcesMissed }} not found
+      }
+      @if (r.totals.sourcesDeactivated) {
+        · {{ r.totals.sourcesDeactivated }} deactivated
+      }
+      · {{ r.totals.sourcesChecked }} checked · {{ usd(r.totals.costUsd) }} ({{
+        r.totals.calls
+      }}
+      LLM calls, {{ tok(r.totals.promptTokens) }} in / {{ tok(r.totals.completionTokens) }} out)
       @if (r.argv; as argv) {
         · <code>discover {{ argv.join(' ') }}</code>
       }
@@ -57,10 +68,153 @@
     </section>
   }
 
+  <!--
+    Reset: rejestr skasowany przed przebiegiem. Sens tej sekcji to lista „nie wróciło" —
+    adresy, których wyszukiwarka nie odtwarza, czyli takie, które trzymały się wyłącznie
+    na ręcznym wpisie. To jedyny pomiar, który to mówi.
+  -->
+  @if (removed().length) {
+    <section class="reset">
+      <h2>Registry reset</h2>
+      <p class="muted">
+        {{ removed().length }} sources dropped before this run ·
+        <span class="positive">{{ removed().length - notReturned().length }} found again</span> ·
+        <span class="warn">{{ notReturned().length }} not recovered by search</span>
+      </p>
+      <div class="table-wrap">
+        <table tuiTable class="reset-table">
+          <colgroup>
+            <col style="width: 22%" />
+            <col style="width: 10%" />
+            <col style="width: 34%" />
+            <col style="width: 34%" />
+          </colgroup>
+          <thead tuiThead>
+            <tr tuiThGroup>
+              <th tuiTh>Dropped source</th>
+              <th tuiTh>Town</th>
+              <th tuiTh>Old address</th>
+              <th tuiTh>Came back as</th>
+            </tr>
+          </thead>
+          <tbody tuiTbody>
+            @for (x of removed(); track x.id) {
+              <tr tuiTr>
+                <td tuiTd class="src">
+                  <span class="src-name">{{ x.name }}</span>
+                  <span class="muted src-id">{{ x.id }} · {{ x.fetch }}</span>
+                </td>
+                <td tuiTd>{{ x.town }}</td>
+                <td tuiTd class="mono small">{{ x.url }}</td>
+                <td tuiTd class="mono small">
+                  @if (x.returned) {
+                    <span class="positive">{{ x.returned }}</span>
+                    @if (x.returnedUrl) {
+                      <span class="block muted">{{ x.returnedUrl }}</span>
+                    }
+                  } @else {
+                    <span class="warn">
+                      not recovered{{ x.dead ? ' (was already dead)' : '' }}
+                    </span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+
+  <!--
+    Ślad wyszukiwarki. Do tej pory zapytania, wyniki i decyzje modelu leżały w trzech
+    osobnych miejscach raportu i nic ich nie łączyło — „skąd wzięło się to źródło"
+    trzeba było składać ręcznie, porównując adresy wzrokiem.
+  -->
+  @if (hasTrace()) {
+    <section class="trace">
+      <h2>Search trace — query → hit → decision → listing</h2>
+      <p class="muted">
+        What the search engine returned and what became of every single result. Hits with no
+        decision are the interesting ones: the model saw them and passed.
+      </p>
+      <div class="queries">
+        @for (q of trace(); track $index) {
+          <div class="query-block">
+            <div class="query-head">
+              <code>{{ q.query }}</code>
+              <span class="muted">{{ q.town }} · {{ q.hits.length }} hits · {{ ms(q.ms) }}</span>
+              @if (q.skipped) {
+                <span tuiBadge size="s" appearance="neutral">skipped</span>
+              }
+            </div>
+            @if (q.err) {
+              <div class="negative">{{ q.err }}</div>
+            }
+            @if (q.trimmed) {
+              <div class="muted">{{ q.trimmed }} results trimmed from history</div>
+            }
+            <ol class="results">
+              @for (h of q.hits; track $index) {
+                <li>
+                  <div>{{ h.title }}</div>
+                  @if (h.url) {
+                    <a tuiLink class="mono" [href]="h.url" target="_blank" rel="noopener">
+                      {{ h.url }}
+                    </a>
+                  }
+                  @if (h.fate; as f) {
+                    <div class="fate">
+                      <span tuiBadge size="s" [appearance]="decisionMeta[f.decision].appearance">
+                        {{ decisionMeta[f.decision].label }}
+                      </span>
+                      <span class="mono muted">{{ f.id }}</span>
+                      @if (f.reason) {
+                        <span class="muted">· {{ f.reason }}</span>
+                      }
+                    </div>
+                    @for (e of h.entrypoints; track e.url) {
+                      <div class="entry">
+                        ↳
+                        <a tuiLink class="mono" [href]="e.url" target="_blank" rel="noopener">
+                          {{ e.url }}
+                        </a>
+                        <span class="muted">
+                          {{ e.kind }}
+                          @if (e.detailCount) {
+                            · ×{{ e.detailCount }}
+                          }
+                        </span>
+                      </div>
+                    }
+                  } @else {
+                    <div class="muted fate">not proposed by the model</div>
+                  }
+                </li>
+              }
+            </ol>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
   @if (r.towns.length) {
     <section class="towns">
       <h2>Search + model, per town</h2>
       <table tuiTable class="towns-table">
+        <colgroup>
+          <col style="width: 3%" />
+          <col style="width: 18%" />
+          <col style="width: 11%" />
+          <col style="width: 8%" />
+          <col style="width: 18%" />
+          <col style="width: 9%" />
+          <col style="width: 7%" />
+          <col style="width: 11%" />
+          <col style="width: 8%" />
+          <col style="width: 7%" />
+        </colgroup>
         <thead tuiThead>
           <tr tuiThGroup>
             <th tuiTh></th>
@@ -136,7 +290,13 @@
                             <li>
                               <div>{{ res.title }}</div>
                               @if (res.url) {
-                                <a tuiLink class="mono" [href]="res.url" target="_blank" rel="noopener">
+                                <a
+                                  tuiLink
+                                  class="mono"
+                                  [href]="res.url"
+                                  target="_blank"
+                                  rel="noopener"
+                                >
                                   {{ res.url }}
                                 </a>
                               }
@@ -187,6 +347,15 @@
       </div>
       <div class="table-wrap">
         <table tuiTable class="proposals-table">
+          <colgroup>
+            <col style="width: 9%" />
+            <col style="width: 22%" />
+            <col style="width: 9%" />
+            <col style="width: 6%" />
+            <col style="width: 13%" />
+            <col style="width: 21%" />
+            <col style="width: 20%" />
+          </colgroup>
           <thead tuiThead>
             <tr tuiThGroup>
               <th tuiTh>Decision</th>
@@ -208,13 +377,7 @@
                 </td>
                 <td tuiTd class="src">
                   <span class="src-name">{{ row.p.name }}</span>
-                  <a
-                    tuiLink
-                    class="mono src-id"
-                    [href]="row.p.url"
-                    target="_blank"
-                    rel="noopener"
-                  >
+                  <a tuiLink class="mono src-id" [href]="row.p.url" target="_blank" rel="noopener">
                     {{ row.p.url }}
                   </a>
                 </td>
@@ -261,21 +424,44 @@
     </div>
     <div class="table-wrap">
       <table tuiTable class="verify-table">
+        <colgroup>
+          <col style="width: 3%" />
+          <col style="width: 9%" />
+          <col style="width: 29%" />
+          <col style="width: 8%" />
+          <col style="width: 14%" />
+          <col style="width: 21%" />
+          <col style="width: 7%" />
+          <col style="width: 9%" />
+        </colgroup>
         <thead tuiThead>
           <tr tuiThGroup>
+            <th tuiTh></th>
             <th tuiTh>Outcome</th>
             <th tuiTh>Source</th>
             <th tuiTh>Town</th>
             <th tuiTh>Response</th>
-            <th tuiTh>Redirect</th>
-            <th tuiTh>Details</th>
+            <th tuiTh>Findings</th>
             <th tuiTh>Cost</th>
             <th tuiTh>Time</th>
           </tr>
         </thead>
         <tbody tuiTbody>
           @for (v of verifications(); track v.id) {
-            <tr tuiTr>
+            <tr
+              tuiTr
+              [class.clickable]="hasDetail(v)"
+              (click)="hasDetail(v) && toggleVerification(v.id)"
+            >
+              <td tuiTd>
+                @if (hasDetail(v)) {
+                  <tui-icon
+                    [icon]="
+                      expandedVerification() === v.id ? '@tui.chevron-down' : '@tui.chevron-right'
+                    "
+                  />
+                }
+              </td>
               <td tuiTd>
                 <span tuiBadge size="s" [appearance]="outcomeMeta[v.outcome].appearance">
                   {{ outcomeMeta[v.outcome].label }}
@@ -286,29 +472,215 @@
                   </span>
                 }
               </td>
+              <!--
+                Adres jest tożsamością źródła, a nie szczegółem: bez niego wiersz bez
+                przekierowania („ok") nie pokazywał ŻADNEGO URL-a. Pytany i osiągnięty
+                idą jeden pod drugim, więc naprawę widać bez rozwijania.
+              -->
               <td tuiTd class="src">
                 <span class="src-name">{{ v.name }}</span>
                 <span class="muted src-id">{{ v.id }}</span>
+                <a
+                  tuiLink
+                  class="mono src-url"
+                  [href]="v.url.replace('{page}', '1')"
+                  target="_blank"
+                  rel="noopener"
+                  (click)="$event.stopPropagation()"
+                >
+                  {{ v.url }}
+                </a>
+                @if (v.newUrl ?? v.probe?.finalUrl; as landed) {
+                  @if (landed !== v.url) {
+                    <a
+                      tuiLink
+                      class="mono src-url positive"
+                      [href]="landed"
+                      target="_blank"
+                      rel="noopener"
+                      (click)="$event.stopPropagation()"
+                    >
+                      → {{ landed }}
+                    </a>
+                  }
+                }
               </td>
               <td tuiTd>{{ v.town }}</td>
               <td tuiTd [class.negative]="v.probe && !v.probe.ok">
                 {{ v.probe ? probe(v.probe) : v.httpStatus ? 'HTTP ' + v.httpStatus : '—' }}
+                @if (v.reach; as reach) {
+                  <span class="muted small block">{{ reach }}</span>
+                }
               </td>
-              <td tuiTd class="mono small">{{ v.probe?.finalUrl ?? '—' }}</td>
               <td tuiTd class="why">
-                @if (v.newUrl) {
-                  <span class="positive">→ {{ v.newUrl }}</span>
-                } @else if (v.err) {
-                  {{ v.err }}
-                } @else if (v.note) {
-                  <span class="muted">{{ v.note }}</span>
-                } @else {
+                @if (v.err) {
+                  <span class="negative">{{ v.err }}</span>
+                }
+                @if (v.note) {
+                  <span class="muted block">{{ v.note }}</span>
+                }
+                @if (v.verdict; as verdict) {
+                  <span
+                    tuiBadge
+                    size="s"
+                    [appearance]="verdict === 'events' ? 'success' : 'neutral'"
+                    title="model's verdict on the entrypoint"
+                  >
+                    {{ verdict }}
+                  </span>
+                }
+                @for (e of v.entrypoints; track e.url) {
+                  <span class="chip">
+                    {{ e.kind }}
+                    @if (e.detailCount) {
+                      ×{{ e.detailCount }}
+                    }
+                  </span>
+                }
+                @for (c of v.capabilities; track c.url) {
+                  <span class="chip" [class.warn]="!c.datesParsed">
+                    {{ c.kind }} · {{ c.itemsSeen }}/{{ c.datesParsed }} dated
+                  </span>
+                }
+                @if (!v.err && !v.note && !v.verdict && !v.entrypoints?.length) {
                   —
                 }
               </td>
               <td tuiTd>{{ v.llm.costUsd ? usd(v.llm.costUsd) : '—' }}</td>
-              <td tuiTd>{{ ms(v.ms) }}</td>
+              <td tuiTd>
+                {{ ms(v.ms) }}
+                @if (v.probe && profileMs(v) > 200) {
+                  <span class="muted small block">+{{ ms(profileMs(v)) }} profile</span>
+                }
+              </td>
             </tr>
+            @if (expandedVerification() === v.id) {
+              <tr tuiTr class="detail-row">
+                <td tuiTd colspan="8">
+                  <div class="queries">
+                    @if (v.ladder?.length) {
+                      <div class="query-block">
+                        <div class="query-head"><strong>Reachability ladder</strong></div>
+                        <ol class="results">
+                          @for (step of v.ladder; track $index) {
+                            <li>
+                              <a
+                                tuiLink
+                                class="mono"
+                                [href]="step.url"
+                                target="_blank"
+                                rel="noopener"
+                              >
+                                {{ step.url }}
+                              </a>
+                              <div>
+                                <span
+                                  tuiBadge
+                                  size="s"
+                                  [appearance]="
+                                    step.outcome === 'ok' || step.outcome === 'redirected'
+                                      ? 'success'
+                                      : 'neutral'
+                                  "
+                                >
+                                  {{ step.outcome }}
+                                </span>
+                                @if (step.httpStatus) {
+                                  <span class="muted">· HTTP {{ step.httpStatus }}</span>
+                                }
+                              </div>
+                              @if (step.err) {
+                                <div class="negative">{{ step.err }}</div>
+                              }
+                            </li>
+                          }
+                        </ol>
+                      </div>
+                    }
+                    @if (v.candidate; as candidate) {
+                      <div class="query-block">
+                        <div class="query-head"><strong>Repair candidate</strong></div>
+                        <a tuiLink class="mono" [href]="candidate" target="_blank" rel="noopener">
+                          {{ candidate }}
+                        </a>
+                        @if (v.candidateProbe; as cp) {
+                          <div class="muted" [class.negative]="!cp.ok">{{ probe(cp) }}</div>
+                        }
+                      </div>
+                    }
+                    @if (v.entrypoints?.length) {
+                      <div class="query-block">
+                        <div class="query-head"><strong>Event listings found</strong></div>
+                        <ol class="results">
+                          @for (e of v.entrypoints; track e.url) {
+                            <li>
+                              <a tuiLink class="mono" [href]="e.url" target="_blank" rel="noopener">
+                                {{ e.url }}
+                              </a>
+                              <div class="muted">
+                                {{ e.kind }} · {{ e.via }} ({{ e.confidence }})
+                                @if (e.detailPattern) {
+                                  · <code>{{ e.detailPattern }}</code> ×{{ e.detailCount }}
+                                }
+                                @if (e.paginated) {
+                                  · paginated
+                                }
+                              </div>
+                            </li>
+                          }
+                        </ol>
+                      </div>
+                    }
+                    @if (v.capabilities?.length) {
+                      <div class="query-block">
+                        <div class="query-head"><strong>Machine-readable outputs</strong></div>
+                        <ol class="results">
+                          @for (c of v.capabilities; track c.url) {
+                            <li>
+                              <code>{{ c.kind }}</code>
+                              <a tuiLink class="mono" [href]="c.url" target="_blank" rel="noopener">
+                                {{ c.url }}
+                              </a>
+                              <div class="muted">
+                                {{ c.itemsSeen }} records, {{ c.datesParsed }} with a date · checked
+                                {{ c.checked }}
+                              </div>
+                              @if (!c.datesParsed) {
+                                <div class="warn">
+                                  no dates parsed — endpoint answers, but daily cannot extract from
+                                  it
+                                </div>
+                              }
+                            </li>
+                          }
+                        </ol>
+                      </div>
+                    }
+                    @if (v.searches.length) {
+                      <div class="query-block">
+                        <div class="query-head"><strong>Repair searches</strong></div>
+                        @for (s of v.searches; track $index) {
+                          <div>
+                            <code>{{ s.query }}</code>
+                            <span class="muted">
+                              · {{ s.results.length || s.trimmed || 0 }} results · {{ ms(s.ms) }}
+                            </span>
+                          </div>
+                        }
+                      </div>
+                    }
+                    @if (v.archive?.length) {
+                      <div class="query-block">
+                        <div class="query-head"><strong>Private archive</strong></div>
+                        @for (path of v.archive; track path) {
+                          <div class="mono">{{ path }}</div>
+                        }
+                      </div>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
           } @empty {
             <tr tuiTr>
               <td tuiTd colspan="8" class="muted">No verifications match the current filter.</td>

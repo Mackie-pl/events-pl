@@ -6,7 +6,14 @@ import type { BdUsage, LlmUsage, TaskUsage } from "./usage.js";
 
 // ---------------- observability / run reporting ----------------
 
-export type SourceStatus = "ok" | "unchanged" | "error" | "skipped-fb" | "skipped-dead" | "empty";
+/**
+ * `skipped-dead` i `skipped-inactive` to dwie różne diagnozy i dlatego są dwoma statusami:
+ * pierwszy znaczy „drabina udowodniła, że adresu nie ma", drugi „discovery przestało go
+ * znajdować i nic z niego nie plonuje". Pierwszy naprawia re-discovery, drugi sam wraca,
+ * gdy wyszukiwarka znowu pokaże adres.
+ */
+export type SourceStatus =
+  | "ok" | "unchanged" | "error" | "skipped-fb" | "skipped-dead" | "skipped-inactive" | "empty";
 
 export interface FollowupRun {
   url: string;
@@ -46,7 +53,23 @@ export interface SourceRun {
   fetch: FetchStrategy;
   status: SourceStatus;
   httpStatus?: number;
-  kind?: "html" | "pdf";
+  kind?: "html" | "pdf" | "feed";
+  /**
+   * Wyjście maszynowe użyte zamiast skrobania HTML-a. Obecne = to źródło nie kosztowało
+   * ani jednego wywołania modelu; `llm.calls === 0` przy `events > 0` jest tego dowodem
+   * w costs.json. `fellBack` = feed nic nie dał i wróciliśmy na stronę + model.
+   */
+  structured?: {
+    kind: "rss" | "wp-rest" | "tribe" | "ical" | "jsonld";
+    url: string;
+    /** rekordów w feedzie (przed odsiewem) */
+    seen: number;
+    /** wydarzeń po odsiewie */
+    items: number;
+    /** ile i dlaczego odpadło — bez tego „8 rekordów → 3 wydarzenia" jest zagadką */
+    dropped?: { past?: number; noDate?: number; noTitle?: number };
+    fellBack?: boolean;
+  };
   /** długość pobranego tekstu */
   chars?: number;
   /** czy hash różnił się od stanu (zmiana treści) */
@@ -86,6 +109,8 @@ export interface RunTotals extends LlmUsage {
   errors: number;
   skippedFb: number;
   skippedDead: number;
+  /** pominięte jako zdegradowane — brak trafień w discovery i zero plonu */
+  skippedInactive: number;
   empty: number;
   events: number;
   followupsTried: number;

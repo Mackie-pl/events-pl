@@ -77,6 +77,14 @@ async function run(): Promise<void> {
         { url: src.url });
       continue;
     }
+    if (src.inactive) {
+      // adres żyje, ale discovery przestało go znajdować i nic z niego nie plonuje.
+      // Wraca sam, gdy wyszukiwarka znowu go pokaże — dlatego pomijamy, a nie kasujemy.
+      sourceRuns.push(newSourceRun(src, src.url.replace("{page}", "1"), "skipped-inactive"));
+      audit("skip", `nieaktywne: ${src.missedRuns ?? 0} przebiegi discovery bez trafienia ` +
+        "i zero wydarzeń — wróci przy pierwszym trafieniu", { url: src.url });
+      continue;
+    }
     const { events, run: sr } = await processSource(src, state, errors, fbEventUrls);
     sourceRuns.push(sr);
     producedBy.set(sr, events);

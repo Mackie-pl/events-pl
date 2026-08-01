@@ -13,7 +13,9 @@ export * from './types-probe';
 // Profil źródła z etapu 1: osiągalność, entrypointy, maszynowe wyjścia.
 // Tu tylko `import`, bez `export *` jak wyżej: te typy są osiągalne przez pola `Source`,
 // więc nikt nie importuje ich po nazwie, a ten plik siedzi dokładnie na progu 350 linii kodu.
-import type { EntryPoint, ReachOutcome, SourceCapability } from './types-source';
+export type { EntryPoint, ReachOutcome, ReachStep, SourceCapability } from './types-source';
+
+import type { EntryPoint, ReachOutcome, ReachStep, SourceCapability } from './types-source';
 
 export type FetchStrategy =
   'plain' | 'headless' | 'pdf' | 'api' | 'fb' | 'fb_group' | 'fb_event' | 'rss';
@@ -47,6 +49,12 @@ export interface Source {
   previous_urls?: string[];
   /** URL martwy — daily pomija (skipped-dead) do czasu naprawy */
   dead?: boolean;
+  /** ostatni przebieg discovery, w którego trafieniach był ten adres */
+  lastSeenRun?: string;
+  /** ile kolejnych pełnych przebiegów discovery go NIE znalazło */
+  missedRuns?: number;
+  /** zdegradowane: brak trafień + zero plonu. Odwracalne — wraca przy pierwszym trafieniu */
+  inactive?: boolean;
   /** profil z etapu 1 — patrz types-source.ts */
   reach?: ReachOutcome;
   entrypoints?: EntryPoint[];
@@ -155,7 +163,15 @@ export interface EventsFile {
 
 // ---------------- observability / run reporting ----------------
 
-export type SourceStatus = 'ok' | 'unchanged' | 'error' | 'skipped-fb' | 'skipped-dead' | 'empty';
+export type SourceStatus =
+  | 'ok'
+  | 'unchanged'
+  | 'error'
+  | 'skipped-fb'
+  | 'skipped-dead'
+  /** discovery przestało je znajdować i nic nie plonuje — wraca samo przy pierwszym trafieniu */
+  | 'skipped-inactive'
+  | 'empty';
 
 export interface FollowupRun {
   url: string;
@@ -211,7 +227,16 @@ export interface SourceRun {
   fetch: FetchStrategy;
   status: SourceStatus;
   httpStatus?: number;
-  kind?: 'html' | 'pdf';
+  kind?: 'html' | 'pdf' | 'feed';
+  /** wyjście maszynowe użyte zamiast HTML-a; obecne = zero wywołań modelu na tym źródle */
+  structured?: {
+    kind: 'rss' | 'wp-rest' | 'tribe' | 'ical' | 'jsonld';
+    url: string;
+    seen: number;
+    items: number;
+    dropped?: { past?: number; noDate?: number; noTitle?: number };
+    fellBack?: boolean;
+  };
   chars?: number;
   changed?: boolean;
   events: number;
@@ -244,8 +269,9 @@ export interface RunTotals extends LlmUsage {
   unchanged: number;
   errors: number;
   skippedFb: number;
-  /** opcjonalne — starsze przebiegi w runs.json nie mają tego pola */
+  /** opcjonalne — starsze przebiegi w runs.json nie mają tych pól */
   skippedDead?: number;
+  skippedInactive?: number;
   empty: number;
   events: number;
   followupsTried: number;
@@ -350,7 +376,11 @@ export interface GeoLookup {
   fallback?: boolean;
 }
 
-export type ProposalDecision = 'added' | 'duplicate' | 'low-confidence' | 'invalid';
+/**
+ * `confirmed` to przeciwieństwo `duplicate`, nie jego odmiana: adres już był w rejestrze,
+ * ale discovery WŁAŚNIE potwierdziło go trafieniem i dopisało proweniencję.
+ */
+export type ProposalDecision = 'added' | 'confirmed' | 'duplicate' | 'low-confidence' | 'invalid';
 
 export interface SourceProposal {
   id: string;
@@ -373,6 +403,8 @@ export interface TownDiscoveryRun {
   proposed: number;
   added: number;
   addedIds: string[];
+  /** znane źródła potwierdzone trafieniem w tym przebiegu */
+  confirmed?: number;
   /** brak w przebiegach sprzed ledgeru propozycji */
   proposals?: SourceProposal[];
   parse?: 'ok' | 'no-json' | 'bad-json' | 'no-sources';
@@ -394,6 +426,16 @@ export interface SourceVerification {
   httpStatus?: number;
   err?: string;
   searches: SearchCall[];
+  /**
+   * Profil ustalony przy weryfikacji — te pięć pól zapisywał potok od początku, ale ten typ
+   * ich nie znał, więc panel pokazywał sam kod HTTP i nic z tego, co kupiły sekundy i dolary
+   * spędzone na modelu.
+   */
+  reach?: ReachOutcome;
+  ladder?: ReachStep[];
+  entrypoints?: EntryPoint[];
+  capabilities?: SourceCapability[];
+  verdict?: 'events' | 'news' | 'none';
   candidate?: string;
   newUrl?: string;
   llm: LlmUsage;
@@ -412,6 +454,10 @@ export interface DiscoverTotals extends LlmUsage {
   searchErrors?: number;
   searchesSkipped?: number;
   sourcesAdded: number;
+  /** znane źródła potwierdzone trafieniem — 0 tam, gdzie nikt jeszcze nie rozliczał rejestru */
+  sourcesConfirmed?: number;
+  sourcesMissed?: number;
+  sourcesDeactivated?: number;
   proposalsRejected?: number;
   sourcesChecked: number;
   ok: number;
@@ -423,6 +469,22 @@ export interface DiscoverTotals extends LlmUsage {
   costVerifyUsd: number;
   redactedPhones?: number;
   redactedEmails?: number;
+}
+
+/**
+ * Źródło skasowane przez `--reset` i rozliczenie, czy discovery znalazło je z powrotem.
+ * `returned` puste = wyszukiwarka tego adresu NIE odtwarza; trzymał się na ręcznym wpisie.
+ */
+export interface RemovedSource {
+  id: string;
+  name: string;
+  url: string;
+  town: string;
+  type: SourceType;
+  fetch: FetchStrategy;
+  dead?: boolean;
+  returned?: string;
+  returnedUrl?: string;
 }
 
 export interface DiscoverRunReport {
@@ -443,6 +505,8 @@ export interface DiscoverRunReport {
   archiveEnabled?: boolean;
   /** szczegóły (wyniki search, dopasowane trafienia) usunięte przy przycinaniu historii */
   slimmed?: boolean;
+  /** rejestr skasowany przed przebiegiem (`--reset`) — z rozliczeniem, co wróciło */
+  reset?: { removed: RemovedSource[] };
   /** koszt przebiegu w rozbiciu na kategorie — kopia wpisów z costs.json */
   costs?: CostEntry[];
 }

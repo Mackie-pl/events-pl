@@ -32,3 +32,23 @@ export function fmtDayPl(iso: string): string {
   const d = new Date(`${iso}T12:00:00Z`);
   return `${DAY_NAMES[d.getUTCDay()]} ${d.getUTCDate()}.${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
 }
+
+/**
+ * "2026-07-25T18:00:00Z" | "2026-07-25 18:00" | "1721930400"(unix) → {date, time}.
+ * Godzinę emitujemy tylko gdy jest jawnie w napisie (unikamy przesunięć stref przy fallbacku).
+ *
+ * Tu, a nie w pipeline/facebook.ts, bo mapują tak samo dwa niezależne wejścia maszynowe:
+ * rekord Bright Data i rekord `tribe`/JSON-LD. Kopia rozjechałaby się przy pierwszej poprawce.
+ */
+export function splitDateTime(raw: string | null): { date: string | null; time: string | null } {
+  if (!raw) return { date: null, time: null };
+  if (/^\d{10,13}$/.test(raw)) {
+    const ms = raw.length === 10 ? Number(raw) * 1000 : Number(raw);
+    const d = new Date(ms);
+    return Number.isNaN(d.getTime()) ? { date: null, time: null } : { date: d.toISOString().slice(0, 10), time: null };
+  }
+  const m = raw.match(/(\d{4}-\d{2}-\d{2})(?:[T ](\d{2}:\d{2}))?/);
+  if (m) return { date: m[1] ?? null, time: m[2] ?? null };
+  const d = new Date(raw);
+  return Number.isNaN(d.getTime()) ? { date: null, time: null } : { date: d.toISOString().slice(0, 10), time: null };
+}

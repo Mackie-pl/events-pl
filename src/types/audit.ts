@@ -16,6 +16,12 @@ export type AuditKind =
   | "content"
   /** wydarzenia odtworzone z cache, bez wywołania modelu */
   | "cache.hit"
+  /** wybór wyjścia maszynowego (tribe/ical/jsonld) zamiast skrobania HTML-a */
+  | "capability"
+  /** rekordy maszynowe → wydarzenia: ile weszło, ile odpadło i dlaczego */
+  | "capability.parsed"
+  /** wyjście maszynowe nic nie dało — powrót na HTML + model */
+  | "capability.fallback"
   /** wywołanie modelu (ekstrakcja tekstu albo plakat) */
   | "llm"
   /** wydarzenie odrzucone przez potok (dziś: brak daty startu) */

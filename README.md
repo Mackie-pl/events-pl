@@ -59,8 +59,12 @@ npm run daily                   # → events.json + index.html
 npm run discover -- "Poznań" 15 # pełne discovery + weryfikacja URL-i
 npm run discover -- --verify    # sama weryfikacja/naprawa URL-i (tanio: Haiku; cron w discover.yml)
 npm run discover -- --why lubon-ok   # skąd to źródło się wzięło (nie kosztuje nic, nie rusza sieci)
+npm run discover -- --reset "Poznań" 15   # kasuje rejestr i odbudowuje go z samych trafień
+                                          # wyszukiwarki; raport pokazuje, co NIE wróciło
 
 npm run typecheck               # tsc --noEmit (strict)
+npm test                        # testy kodu — muszą być zielone
+npm run test:live               # testy kontraktowe na danych z repo (patrz niżej)
 
 # structured outputs (wymuszony JSON Schema na odpowiedzi) — domyślnie wyłączone.
 # Obsługa zależy od modelu I od tłumaczenia OpenRoutera, więc najpierw jedno wywołanie:
@@ -285,8 +289,34 @@ oraz — jeśli adresu w rejestrze **nie ma** — wszystkie propozycje z nim zwi
 odrzucenia. To samo w panelu: zakładka **Discovery** (rejestr z kolumną „why", rozwijane szczegóły
 i przejście do przebiegu).
 
-⚠️ 46 źródeł z ręcznego etapu 1 (2026-07-20) proweniencji nie ma i mieć nie będzie — panel i `--why`
-mówią to wprost zamiast udawać. Zapisywana jest od pierwszego automatycznego `discover`.
+⚠️ 46 źródeł z ręcznego etapu 1 (2026-07-20) proweniencji nie ma. Do niedawna nie miało też szans jej
+dorobić: trafienie w znany adres kończyło się `decision: "duplicate"` i `continue`, więc rejestr nigdy
+nie dowiadywał się, że nadal jest znajdowany. Teraz są dwie drogi wyjścia — `confirm()` dopisuje
+proweniencję każdemu adresowi, który discovery znajdzie ponownie, a `--reset` odbudowuje rejestr
+wyłącznie z trafień wyszukiwarki i wypisuje, czego nie dało się odtworzyć.
+
+**Rozliczanie rejestru.** Pełny przebieg nie tylko dodaje — także sprawdza, czego wyszukiwarka już
+NIE znajduje. Reguła jest asymetryczna z premedytacją: **degradacja za brak dowodu, śmierć tylko za
+dowód**. Brak trafienia zwiększa `missedRuns`; dopiero dwa pudła z rzędu PRZY zerowym plonie w oknie
+`runs.json` ustawiają `inactive: true` (daily pomija jako `skipped-inactive`). Powrót jest
+automatyczny — pierwsze trafienie zdejmuje flagę. Źródła FB są wyłączone z tej reguły (Google nie
+indeksuje grup, a `verify` i tak ich nie dotyka), a plon ma weto także wobec werdyktu `dead`:
+źródło, które w oknie `runs.json` dało wydarzenia, nie zostanie pochowane przez nieudaną sondę.
+
+### Testy kontraktowe na żywych danych (`npm run test:live`)
+
+`test/live/*.live.ts` czyta to, co faktycznie leży w repo po ostatnim przebiegu, i pilnuje reguł,
+których potok ma dotrzymywać: martwe źródło z działającą zdolnością, `inactive` mimo plonu,
+entrypoint na innym hoście niż źródło, naprawa zgłoszona w raporcie, ale niezapisana w rejestrze.
+
+Zasada, dla której powstały: **danych nie poprawiamy ręcznie.** Gdy w rejestrze widać sprzeczność,
+nie edytujemy `sources.json` — piszemy asercję, która ją nazywa, i zmieniamy potok tak, żeby następny
+przebieg wyprodukował dane poprawnie. Każdy komunikat porażki kończy się linią `POTOK:` z konkretną
+propozycją zmiany, właśnie po to, żeby nie kusiło do edytora.
+
+Dlatego to osobny skrypt, a nie część `npm test`: `npm test` waliduje KOD i musi być zielony,
+`test:live` waliduje STAN DANYCH i ma prawo świecić na czerwono aż do najbliższego przebiegu.
+Czyta drzewo robocze, więc na nieaktualnym klonie odpowie o nieaktualnym stanie.
 
 **Twardość przebiegu** (etap 1 kosztuje realne pieniądze, więc awaria nie może kasować wyniku):
 

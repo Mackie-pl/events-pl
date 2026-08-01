@@ -6,17 +6,21 @@ import type { RunReport, RunTotals, SourceRun } from "../types/index.js";
 
 export function buildReport(startedAt: string, t0: number, sources: SourceRun[], pii: RedactionStats): RunReport {
   const totals: RunTotals = {
-    sources: sources.length, ok: 0, unchanged: 0, errors: 0, skippedFb: 0, skippedDead: 0, empty: 0,
+    sources: sources.length, ok: 0, unchanged: 0, errors: 0,
+    skippedFb: 0, skippedDead: 0, skippedInactive: 0, empty: 0,
     events: 0, followupsTried: 0, geoHits: 0, geoMisses: 0, droppedInvalid: 0,
     calls: 0, promptTokens: 0, completionTokens: 0, costUsd: 0,
     redactedPhones: pii.phones, redactedEmails: pii.emails,
   };
   for (const s of sources) {
+    // `else` na końcu jest workiem na „empty", więc KAŻDY nowy status musi mieć własną
+    // gałąź — inaczej cicho wliczy się w puste źródła i zniknie z podsumowania
     if (s.status === "ok") totals.ok++;
     else if (s.status === "unchanged") totals.unchanged++;
     else if (s.status === "error") totals.errors++;
     else if (s.status === "skipped-fb") totals.skippedFb++;
     else if (s.status === "skipped-dead") totals.skippedDead++;
+    else if (s.status === "skipped-inactive") totals.skippedInactive++;
     else totals.empty++;
     totals.events += s.events;
     totals.followupsTried += s.followups.length;

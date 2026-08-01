@@ -23,6 +23,7 @@ import type {
 } from "../../types/index.js";
 import { fbGroupPostsToText, harvestEventUrls, isEventUrl } from "../facebook.js";
 
+import { capabilitySource } from "./capability-source.js";
 import {
   droppedInvalidStats, extractEvents, extractPoster, resetDroppedInvalid,
 } from "./extract.js";
@@ -145,6 +146,36 @@ async function processFollowup(
 const followupEvents = (url: string, state: PipelineState): EventItem[] =>
   state.extractions?.[url]?.events ?? [];
 
+/**
+ * Domknięcie wydarzeń: przypisanie źródła i geokodowanie. Wspólne dla obu ścieżek —
+ * maszynowej i modelowej — bo miejsce trzeba znaleźć tak samo niezależnie od tego,
+ * czy termin przyszedł z `tribe`, czy z odczytania strony przez model.
+ *
+ * Krok na MIEJSCE, nie na wydarzenie: dziesięć wydarzeń w tej samej sali to jedno
+ * pytanie do geokodera i jedna informacja dla czytającego ślad.
+ */
+async function attachGeo(
+  events: EventItem[], src: Source, state: PipelineState, run: SourceRun,
+): Promise<void> {
+  const geoSeen = new Set<string>();
+  for (const ev of events) {
+    ev.source_id = src.id;
+    ev.town ??= src.town;
+    // geocode ma własny cache po "venue|town", więc wydarzenia z cache nie kosztują zapytań
+    if (ev.venue) {
+      const g = await geocode(ev.venue, ev.town, state.geo);
+      ev.geo = g;
+      if (g) run.geo.hits++; else run.geo.misses++;
+      const key = `${ev.venue}|${ev.town}`;
+      if (!geoSeen.has(key)) {
+        geoSeen.add(key);
+        audit("geo", g ? `„${ev.venue}" → ${g.lat}, ${g.lon}` : `„${ev.venue}" — geokoder nie zna tego adresu`,
+          { venue: ev.venue, town: ev.town, hit: g !== null });
+      }
+    }
+  }
+}
+
 export async function processSource(
   src: Source, state: PipelineState, errors: PipelineError[], fbEventUrls: Set<string>,
 ): Promise<{ events: EventItem[]; run: SourceRun }> {
@@ -171,6 +202,20 @@ export async function processSource(
     if (paths.length) run.archive = paths;
     return { events, run };
   };
+
+  // --- ścieżka maszynowa: gotowe rekordy zamiast strony i modelu ---
+  // null = źródło nie ma zdolności, feed nie odpowiedział albo nic nie dał; wtedy lecimy
+  // dalej normalnie. Powód zejścia zostaje w śladzie jako `capability.fallback`.
+  const viaCapability = await capabilitySource(src, state, run);
+  if (viaCapability) {
+    await attachGeo(viaCapability, src, state, run);
+    run.status = viaCapability.length > 0 ? (run.changed === false ? "unchanged" : "ok") : "empty";
+    audit("done",
+      `status „${run.status}" — ${viaCapability.length} wydarzeń idzie do scalania `
+      + "(ścieżka maszynowa, zero wywołań modelu)",
+      { status: run.status, events: viaCapability.length, ms: Math.round(performance.now() - t0) });
+    return finalize(viaCapability);
+  }
 
   const cache = (state.extractions ??= {});
   const cached = cache[src.id];
@@ -282,25 +327,7 @@ export async function processSource(
     if (fr.outcome !== "error") events.push(...followupEvents(fuUrl, state));
   }
 
-  // krok na MIEJSCE, nie na wydarzenie: dziesięć wydarzeń w tej samej sali to jedno
-  // pytanie do geokodera i jedna informacja dla czytającego ślad
-  const geoSeen = new Set<string>();
-  for (const ev of events) {
-    ev.source_id = src.id;
-    ev.town ??= src.town;
-    // geocode ma własny cache po "venue|town", więc wydarzenia z cache nie kosztują zapytań
-    if (ev.venue) {
-      const g = await geocode(ev.venue, ev.town, state.geo);
-      ev.geo = g;
-      if (g) run.geo.hits++; else run.geo.misses++;
-      const key = `${ev.venue}|${ev.town}`;
-      if (!geoSeen.has(key)) {
-        geoSeen.add(key);
-        audit("geo", g ? `„${ev.venue}" → ${g.lat}, ${g.lon}` : `„${ev.venue}" — geokoder nie zna tego adresu`,
-          { venue: ev.venue, town: ev.town, hit: g !== null });
-      }
-    }
-  }
+  await attachGeo(events, src, state, run);
 
   const anyFollowupChanged = run.followups.some((f) => f.outcome === "ok");
   if (!run.changed && !anyFollowupChanged) {

@@ -9,7 +9,9 @@
 import { strict as assert } from "node:assert";
 import { describe, it } from "node:test";
 
-import { feedCandidates, hasEventDate, probeJsonLd } from "../src/pipeline/discover/capabilities.js";
+import {
+  feedCandidates, hasEventDate, itemHasEventDate, probeJsonLd,
+} from "../src/pipeline/discover/capabilities.js";
 
 describe("hasEventDate — data WYDARZENIA, nie publikacji", () => {
   it("odrzuca wpis WP z samą datą publikacji", () => {
@@ -36,6 +38,44 @@ describe("hasEventDate — data WYDARZENIA, nie publikacji", () => {
   it("nie wchodzi w nieskończoną strukturę", () => {
     const deep = { a: { b: { c: { d: { start_date: "2026-08-15" } } } } };
     assert.equal(hasEventDate(deep), false); // głębiej niż 3 poziomy — świadomie nie szukamy
+  });
+});
+
+/**
+ * Regresja: `datesParsed` dla RSS liczyło się z `<pubDate>`, czyli z daty PUBLIKACJI — tej
+ * samej, którą reguła tego modułu wyklucza. Efekt: KAŻDY feed świata dostawał
+ * `datesParsed === itemsSeen` i wyglądał na maszynowe źródło wydarzeń. W rejestrze dało to
+ * m.in. „komorniki-city rss 1000it/1000d" dla zwykłych gminnych aktualności.
+ */
+describe("itemHasEventDate — RSS liczy termin z TREŚCI, nie z pubDate", () => {
+  const withPubDate = (inner: string): string =>
+    `<item><title>Tytuł</title><pubDate>Thu, 30 Jul 2026 21:24:07 +0200</pubDate>${inner}</item>`;
+
+  it("sam pubDate to za mało — to data publikacji wpisu", () => {
+    assert.equal(itemHasEventDate(withPubDate("<description>Zapraszamy na warsztaty.</description>")), false);
+  });
+
+  it("termin w opisie się liczy (gokkomorniki, lipiec 2026)", () => {
+    assert.equal(itemHasEventDate(withPubDate(
+      "<description><![CDATA[<p>wydarzenie odbędzie się w&nbsp;dniu 05.09.2026</p>]]></description>",
+    )), true);
+  });
+
+  it("termin w samym tytule też się liczy", () => {
+    assert.equal(itemHasEventDate("<item><title>Portal Film Fest 23.08.2026</title></item>"), true);
+  });
+
+  it("rozpoznaje datę słowną po polsku", () => {
+    assert.equal(itemHasEventDate(withPubDate("<description>Koncert 15 września na rynku.</description>")), true);
+  });
+
+  it("rozpoznaje zapis ISO", () => {
+    assert.equal(itemHasEventDate(withPubDate("<description>Start 2026-09-05 o 18:00.</description>")), true);
+  });
+
+  it("Atom: entry z summary działa tak samo", () => {
+    assert.equal(itemHasEventDate("<entry><title>Piknik</title><summary>12.08.2026</summary></entry>"), true);
+    assert.equal(itemHasEventDate("<entry><title>Piknik</title><summary>bez terminu</summary></entry>"), false);
   });
 });
 
