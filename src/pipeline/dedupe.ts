@@ -1,4 +1,5 @@
 /** Scalanie tego samego wydarzenia z kilku źródeł. */
+import { eventKey } from "../shared/event-key.js";
 import type { EventItem } from "../types/index.js";
 import { DEDUPE_SYSTEM } from "./prompts.js";
 
@@ -18,8 +19,8 @@ export interface DedupeResult {
   dropped: DedupeDrop[];
 }
 
-const keyOf = (ev: EventItem): string =>
-  `${(ev.title ?? "").toLowerCase().replace(/\W+/g, "").slice(0, 40)}|${ev.date_start}`;
+// normalizacja mieszka w shared/event-key.ts — raport plonu musi scalać identycznie
+const keyOf = (ev: EventItem): string => eventKey(ev.title, ev.date_start);
 
 /** Tania heurystyka; LLM-owy dedupe (DEDUPE_SYSTEM) do podpięcia dla niejednoznacznych par. */
 export function dedupe(events: EventItem[]): DedupeResult {

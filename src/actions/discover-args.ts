@@ -6,10 +6,15 @@
  */
 export type DiscoverArgs =
   | { mode: "why"; needle: string }
+  | { mode: "yield" }
   | { mode: "run"; verifyOnly: boolean; reset: boolean; center: string; radius: number }
   | { mode: "usage"; err: string };
 
 export function parseArgs(args: readonly string[]): DiscoverArgs {
+  // tryby raportowe idą PRZED rozbiorem miasta/promienia: czytają zapisany stan, więc
+  // domyślne „Poznań 15" nic dla nich nie znaczy i nie ma czego walidować
+  if (args.includes("--yield")) return { mode: "yield" };
+
   const whyAt = args.indexOf("--why");
   if (whyAt !== -1) {
     const needle = args[whyAt + 1];

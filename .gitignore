@@ -3,3 +3,6 @@ dist/
 .env
 *.log
 # state.json, events.json i runs.json commitowane celowo (persystencja crona na GH Actions)
+
+# ustawienia lokalne Claude Code (per-maszyna), launch.json zostaje
+.claude/settings.local.json

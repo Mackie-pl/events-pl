@@ -20,6 +20,42 @@ import { BROWSER_HEADERS, fetchUrl } from "./http.js";
  */
 let fetches = 0;
 
+/**
+ * Co wycinamy przed wysłaniem strony do modelu. Wyłącznie ELEMENTY SEMANTYCZNE i role ARIA —
+ * żadnego zgadywania po klasach czy id, i to jest tu najważniejsza decyzja.
+ *
+ * Pomiar 2026-08-01 na dziesięciu prawdziwych stronach z rejestru. Wariant z `[class*=nav]`
+ * i `[class*=menu]` wyglądał najlepiej ze wszystkich — treść poznan.pl kurczyła się o 50%,
+ * kultura.poznan.pl o 40% — dopóki nie policzyło się linków do wydarzeń w wyniku: spadały
+ * z 1 na 0. CMS poznan.pl trzyma listę wyników w kontenerze z „nav" w nazwie klasy, więc
+ * te 50% to był ŁADUNEK, nie opakowanie. Dwa źródła zamieniłyby się w jałowe dokładnie tak,
+ * jak te, które właśnie naprawiliśmy, tylko trudniej byłoby to powiązać z przyczyną.
+ *
+ * `header` przeszedł osobny test, bo bywa opakowaniem tytułu artykułu (`article > header > h1`):
+ * na siedmiu stronach pojedynczych wydarzeń nie zgubił ANI JEDNEGO tytułu, a na dwóch dał
+ * największy pojedynczy zysk (bibliotekamosina.pl: 5938 → 4334 znaków).
+ *
+ * Zysk jest skromny i zależy od typu strony: ~1% na stronach-listach, ~13% na stronach
+ * pojedynczych wydarzeń (followupach), gdzie chrom stanowi większość dokumentu.
+ */
+const TEXT_SELECTORS = [
+  { selector: "a", options: { ignoreHref: false } },
+  { selector: "nav", format: "skip" },
+  { selector: "script", format: "skip" },
+  { selector: "style", format: "skip" },
+  { selector: "noscript", format: "skip" },
+  { selector: "footer", format: "skip" },
+  { selector: "header", format: "skip" },
+  { selector: "aside", format: "skip" },
+  { selector: "[role=navigation]", format: "skip" },
+  { selector: "[role=banner]", format: "skip" },
+  { selector: "[role=contentinfo]", format: "skip" },
+  { selector: "[role=search]", format: "skip" },
+];
+
+/** Jedno przejście HTML → tekst dla WSZYSTKICH ścieżek pobrania. */
+const toText = (html: string): string => htmlToText(html, { wordwrap: false, selectors: TEXT_SELECTORS });
+
 export type Fetched = {
   kind: "html" | "pdf" | "skip" | "not-modified" | "feed";
   text: string;
@@ -68,17 +104,7 @@ export async function fetchPlain(url: string, extraHeaders: Record<string, strin
     return { kind: "pdf", text, httpStatus: status, ...v };
   }
   const html = await res.text();
-  const text = htmlToText(html, {
-    wordwrap: false,
-    selectors: [
-      { selector: "a", options: { ignoreHref: false } },
-      { selector: "nav", format: "skip" },
-      { selector: "script", format: "skip" },
-      { selector: "style", format: "skip" },
-      { selector: "footer", format: "skip" },
-    ],
-  });
-  return { kind: "html", text, httpStatus: status, ...v };
+  return { kind: "html", text: toText(html), httpStatus: status, ...v };
 }
 
 /**
@@ -114,7 +140,10 @@ export async function fetchHeadless(url: string): Promise<Fetched> {
     const status = resp?.status() ?? 0;
     if (status >= 400) throw httpError(status, url);
     const html = await page.content();
-    return { kind: "html", text: htmlToText(html, { wordwrap: false }), httpStatus: status };
+    // ta sama konwersja co w fetchPlain. Wcześniej headless leciał BEZ selektorów, więc
+    // ścieżka ratunkowa po 403 wysyłała do modelu menu i stopkę, których zwykła nie wysyłała —
+    // dwie różne treści dla tego samego adresu, zależnie od tego, czy serwis nas odbił
+    return { kind: "html", text: toText(html), httpStatus: status };
   } finally {
     await browser.close();
   }

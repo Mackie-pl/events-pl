@@ -5,6 +5,7 @@
  *   npm run discover -- "Poznań" 15   pełne discovery (drogie: Sonnet + search) + weryfikacja
  *   npm run discover -- --verify      tylko weryfikacja/naprawa URL-i z sources.json (tanie: Haiku)
  *   npm run discover -- --why <id|url|fragment nazwy>   dlaczego ten adres jest (albo go nie ma) w rejestrze
+ *   npm run discover -- --yield       co byśmy stracili, zdejmując źródło (liczy z runs.json, za darmo)
  *
  * Weryfikacja: każdy URL jest fetchowany; martwy próbujemy naprawić (Brave search + LLM).
  * Naprawiony: stary adres ląduje w previous_urls. Nienaprawialny: dead:true + notatka
@@ -35,7 +36,7 @@ import { dropNote, reconcileEntrypoints } from "../pipeline/discover/entrypoint-
 import { harvestById, reconcile } from "../pipeline/discover/reconcile.js";
 import { buildRegistry } from "../pipeline/discover/registry.js";
 import { verifySource } from "../pipeline/verify/verify-source.js";
-import { costLine, recordCosts } from "../reporting/cost-ledger.js";
+import { costLine, costRates, recordCosts } from "../reporting/cost-ledger.js";
 import { dailyRunsStore } from "../reporting/daily-report.js";
 import { buildDiscoverCosts } from "../reporting/discover-costs.js";
 import { discoverRunsStore } from "../reporting/discover-runs-store.js";
@@ -43,6 +44,8 @@ import { writeDiscoverSummary } from "../reporting/discover-summary.js";
 import { buildTotals, emptyTotals } from "../reporting/discover-totals.js";
 import { OUTCOME_ICON } from "../reporting/icons.js";
 import { redactDiscoverRun } from "../reporting/redact.js";
+import { buildYield } from "../reporting/source-yield.js";
+import { printYield } from "../reporting/yield-print.js";
 import { todayIso } from "../shared/dates.js";
 import { describeError } from "../shared/errors.js";
 import { urlKey } from "../shared/url.js";
@@ -125,18 +128,31 @@ async function runStages(
     const geo = await townsInRadius(opts.center, opts.radius);
     report.geo = geo;
     console.log(`Gminy w promieniu ${opts.radius} km od ${opts.center}:`, geo.towns.join(", "));
-    for (const town of geo.towns) {
-      report.towns.push(await discoverTown(town, reg, opts.startedAt));
+    for (const [i, town] of geo.towns.entries()) {
+      console.log(`\n── gmina ${i + 1}/${geo.towns.length}: ${town}`);
+      const done = await discoverTown(town, reg, opts.startedAt);
+      report.towns.push(done);
+      console.log(`  ↳ ${town}: ${done.proposed} propozycji, +${done.added} nowych, ` +
+        `${done.confirmed} potwierdzonych · $${done.llm.costUsd.toFixed(4)} · ${(done.ms / 1000).toFixed(1)}s`);
     }
     reconcileRegistry(report, cfg, reg, { startedAt: opts.startedAt, towns: geo.towns, harvest });
   }
   // weryfikacja wszystkich źródeł (także świeżo dodanych — dla nich to pierwszy fetch w życiu)
+  //
+  // Linia leci dla KAŻDEGO źródła, także dla ✅. Wcześniej logowały się same kłopoty i wychodziło
+  // z tego przewrotne: im lepiej szło, tym dłużej CLI milczał, a najdłuższy etap przebiegu
+  // (kilkadziesiąt fetchów) nie dawał znaku życia ani śladu postępu.
+  const total = cfg.sources.length;
+  console.log(`\n── weryfikacja: ${total} źródeł`);
+  let done = 0;
   for (const src of cfg.sources) {
     const ver = await verifySource(src, reg.fresh.has(src.id), harvest.get(src.id) ?? 0);
-    if (ver.outcome !== "ok" && ver.outcome !== "skipped") {
-      const detail = ver.outcome === "fixed" ? `${ver.url} → ${ver.newUrl}` : ver.err;
-      console.log(`  ${OUTCOME_ICON[ver.outcome]} ${ver.id}: ${detail}`);
-    }
+    done++;
+    const detail = ver.outcome === "fixed" ? `${ver.url} → ${ver.newUrl}`
+      : ver.outcome === "skipped" ? ver.note
+        : ver.outcome === "ok" ? undefined
+          : ver.err;
+    console.log(`  ${OUTCOME_ICON[ver.outcome]} ${done}/${total} ${ver.id}${detail ? `: ${detail}` : ""}`);
     report.verifications.push(ver);
   }
 }
@@ -264,6 +280,10 @@ async function main(): Promise<void> {
   }
   if (args.mode === "why") {
     explain(args.needle, await loadCfg("Poznań", 15), await discoverRunsStore.all());
+    return;
+  }
+  if (args.mode === "yield") {
+    printYield(buildYield(await dailyRunsStore.all(), costRates()), await loadCfg("Poznań", 15));
     return;
   }
   await runDiscovery(args, argv);

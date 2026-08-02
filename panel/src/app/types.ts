@@ -407,7 +407,11 @@ export interface TownDiscoveryRun {
   confirmed?: number;
   /** brak w przebiegach sprzed ledgeru propozycji */
   proposals?: SourceProposal[];
-  parse?: 'ok' | 'no-json' | 'bad-json' | 'no-sources';
+  parse?: 'ok' | 'no-json' | 'bad-json' | 'truncated' | 'no-sources';
+  /** ile kompletnych propozycji wyłuskano z uciętej odpowiedzi */
+  recovered?: number;
+  /** powód zatrzymania modelu (`stop`/`length`) */
+  finish?: string;
   responseChars?: number;
   llm: LlmUsage;
   ms: number;

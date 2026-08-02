@@ -1,9 +1,12 @@
 /** Discovery jednej gminy: zapytania do wyszukiwarki → triage modelem → wpisy do rejestru. */
 import { searchState, webSearch } from "../../adapters/search.js";
-import { MODEL_DISCOVER, chat, resetUsage, snapshotUsage } from "../../adapters/openrouter.js";
+import {
+  MODEL_DISCOVER, chat, finishReason, resetUsage, snapshotUsage, wasTruncated,
+} from "../../adapters/openrouter.js";
 import { archiveRaw, beginSource, sourcePaths } from "../../adapters/supabase-archive.js";
 import { todayIso } from "../../shared/dates.js";
 import { describeError } from "../../shared/errors.js";
+import { salvageArray } from "../../shared/json-salvage.js";
 import { slug, str, trim } from "../../shared/text.js";
 import { urlKey } from "../../shared/url.js";
 import type {
@@ -14,6 +17,19 @@ import { DISCOVERY_QUERIES, DISCOVERY_SYSTEM } from "../prompts.js";
 import { MIN_CONFIDENCE, matchHit } from "./proposal-match.js";
 import { type Registry, uniqueId } from "./registry.js";
 import { toSource } from "./to-source.js";
+
+/**
+ * Sufit odpowiedzi modelu na jedną gminę.
+ *
+ * 4000 (poprzednia wartość) wystarczało, dopóki gminy były małe. Poznań to dziesięć zapytań
+ * po ~9 wyników, czyli ~94 rekordy do oceny — model uderzył w limit CO DO TOKENA i cała
+ * gmina przepadła. Zależność jest przewrotna: im lepsze wyniki wyszukiwarki, tym pewniejsza
+ * porażka, więc największa gmina przebiegu zawodzi pierwsza.
+ *
+ * 12000 daje ~3x zapasu przy obecnej liczbie zapytań. To sufit bezpieczeństwa, nie budżet:
+ * płacimy za tokeny FAKTYCZNIE wygenerowane, więc małe gminy nic na tym nie tracą.
+ */
+const MAX_TOKENS = Number(process.env["DISCOVER_MAX_TOKENS"] ?? 12_000);
 
 /** Kontekst potwierdzenia — te same cztery rzeczy, z których buduje się proweniencję. */
 export interface Confirmation {
@@ -79,9 +95,18 @@ export async function discoverTown(town: string, reg: Registry, runStartedAt: st
   // powiedzieć, KTÓRE zapytanie wyprodukowało dane źródło
   const hits: Array<{ query: string; result: SearchResult }> = [];
   try {
-    for (const tmpl of DISCOVERY_QUERIES) {
+    for (const [i, tmpl] of DISCOVERY_QUERIES.entries()) {
       const query = tmpl.replace("{town}", town);
-      for (const result of await webSearch(query, run.searches)) hits.push({ query, result });
+      const results = await webSearch(query, run.searches);
+      for (const result of results) hits.push({ query, result });
+      // przebieg spędza tu ~10 s na gminę i wcześniej nie mówił o tym nic — po podsumowaniu
+      // dało się odczytać, ILE zapytań poszło, ale nigdy KTÓRE i czy jeszcze żyje
+      const call = run.searches.at(-1);
+      console.log(
+        `  🔍 ${town} ${i + 1}/${DISCOVERY_QUERIES.length}: "${query}" — ` +
+        (call?.skipped ? "pominięte" : `${results.length} wyników`) +
+        `${call?.err ? ` · ${call.err}` : ""} (${call?.ms ?? 0} ms)`,
+      );
     }
     if (hits.length === 0) {
       run.parse = "no-sources";
@@ -94,14 +119,24 @@ export async function discoverTown(town: string, reg: Registry, runStartedAt: st
     await archiveRaw(`discover-${slug(town)}`, `search://web?town=${encodeURIComponent(town)}`,
       JSON.stringify({ town, searches: run.searches }, null, 1), "search");
 
+    // najdłuższy pojedynczy krok przebiegu (Poznań: 60 s) — bez tej linii CLI milczał
+    // przez minutę i nie dawało się odróżnić pracy od zawieszenia
+    console.log(`  🧠 ${town}: ${MODEL_DISCOVER} ocenia ${hits.length} wyników (limit ${MAX_TOKENS} tok.)…`);
+    const tLlm = performance.now();
     const out = await chat({
       model: MODEL_DISCOVER,
       task: "discover",
       system: DISCOVERY_SYSTEM,
       user: `Miasto/gmina: ${town}\nWyniki wyszukiwania:\n${JSON.stringify(hits.map((h) => h.result))}`,
-      maxTokens: 4000,
+      maxTokens: MAX_TOKENS,
     });
+    const finish = finishReason();
     run.responseChars = out.length;
+    if (finish) run.finish = finish;
+    console.log(
+      `  🧠 ${town}: ${out.length} zn. w ${((performance.now() - tLlm) / 1000).toFixed(1)}s` +
+      ` (koniec: ${finish ?? "?"})`,
+    );
 
     const m = out.match(/\{[\s\S]*\}/);
     if (!m) {
@@ -114,10 +149,24 @@ export async function discoverTown(town: string, reg: Registry, runStartedAt: st
       const parsed = (JSON.parse(m[0]) as { sources?: unknown }).sources;
       raw = Array.isArray(parsed) ? parsed : [];
       run.parse = raw.length ? "ok" : "no-sources";
+      if (wasTruncated()) {
+        // JSON się domknął, ale model i tak został przerwany — lista jest niepełna,
+        // a bez ostrzeżenia wyglądałaby na kompletną odpowiedź „tyle jest w tej gminie"
+        console.warn(`  ⚠️ ${town}: odpowiedź ucięta na limicie ${MAX_TOKENS} tok. — lista może być niepełna`);
+      }
     } catch (e) {
-      run.parse = "bad-json";
-      run.err = `niepoprawny JSON od modelu: ${describeError(e)}`;
-      return finalize();
+      // Ucięcie psuje WYŁĄCZNIE ogon dokumentu. Kompletne rekordy sprzed miejsca przerwania
+      // są w pełni dobre i nie ma powodu wyrzucać ich razem z wywołaniem, które już kosztowało.
+      raw = salvageArray(out, "sources");
+      run.recovered = raw.length;
+      const cut = wasTruncated();
+      run.parse = cut ? "truncated" : "bad-json";
+      run.err = (cut
+        ? `odpowiedź ucięta na limicie ${MAX_TOKENS} tokenów (podnieś DISCOVER_MAX_TOKENS)`
+        : `niepoprawny JSON od modelu: ${describeError(e)}`)
+        + ` — odzyskano ${raw.length} kompletnych propozycji`;
+      console.warn(`  ⚠️ ${town}: ${run.err}`);
+      if (!raw.length) return finalize();
     }
     run.proposed = raw.length;
 

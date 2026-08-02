@@ -247,8 +247,14 @@
                 }
               </td>
               <td tuiTd>{{ resultCount(t.searches) }}</td>
-              <td tuiTd [class.negative]="t.parse === 'no-json' || t.parse === 'bad-json'">
+              <td
+                tuiTd
+                [class.negative]="t.parse === 'no-json' || t.parse === 'bad-json' || t.parse === 'truncated'"
+              >
                 {{ t.parse ?? '—' }}
+                @if (t.recovered) {
+                  <span class="muted">· odzyskano {{ t.recovered }}</span>
+                }
                 @if (t.err) {
                   <span class="muted">· {{ t.err }}</span>
                 }

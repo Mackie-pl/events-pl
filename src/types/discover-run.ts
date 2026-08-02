@@ -45,6 +45,17 @@ export interface GeoLookup {
   err?: string;
   /** Overpass padł — discovery poleciało tylko dla miasta centralnego */
   fallback?: boolean;
+  /**
+   * Kod odpowiedzi Overpass przy błędzie. 4xx (poza 429) = odbity NASZ request — wada
+   * konfiguracji, którą powtórzenie przebiegu utrwala zamiast naprawić; 5xx/429 = ich
+   * przeciążenie. Bez tego pola oba wyglądają w raporcie identycznie.
+   */
+  httpStatus?: number;
+  /**
+   * Ile gmin OSM w ogóle rozważył (prostokąt), zanim przycięliśmy je do promienia.
+   * Rozstrzyga „mało gmin, bo region jest rzadki" kontra „mało, bo filtr za ostry".
+   */
+  considered?: number;
 }
 
 /**
@@ -93,8 +104,17 @@ export interface TownDiscoveryRun {
   /**
    * Czy dało się odczytać odpowiedź modelu. `no-json`/`bad-json` to awaria ekstrakcji,
    * nie „brak źródeł w gminie" — bez tego pola jedno wygląda dokładnie jak drugie.
+   *
+   * `truncated` wydzielone z `bad-json`, bo to inna awaria i inna naprawa: model NIE zwrócił
+   * złego JSON-a, tylko został przerwany na limicie `max_tokens` w środku tablicy. Poznań
+   * 2026-08-01 przepalił tak $0.093 i zameldował „niepoprawny JSON od modelu" — diagnozę,
+   * która kierowała na prompt zamiast na limit.
    */
-  parse?: "ok" | "no-json" | "bad-json" | "no-sources";
+  parse?: "ok" | "no-json" | "bad-json" | "truncated" | "no-sources";
+  /** ile kompletnych propozycji wyłuskano z uciętej odpowiedzi (reszta przepadła) */
+  recovered?: number;
+  /** powód zatrzymania modelu prosto od dostawcy: `length` = ucięte na limicie */
+  finish?: string;
   /** długość odpowiedzi modelu w znakach */
   responseChars?: number;
   llm: LlmUsage;

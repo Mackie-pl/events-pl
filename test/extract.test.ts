@@ -138,3 +138,50 @@ describe("parseModelJson — odporność na śmieci od modelu", () => {
     assert.deepEqual(parseModelJson("{}").events, []);
   });
 });
+
+/**
+ * Odczyt uszkodzonej odpowiedzi. Do sierpnia 2026 KAŻDA awaria parsowania kończyła się cichym
+ * `{ events: [] }`, nieodróżnialnym od strony bez wydarzeń — trzy poznańskie portale stały tak
+ * przez pięć przebiegów ze statusem „empty", płacąc ~$0.49 dziennie za zero wydarzeń.
+ *
+ * Oba przypadki są z prawdziwych odpowiedzi Haiku 4.5:
+ *   - ucięcie na max_tokens (dawniej 4000, dziś EXTRACT_MAX_TOKENS),
+ *   - niezaescapowany cudzysłów w tytule: model przepisuje typografię strony i zamyka
+ *     polskie „ prostym ", co urywa string JSON-a w środku wartości.
+ */
+describe("parseModelJson — uszkodzona odpowiedź", () => {
+  const good = '{"title":"Koncert","date_start":"2026-08-01","is_noise":false}';
+
+  it("ratuje kompletne wydarzenia z odpowiedzi uciętej w pół rekordu", () => {
+    const cut = `{"events":[${good},${good},{"title":"Nieskoń`;
+    const r = parseModelJson(cut, true);
+    assert.equal(r.parse, "truncated");
+    assert.equal(r.events.length, 2, "dwa kompletne rekordy nie mogą zginąć z jednym uciętym");
+    assert.equal(r.recovered, 2);
+  });
+
+  it("ucięcie i zwykły zły JSON to dwie różne diagnozy", () => {
+    const broken = `{"events":[${good},{"title":"Spacer „Okrąglak" z przewodnikiem"}]}`;
+    assert.equal(parseModelJson(broken, false).parse, "bad-json");
+    assert.equal(parseModelJson(broken, true).parse, "truncated");
+  });
+
+  it("odzyskane wydarzenia przechodzą tę samą walidację co reszta", () => {
+    const cut = `{"events":[${good},{"title":"Bez daty","is_noise":false},{"title":"Uci`;
+    const r = parseModelJson(cut, true);
+    assert.equal(r.events.length, 1, "wpis bez daty odpada tak samo jak w zdrowej ścieżce");
+    assert.equal(droppedInvalidStats(), 1);
+  });
+
+  it("brak JSON-a w ogóle ma własny werdykt, nie „zero wydarzeń\"", () => {
+    const r = parseModelJson("Przepraszam, nie znalazłem wydarzeń na tej stronie.");
+    assert.equal(r.parse, "no-json");
+    assert.deepEqual(r.events, []);
+  });
+
+  it("zdrowa odpowiedź NIE dostaje adnotacji o awarii", () => {
+    const r = parseModelJson(`{"events":[${good}]}`);
+    assert.equal(r.parse, undefined, "brak pola = odczytane w całości");
+    assert.equal(r.recovered, undefined);
+  });
+});

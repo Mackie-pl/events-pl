@@ -76,14 +76,23 @@ export interface ChatOptions {
 }
 
 /**
- * Structured outputs (`response_format: json_schema`) — WYŁĄCZONE domyślnie.
+ * Structured outputs (`response_format: json_schema`) — WŁĄCZONE domyślnie od 2026-08-01.
  *
- * Nie dlatego, że są gorsze: znoszą wyłuskiwanie JSON-a regexem i gwarantują kształt.
- * Dlatego, że MODEL_EXTRACT jest podmieniany z .env, obsługa zależy od modelu I od tego,
- * jak OpenRouter tłumaczy to na API danego dostawcy, a sprawdzenie kosztuje płatne
- * wywołanie. Włącz świadomie: STRUCTURED_OUTPUTS=1 (najpierw `npm run check:structured`).
+ * Były wyłączone, dopóki nikt nie zapłacił za sprawdzenie. Sonda (`npm run check:structured`,
+ * $0.0041) pokazała: schemat przyjęty przez Anthropic, odpowiedź to goły JSON, przechodzi
+ * walidację bez łatania braków. Rozstrzygnął jednak dopiero pomiar na prawdziwym źródle —
+ * `estrada.poznan.pl` zwracała 8 wydarzeń bez schematu i 25 z nim.
+ *
+ * Powód jest konkretny i będzie wracał: model przepisuje typografię strony i wypuszcza
+ * `"title": "Spacer „Okrąglak – eksperyment modernizmu" z dr hab. ..."` — polski cudzysłów
+ * otwierający, ASCII zamykający, czyli string JSON-a urwany w środku wartości. Żaden prompt
+ * tego nie gwarantuje; `response_format` gwarantuje.
+ *
+ * Wyłącznik zostaje (`STRUCTURED_OUTPUTS=0`), bo MODEL_EXTRACT jest podmieniany z .env,
+ * a obsługa zależy od modelu I od dostawcy, na którego zrouteruje OpenRouter. Odbicie
+ * schematu i tak gasi flagę na resztę procesu (patrz `structuredOff` niżej).
  */
-const STRUCTURED = process.env["STRUCTURED_OUTPUTS"] === "1";
+const STRUCTURED = process.env["STRUCTURED_OUTPUTS"] !== "0";
 
 /**
  * Dostawcy pomijani PRZY SCHEMACIE (slugi OpenRoutera, małymi literami). Domyślnie `azure`,
@@ -116,9 +125,20 @@ let structuredError: string | null = null;
  */
 let lastProvider: string | null = null;
 
+/**
+ * Powód zatrzymania ostatniego wywołania. Modułowy jak `lastProvider` i z tego samego
+ * powodu: `chat()` zwraca sam tekst i tak używa go kilkanaście miejsc, a rozszerzenie
+ * zwracanego typu przepisałoby każde z nich. Wywołania są sekwencyjne (await), więc
+ * „ostatnie" jest jednoznaczne — czytaj TUŻ po `chat()`.
+ */
+let lastFinish: string | null = null;
+
 export const structuredActive = (): boolean => STRUCTURED && !structuredOff;
 export const structuredRejection = (): string | null => structuredError;
 export const servingProvider = (): string | null => lastProvider;
+export const finishReason = (): string | null => lastFinish;
+/** Czy ostatnia odpowiedź została ucięta na `max_tokens` — a nie skończona przez model. */
+export const wasTruncated = (): boolean => lastFinish === "length";
 
 /** Tylko dla sondy i testów: pozwala spróbować innego schematu w tym samym procesie. */
 export function resetStructured(): void {
@@ -137,6 +157,8 @@ export interface LlmCallRecord {
   ms: number;
   ok: boolean;
   err?: string;
+  /** powód zatrzymania (`stop`/`length`) — w archiwum odróżnia „model tak uznał" od „ucięliśmy go" */
+  finish?: string;
 }
 
 /**
@@ -162,7 +184,15 @@ async function record(rec: LlmCallRecord): Promise<void> {
 }
 
 interface ChatCompletionResponse {
-  choices?: Array<{ message?: { content?: string | null } }>;
+  choices?: Array<{
+    message?: { content?: string | null };
+    /**
+     * `stop` = model skończył sam, `length` = ucięliśmy go na `max_tokens`. Bez tego pola
+     * ucięta odpowiedź dociera wyżej jako zwykły string i wygląda na kompletną — potok
+     * zgłasza wtedy „niepoprawny JSON", czyli wskazuje prompt zamiast limitu.
+     */
+    finish_reason?: string | null;
+  }>;
   usage?: { prompt_tokens?: number; completion_tokens?: number; cost?: number };
   /** kto FAKTYCZNIE obsłużył request — ten sam model bywa serwowany z kilku źródeł */
   provider?: string;
@@ -265,6 +295,8 @@ export async function chat(opts: ChatOptions): Promise<string> {
   if (!apiKey) throw new Error("Brak OPENROUTER_API_KEY");
 
   const t0 = performance.now();
+  // zerujemy PRZED wywołaniem: po awarii nie wolno oddać powodu z poprzedniego wywołania
+  lastFinish = null;
   const base = { model: opts.model, task: opts.task, system: opts.system, user: opts.user };
   const ms = (): number => Math.round(performance.now() - t0);
   // nieudane wywołania archiwizujemy tak samo jak udane — to one wymagają debugowania
@@ -296,6 +328,7 @@ export async function chat(opts: ChatOptions): Promise<string> {
   }
 
   lastProvider = json.provider ?? null;
+  lastFinish = json.choices?.[0]?.finish_reason ?? null;
   const usage = {
     promptTokens: json.usage?.prompt_tokens ?? 0,
     completionTokens: json.usage?.completion_tokens ?? 0,
@@ -308,7 +341,10 @@ export async function chat(opts: ChatOptions): Promise<string> {
   addTask(opts.task, usage);
 
   const response = json.choices?.[0]?.message?.content ?? "";
-  await record({ ...base, response, usage, ms: ms(), ok: true });
+  await record({
+    ...base, response, usage, ms: ms(), ok: true,
+    ...(lastFinish ? { finish: lastFinish } : {}),
+  });
   return response;
 }
 

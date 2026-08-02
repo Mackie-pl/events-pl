@@ -302,6 +302,13 @@ export async function processSource(
         { chars: fetched.text.length, hash: hash.slice(0, 12), was: cached?.hash.slice(0, 12) ?? null });
       const result = await extractEvents(fetched.text, url);
       pageEvents = [...(result.events ?? [])];
+      if (result.parse) {
+        // do raportu, nie tylko do śladu: `--yield` liczy jałowe źródła z runs.json i bez tej
+        // notatki „zepsuty odczyt" wygląda tam na „serwis nie ma wydarzeń"
+        run.note = result.parse === "truncated"
+          ? `odpowiedź modelu ucięta na limicie — odzyskano ${result.recovered ?? 0} wydarzeń`
+          : `nie dało się odczytać odpowiedzi modelu (${result.parse})`;
+      }
       cache[src.id] = { hash, events: pageEvents, at: new Date().toISOString(), ...v };
       state.hashes[src.id] = hash; // legacy, dla zgodności ze starym state.json
       const proposed = (result.followups ?? []).map((f) => f.url);

@@ -21,6 +21,16 @@ export interface EventItem extends ModelEvent {
 export interface ExtractionResult {
   events: EventItem[];
   followups?: Followup[];
+  /**
+   * Czy dało się odczytać odpowiedź modelu. Brak pola = odczytana w całości.
+   *
+   * Do 2026-08 parser połykał wyjątek i zwracał pustą listę, więc ucięta odpowiedź wyglądała
+   * IDENTYCZNIE jak strona bez wydarzeń: `status: "empty"` i nic więcej. Trzy poznańskie
+   * źródła stały tak przez pięć przebiegów, płacąc ~$0.49 dziennie za zero wydarzeń.
+   */
+  parse?: "no-json" | "bad-json" | "truncated";
+  /** ile kompletnych wydarzeń wyłuskano z uciętej odpowiedzi */
+  recovered?: number;
 }
 
 export interface EventsFile {

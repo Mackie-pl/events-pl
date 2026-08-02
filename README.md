@@ -59,6 +59,7 @@ npm run daily                   # → events.json + index.html
 npm run discover -- "Poznań" 15 # pełne discovery + weryfikacja URL-i
 npm run discover -- --verify    # sama weryfikacja/naprawa URL-i (tanio: Haiku; cron w discover.yml)
 npm run discover -- --why lubon-ok   # skąd to źródło się wzięło (nie kosztuje nic, nie rusza sieci)
+npm run discover -- --yield          # co byśmy stracili, zdejmując źródło (też darmowe, z runs.json)
 npm run discover -- --reset "Poznań" 15   # kasuje rejestr i odbudowuje go z samych trafień
                                           # wyszukiwarki; raport pokazuje, co NIE wróciło
 
@@ -66,10 +67,10 @@ npm run typecheck               # tsc --noEmit (strict)
 npm test                        # testy kodu — muszą być zielone
 npm run test:live               # testy kontraktowe na danych z repo (patrz niżej)
 
-# structured outputs (wymuszony JSON Schema na odpowiedzi) — domyślnie wyłączone.
-# Obsługa zależy od modelu I od tłumaczenia OpenRoutera, więc najpierw jedno wywołanie:
-npm run check:structured        # PŁATNE (~$0.001): mówi, czy MODEL_EXTRACT przyjmuje schemat
-# jeśli przyjmuje → STRUCTURED_OUTPUTS=1 w .env
+# structured outputs (wymuszony JSON Schema na odpowiedzi) — od 2026-08-01 domyślnie WŁĄCZONE.
+# Obsługa zależy od modelu I od tłumaczenia OpenRoutera, więc po zmianie MODEL_EXTRACT:
+npm run check:structured        # PŁATNE (~$0.004): mówi, czy MODEL_EXTRACT przyjmuje schemat
+# jeśli odbija → STRUCTURED_OUTPUTS=0 w .env (potok i tak gasi flagę sam po odbiciu)
 ```
 
 **Konfiguracja idzie przez `.env`** (wzór w `.env.example`, plik jest w `.gitignore`).
@@ -289,6 +290,32 @@ oraz — jeśli adresu w rejestrze **nie ma** — wszystkie propozycje z nim zwi
 odrzucenia. To samo w panelu: zakładka **Discovery** (rejestr z kolumną „why", rozwijane szczegóły
 i przejście do przebiegu).
 
+**Plon marginalny (`--yield`).** Proweniencja mówi, SKĄD źródło jest; plon mówi, czy zasługuje na
+miejsce. Rejestr rośnie monotonicznie, a discovery dla jednej gminy potrafi dodać pięć grup FB
+o w większości tych samych imprezach — „ile wydarzeń dało źródło" nie jest tu miarą wartości.
+Liczy się, ile dało wydarzeń, **których nie dało nic innego**:
+
+```bash
+npm run discover -- --yield        # liczy z runs.json: zero sieci, zero kosztu
+```
+
+Nośnikiem jest `SourceRun.produced` — stan **przed** dedupe, jedyne miejsce, w którym widać rekordy
+przegranych; po scaleniu duplikat znika i „nikt inny tego nie miał" przestaje być odróżnialne od
+„mieli wszyscy". Tożsamość wydarzenia bierzemy z `shared/event-key.ts`, tej samej funkcji, którą
+scala potok — własna normalizacja mierzyłaby nakładanie inne niż to, które faktycznie zaszło.
+
+Raport rozdziela dwie diagnozy, które w symulacji wyglądają identycznie (obie „można zdjąć za darmo"),
+a wymagają przeciwnych działań: **redundantne** (dają wydarzenia, ale wszystkie ma ktoś inny — nadmiar
+do usunięcia) i **jałowe** (nie dają nic — zwykle usterka do naprawy). Pierwszy pomiar na 5 przebiegach
+i 46 źródłach: **zero redundantnych**, 25 jałowych za $0.74 na przebieg. Nakładanie istnieje
+(komorniki-city ↔ komorniki-gok mają 19 wspólnych wydarzeń), ale każde źródło ma też coś wyłącznie
+swojego — cały wydatek bez pokrycia siedzi w źródłach, które nie dają nic.
+
+⚠️ Rachunek jest w JEDNĄ stronę ostrożny i w jedną nie: klucz scalania obcina tytuł do 40 znaków bez
+znaków specjalnych, więc „Fiesta" i „Fiesta 2026" liczą się osobno — **nakładanie jest zaniżone**,
+wyłączność zawyżona. Źródło, które mimo to wyszło na zbędne, jest zbędne tym pewniej. Nie mierzymy
+też utraty WYPRZEDZENIA: kto publikuje pierwszy, a resztę i tak dopisują inni, wyjdzie tu na zbędnego.
+
 ⚠️ 46 źródeł z ręcznego etapu 1 (2026-07-20) proweniencji nie ma. Do niedawna nie miało też szans jej
 dorobić: trafienie w znany adres kończyło się `decision: "duplicate"` i `continue`, więc rejestr nigdy
 nie dowiadywał się, że nadal jest znajdowany. Teraz są dwie drogi wyjścia — `confirm()` dopisuje
@@ -334,7 +361,27 @@ Czyta drzewo robocze, więc na nieaktualnym klonie odpowie o nieaktualnym stanie
   Gdy wyszukiwarka JEST, naprawę próbujemy zawsze, także dla `dns-dead`: martwa domena nie znaczy
   martwej instytucji. `gokis-kleszczewo.pl` nie istnieje, ale GOKiS Kleszczewo działa pod
   `gokis.kleszczewo.pl` — i właśnie takie przypadki naprawa ma łapać,
-- padnięty Overpass → discovery samego miasta centralnego zamiast utraty całego przebiegu,
+- padnięty Overpass → discovery samego miasta centralnego zamiast utraty całego przebiegu, ale **4xx
+  jest w raporcie oznaczone osobno**: to odbity nasz request, więc powtórzenie przebiegu go nie naprawi.
+  Overpass wymaga własnego User-Agenta (`Mozilla/…` dostaje 406 tak samo jak brak nagłówka), a gminy
+  zbieramy dwoma zapytaniami — bbox miasta, potem gminy w rozszerzonym prostokącie przycięte do
+  promienia u nas. `(around.<relacja>:R)` wygląda naturalniej i zwraca **zero** elementów po dwóch
+  minutach: `around` mierzy od węzłów zbioru, a relacja graniczna sama żadnych nie wnosi,
+- **wycinanie chromu strony: tylko semantyka, nigdy klasy.** `page-fetch.ts` zdejmuje przed
+  wysłaniem do modelu `nav`/`header`/`footer`/`aside`/`script`/`style`/`noscript` i role ARIA
+  (`banner`, `navigation`, `contentinfo`, `search`). Wariant po klasach (`[class*=nav]`,
+  `[class*=menu]`) wygląda dwa razy lepiej w liczbach — i kasuje ładunek: na poznan.pl treść
+  kurczyła się o 50%, a linki do wydarzeń z 1 na 0, bo CMS trzyma listę wyników w kontenerze
+  z „nav" w nazwie klasy. Zysk wersji bezpiecznej: ~1% na stronach-listach, ~13% na followupach
+  (stronach pojedynczych wydarzeń), gdzie chrom jest większością dokumentu,
+- **ucięta odpowiedź modelu to nie zepsuty JSON.** `finish_reason: length` jest raportowane jako
+  `parse: "truncated"` (nie `bad-json`), a z niedomkniętej tablicy odzyskujemy kompletne rekordy
+  sprzed miejsca przerwania — `JSON.parse` kasował je razem z jednym niedokończonym, po opłaconym
+  już wywołaniu. Sufit odpowiedzi: `DISCOVER_MAX_TOKENS` / `EXTRACT_MAX_TOKENS` (domyślnie 12000).
+  W ekstrakcji ta sama wada była CICHSZA i kosztowniejsza: `parseModelJson` łapało wyjątek
+  i zwracało pustą listę, więc ucięta odpowiedź wyglądała identycznie jak strona bez wydarzeń
+  (`status: "empty"`). Trzy poznańskie portale stały tak przez pięć przebiegów, płacąc ~$0.49
+  dziennie za zero wydarzeń — i to jest cała odpowiedź na pytanie „czemu są jałowe",
 - odpowiedź modelu jest **walidowana**, nie rzutowana: rekord bez URL-a odpada, nieznane `type`/`fetch`
   są normalizowane, a kolizja `id` dostaje sufiks — `id` jest kluczem cache ekstrakcji w `state.json`,
   więc duplikat cicho scalałby dwa różne źródła,

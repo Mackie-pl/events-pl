@@ -16,8 +16,15 @@ function headerLines(report: DiscoverRunReport): string[] {
     lines.push(`> ⚠️ **przebieg przerwany:** ${md(report.err, 300)} — liczby są cząstkowe`, "");
   }
   if (report.geo?.fallback) {
+    const status = report.geo.httpStatus;
+    // 4xx = odbity NASZ request. Powtórzenie przebiegu go nie naprawi, a przy --reset
+    // zawęża pomiar do jednej gminy — to musi się czytać jak usterka, nie jak pogoda.
+    const ours = status !== undefined && status < 500 && status !== 429;
     lines.push(
-      `> ⚠️ Overpass padł (${md(report.geo.err ?? "", 200)}) — discovery tylko dla miasta centralnego`,
+      ours
+        ? `> ❌ Overpass **odrzucił nasz request** (${md(report.geo.err ?? "", 200)}) — ` +
+          "to błąd po naszej stronie, discovery objęło tylko miasto centralne"
+        : `> ⚠️ Overpass padł (${md(report.geo.err ?? "", 200)}) — discovery tylko dla miasta centralnego`,
       "",
     );
   }
@@ -52,7 +59,8 @@ function townTable(towns: TownDiscoveryRun[]): string[] {
     const skipped = town.searches.length - sent;
     lines.push(
       `| ${town.town} | ${sent}${skipped ? ` (+${skipped} pom.)` : ""} | ` +
-      `${town.parse ?? "—"}${town.err ? ` (${md(town.err, 60)})` : ""} | ` +
+      `${town.parse ?? "—"}${town.recovered ? ` (odzyskano ${town.recovered})` : ""}` +
+      `${town.err ? ` (${md(town.err, 60)})` : ""} | ` +
       `${town.proposed} | ${town.added} | ${town.llm.promptTokens}+${town.llm.completionTokens} | ` +
       `$${town.llm.costUsd.toFixed(4)} | ${town.ms} |`,
     );

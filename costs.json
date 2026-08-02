@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-02T06:40:10.530Z",
+ "updated": "2026-08-02T10:48:34.837Z",
  "rates": {
   "bdPerRecord": 0.0015,
   "searchPerQuery": 0.001,
@@ -67,6 +67,17 @@
    "at": "2026-07-26T06:44:07.354Z",
    "stage": "daily",
    "run": "2026-07-26T06:31:45.703Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 15,
+   "unit": "lookups"
+  },
+  {
+   "day": "2026-07-26",
+   "at": "2026-07-26T06:44:07.354Z",
+   "stage": "daily",
+   "run": "2026-07-26T06:31:45.703Z",
    "category": "llm-extract",
    "usd": 0.838207,
    "estimated": false,
@@ -118,22 +129,22 @@
    "at": "2026-07-26T06:44:07.354Z",
    "stage": "daily",
    "run": "2026-07-26T06:31:45.703Z",
-   "category": "geo",
-   "usd": 0,
-   "estimated": true,
-   "units": 15,
-   "unit": "lookups"
-  },
-  {
-   "day": "2026-07-26",
-   "at": "2026-07-26T06:44:07.354Z",
-   "stage": "daily",
-   "run": "2026-07-26T06:31:45.703Z",
    "category": "storage",
    "usd": 0,
    "estimated": true,
    "units": 2.257,
    "unit": "MB"
+  },
+  {
+   "day": "2026-07-27",
+   "at": "2026-07-27T07:05:33.750Z",
+   "stage": "daily",
+   "run": "2026-07-27T06:58:19.789Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 2,
+   "unit": "lookups"
   },
   {
    "day": "2026-07-27",
@@ -191,22 +202,22 @@
    "at": "2026-07-27T07:05:33.750Z",
    "stage": "daily",
    "run": "2026-07-27T06:58:19.789Z",
-   "category": "geo",
-   "usd": 0,
-   "estimated": true,
-   "units": 2,
-   "unit": "lookups"
-  },
-  {
-   "day": "2026-07-27",
-   "at": "2026-07-27T07:05:33.750Z",
-   "stage": "daily",
-   "run": "2026-07-27T06:58:19.789Z",
    "category": "storage",
    "usd": 0,
    "estimated": true,
    "units": 1.59,
    "unit": "MB"
+  },
+  {
+   "day": "2026-07-28",
+   "at": "2026-07-28T06:28:46.124Z",
+   "stage": "daily",
+   "run": "2026-07-28T06:21:40.490Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 3,
+   "unit": "lookups"
   },
   {
    "day": "2026-07-28",
@@ -264,22 +275,22 @@
    "at": "2026-07-28T06:28:46.124Z",
    "stage": "daily",
    "run": "2026-07-28T06:21:40.490Z",
-   "category": "geo",
-   "usd": 0,
-   "estimated": true,
-   "units": 3,
-   "unit": "lookups"
-  },
-  {
-   "day": "2026-07-28",
-   "at": "2026-07-28T06:28:46.124Z",
-   "stage": "daily",
-   "run": "2026-07-28T06:21:40.490Z",
    "category": "storage",
    "usd": 0,
    "estimated": true,
    "units": 1.518,
    "unit": "MB"
+  },
+  {
+   "day": "2026-07-29",
+   "at": "2026-07-29T06:34:36.740Z",
+   "stage": "daily",
+   "run": "2026-07-29T06:26:39.241Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 4,
+   "unit": "lookups"
   },
   {
    "day": "2026-07-29",
@@ -337,22 +348,22 @@
    "at": "2026-07-29T06:34:36.740Z",
    "stage": "daily",
    "run": "2026-07-29T06:26:39.241Z",
-   "category": "geo",
-   "usd": 0,
-   "estimated": true,
-   "units": 4,
-   "unit": "lookups"
-  },
-  {
-   "day": "2026-07-29",
-   "at": "2026-07-29T06:34:36.740Z",
-   "stage": "daily",
-   "run": "2026-07-29T06:26:39.241Z",
    "category": "storage",
    "usd": 0,
    "estimated": true,
    "units": 1.752,
    "unit": "MB"
+  },
+  {
+   "day": "2026-07-30",
+   "at": "2026-07-30T06:29:34.986Z",
+   "stage": "daily",
+   "run": "2026-07-30T06:22:35.736Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 4,
+   "unit": "lookups"
   },
   {
    "day": "2026-07-30",
@@ -410,22 +421,22 @@
    "at": "2026-07-30T06:29:34.986Z",
    "stage": "daily",
    "run": "2026-07-30T06:22:35.736Z",
-   "category": "geo",
-   "usd": 0,
-   "estimated": true,
-   "units": 4,
-   "unit": "lookups"
-  },
-  {
-   "day": "2026-07-30",
-   "at": "2026-07-30T06:29:34.986Z",
-   "stage": "daily",
-   "run": "2026-07-30T06:22:35.736Z",
    "category": "storage",
    "usd": 0,
    "estimated": true,
    "units": 1.301,
    "unit": "MB"
+  },
+  {
+   "day": "2026-07-31",
+   "at": "2026-07-31T06:55:30.262Z",
+   "stage": "daily",
+   "run": "2026-07-31T06:43:31.440Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 19,
+   "unit": "lookups"
   },
   {
    "day": "2026-07-31",
@@ -477,17 +488,6 @@
    "estimated": true,
    "units": 76,
    "unit": "fetches"
-  },
-  {
-   "day": "2026-07-31",
-   "at": "2026-07-31T06:55:30.262Z",
-   "stage": "daily",
-   "run": "2026-07-31T06:43:31.440Z",
-   "category": "geo",
-   "usd": 0,
-   "estimated": true,
-   "units": 19,
-   "unit": "lookups"
   },
   {
    "day": "2026-07-31",
@@ -556,6 +556,17 @@
    "at": "2026-08-01T06:34:54.384Z",
    "stage": "daily",
    "run": "2026-08-01T06:23:57.322Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 21,
+   "unit": "lookups"
+  },
+  {
+   "day": "2026-08-01",
+   "at": "2026-08-01T06:34:54.384Z",
+   "stage": "daily",
+   "run": "2026-08-01T06:23:57.322Z",
    "category": "llm-extract",
    "usd": 0.702611,
    "estimated": false,
@@ -607,22 +618,135 @@
    "at": "2026-08-01T06:34:54.384Z",
    "stage": "daily",
    "run": "2026-08-01T06:23:57.322Z",
-   "category": "geo",
-   "usd": 0,
-   "estimated": true,
-   "units": 21,
-   "unit": "lookups"
-  },
-  {
-   "day": "2026-08-01",
-   "at": "2026-08-01T06:34:54.384Z",
-   "stage": "daily",
-   "run": "2026-08-01T06:23:57.322Z",
    "category": "storage",
    "usd": 0,
    "estimated": true,
    "units": 2.475,
    "unit": "MB"
+  },
+  {
+   "day": "2026-08-01",
+   "at": "2026-08-01T18:33:34.294Z",
+   "stage": "discover",
+   "run": "2026-08-01T18:32:23.713Z",
+   "category": "llm-discover",
+   "usd": 0.093192,
+   "estimated": false,
+   "units": 1,
+   "unit": "calls",
+   "tokensIn": 11064,
+   "tokensOut": 4000,
+   "top": [
+    {
+     "id": "Poznań",
+     "usd": 0.093192,
+     "units": 1
+    }
+   ]
+  },
+  {
+   "day": "2026-08-01",
+   "at": "2026-08-01T18:33:34.294Z",
+   "stage": "discover",
+   "run": "2026-08-01T18:32:23.713Z",
+   "category": "search",
+   "usd": 0.01,
+   "estimated": true,
+   "units": 10,
+   "unit": "queries"
+  },
+  {
+   "day": "2026-08-01",
+   "at": "2026-08-01T19:06:43.843Z",
+   "stage": "discover",
+   "run": "2026-08-01T19:05:14.141Z",
+   "category": "llm-discover",
+   "usd": 0.068202,
+   "estimated": false,
+   "units": 1,
+   "unit": "calls",
+   "tokensIn": 10889,
+   "tokensOut": 2369,
+   "top": [
+    {
+     "id": "Luboń",
+     "usd": 0.068202,
+     "units": 1
+    }
+   ]
+  },
+  {
+   "day": "2026-08-01",
+   "at": "2026-08-01T19:06:43.843Z",
+   "stage": "discover",
+   "run": "2026-08-01T19:05:14.141Z",
+   "category": "llm-verify",
+   "usd": 0.015397,
+   "estimated": false,
+   "units": 5,
+   "unit": "calls",
+   "tokensIn": 12062,
+   "tokensOut": 667,
+   "top": [
+    {
+     "id": "oklubon-pl",
+     "usd": 0.003949,
+     "units": 1
+    },
+    {
+     "id": "lubon-pl-kalendarium",
+     "usd": 0.003367,
+     "units": 1
+    },
+    {
+     "id": "lubon-pl-kalendarz2026",
+     "usd": 0.003219,
+     "units": 1
+    },
+    {
+     "id": "biblub-com",
+     "usd": 0.002694,
+     "units": 1
+    },
+    {
+     "id": "gazeta-lubon-pl",
+     "usd": 0.002168,
+     "units": 1
+    }
+   ]
+  },
+  {
+   "day": "2026-08-01",
+   "at": "2026-08-01T19:06:43.843Z",
+   "stage": "discover",
+   "run": "2026-08-01T19:05:14.141Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 28,
+   "unit": "fetches"
+  },
+  {
+   "day": "2026-08-01",
+   "at": "2026-08-01T19:06:43.843Z",
+   "stage": "discover",
+   "run": "2026-08-01T19:05:14.141Z",
+   "category": "search",
+   "usd": 0.01,
+   "estimated": true,
+   "units": 10,
+   "unit": "queries"
+  },
+  {
+   "day": "2026-08-02",
+   "at": "2026-08-02T06:40:10.517Z",
+   "stage": "daily",
+   "run": "2026-08-02T06:28:41.191Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 20,
+   "unit": "lookups"
   },
   {
    "day": "2026-08-02",
@@ -680,22 +804,93 @@
    "at": "2026-08-02T06:40:10.517Z",
    "stage": "daily",
    "run": "2026-08-02T06:28:41.191Z",
-   "category": "geo",
-   "usd": 0,
-   "estimated": true,
-   "units": 20,
-   "unit": "lookups"
-  },
-  {
-   "day": "2026-08-02",
-   "at": "2026-08-02T06:40:10.517Z",
-   "stage": "daily",
-   "run": "2026-08-02T06:28:41.191Z",
    "category": "storage",
    "usd": 0,
    "estimated": true,
    "units": 3.273,
    "unit": "MB"
+  },
+  {
+   "day": "2026-08-02",
+   "at": "2026-08-02T10:48:34.821Z",
+   "stage": "discover",
+   "run": "2026-08-02T10:46:48.612Z",
+   "category": "llm-discover",
+   "usd": 0.072939,
+   "estimated": false,
+   "units": 1,
+   "unit": "calls",
+   "tokensIn": 10848,
+   "tokensOut": 2693,
+   "top": [
+    {
+     "id": "Luboń",
+     "usd": 0.072939,
+     "units": 1
+    }
+   ]
+  },
+  {
+   "day": "2026-08-02",
+   "at": "2026-08-02T10:48:34.821Z",
+   "stage": "discover",
+   "run": "2026-08-02T10:46:48.612Z",
+   "category": "llm-verify",
+   "usd": 0.022549,
+   "estimated": false,
+   "units": 8,
+   "unit": "calls",
+   "tokensIn": 17769,
+   "tokensOut": 956,
+   "top": [
+    {
+     "id": "oklubon-wydarzenia",
+     "usd": 0.003904,
+     "units": 1
+    },
+    {
+     "id": "lubon-pl-kalendarium",
+     "usd": 0.003332,
+     "units": 1
+    },
+    {
+     "id": "lubon-pl-kalendarz-2026",
+     "usd": 0.003219,
+     "units": 1
+    },
+    {
+     "id": "biblub-com",
+     "usd": 0.002656,
+     "units": 1
+    },
+    {
+     "id": "lubon-pl-losir",
+     "usd": 0.002644,
+     "units": 1
+    }
+   ]
+  },
+  {
+   "day": "2026-08-02",
+   "at": "2026-08-02T10:48:34.821Z",
+   "stage": "discover",
+   "run": "2026-08-02T10:46:48.612Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 42,
+   "unit": "fetches"
+  },
+  {
+   "day": "2026-08-02",
+   "at": "2026-08-02T10:48:34.821Z",
+   "stage": "discover",
+   "run": "2026-08-02T10:46:48.612Z",
+   "category": "search",
+   "usd": 0.01,
+   "estimated": true,
+   "units": 10,
+   "unit": "queries"
   }
  ]
 }
