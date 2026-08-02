@@ -1,1797 +1,6 @@
 [
  {
   "stage": "daily",
-  "startedAt": "2026-07-26T06:31:45.703Z",
-  "finishedAt": "2026-07-26T06:44:07.353Z",
-  "durationMs": 741649,
-  "totals": {
-   "sources": 46,
-   "ok": 13,
-   "unchanged": 0,
-   "errors": 16,
-   "skippedFb": 5,
-   "skippedDead": 0,
-   "empty": 12,
-   "events": 135,
-   "followupsTried": 36,
-   "geoHits": 28,
-   "geoMisses": 61,
-   "calls": 59,
-   "promptTokens": 396302,
-   "completionTokens": 88381,
-   "costUsd": 0.8382070000000001,
-   "redactedPhones": 5,
-   "redactedEmails": 6
-  },
-  "sources": [
-   {
-    "id": "poznan-city-api",
-    "name": "Poznań – miejski web service wydarzeń",
-    "town": "Poznań",
-    "url": "https://www.um.poznan.pl/web-service/events?wsdl",
-    "fetch": "api",
-    "status": "empty",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 0,
-     "promptTokens": 0,
-     "completionTokens": 0,
-     "costUsd": 0
-    },
-    "ms": 4044,
-    "httpStatus": 200,
-    "kind": "html",
-    "chars": 0,
-    "archive": [
-     "raw/2026-07-26/poznan-city-api/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.json"
-    ]
-   },
-   {
-    "id": "poznan-kultura",
-    "name": "kultura.poznan.pl – Kalendarium",
-    "town": "Poznań",
-    "url": "https://kultura.poznan.pl/mim/public/kultura/events.html?co=list&lang=pl&category=&p=1",
-    "fetch": "plain",
-    "status": "empty",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 1,
-     "promptTokens": 9821,
-     "completionTokens": 4000,
-     "costUsd": 0.029821
-    },
-    "ms": 22227,
-    "httpStatus": 200,
-    "kind": "html",
-    "chars": 21062,
-    "changed": true,
-    "llmByTask": {
-     "extract": {
-      "calls": 1,
-      "promptTokens": 9821,
-      "completionTokens": 4000,
-      "costUsd": 0.029821
-     }
-    },
-    "archive": [
-     "raw/2026-07-26/poznan-kultura/de96c039f93522a55a6c377f6165bfb397e123154595df0aea08dcb8fe2b5016.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/poznan-kultura/0001-anthropic_claude-haiku-4.5.json"
-    ]
-   },
-   {
-    "id": "poznan-kultura-rss",
-    "name": "kultura.poznan.pl – RSS",
-    "town": "Poznań",
-    "url": "https://kultura.poznan.pl/mim/feeds/",
-    "fetch": "plain",
-    "status": "ok",
-    "events": 10,
-    "followups": [
-     {
-      "url": "https://www.poznan.pl/mim/public/feeds/rss.xml?name=events",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 10
-     },
-     {
-      "url": "https://www.poznan.pl/mim/events/",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 0
-     },
-     {
-      "url": "https://kultura.poznan.pl/",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 0
-     }
-    ],
-    "geo": {
-     "hits": 0,
-     "misses": 10
-    },
-    "llm": {
-     "calls": 4,
-     "promptTokens": 33848,
-     "completionTokens": 7611,
-     "costUsd": 0.071903
-    },
-    "ms": 50162,
-    "httpStatus": 200,
-    "kind": "html",
-    "chars": 19142,
-    "changed": true,
-    "llmByTask": {
-     "extract": {
-      "calls": 4,
-      "promptTokens": 33848,
-      "completionTokens": 7611,
-      "costUsd": 0.071903
-     }
-    },
-    "archive": [
-     "raw/2026-07-26/poznan-kultura-rss/3bf10407ca9ba3dfd79cb2860263ad0f325bd5fa97c3601ffc3909d5c6e027e7.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/poznan-kultura-rss/0002-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/poznan-kultura-rss__followup/7b7680cf85bd755adfd2229f88df4822b5f5be7db482a1a519aab9e22a7ca261.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/poznan-kultura-rss/0003-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/poznan-kultura-rss__followup/0e2dcb16ae1eb144d0da0ccc6e38bb2dc2c3311b5e200772ff0d4d9836fdd3f4.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/poznan-kultura-rss/0004-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/poznan-kultura-rss__followup/6de5044e3a819523ac17e2f33cc25f336204c162a3386dae7abe33a8ccc1a03d.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/poznan-kultura-rss/0005-anthropic_claude-haiku-4.5.json"
-    ]
-   },
-   {
-    "id": "poznan-events",
-    "name": "poznan.pl – Co? Gdzie? Kiedy?",
-    "town": "Poznań",
-    "url": "https://www.poznan.pl/mim/events/",
-    "fetch": "plain",
-    "status": "empty",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 1,
-     "promptTokens": 14529,
-     "completionTokens": 4000,
-     "costUsd": 0.034529
-    },
-    "ms": 21836,
-    "httpStatus": 200,
-    "kind": "html",
-    "chars": 31524,
-    "changed": true,
-    "llmByTask": {
-     "extract": {
-      "calls": 1,
-      "promptTokens": 14529,
-      "completionTokens": 4000,
-      "costUsd": 0.034529
-     }
-    },
-    "archive": [
-     "raw/2026-07-26/poznan-events/0e2dcb16ae1eb144d0da0ccc6e38bb2dc2c3311b5e200772ff0d4d9836fdd3f4.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/poznan-events/0006-anthropic_claude-haiku-4.5.json"
-    ]
-   },
-   {
-    "id": "ck-zamek",
-    "name": "CK Zamek",
-    "town": "Poznań",
-    "url": "https://ckzamek.pl/wydarzenia/",
-    "fetch": "headless",
-    "status": "error",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 0,
-     "promptTokens": 0,
-     "completionTokens": 0,
-     "costUsd": 0
-    },
-    "ms": 4240,
-    "err": "HTTP 404 https://ckzamek.pl/wydarzenia/",
-    "httpStatus": 404
-   },
-   {
-    "id": "estrada",
-    "name": "Estrada Poznańska (Lato z Estradą, Estrada w Centrum)",
-    "town": "Poznań",
-    "url": "https://estrada.poznan.pl/",
-    "fetch": "plain",
-    "status": "empty",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 1,
-     "promptTokens": 14177,
-     "completionTokens": 4000,
-     "costUsd": 0.034177
-    },
-    "ms": 22784,
-    "httpStatus": 200,
-    "kind": "html",
-    "chars": 33431,
-    "changed": true,
-    "llmByTask": {
-     "extract": {
-      "calls": 1,
-      "promptTokens": 14177,
-      "completionTokens": 4000,
-      "costUsd": 0.034177
-     }
-    },
-    "archive": [
-     "raw/2026-07-26/estrada/6a1305cffc30198f6ed30635efab82a44e230deae9a96ed86bf262ef4eedaf42.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/estrada/0007-anthropic_claude-haiku-4.5.json"
-    ]
-   },
-   {
-    "id": "brama-poznania",
-    "name": "Brama Poznania / Trakt Królewsko-Cesarski",
-    "town": "Poznań",
-    "url": "https://bramapoznania.pl/wydarzenia",
-    "fetch": "plain",
-    "status": "error",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 0,
-     "promptTokens": 0,
-     "completionTokens": 0,
-     "costUsd": 0
-    },
-    "ms": 889,
-    "err": "HTTP 404 https://bramapoznania.pl/wydarzenia",
-    "httpStatus": 404
-   },
-   {
-    "id": "teatr-animacji",
-    "name": "Teatr Animacji (repertuar + wiek widzów)",
-    "town": "Poznań",
-    "url": "https://teatranimacji.pl/pl/repertuar",
-    "fetch": "plain",
-    "status": "empty",
-    "events": 0,
-    "followups": [
-     {
-      "url": "https://teatranimacji.pl/pl/repertuar",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 0
-     }
-    ],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 2,
-     "promptTokens": 1458,
-     "completionTokens": 394,
-     "costUsd": 0.003428
-    },
-    "ms": 8947,
-    "httpStatus": 200,
-    "kind": "html",
-    "chars": 14,
-    "changed": true,
-    "llmByTask": {
-     "extract": {
-      "calls": 2,
-      "promptTokens": 1458,
-      "completionTokens": 394,
-      "costUsd": 0.003428
-     }
-    },
-    "archive": [
-     "raw/2026-07-26/teatr-animacji/6a3deb120b720dee436267ddc88481ce9b78fc2a7546e174d23074d3c59bba9d.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/teatr-animacji/0008-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/teatr-animacji__followup/6a3deb120b720dee436267ddc88481ce9b78fc2a7546e174d23074d3c59bba9d.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/teatr-animacji/0009-anthropic_claude-haiku-4.5.json"
-    ]
-   },
-   {
-    "id": "biblraczynskich",
-    "name": "Biblioteka Raczyńskich – wydarzenia",
-    "town": "Poznań",
-    "url": "https://bracz.edu.pl/wydarzenia/",
-    "fetch": "plain",
-    "status": "error",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 0,
-     "promptTokens": 0,
-     "completionTokens": 0,
-     "costUsd": 0
-    },
-    "ms": 1836,
-    "err": "HTTP 404 https://bracz.edu.pl/wydarzenia/",
-    "httpStatus": 404
-   },
-   {
-    "id": "palmiarnia",
-    "name": "Palmiarnia Poznańska",
-    "town": "Poznań",
-    "url": "https://palmiarnia.poznan.pl/",
-    "fetch": "plain",
-    "status": "ok",
-    "events": 7,
-    "followups": [
-     {
-      "url": "https://palmiarnia.poznan.pl/zwiedzanie/godziny-otwarcia/",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 0
-     },
-     {
-      "url": "https://palmiarnia.poznan.pl/zwiedzanie/cennik/",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 0
-     },
-     {
-      "url": "https://palmiarnia.poznan.pl/park-wilsona/harmonogram-wydarzen-w-muszli-koncertowej/",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 4
-     },
-     {
-      "url": "https://palmiarnia.poznan.pl/spacery-dla-seniorow-lato-2026/",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 0
-     },
-     {
-      "url": "https://palmiarnia.poznan.pl/vii-poznanskie-dni-sukulentow-kaktusy-meksyku/",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 1
-     }
-    ],
-    "geo": {
-     "hits": 0,
-     "misses": 7
-    },
-    "llm": {
-     "calls": 6,
-     "promptTokens": 25390,
-     "completionTokens": 3835,
-     "costUsd": 0.044565
-    },
-    "ms": 42273,
-    "httpStatus": 200,
-    "kind": "html",
-    "chars": 10925,
-    "changed": true,
-    "llmByTask": {
-     "extract": {
-      "calls": 6,
-      "promptTokens": 25390,
-      "completionTokens": 3835,
-      "costUsd": 0.044565
-     }
-    },
-    "archive": [
-     "raw/2026-07-26/palmiarnia/bb690a67debcd3bbf584e2d80dc9c97b900d403be9f4db94972f17fb5be7c611.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/palmiarnia/0010-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/palmiarnia__followup/39344dab000ab7697d532ba3226d726bc70be309a7acd800f0c60b2c379700ce.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/palmiarnia/0011-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/palmiarnia__followup/4b29d4b5e4a41af8b9ad16f96d2558fb62134e6279bf16eae27aaf6866cae4b2.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/palmiarnia/0012-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/palmiarnia__followup/59405e3a278ac6f6b6857f05ad1a9f1d2c2204ba8c344bf52ef26771838714ea.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/palmiarnia/0013-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/palmiarnia__followup/ee6d2f87cfa2481497d3633eec2b92c89dabbb7ea6a256e5d9265bf15d4e6618.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/palmiarnia/0014-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/palmiarnia__followup/f817e4e6bcaaa4731e2e860b72fc53c70059280e5c5372a4146d8b0f5fe4a1c9.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/palmiarnia/0015-anthropic_claude-haiku-4.5.json"
-    ]
-   },
-   {
-    "id": "nowe-zoo",
-    "name": "ZOO Poznań – wydarzenia",
-    "town": "Poznań",
-    "url": "https://zoo.poznan.pl/",
-    "fetch": "plain",
-    "status": "error",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 0,
-     "promptTokens": 0,
-     "completionTokens": 0,
-     "costUsd": 0
-    },
-    "ms": 10496,
-    "err": "GET https://zoo.poznan.pl/: TypeError: fetch failed ← ConnectTimeoutError: Connect Timeout Error (attempted address: zoo.poznan.pl:443, timeout: 10000ms)"
-   },
-   {
-    "id": "dk-stokrotka",
-    "name": "Dom Kultury Stokrotka (Grunwald)",
-    "town": "Poznań",
-    "url": "https://www.facebook.com/DKStokrotka/",
-    "fetch": "fb",
-    "status": "skipped-fb",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 0,
-     "promptTokens": 0,
-     "completionTokens": 0,
-     "costUsd": 0
-    },
-    "ms": 0
-   },
-   {
-    "id": "dk-pod-lipami",
-    "name": "Dom Kultury Pod Lipami (Winogrady)",
-    "town": "Poznań",
-    "url": "https://www.psm-winogrady.pl/domy-kultury/",
-    "fetch": "plain",
-    "status": "error",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 0,
-     "promptTokens": 0,
-     "completionTokens": 0,
-     "costUsd": 0
-    },
-    "ms": 62,
-    "err": "GET https://www.psm-winogrady.pl/domy-kultury/: TypeError: fetch failed ← getaddrinfo ENOTFOUND www.psm-winogrady.pl"
-   },
-   {
-    "id": "dk-orbita",
-    "name": "Osiedlowy DK Orbita (os. Kosmonautów)",
-    "town": "Poznań",
-    "url": "https://www.psm-winogrady.pl/domy-kultury/",
-    "fetch": "plain",
-    "status": "error",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 0,
-     "promptTokens": 0,
-     "completionTokens": 0,
-     "costUsd": 0
-    },
-    "ms": 638,
-    "err": "GET https://www.psm-winogrady.pl/domy-kultury/: TypeError: fetch failed ← getaddrinfo ENOTFOUND www.psm-winogrady.pl"
-   },
-   {
-    "id": "fyrtel-glowna",
-    "name": "Fyrtel Główna",
-    "town": "Poznań",
-    "url": "https://www.facebook.com/fyrtelglowna/",
-    "fetch": "fb",
-    "status": "skipped-fb",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 0,
-     "promptTokens": 0,
-     "completionTokens": 0,
-     "costUsd": 0
-    },
-    "ms": 0
-   },
-   {
-    "id": "lubon-city",
-    "name": "Miasto Luboń – aktualności",
-    "town": "Luboń",
-    "url": "https://lubon.pl/",
-    "fetch": "plain",
-    "status": "ok",
-    "events": 2,
-    "followups": [
-     {
-      "url": "https://lubon.pl/artykul/334/5274/sprawdz-harmonogram-bezplatnych-zajec-i-wydarzen-na-plazy-miejskiej-w-luboniu-w-2026-roku",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 0
-     },
-     {
-      "url": "https://lubon.pl/artykul/352/4766/kalendarz-wydarzen-miejskich-w-2025-roku",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 0
-     }
-    ],
-    "geo": {
-     "hits": 1,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 3,
-     "promptTokens": 23556,
-     "completionTokens": 8601,
-     "costUsd": 0.066561
-    },
-    "ms": 52921,
-    "httpStatus": 200,
-    "kind": "html",
-    "chars": 16981,
-    "changed": true,
-    "llmByTask": {
-     "extract": {
-      "calls": 3,
-      "promptTokens": 23556,
-      "completionTokens": 8601,
-      "costUsd": 0.066561
-     }
-    },
-    "archive": [
-     "raw/2026-07-26/lubon-city/d2596a4a747bb7305fcdd67c8b75f0c8993217c78994c29dac9e3d500996ad9c.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/lubon-city/0016-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/lubon-city__followup/4800080863a6b903d3b587165cecee361f3b1bb6548af13e32a162c34757f7f3.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/lubon-city/0017-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/lubon-city__followup/4e5a4577141b56d94bdfbff3a55739dfee77c7263f2c3fc66ef1d3a5bb6c1acc.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/lubon-city/0018-anthropic_claude-haiku-4.5.json"
-    ]
-   },
-   {
-    "id": "lubon-ok",
-    "name": "Ośrodek Kultury w Luboniu",
-    "town": "Luboń",
-    "url": "https://www.oklubon.pl/",
-    "fetch": "plain",
-    "status": "ok",
-    "events": 7,
-    "followups": [
-     {
-      "url": "https://www.oklubon.pl/wydarzenia/letnie-polkolonie",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 2
-     },
-     {
-      "url": "https://www.oklubon.pl/wydarzenia/wycieczka-do-leszna",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 1
-     },
-     {
-      "url": "https://www.oklubon.pl/wydarzenia/wystawa-plastyczna",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 1
-     },
-     {
-      "url": "https://www.oklubon.pl/zajecia",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 0
-     }
-    ],
-    "geo": {
-     "hits": 3,
-     "misses": 3
-    },
-    "llm": {
-     "calls": 5,
-     "promptTokens": 13635,
-     "completionTokens": 2898,
-     "costUsd": 0.028124999999999997
-    },
-    "ms": 25700,
-    "httpStatus": 200,
-    "kind": "html",
-    "chars": 9368,
-    "changed": true,
-    "llmByTask": {
-     "extract": {
-      "calls": 5,
-      "promptTokens": 13635,
-      "completionTokens": 2898,
-      "costUsd": 0.028124999999999997
-     }
-    },
-    "archive": [
-     "raw/2026-07-26/lubon-ok/4ea5e3903f6dbf16eee3d925907c2186d7bf049c5c3c2eec4a74bce8090d2342.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/lubon-ok/0019-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/lubon-ok__followup/f08e97cb2295ee8481c0d1676c5027134eaf49e9182655bf2de701f8558d78a7.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/lubon-ok/0020-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/lubon-ok__followup/e2f34b5c62b8ac083777526b6935d54236df7c473c8cf87318e7ae8f2e239b0a.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/lubon-ok/0021-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/lubon-ok__followup/667f8942fff6af4a40122cdee233ddd335db1f21fc667b8c25e025d7bae6ea1b.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/lubon-ok/0022-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/lubon-ok__followup/32538ee840f65ad6c9319953a223698370de5309cb977e9c15af245e934a19ba.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/lubon-ok/0023-anthropic_claude-haiku-4.5.json"
-    ]
-   },
-   {
-    "id": "lubon-ok-fb",
-    "name": "OK Luboń – Facebook",
-    "town": "Luboń",
-    "url": "https://www.facebook.com/OsrodekKulturyLubon/",
-    "fetch": "fb",
-    "status": "skipped-fb",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 0,
-     "promptTokens": 0,
-     "completionTokens": 0,
-     "costUsd": 0
-    },
-    "ms": 0
-   },
-   {
-    "id": "lubon-plaza",
-    "name": "Plaża miejska Luboń (kalendarz venue)",
-    "town": "Luboń",
-    "url": "https://www.facebook.com/plazamiejskalubon/",
-    "fetch": "fb",
-    "status": "skipped-fb",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 0,
-     "promptTokens": 0,
-     "completionTokens": 0,
-     "costUsd": 0
-    },
-    "ms": 0
-   },
-   {
-    "id": "lubon-biblioteka",
-    "name": "Biblioteka Miejska w Luboniu",
-    "town": "Luboń",
-    "url": "https://biblub.com.pl/",
-    "fetch": "plain",
-    "status": "error",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 0,
-     "promptTokens": 0,
-     "completionTokens": 0,
-     "costUsd": 0
-    },
-    "ms": 329,
-    "err": "GET https://biblub.com.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND biblub.com.pl"
-   },
-   {
-    "id": "puszczykowo-city",
-    "name": "Puszczykowo – instytucje kultury",
-    "town": "Puszczykowo",
-    "url": "https://puszczykowo.pl/strefa-miejska/kultura/instytucje-kultury",
-    "fetch": "plain",
-    "status": "empty",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 1,
-     "promptTokens": 3572,
-     "completionTokens": 911,
-     "costUsd": 0.008127
-    },
-    "ms": 7351,
-    "httpStatus": 200,
-    "kind": "html",
-    "chars": 6648,
-    "changed": true,
-    "llmByTask": {
-     "extract": {
-      "calls": 1,
-      "promptTokens": 3572,
-      "completionTokens": 911,
-      "costUsd": 0.008127
-     }
-    },
-    "archive": [
-     "raw/2026-07-26/puszczykowo-city/60d34b6bc60b73a4c9fdeae1ca765fe25027779ef6400499aa2e8bbb910c5c3f.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/puszczykowo-city/0024-anthropic_claude-haiku-4.5.json"
-    ]
-   },
-   {
-    "id": "puszczykowo-bmcak",
-    "name": "Biblioteka Miejska CAK Puszczykowo",
-    "town": "Puszczykowo",
-    "url": "https://www.biblioteka.puszczykowo.pl/",
-    "fetch": "plain",
-    "status": "error",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 0,
-     "promptTokens": 0,
-     "completionTokens": 0,
-     "costUsd": 0
-    },
-    "ms": 223,
-    "err": "GET https://www.biblioteka.puszczykowo.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND www.biblioteka.puszczykowo.pl"
-   },
-   {
-    "id": "mosina-city",
-    "name": "Gmina Mosina – kalendarz wydarzeń",
-    "town": "Mosina",
-    "url": "https://www.mosina.pl/wydarzenia?page=1",
-    "fetch": "plain",
-    "status": "error",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 0,
-     "promptTokens": 0,
-     "completionTokens": 0,
-     "costUsd": 0
-    },
-    "ms": 10042,
-    "err": "GET https://www.mosina.pl/wydarzenia?page=1: TypeError: fetch failed ← ConnectTimeoutError: Connect Timeout Error (attempted address: www.mosina.pl:443, timeout: 10000ms)"
-   },
-   {
-    "id": "mosina-mok",
-    "name": "Mosiński Ośrodek Kultury",
-    "town": "Mosina",
-    "url": "https://www.kultura.gmina.pl/aktualnosci/",
-    "fetch": "plain",
-    "status": "empty",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 1,
-     "promptTokens": 13973,
-     "completionTokens": 2769,
-     "costUsd": 0.027818
-    },
-    "ms": 16132,
-    "httpStatus": 200,
-    "kind": "html",
-    "chars": 26771,
-    "changed": true,
-    "llmByTask": {
-     "extract": {
-      "calls": 1,
-      "promptTokens": 13973,
-      "completionTokens": 2769,
-      "costUsd": 0.027818
-     }
-    },
-    "archive": [
-     "raw/2026-07-26/mosina-mok/39e6c8d5fbf5bcbb666378f8143ec41d93e5c1f5bf8b458b07e4576953e278d2.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/mosina-mok/0025-anthropic_claude-haiku-4.5.json"
-    ]
-   },
-   {
-    "id": "mosina-osir",
-    "name": "OSiR Mosina – wydarzenia + programy PDF",
-    "town": "Mosina",
-    "url": "https://osirmosina.pl/wydarzenia",
-    "fetch": "plain",
-    "status": "error",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 0,
-     "promptTokens": 0,
-     "completionTokens": 0,
-     "costUsd": 0
-    },
-    "ms": 838,
-    "err": "HTTP 404 https://osirmosina.pl/wydarzenia",
-    "httpStatus": 404
-   },
-   {
-    "id": "mosina-biblioteka",
-    "name": "Mosińska Biblioteka Publiczna",
-    "town": "Mosina",
-    "url": "http://bibliotekamosina.pl/",
-    "fetch": "plain",
-    "status": "ok",
-    "events": 5,
-    "followups": [
-     {
-      "url": "http://bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/akcja-lato-z-biblioteka",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 5
-     },
-     {
-      "url": "http://bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/spektakl-klaudek-i-klaudynka-w-bibliotece",
-      "kind": "page",
-      "outcome": "error",
-      "events": 0,
-      "err": "GET http://bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/spektakl-klaudek-i-klaudynka-w-bibliotece: timeout po 30s ← TimeoutError: The operation was aborted due to timeout"
-     }
-    ],
-    "geo": {
-     "hits": 0,
-     "misses": 5
-    },
-    "llm": {
-     "calls": 2,
-     "promptTokens": 11430,
-     "completionTokens": 2028,
-     "costUsd": 0.02157
-    },
-    "ms": 47401,
-    "httpStatus": 200,
-    "kind": "html",
-    "chars": 11020,
-    "changed": true,
-    "llmByTask": {
-     "extract": {
-      "calls": 2,
-      "promptTokens": 11430,
-      "completionTokens": 2028,
-      "costUsd": 0.02157
-     }
-    },
-    "archive": [
-     "raw/2026-07-26/mosina-biblioteka/02eecf7445e95d5f2d21cf5543fbd59a23a4a617c37a16c25cf3b5c2fcf9e6e3.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/mosina-biblioteka/0026-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/mosina-biblioteka__followup/1cfc1078499107532e4f9af41b64ec883c57d9c96467fc14d96774594d0dfea9.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/mosina-biblioteka/0027-anthropic_claude-haiku-4.5.json"
-    ]
-   },
-   {
-    "id": "mosina-galeria",
-    "name": "Galeria Sztuki w Mosinie",
-    "town": "Mosina",
-    "url": "https://www.galeriamosina.pl/",
-    "fetch": "plain",
-    "status": "empty",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 1,
-     "promptTokens": 3092,
-     "completionTokens": 737,
-     "costUsd": 0.006777
-    },
-    "ms": 5955,
-    "httpStatus": 200,
-    "kind": "html",
-    "chars": 5068,
-    "changed": true,
-    "llmByTask": {
-     "extract": {
-      "calls": 1,
-      "promptTokens": 3092,
-      "completionTokens": 737,
-      "costUsd": 0.006777
-     }
-    },
-    "archive": [
-     "raw/2026-07-26/mosina-galeria/bfb017c3a63f56739ab0a0848abab189d72917aaee2c767968f4d1d898a8faf1.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/mosina-galeria/0028-anthropic_claude-haiku-4.5.json"
-    ]
-   },
-   {
-    "id": "mosina-fb",
-    "name": "Gmina Mosina – Facebook",
-    "town": "Mosina",
-    "url": "https://www.facebook.com/gminamosina/",
-    "fetch": "fb",
-    "status": "skipped-fb",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 0,
-     "promptTokens": 0,
-     "completionTokens": 0,
-     "costUsd": 0
-    },
-    "ms": 0
-   },
-   {
-    "id": "komorniki-city",
-    "name": "Gmina Komorniki – kultura i sport",
-    "town": "Komorniki",
-    "url": "https://www.komorniki.pl/kultura-i-sport.html",
-    "fetch": "plain",
-    "status": "ok",
-    "events": 15,
-    "followups": [
-     {
-      "url": "https://gokkomorniki.pl/",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 8
-     },
-     {
-      "url": "https://gosirkomorniki.pl/",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 4
-     },
-     {
-      "url": "https://www.biblioteka-komorniki.pl/",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 3
-     }
-    ],
-    "geo": {
-     "hits": 4,
-     "misses": 1
-    },
-    "llm": {
-     "calls": 4,
-     "promptTokens": 29481,
-     "completionTokens": 4628,
-     "costUsd": 0.052621
-    },
-    "ms": 35667,
-    "httpStatus": 200,
-    "kind": "html",
-    "chars": 15423,
-    "changed": true,
-    "llmByTask": {
-     "extract": {
-      "calls": 4,
-      "promptTokens": 29481,
-      "completionTokens": 4628,
-      "costUsd": 0.052621
-     }
-    },
-    "archive": [
-     "raw/2026-07-26/komorniki-city/cd69cfa14aff4afdb2b32a9b2730bcdd9d0c5f5ebc6dd86b6075a47d458d554b.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/komorniki-city/0029-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/komorniki-city__followup/93718d5625b6669c1f628b2a8f5598bbcb9bafbca795a1bb91095ab6ad711fbf.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/komorniki-city/0030-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/komorniki-city__followup/98c5873f371edd9d86f7fc5aa8355c48f96992b8895e4750ed95af2326d97703.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/komorniki-city/0031-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/komorniki-city__followup/6f3ed7797079fc0393f4b5ca48082da85c469cd7a79790f532d7c1ef04fe0f63.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/komorniki-city/0032-anthropic_claude-haiku-4.5.json"
-    ]
-   },
-   {
-    "id": "komorniki-gok",
-    "name": "GOK Komorniki (DK Koło, Remiza Plewiska…)",
-    "town": "Komorniki",
-    "url": "https://gokkomorniki.pl/",
-    "fetch": "plain",
-    "status": "ok",
-    "events": 30,
-    "followups": [
-     {
-      "url": "https://gokkomorniki.pl/aktualnosci/",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 11
-     },
-     {
-      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 11
-     },
-     {
-      "url": "https://gokkomorniki.pl/warsztaty.html",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 0
-     }
-    ],
-    "geo": {
-     "hits": 2,
-     "misses": 16
-    },
-    "llm": {
-     "calls": 4,
-     "promptTokens": 28284,
-     "completionTokens": 8441,
-     "costUsd": 0.070489
-    },
-    "ms": 52388,
-    "httpStatus": 200,
-    "kind": "html",
-    "chars": 15834,
-    "changed": true,
-    "llmByTask": {
-     "extract": {
-      "calls": 4,
-      "promptTokens": 28284,
-      "completionTokens": 8441,
-      "costUsd": 0.070489
-     }
-    },
-    "archive": [
-     "raw/2026-07-26/komorniki-gok/93718d5625b6669c1f628b2a8f5598bbcb9bafbca795a1bb91095ab6ad711fbf.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/komorniki-gok/0033-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/komorniki-gok__followup/6f8c8c882919215f2c38ca5340b12eea4fd28138b27bf661df2a0b232b4a2ea0.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/komorniki-gok/0034-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/komorniki-gok__followup/3181c00b54b6dde087817fda815fdf801116253566d45f7467b11ad1b1d63ae2.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/komorniki-gok/0035-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/komorniki-gok__followup/30e2f517c25e382a423dc028b46da7ffae48099daf51b38b56b692fc9b30cef8.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/komorniki-gok/0036-anthropic_claude-haiku-4.5.json"
-    ]
-   },
-   {
-    "id": "dopiewo-city",
-    "name": "Gmina Dopiewo",
-    "town": "Dopiewo",
-    "url": "https://dopiewo.pl/",
-    "fetch": "plain",
-    "status": "ok",
-    "events": 5,
-    "followups": [
-     {
-      "url": "https://dopiewo.pl/aktualnosci/2026-06-25/lato-w-gminie-dopiewo",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 0
-     }
-    ],
-    "geo": {
-     "hits": 1,
-     "misses": 1
-    },
-    "llm": {
-     "calls": 2,
-     "promptTokens": 12325,
-     "completionTokens": 5440,
-     "costUsd": 0.039525
-    },
-    "ms": 30073,
-    "httpStatus": 200,
-    "kind": "html",
-    "chars": 14657,
-    "changed": true,
-    "llmByTask": {
-     "extract": {
-      "calls": 2,
-      "promptTokens": 12325,
-      "completionTokens": 5440,
-      "costUsd": 0.039525
-     }
-    },
-    "archive": [
-     "raw/2026-07-26/dopiewo-city/e3c212154b5b5a0aedc268cd4323ebc5b2ef1576fc262d738c2c8ba83378d8f6.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/dopiewo-city/0037-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/dopiewo-city__followup/10e8a60e4a72fa5d1686c920c39a9b341623916e839085d4adb42b5002004f87.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/dopiewo-city/0038-anthropic_claude-haiku-4.5.json"
-    ]
-   },
-   {
-    "id": "dopiewo-gosir",
-    "name": "GOSiR Dopiewo / CRK Konarzewo",
-    "town": "Dopiewo",
-    "url": "https://gosir.dopiewo.pl/",
-    "fetch": "plain",
-    "status": "ok",
-    "events": 7,
-    "followups": [
-     {
-      "url": "https://gosir.dopiewo.pl/aktualnosci/sportowo-kulturalne-polkolonie-letnie-z-gosir-w-dopiewie",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 1
-     },
-     {
-      "url": "https://gosir.dopiewo.pl/aktualnosci/sportowe-soboty-lato-2026",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 0
-     }
-    ],
-    "geo": {
-     "hits": 0,
-     "misses": 7
-    },
-    "llm": {
-     "calls": 3,
-     "promptTokens": 15839,
-     "completionTokens": 3052,
-     "costUsd": 0.031098999999999998
-    },
-    "ms": 27532,
-    "httpStatus": 200,
-    "kind": "html",
-    "chars": 11780,
-    "changed": true,
-    "llmByTask": {
-     "extract": {
-      "calls": 3,
-      "promptTokens": 15839,
-      "completionTokens": 3052,
-      "costUsd": 0.031098999999999998
-     }
-    },
-    "archive": [
-     "raw/2026-07-26/dopiewo-gosir/7fe8f562aff1f13fa12c1053b6ce93b2fb13d6f3e2dd8599b3e4c2fd2a90168e.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/dopiewo-gosir/0039-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/dopiewo-gosir__followup/31388d6e83f7ab30cd3aea5be38cd4a4b499b9d084104757b1c86da977da2e92.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/dopiewo-gosir/0040-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/dopiewo-gosir__followup/99d0a3020911abc0acf647aa3c30eec3d97460c3f0a309ebff329e0c507017cb.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/dopiewo-gosir/0041-anthropic_claude-haiku-4.5.json"
-    ]
-   },
-   {
-    "id": "tarnowo-city",
-    "name": "Gmina Tarnowo Podgórne",
-    "town": "Tarnowo Podgórne",
-    "url": "https://www.tarnowo-podgorne.pl/",
-    "fetch": "plain",
-    "status": "empty",
-    "events": 0,
-    "followups": [
-     {
-      "url": "https://www.tarnowo-podgorne.pl/wydarzenia/",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 0
-     }
-    ],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 2,
-     "promptTokens": 6760,
-     "completionTokens": 2082,
-     "costUsd": 0.01717
-    },
-    "ms": 17429,
-    "httpStatus": 200,
-    "kind": "html",
-    "chars": 8046,
-    "changed": true,
-    "llmByTask": {
-     "extract": {
-      "calls": 2,
-      "promptTokens": 6760,
-      "completionTokens": 2082,
-      "costUsd": 0.01717
-     }
-    },
-    "archive": [
-     "raw/2026-07-26/tarnowo-city/5a7224e2eaa3384b23f754ba372600acef7f9639d76f57de657db56d2d14d8b3.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/tarnowo-city/0042-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/tarnowo-city__followup/9d45d741b8b0089b8e67f310a2a6606d84c8fd26b8d1a5534680959edcbe7f07.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/tarnowo-city/0043-anthropic_claude-haiku-4.5.json"
-    ]
-   },
-   {
-    "id": "tarnowo-gok",
-    "name": "GOK Sezam (Tarnowo Podgórne)",
-    "town": "Tarnowo Podgórne",
-    "url": "https://goksezam.pl/",
-    "fetch": "plain",
-    "status": "ok",
-    "events": 21,
-    "followups": [
-     {
-      "url": "https://goksezam.pl/wydarzenia.html",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 13
-     },
-     {
-      "url": "https://biletyna.pl/Tarnowo-Podgorne/Gminny-Osrodek-Kultury-SEZAM",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 0
-     }
-    ],
-    "geo": {
-     "hits": 13,
-     "misses": 3
-    },
-    "llm": {
-     "calls": 3,
-     "promptTokens": 11508,
-     "completionTokens": 6178,
-     "costUsd": 0.042398
-    },
-    "ms": 36944,
-    "httpStatus": 200,
-    "kind": "html",
-    "chars": 8153,
-    "changed": true,
-    "llmByTask": {
-     "extract": {
-      "calls": 3,
-      "promptTokens": 11508,
-      "completionTokens": 6178,
-      "costUsd": 0.042398
-     }
-    },
-    "archive": [
-     "raw/2026-07-26/tarnowo-gok/4940dd33e789da794927336245e3063d34dea749383aae57e251d232fea9ab6e.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/tarnowo-gok/0044-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/tarnowo-gok__followup/a3e7c7bca30ef2b92d07c1abdae0283e1395d4e575e8afa39f22abdcf3595a97.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/tarnowo-gok/0045-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/tarnowo-gok__followup/ddbff1b95aecae43454bce551bc4c2e8f17829c0b42ee80f2dba48fb43c621eb.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/tarnowo-gok/0046-anthropic_claude-haiku-4.5.json"
-    ]
-   },
-   {
-    "id": "rokietnica-city",
-    "name": "Gmina Rokietnica",
-    "town": "Rokietnica",
-    "url": "https://rokietnica.pl/",
-    "fetch": "plain",
-    "status": "empty",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 1,
-     "promptTokens": 7667,
-     "completionTokens": 348,
-     "costUsd": 0.009407
-    },
-    "ms": 5821,
-    "httpStatus": 200,
-    "kind": "html",
-    "chars": 16765,
-    "changed": true,
-    "llmByTask": {
-     "extract": {
-      "calls": 1,
-      "promptTokens": 7667,
-      "completionTokens": 348,
-      "costUsd": 0.009407
-     }
-    },
-    "archive": [
-     "raw/2026-07-26/rokietnica-city/12744e189ec5b18e95699e6a4f05ee0893056648e912a484d0a287d07db35095.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/rokietnica-city/0047-anthropic_claude-haiku-4.5.json"
-    ]
-   },
-   {
-    "id": "rokietnica-gok",
-    "name": "GOK Rokietnica",
-    "town": "Rokietnica",
-    "url": "https://kultura.rokietnica.pl/",
-    "fetch": "plain",
-    "status": "error",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 0,
-     "promptTokens": 0,
-     "completionTokens": 0,
-     "costUsd": 0
-    },
-    "ms": 296,
-    "err": "GET https://kultura.rokietnica.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND kultura.rokietnica.pl"
-   },
-   {
-    "id": "suchylas-city",
-    "name": "Gmina Suchy Las",
-    "town": "Suchy Las",
-    "url": "https://www.suchylas.pl/",
-    "fetch": "plain",
-    "status": "error",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 0,
-     "promptTokens": 0,
-     "completionTokens": 0,
-     "costUsd": 0
-    },
-    "ms": 45208,
-    "err": "HTTP 403 https://www.suchylas.pl/",
-    "httpStatus": 403
-   },
-   {
-    "id": "suchylas-ckbp",
-    "name": "CKiBP Suchy Las (Centrum Kultury i Biblioteka)",
-    "town": "Suchy Las",
-    "url": "https://www.osrodekkultury.pl/",
-    "fetch": "plain",
-    "status": "empty",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 1,
-     "promptTokens": 4156,
-     "completionTokens": 1059,
-     "costUsd": 0.009451
-    },
-    "ms": 9495,
-    "httpStatus": 200,
-    "kind": "html",
-    "chars": 7790,
-    "changed": true,
-    "llmByTask": {
-     "extract": {
-      "calls": 1,
-      "promptTokens": 4156,
-      "completionTokens": 1059,
-      "costUsd": 0.009451
-     }
-    },
-    "archive": [
-     "raw/2026-07-26/suchylas-ckbp/acf1c5fce333bdbe30552bbc237a9122718e85ac3aca15266286d7f3c1e06f17.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/suchylas-ckbp/0048-anthropic_claude-haiku-4.5.json"
-    ]
-   },
-   {
-    "id": "czerwonak-city",
-    "name": "Gmina Czerwonak",
-    "town": "Czerwonak",
-    "url": "https://www.czerwonak.pl/",
-    "fetch": "plain",
-    "status": "ok",
-    "events": 8,
-    "followups": [
-     {
-      "url": "https://www.czerwonak.pl/mieszkaniec/informacje/aktualnosci/wakacyjne-atrakcje-i-wydarzenia-w-gminie-czerwonak/10375",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 5
-     },
-     {
-      "url": "https://www.czerwonak.pl/mieszkaniec/kalendarz",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 0
-     }
-    ],
-    "geo": {
-     "hits": 2,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 3,
-     "promptTokens": 38246,
-     "completionTokens": 6511,
-     "costUsd": 0.070801
-    },
-    "ms": 37582,
-    "httpStatus": 200,
-    "kind": "html",
-    "chars": 37427,
-    "changed": true,
-    "llmByTask": {
-     "extract": {
-      "calls": 3,
-      "promptTokens": 38246,
-      "completionTokens": 6511,
-      "costUsd": 0.070801
-     }
-    },
-    "archive": [
-     "raw/2026-07-26/czerwonak-city/f9822c6cdf0ef68c9727c7bbd8663a92b84a1ca62b6fa37777681d4a8342affd.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/czerwonak-city/0049-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/czerwonak-city__followup/79f53893029a866ed9cb7079fcbd13f6cb459ea06a5d2361e35d7171aa5e23a6.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/czerwonak-city/0050-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/czerwonak-city__followup/1a47859407ec623d09035968586d840f40c6e32827de04d304f26a80b478259f.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/czerwonak-city/0051-anthropic_claude-haiku-4.5.json"
-    ]
-   },
-   {
-    "id": "czerwonak-gok",
-    "name": "GOK Sokół (Czerwonak)",
-    "town": "Czerwonak",
-    "url": "https://goksokol.pl/",
-    "fetch": "plain",
-    "status": "error",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 0,
-     "promptTokens": 0,
-     "completionTokens": 0,
-     "costUsd": 0
-    },
-    "ms": 14,
-    "err": "GET https://goksokol.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND goksokol.pl"
-   },
-   {
-    "id": "swarzedz-city",
-    "name": "Miasto i Gmina Swarzędz",
-    "town": "Swarzędz",
-    "url": "https://www.swarzedz.pl/",
-    "fetch": "plain",
-    "status": "ok",
-    "events": 11,
-    "followups": [
-     {
-      "url": "https://ok-swarzedz.pl/summer-swaj-party-noc-z-muzyka-klubowa-2026/",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 0
-     },
-     {
-      "url": "https://ok-swarzedz.pl/miedzynarodowy-festiwal-sztuki-ludowej/",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 1
-     },
-     {
-      "url": "https://www.swarzedz.pl/index.php?id=618",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 0
-     },
-     {
-      "url": "https://www.swarzedz.pl/index.php?id=615",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 3
-     }
-    ],
-    "geo": {
-     "hits": 2,
-     "misses": 4
-    },
-    "llm": {
-     "calls": 5,
-     "promptTokens": 58083,
-     "completionTokens": 4892,
-     "costUsd": 0.082543
-    },
-    "ms": 51633,
-    "httpStatus": 200,
-    "kind": "html",
-    "chars": 26917,
-    "changed": true,
-    "llmByTask": {
-     "extract": {
-      "calls": 5,
-      "promptTokens": 58083,
-      "completionTokens": 4892,
-      "costUsd": 0.082543
-     }
-    },
-    "archive": [
-     "raw/2026-07-26/swarzedz-city/27df746f43fdcf0b1efbc639da74c0e950910e1da53741083380f148b1b39bd6.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/swarzedz-city/0052-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/swarzedz-city__followup/2ef9c874d14d9949560e04c5688e06d01156cd2994da32bb7d8836e9d6e15d41.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/swarzedz-city/0053-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/swarzedz-city__followup/2c3b74ce9b17d0278efab2fe0f230dfe96d2338096e301e41c683850d2934e1b.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/swarzedz-city/0054-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/swarzedz-city__followup/405bf4526b0ae38983a7c06adad34590d8b1ad947e114a591004426f996d6f41.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/swarzedz-city/0055-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/swarzedz-city__followup/31bcd70c6211f30cdf7134566525b3bdb920cc3a157bbc63ba680135d171a655.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/swarzedz-city/0056-anthropic_claude-haiku-4.5.json"
-    ]
-   },
-   {
-    "id": "swarzedz-ok",
-    "name": "Ośrodek Kultury w Swarzędzu",
-    "town": "Swarzędz",
-    "url": "https://www.ok-swarzedz.pl/",
-    "fetch": "plain",
-    "status": "empty",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 1,
-     "promptTokens": 8321,
-     "completionTokens": 1844,
-     "costUsd": 0.017541
-    },
-    "ms": 13246,
-    "httpStatus": 200,
-    "kind": "html",
-    "chars": 15997,
-    "changed": true,
-    "llmByTask": {
-     "extract": {
-      "calls": 1,
-      "promptTokens": 8321,
-      "completionTokens": 1844,
-      "costUsd": 0.017541
-     }
-    },
-    "archive": [
-     "raw/2026-07-26/swarzedz-ok/3ad75ca07e187dab0a3a01802c139253451f2cdc44e04207f352428a2f5a9d15.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/swarzedz-ok/0057-anthropic_claude-haiku-4.5.json"
-    ]
-   },
-   {
-    "id": "kornik-city",
-    "name": "Miasto i Gmina Kórnik",
-    "town": "Kórnik",
-    "url": "https://www.kornik.pl/",
-    "fetch": "plain",
-    "status": "ok",
-    "events": 7,
-    "followups": [
-     {
-      "url": "https://www.kornik.pl/kalendarium",
-      "kind": "page",
-      "outcome": "ok",
-      "events": 2
-     }
-    ],
-    "geo": {
-     "hits": 0,
-     "misses": 4
-    },
-    "llm": {
-     "calls": 2,
-     "promptTokens": 7151,
-     "completionTokens": 2122,
-     "costUsd": 0.017761
-    },
-    "ms": 17671,
-    "httpStatus": 200,
-    "kind": "html",
-    "chars": 11384,
-    "changed": true,
-    "llmByTask": {
-     "extract": {
-      "calls": 2,
-      "promptTokens": 7151,
-      "completionTokens": 2122,
-      "costUsd": 0.017761
-     }
-    },
-    "archive": [
-     "raw/2026-07-26/kornik-city/9ba87eb5af9986f6ba9e5236545bfcb008658783e17e3289ece4fcbf164fade0.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/kornik-city/0058-anthropic_claude-haiku-4.5.json",
-     "raw/2026-07-26/kornik-city__followup/8210c417e014f20a38e62a6e0689c54213aa90679a4aa5cfd623c1e183a0b90f.json",
-     "llm/2026-07-26/2026-07-26T06-31-45-703Z/kornik-city/0059-anthropic_claude-haiku-4.5.json"
-    ]
-   },
-   {
-    "id": "kornik-kok",
-    "name": "Kórnicki Ośrodek Kultury",
-    "town": "Kórnik",
-    "url": "https://kok.kornik.pl/",
-    "fetch": "plain",
-    "status": "error",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 0,
-     "promptTokens": 0,
-     "completionTokens": 0,
-     "costUsd": 0
-    },
-    "ms": 259,
-    "err": "GET https://kok.kornik.pl/: TypeError: fetch failed ← certificate has expired"
-   },
-   {
-    "id": "kornik-arboretum",
-    "name": "Arboretum Kórnickie",
-    "town": "Kórnik",
-    "url": "https://www.idpan.poznan.pl/arboretum/",
-    "fetch": "plain",
-    "status": "error",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 0,
-     "promptTokens": 0,
-     "completionTokens": 0,
-     "costUsd": 0
-    },
-    "ms": 2108,
-    "err": "HTTP 500 https://www.idpan.poznan.pl/arboretum/",
-    "httpStatus": 500
-   },
-   {
-    "id": "kleszczewo-gokis",
-    "name": "GOKiS Kleszczewo",
-    "town": "Kleszczewo",
-    "url": "https://gokis-kleszczewo.pl/",
-    "fetch": "plain",
-    "status": "error",
-    "events": 0,
-    "followups": [],
-    "geo": {
-     "hits": 0,
-     "misses": 0
-    },
-    "llm": {
-     "calls": 0,
-     "promptTokens": 0,
-     "completionTokens": 0,
-     "costUsd": 0
-    },
-    "ms": 318,
-    "err": "GET https://gokis-kleszczewo.pl/: TypeError: fetch failed ← getaddrinfo ENOTFOUND gokis-kleszczewo.pl"
-   }
-  ],
-  "brightdata": {
-   "triggers": 0,
-   "inputs": 0,
-   "polls": 0,
-   "records": 0,
-   "errors": 0,
-   "snapshots": [],
-   "byDataset": {}
-  },
-  "costs": [
-   {
-    "day": "2026-07-26",
-    "at": "2026-07-26T06:44:07.354Z",
-    "stage": "daily",
-    "run": "2026-07-26T06:31:45.703Z",
-    "category": "llm-extract",
-    "usd": 0.838207,
-    "estimated": false,
-    "units": 59,
-    "unit": "calls",
-    "tokensIn": 396302,
-    "tokensOut": 88381,
-    "top": [
-     {
-      "id": "swarzedz-city",
-      "usd": 0.082543,
-      "units": 5
-     },
-     {
-      "id": "poznan-kultura-rss",
-      "usd": 0.071903,
-      "units": 4
-     },
-     {
-      "id": "czerwonak-city",
-      "usd": 0.070801,
-      "units": 3
-     },
-     {
-      "id": "komorniki-gok",
-      "usd": 0.070489,
-      "units": 4
-     },
-     {
-      "id": "lubon-city",
-      "usd": 0.066561,
-      "units": 3
-     }
-    ]
-   },
-   {
-    "day": "2026-07-26",
-    "at": "2026-07-26T06:44:07.354Z",
-    "stage": "daily",
-    "run": "2026-07-26T06:31:45.703Z",
-    "category": "scrape",
-    "usd": 0,
-    "estimated": true,
-    "units": 78,
-    "unit": "fetches"
-   },
-   {
-    "day": "2026-07-26",
-    "at": "2026-07-26T06:44:07.354Z",
-    "stage": "daily",
-    "run": "2026-07-26T06:31:45.703Z",
-    "category": "geo",
-    "usd": 0,
-    "estimated": true,
-    "units": 15,
-    "unit": "lookups"
-   },
-   {
-    "day": "2026-07-26",
-    "at": "2026-07-26T06:44:07.354Z",
-    "stage": "daily",
-    "run": "2026-07-26T06:31:45.703Z",
-    "category": "storage",
-    "usd": 0,
-    "estimated": true,
-    "units": 2.257,
-    "unit": "MB"
-   }
-  ]
- },
- {
-  "stage": "daily",
   "startedAt": "2026-07-27T06:58:19.789Z",
   "finishedAt": "2026-07-27T07:05:33.750Z",
   "durationMs": 433960,
@@ -15721,6 +13930,3386 @@
     "usd": 0,
     "estimated": true,
     "units": 2.475,
+    "unit": "MB"
+   }
+  ]
+ },
+ {
+  "stage": "daily",
+  "startedAt": "2026-08-02T06:28:41.191Z",
+  "finishedAt": "2026-08-02T06:40:10.517Z",
+  "durationMs": 689325,
+  "totals": {
+   "sources": 46,
+   "ok": 21,
+   "unchanged": 3,
+   "errors": 2,
+   "skippedFb": 5,
+   "skippedDead": 0,
+   "skippedInactive": 0,
+   "empty": 15,
+   "events": 222,
+   "followupsTried": 63,
+   "geoHits": 63,
+   "geoMisses": 112,
+   "droppedInvalid": 3,
+   "calls": 54,
+   "promptTokens": 417541,
+   "completionTokens": 79407,
+   "costUsd": 0.814576,
+   "redactedPhones": 6,
+   "redactedEmails": 4
+  },
+  "sources": [
+   {
+    "id": "poznan-city-api",
+    "name": "Poznań – miejski web service wydarzeń",
+    "town": "Poznań",
+    "url": "https://www.poznan.pl/web-service/events?wsdl",
+    "fetch": "api",
+    "status": "empty",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 2162,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 0,
+    "archive": [
+     "raw/2026-08-02/poznan-city-api/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.json"
+    ]
+   },
+   {
+    "id": "poznan-kultura",
+    "name": "kultura.poznan.pl – Kalendarium",
+    "town": "Poznań",
+    "url": "https://kultura.poznan.pl/mim/kultura/events.html?co=list&lang=pl&category=&p=1",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [
+     {
+      "url": "https://kultura.poznan.pl/mim/kultura/seances/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 2,
+     "promptTokens": 31058,
+     "completionTokens": 4468,
+     "costUsd": 0.053398
+    },
+    "ms": 27058,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 22435,
+    "changed": true,
+    "llmByTask": {
+     "extract": {
+      "calls": 2,
+      "promptTokens": 31058,
+      "completionTokens": 4468,
+      "costUsd": 0.053398
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/poznan-kultura/ab1a37248db5d42d30adc388b66f6bcf5af39017b55fd4550d5fcf07807075af.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/poznan-kultura/0001-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/poznan-kultura__followup/408109a690ddf51d13fb0a5b3b9d04dde3eb7ade8c400a2d7db60b0710bc85d9.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/poznan-kultura/0002-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "poznan-kultura-rss",
+    "name": "kultura.poznan.pl – RSS",
+    "town": "Poznań",
+    "url": "https://www.poznan.pl/mim/feeds/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 4,
+    "followups": [
+     {
+      "url": "https://www.poznan.pl/mim/public/feeds/rss.xml?name=events",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 4
+     },
+     {
+      "url": "https://www.poznan.pl/mim/events/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 0
+     },
+     {
+      "url": "https://www.poznan.pl/afisz/",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 4
+    },
+    "llm": {
+     "calls": 2,
+     "promptTokens": 16265,
+     "completionTokens": 5595,
+     "costUsd": 0.04424
+    },
+    "ms": 40249,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 19142,
+    "changed": false,
+    "followupsRechecked": 3,
+    "cached": 0,
+    "llmByTask": {
+     "extract": {
+      "calls": 2,
+      "promptTokens": 16265,
+      "completionTokens": 5595,
+      "costUsd": 0.04424
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/poznan-kultura-rss/6d3e12273cac5274ce989cf8e1f12c0864f1bc402d2a0345921932b8aee2eaca.json",
+     "raw/2026-08-02/poznan-kultura-rss__followup/c5522022881ac5cf0e0e671c8ef6b2c11367c75023e197418c58422f1e56709c.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/poznan-kultura-rss/0003-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/poznan-kultura-rss__followup/041f4c04dc7a1e564e81b1c613ef61ca2417eb5cd9a1f5e1bef0989c0e0b1ba8.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/poznan-kultura-rss/0004-anthropic_claude-haiku-4.5.json"
+    ],
+    "produced": [
+     {
+      "title": "Mistrzostwa Świata w kajakarstwie",
+      "date": "2026-08-26",
+      "url": "https://www.poznan.pl/mim/events/mistrzostwa-swiata-w-kajakarstwie-tor-regatowy-malta-ul-wiankowa-3-w-poznaniu,171682.html"
+     },
+     {
+      "title": "10. Lato z Estradą - Strzeszyn - akcja teatralna Ludo&Arsène",
+      "date": "2026-08-11",
+      "url": "https://www.poznan.pl/mim/events/10-lato-z-estrada-strzeszyn-akcja-teatralna-ludo-ars-232-ne-teren-zielony-przy-gorce-miedzy-ul-owidiusza-i-ul-horacego,184316.html"
+     },
+     {
+      "title": "10. Lato z Estradą - Chartowo - Sitko - stoisko do odbijania wzorów metodą sitodruku",
+      "date": "2026-08-21",
+      "url": "https://www.poznan.pl/mim/events/10-lato-z-estrada-chartowo-sitko-stoisko-do-odbijania-wzorow-metoda-sitodruku-teren-przy-spoldzielczym-stadionie-sportowym-olimp,184225.html"
+     },
+     {
+      "title": "Estrada w Centrum - Spotkanie autorskie z Alexandrem Hacke",
+      "date": "2026-08-27",
+      "url": "https://www.poznan.pl/mim/events/estrada-w-centrum-spotkanie-autorskie-z-alexandrem-hacke-galeria-miejska-arsenal-stary-rynek-6,184442.html"
+     }
+    ]
+   },
+   {
+    "id": "poznan-events",
+    "name": "poznan.pl – Co? Gdzie? Kiedy?",
+    "town": "Poznań",
+    "url": "https://www.poznan.pl/mim/events/",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [
+     {
+      "url": "https://www.poznan.pl/mim/events/seances/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 2,
+     "promptTokens": 33468,
+     "completionTokens": 4185,
+     "costUsd": 0.054393
+    },
+    "ms": 28220,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 28584,
+    "changed": true,
+    "llmByTask": {
+     "extract": {
+      "calls": 2,
+      "promptTokens": 33468,
+      "completionTokens": 4185,
+      "costUsd": 0.054393
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/poznan-events/041f4c04dc7a1e564e81b1c613ef61ca2417eb5cd9a1f5e1bef0989c0e0b1ba8.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/poznan-events/0005-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/poznan-events__followup/02766b7e102815987e2418b611471436226bb8ccace4d7b201edaecd9a872084.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/poznan-events/0006-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "ck-zamek",
+    "name": "CK Zamek",
+    "town": "Poznań",
+    "url": "https://ckzamek.pl/",
+    "fetch": "headless",
+    "status": "empty",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 20134,
+     "completionTokens": 4000,
+     "costUsd": 0.040134
+    },
+    "ms": 23675,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 45794,
+    "changed": true,
+    "llmByTask": {
+     "extract": {
+      "calls": 1,
+      "promptTokens": 20134,
+      "completionTokens": 4000,
+      "costUsd": 0.040134
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/ck-zamek/d6739ba8f0d1f27ee7c90607daa5928bb43bce104bd484cdaf8c0699804b59f2.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/ck-zamek/0007-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "estrada",
+    "name": "Estrada Poznańska (Lato z Estradą, Estrada w Centrum)",
+    "town": "Poznań",
+    "url": "https://estrada.poznan.pl/",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 13044,
+     "completionTokens": 4000,
+     "costUsd": 0.033044
+    },
+    "ms": 23393,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 29981,
+    "changed": true,
+    "llmByTask": {
+     "extract": {
+      "calls": 1,
+      "promptTokens": 13044,
+      "completionTokens": 4000,
+      "costUsd": 0.033044
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/estrada/e223d1de7e0073cff86a5d4639cabb52500948d85a7a7e51c67c1579a57503a3.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/estrada/0008-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "brama-poznania",
+    "name": "Brama Poznania / Trakt Królewsko-Cesarski",
+    "town": "Poznań",
+    "url": "https://bramapoznania.pl/",
+    "fetch": "plain",
+    "status": "unchanged",
+    "events": 8,
+    "followups": [
+     {
+      "url": "https://bramapoznania.pl/kalendarium",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 8
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 3881,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 10820,
+    "changed": false,
+    "followupsRechecked": 1,
+    "cached": 8,
+    "archive": [
+     "raw/2026-08-02/brama-poznania/22d5fe67a63756c189340a81a63b14c1432d3b8c42a517e66cec863b100a3655.json",
+     "raw/2026-08-02/brama-poznania__followup/9010bd076a9d49baa6bfba8edb92a44cb974a99085895c3ccbde66f52e20d113.json"
+    ],
+    "produced": [
+     {
+      "title": "ZIELONY USPOKAJA",
+      "date": "2026-07-24",
+      "url": "https://bramapoznania.pl/event/1261/-zielony-uspokaja-wystawa-czasowa-na-kladce"
+     },
+     {
+      "title": "POSZUKIWACZE SKARBÓW / WAKACJE W BRAMIE POZNANIA",
+      "date": "2026-08-04",
+      "url": "https://bramapoznania.pl/event/1247/poszukiwacze-skarbow-wakacje-w-bramie-poznania"
+     },
+     {
+      "title": "OTWARTY DYŻUR W EKSPERYMENTALNYM OGRODZIE DZIEDZICTWA",
+      "date": "2026-08-05",
+      "url": "https://bramapoznania.pl/event/1255/otwarty-dyzur-w-eksperymentalnym-ogrodzie-dziedzic"
+     },
+     {
+      "title": "CICHE GODZINY",
+      "date": "2026-08-06",
+      "url": "https://bramapoznania.pl/event/1262/ciche-godziny"
+     },
+     {
+      "title": "PTAKI W MIEŚCIE - SPACER ORNITOLOGICZNY",
+      "date": "2026-08-08",
+      "url": "https://bramapoznania.pl/event/1244/ptaki-w-miescie-spacer-ornitologiczny"
+     },
+     {
+      "title": "WIADOMOŚCI Z PRZESZŁOŚCI – PRZYPIECZĘTUJ HISTORIĘ / WAKACJE W BRAMIE POZNANIA",
+      "date": "2026-08-08",
+      "url": "https://bramapoznania.pl/event/1248/wiadomosci-z-przeszlosci-przypieczetuj-historie-wa"
+     },
+     {
+      "title": "LABORATORIUM GIĘTKICH KOŃCZYN - WARSZTAT PRACY Z CIAŁEM",
+      "date": "2026-08-08",
+      "url": "https://bramapoznania.pl/event/1245/laboratorium-gietkich-konczyn-warsztat-pracy-z-cia"
+     },
+     {
+      "title": "WARSZTATY TWORZENIA MOZAIKI SZKLANEJ",
+      "date": "2026-08-08",
+      "url": "https://bramapoznania.pl/event/1259/warsztaty-tworzenia-mozaiki-szklanej-8-9-sierpnia-"
+     }
+    ]
+   },
+   {
+    "id": "teatr-animacji",
+    "name": "Teatr Animacji (repertuar + wiek widzów)",
+    "town": "Poznań",
+    "url": "https://teatranimacji.pl/pl/repertuar",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [
+     {
+      "url": "https://teatranimacji.pl/pl/repertuar",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 910,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 14,
+    "changed": false,
+    "followupsRechecked": 1,
+    "cached": 0,
+    "archive": [
+     "raw/2026-08-02/teatr-animacji/6a3deb120b720dee436267ddc88481ce9b78fc2a7546e174d23074d3c59bba9d.json",
+     "raw/2026-08-02/teatr-animacji__followup/6a3deb120b720dee436267ddc88481ce9b78fc2a7546e174d23074d3c59bba9d.json"
+    ]
+   },
+   {
+    "id": "biblraczynskich",
+    "name": "Biblioteka Raczyńskich – wydarzenia",
+    "town": "Poznań",
+    "url": "https://bracz.edu.pl/kalendarz/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 11,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 2334,
+    "httpStatus": 200,
+    "kind": "feed",
+    "chars": 17428,
+    "changed": true,
+    "structured": {
+     "kind": "tribe",
+     "url": "https://bracz.edu.pl/wp-json/tribe/events/v1/events",
+     "seen": 11,
+     "items": 11
+    },
+    "archive": [
+     "raw/2026-08-02/biblraczynskich/b97e38f5582df698a5f5d939b81d63df10c24c7dd9bceb364aaef42d58458aa4.json"
+    ],
+    "produced": [
+     {
+      "title": "Miasto-ogródek. Spotkanie o ogrodnictwie miejskim w Mikro Domu Kultury",
+      "date": "2026-08-04",
+      "url": "https://bracz.edu.pl/event/czytanie-przestrzeni-miasto-ogrodek-spotkanie-o-ogrodnictwie-miejskim-w-mikro-domu-kultury/"
+     },
+     {
+      "title": "Tęsknota za transcendencją. Rzeźba i rysunek Romana Kosmali. Wernisaż",
+      "date": "2026-08-04",
+      "url": "https://bracz.edu.pl/event/tesknota-za-transcendencja-rzezba-i-rysunek-romana-kosmali-wernisaz/"
+     },
+     {
+      "title": "Pamiętaj o podróżach. Azory – wyspy szczęśliwe",
+      "date": "2026-08-06",
+      "url": "https://bracz.edu.pl/event/pamietaj-o-podrozach-azory-wyspy-szczesliwe/"
+     },
+     {
+      "title": "CZYTATY 10/10. Z Elizą Piotrowską po bibliotece. Gra terenowa",
+      "date": "2026-08-08",
+      "url": "https://bracz.edu.pl/event/czytaty-10-10-z-eliza-piotrowska-po-bibliotece-gra-terenowa/"
+     },
+     {
+      "title": "Pojadę, gdzie cytryna dojrzewa! O podróżach Henryka Sienkiewicza",
+      "date": "2026-08-11",
+      "url": "https://bracz.edu.pl/event/pojade-gdzie-cytryna-dojrzewa-o-podrozach-henryka-sienkiewicza-2/"
+     },
+     {
+      "title": "Zwiedzanie Mieszkania-Pracowni Kazimiery Iłłakowiczówny",
+      "date": "2026-08-12",
+      "url": "https://bracz.edu.pl/event/zwiedzanie-mieszkania-pracowni-kazimiery-illakowiczowny-48/"
+     },
+     {
+      "title": "Od słowa do formy. Pływający obraz. Warsztaty dla dorosłych w Filii 3/32",
+      "date": "2026-08-12",
+      "url": "https://bracz.edu.pl/event/od-slowa-do-formy-plywajacy-obraz-warsztaty-dla-doroslych-w-filii-3-32/"
+     },
+     {
+      "title": "Z Archiwum Książki Dziecięcej. Fabularyzowany spacer śladami poznańskich legend",
+      "date": "2026-08-18",
+      "url": "https://bracz.edu.pl/event/z-archiwum-ksiazki-dzieciecej-fabularyzowany-spacer-sladami-poznanskich-legend-2/"
+     },
+     {
+      "title": "Klub Książki na Rubieży. „Dzika droga. Jak odnalazłam siebie” Cheryl Strayed",
+      "date": "2026-08-20",
+      "url": "https://bracz.edu.pl/event/klub-ksiazki-na-rubiezy-dzika-droga-jak-odnalazlam-siebie-cheryl-strayed/"
+     },
+     {
+      "title": "Spotkanie z Agatą Widzowską",
+      "date": "2026-08-20",
+      "url": "https://bracz.edu.pl/event/spotkanie-z-agata-widzowska/"
+     },
+     {
+      "title": "Klub Książki u Raczyńskich. „Demon z samotnej wyspy” Edogawy Ranpo",
+      "date": "2026-08-20",
+      "url": "https://bracz.edu.pl/event/klub-ksiazki-u-raczynskich-demon-z-samotnej-wyspy-edogawy-ranpo/"
+     }
+    ]
+   },
+   {
+    "id": "palmiarnia",
+    "name": "Palmiarnia Poznańska",
+    "town": "Poznań",
+    "url": "https://palmiarnia.poznan.pl/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 9,
+    "followups": [
+     {
+      "url": "https://palmiarnia.poznan.pl/aktualnosci/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 3
+     },
+     {
+      "url": "https://palmiarnia.poznan.pl/zwiedzanie/godziny-otwarcia/",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 0
+     },
+     {
+      "url": "https://palmiarnia.poznan.pl/zwiedzanie/cennik/",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 0
+     },
+     {
+      "url": "https://palmiarnia.poznan.pl/park-wilsona/harmonogram-wydarzen-w-muszli-koncertowej/",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 4
+     },
+     {
+      "url": "https://palmiarnia.poznan.pl/spacery-dla-seniorow-lato-2026/",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 9
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 5426,
+     "completionTokens": 1039,
+     "costUsd": 0.010621
+    },
+    "ms": 14002,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 10925,
+    "changed": false,
+    "followupsRechecked": 5,
+    "cached": 2,
+    "llmByTask": {
+     "extract": {
+      "calls": 1,
+      "promptTokens": 5426,
+      "completionTokens": 1039,
+      "costUsd": 0.010621
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/palmiarnia/bb690a67debcd3bbf584e2d80dc9c97b900d403be9f4db94972f17fb5be7c611.json",
+     "raw/2026-08-02/palmiarnia__followup/f30e24c3baa03b985e4b26549a9d29cebe4249be122f16419ddaa03e13d21f0b.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/palmiarnia/0009-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/palmiarnia__followup/39344dab000ab7697d532ba3226d726bc70be309a7acd800f0c60b2c379700ce.json",
+     "raw/2026-08-02/palmiarnia__followup/4b29d4b5e4a41af8b9ad16f96d2558fb62134e6279bf16eae27aaf6866cae4b2.json",
+     "raw/2026-08-02/palmiarnia__followup/e03a2b8dc8bfaf513f7bcb79c119fa13f5bd49da84080fac9c31e11c79a3264b.json",
+     "raw/2026-08-02/palmiarnia__followup/ee6d2f87cfa2481497d3633eec2b92c89dabbb7ea6a256e5d9265bf15d4e6618.json"
+    ],
+    "produced": [
+     {
+      "title": "JESZCZE BARDZIEJ DZIKA – SZTUKA, KTÓRA ROZKWITA WŚRÓD EGZOTYCZNEJ ROŚLINNOŚCI",
+      "date": "2026-07-17",
+      "url": "https://palmiarnia.poznan.pl/jeszcze-bardziej-dzika-sztuka-ktora-rozkwita-wsrod-egzotycznej-roslinnosci/"
+     },
+     {
+      "title": "SPACERY DLA SENIORÓW – LATO 2026",
+      "date": "2026-06-17",
+      "url": "https://palmiarnia.poznan.pl/spacery-dla-seniorow-lato-2026/",
+      "mergedInto": "palmiarnia"
+     },
+     {
+      "title": "JESZCZE BARDZIEJ DZIKA – SZTUKA, KTÓRA ROZKWITA WŚRÓD EGZOTYCZNEJ ROŚLINNOŚCI",
+      "date": "2026-07-17",
+      "url": "https://palmiarnia.poznan.pl/jeszcze-bardziej-dzika-sztuka-ktora-rozkwita-wsrod-egzotycznej-roslinnosci/",
+      "mergedInto": "palmiarnia"
+     },
+     {
+      "title": "VII POZNAŃSKIE DNI SUKULENTÓW. KAKTUSY MEKSYKU",
+      "date": "2026-06-18",
+      "url": "https://palmiarnia.poznan.pl/vii-poznanskie-dni-sukulentow-kaktusy-meksyku/"
+     },
+     {
+      "title": "SPACERY DLA SENIORÓW – LATO 2026",
+      "date": "2026-06-17",
+      "url": "https://palmiarnia.poznan.pl/spacery-dla-seniorow-lato-2026/"
+     },
+     {
+      "title": "XXVI Światowy Przegląd Folkloru INTEGRACJE – koncert",
+      "date": "2026-08-16",
+      "url": "https://palmiarnia.poznan.pl/park-wilsona/harmonogram-wydarzen-w-muszli-koncertowej/"
+     },
+     {
+      "title": "SIŁY SPECJALNE – koncert",
+      "date": "2026-08-28",
+      "url": "https://palmiarnia.poznan.pl/park-wilsona/harmonogram-wydarzen-w-muszli-koncertowej/"
+     },
+     {
+      "title": "DOGFEST – festyn",
+      "date": "2026-08-30",
+      "url": "https://palmiarnia.poznan.pl/park-wilsona/harmonogram-wydarzen-w-muszli-koncertowej/"
+     },
+     {
+      "title": "32. Dożynki Miejskie",
+      "date": "2026-09-05",
+      "url": "https://palmiarnia.poznan.pl/park-wilsona/harmonogram-wydarzen-w-muszli-koncertowej/"
+     }
+    ]
+   },
+   {
+    "id": "nowe-zoo",
+    "name": "ZOO Poznań – wydarzenia",
+    "town": "Poznań",
+    "url": "https://zoo.poznan.pl/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 2,
+    "followups": [
+     {
+      "url": "https://zoo.poznan.pl/category/aktualnosci/page/1",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 2
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 2
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 7151,
+     "completionTokens": 688,
+     "costUsd": 0.010591
+    },
+    "ms": 12319,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 17417,
+    "changed": false,
+    "followupsRechecked": 1,
+    "cached": 0,
+    "llmByTask": {
+     "extract": {
+      "calls": 1,
+      "promptTokens": 7151,
+      "completionTokens": 688,
+      "costUsd": 0.010591
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/nowe-zoo/5f7506d7ad79add1e0dc3c1e8c68a7da2664d4f80e23bf0a197d8dd456008d2b.json",
+     "raw/2026-08-02/nowe-zoo__followup/09d5a2c3237955bc11500250d68afdea88a5ee1c736d79e13f6a43a599d8c507.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/nowe-zoo/0010-anthropic_claude-haiku-4.5.json"
+    ],
+    "produced": [
+     {
+      "title": "Mieszkańcy Nowego Zoo bez tajemnic",
+      "date": "2026-07-01",
+      "url": "https://zoo.poznan.pl/2026/07/01/mieszkancy-nowego-zoo-bez-tajemnic-noo-prawie/"
+     },
+     {
+      "title": "Noc Marzeń w Nowym Zoo",
+      "date": "2026-06-12",
+      "url": "https://zoo.poznan.pl/2026/05/15/noc-marzen-w-nowym-zoo-2/"
+     }
+    ]
+   },
+   {
+    "id": "dk-stokrotka",
+    "name": "Dom Kultury Stokrotka (Grunwald)",
+    "town": "Poznań",
+    "url": "https://www.facebook.com/DKStokrotka/",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "dk-pod-lipami",
+    "name": "Dom Kultury Pod Lipami (Winogrady)",
+    "town": "Poznań",
+    "url": "https://psmwinogrady.pl/category/aktualnosci-odk-pod-lipami/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 10,
+    "followups": [],
+    "geo": {
+     "hits": 5,
+     "misses": 5
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 7019,
+    "httpStatus": 200,
+    "kind": "feed",
+    "chars": 39435,
+    "changed": true,
+    "structured": {
+     "kind": "tribe",
+     "url": "https://psmwinogrady.pl/wp-json/tribe/events/v1/events",
+     "seen": 10,
+     "items": 10
+    },
+    "archive": [
+     "raw/2026-08-02/dk-pod-lipami/45680a0d97288a03a48969784d214941762b87f6e5b8d5bf7b0f4a5af7739623.json"
+    ],
+    "produced": [
+     {
+      "title": "ZAJĘCIA STAŁE W ODK „BAJKA”",
+      "date": "2026-08-03",
+      "url": "https://psmwinogrady.pl/wydarzenie/zajecia-stale-w-odk-bajka/"
+     },
+     {
+      "title": "II Turnus Letnich Półkolonii z firmą Edu3Dkacja w ODK „Słońce”",
+      "date": "2026-08-03",
+      "url": "https://psmwinogrady.pl/wydarzenie/ii-turnus-letnich-polkolonii-z-firma-edu3dkacja-w-odk-slonce/"
+     },
+     {
+      "title": "MUZYKA I TEATR NA WINOGRADZKIM FYRTLU – SPEKTAKL „SOKRATES W PIASKOWNICY”",
+      "date": "2026-08-03",
+      "url": "https://psmwinogrady.pl/wydarzenie/muzyka-i-teatr-na-winogradzkim-fyrtlu-spektakl-sokrates-w-piaskownicy/"
+     },
+     {
+      "title": "ZAJĘCIA STAŁE W ODK „BAJKA”",
+      "date": "2026-08-05",
+      "url": "https://psmwinogrady.pl/wydarzenie/zajecia-stale-w-odk-bajka-2/"
+     },
+     {
+      "title": "Hip -hop projekt grupowy z Szkołą Tańca Step by Step w ODK „Słońce”",
+      "date": "2026-08-05",
+      "url": "https://psmwinogrady.pl/wydarzenie/hip-hop-projekt-grupowy-z-szkola-tanca-step-by-step-w-odk-slonce-7/"
+     },
+     {
+      "title": "ZAJĘCIA STAŁE W ODK „BAJKA”",
+      "date": "2026-08-06",
+      "url": "https://psmwinogrady.pl/wydarzenie/zajecia-stale-w-odk-bajka-3/"
+     },
+     {
+      "title": "Galeria Pod Lipami – „MIR BUD” wernisaż pracowni artystycznej Martyny Wojciechowskiej, piątek 07.08. 2026r., godz. 18:00, wstęp wolny",
+      "date": "2026-08-07",
+      "url": "https://psmwinogrady.pl/wydarzenie/galeria-pod-lipami-mir-bud-wernisaz-pracowni-artystycznej-martyny-wojciechowskiej-piatek-07-08-2026r-godz-1800-wstep-wolny/"
+     },
+     {
+      "title": "ZAJĘCIA STAŁE W ODK „BAJKA”",
+      "date": "2026-08-10",
+      "url": "https://psmwinogrady.pl/wydarzenie/zajecia-stale-w-odk-bajka-4/"
+     },
+     {
+      "title": "ODK „Pod Lipami” – Wieczór Gier Planszowych #18 – wtorek, 11.08.2026r., godz. 18:00, wstęp 10 zł",
+      "date": "2026-08-11",
+      "url": "https://psmwinogrady.pl/wydarzenie/odk-pod-lipami-wieczor-gier-planszowych-18-wtorek-11-08-2026r-godz-1800-wstep-10-zl/"
+     },
+     {
+      "title": "ZAJĘCIA STAŁE W ODK „BAJKA”",
+      "date": "2026-08-12",
+      "url": "https://psmwinogrady.pl/wydarzenie/zajecia-stale-w-odk-bajka-5/"
+     }
+    ]
+   },
+   {
+    "id": "dk-orbita",
+    "name": "Osiedlowy DK Orbita (os. Kosmonautów)",
+    "town": "Poznań",
+    "url": "https://psmwinogrady.pl/odk-orbita-os-kosmonautow-paw-118/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 10,
+    "followups": [],
+    "geo": {
+     "hits": 5,
+     "misses": 5
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 1395,
+    "httpStatus": 200,
+    "kind": "feed",
+    "chars": 39435,
+    "changed": true,
+    "structured": {
+     "kind": "tribe",
+     "url": "https://psmwinogrady.pl/wp-json/tribe/events/v1/events",
+     "seen": 10,
+     "items": 10
+    },
+    "archive": [
+     "raw/2026-08-02/dk-orbita/45680a0d97288a03a48969784d214941762b87f6e5b8d5bf7b0f4a5af7739623.json"
+    ],
+    "produced": [
+     {
+      "title": "ZAJĘCIA STAŁE W ODK „BAJKA”",
+      "date": "2026-08-03",
+      "url": "https://psmwinogrady.pl/wydarzenie/zajecia-stale-w-odk-bajka/",
+      "mergedInto": "dk-pod-lipami"
+     },
+     {
+      "title": "II Turnus Letnich Półkolonii z firmą Edu3Dkacja w ODK „Słońce”",
+      "date": "2026-08-03",
+      "url": "https://psmwinogrady.pl/wydarzenie/ii-turnus-letnich-polkolonii-z-firma-edu3dkacja-w-odk-slonce/",
+      "mergedInto": "dk-pod-lipami"
+     },
+     {
+      "title": "MUZYKA I TEATR NA WINOGRADZKIM FYRTLU – SPEKTAKL „SOKRATES W PIASKOWNICY”",
+      "date": "2026-08-03",
+      "url": "https://psmwinogrady.pl/wydarzenie/muzyka-i-teatr-na-winogradzkim-fyrtlu-spektakl-sokrates-w-piaskownicy/",
+      "mergedInto": "dk-pod-lipami"
+     },
+     {
+      "title": "ZAJĘCIA STAŁE W ODK „BAJKA”",
+      "date": "2026-08-05",
+      "url": "https://psmwinogrady.pl/wydarzenie/zajecia-stale-w-odk-bajka-2/",
+      "mergedInto": "dk-pod-lipami"
+     },
+     {
+      "title": "Hip -hop projekt grupowy z Szkołą Tańca Step by Step w ODK „Słońce”",
+      "date": "2026-08-05",
+      "url": "https://psmwinogrady.pl/wydarzenie/hip-hop-projekt-grupowy-z-szkola-tanca-step-by-step-w-odk-slonce-7/",
+      "mergedInto": "dk-pod-lipami"
+     },
+     {
+      "title": "ZAJĘCIA STAŁE W ODK „BAJKA”",
+      "date": "2026-08-06",
+      "url": "https://psmwinogrady.pl/wydarzenie/zajecia-stale-w-odk-bajka-3/",
+      "mergedInto": "dk-pod-lipami"
+     },
+     {
+      "title": "Galeria Pod Lipami – „MIR BUD” wernisaż pracowni artystycznej Martyny Wojciechowskiej, piątek 07.08. 2026r., godz. 18:00, wstęp wolny",
+      "date": "2026-08-07",
+      "url": "https://psmwinogrady.pl/wydarzenie/galeria-pod-lipami-mir-bud-wernisaz-pracowni-artystycznej-martyny-wojciechowskiej-piatek-07-08-2026r-godz-1800-wstep-wolny/",
+      "mergedInto": "dk-pod-lipami"
+     },
+     {
+      "title": "ZAJĘCIA STAŁE W ODK „BAJKA”",
+      "date": "2026-08-10",
+      "url": "https://psmwinogrady.pl/wydarzenie/zajecia-stale-w-odk-bajka-4/",
+      "mergedInto": "dk-pod-lipami"
+     },
+     {
+      "title": "ODK „Pod Lipami” – Wieczór Gier Planszowych #18 – wtorek, 11.08.2026r., godz. 18:00, wstęp 10 zł",
+      "date": "2026-08-11",
+      "url": "https://psmwinogrady.pl/wydarzenie/odk-pod-lipami-wieczor-gier-planszowych-18-wtorek-11-08-2026r-godz-1800-wstep-10-zl/",
+      "mergedInto": "dk-pod-lipami"
+     },
+     {
+      "title": "ZAJĘCIA STAŁE W ODK „BAJKA”",
+      "date": "2026-08-12",
+      "url": "https://psmwinogrady.pl/wydarzenie/zajecia-stale-w-odk-bajka-5/",
+      "mergedInto": "dk-pod-lipami"
+     }
+    ]
+   },
+   {
+    "id": "fyrtel-glowna",
+    "name": "Fyrtel Główna",
+    "town": "Poznań",
+    "url": "https://www.facebook.com/fyrtelglowna/",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "lubon-city",
+    "name": "Miasto Luboń – aktualności",
+    "town": "Luboń",
+    "url": "https://lubon.pl/",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [
+     {
+      "url": "https://lubon.pl/artykuly/350/wydarzenia",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 5358,
+     "completionTokens": 190,
+     "costUsd": 0.006308
+    },
+    "ms": 6428,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 15880,
+    "changed": false,
+    "followupsRechecked": 1,
+    "cached": 0,
+    "llmByTask": {
+     "extract": {
+      "calls": 1,
+      "promptTokens": 5358,
+      "completionTokens": 190,
+      "costUsd": 0.006308
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/lubon-city/b207babcdc286facb72cfe629272399d4c2b0fdb3b3015e437f0019ce8e5dc4f.json",
+     "raw/2026-08-02/lubon-city__followup/1adee804973ad1f0372c3e01a396b56b3df9a19996125adced93a06a96826837.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/lubon-city/0011-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "lubon-ok",
+    "name": "Ośrodek Kultury w Luboniu",
+    "town": "Luboń",
+    "url": "https://www.oklubon.pl/",
+    "fetch": "plain",
+    "status": "unchanged",
+    "events": 1,
+    "followups": [
+     {
+      "url": "https://www.oklubon.pl/wydarzenia",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 1
+     },
+     {
+      "url": "https://www.oklubon.pl/zajecia",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 1685,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 9683,
+    "changed": false,
+    "followupsRechecked": 2,
+    "cached": 1,
+    "archive": [
+     "raw/2026-08-02/lubon-ok/e82cfe2aff0e13f7f3e8c6b7068c5ee855f65981a0a9550ef808b6235b161829.json",
+     "raw/2026-08-02/lubon-ok__followup/a019d5f0d9938edf9c36427494cada003b1f7e28b0662a102bff7e597ba7aac1.json",
+     "raw/2026-08-02/lubon-ok__followup/32538ee840f65ad6c9319953a223698370de5309cb977e9c15af245e934a19ba.json"
+    ],
+    "produced": [
+     {
+      "title": "Happy Bus",
+      "date": "2026-08-03",
+      "url": "https://www.oklubon.pl/wydarzenia/happy-bus-2"
+     }
+    ]
+   },
+   {
+    "id": "lubon-ok-fb",
+    "name": "OK Luboń – Facebook",
+    "town": "Luboń",
+    "url": "https://www.facebook.com/OsrodekKulturyLubon/",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "lubon-plaza",
+    "name": "Plaża miejska Luboń (kalendarz venue)",
+    "town": "Luboń",
+    "url": "https://www.facebook.com/plazamiejskalubon/",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "lubon-biblioteka",
+    "name": "Biblioteka Miejska w Luboniu",
+    "town": "Luboń",
+    "url": "https://biblub.com/",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [
+     {
+      "url": "https://biblub.com/category/aktualnosci/page/1",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 0
+     },
+     {
+      "url": "https://biblub.com/aktualnosci/24-lipca-filia-nr-4-bedzie-nieczynna/",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 0
+     },
+     {
+      "url": "https://biblub.com/aktualnosci/wakacyjne-godziny-otwarcia-biblioteki/",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 3067,
+     "completionTokens": 392,
+     "costUsd": 0.005027
+    },
+    "ms": 10620,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 4613,
+    "changed": false,
+    "followupsRechecked": 3,
+    "cached": 0,
+    "llmByTask": {
+     "extract": {
+      "calls": 1,
+      "promptTokens": 3067,
+      "completionTokens": 392,
+      "costUsd": 0.005027
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/lubon-biblioteka/a2c0e428ab7898f0880d7f8a800959b8f47c10d7c80f88b8a8dc86bb2483a7a3.json",
+     "raw/2026-08-02/lubon-biblioteka__followup/eb1a2c6254dccb9205b3853796cfa8226510a86206ea4dbb499f1fef342207e5.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/lubon-biblioteka/0012-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/lubon-biblioteka__followup/2682eb965dbb848e5ae8f2e307759e8f988ecdcdfe77ebbcefb91236624d5738.json",
+     "raw/2026-08-02/lubon-biblioteka__followup/82b3d97c008e1590fb65ab072113ffa20fea5ee8df8ccabf5ba57c0be18c181a.json"
+    ]
+   },
+   {
+    "id": "puszczykowo-city",
+    "name": "Puszczykowo – instytucje kultury",
+    "town": "Puszczykowo",
+    "url": "https://puszczykowo.pl/strefa-miejska/kultura/instytucje-kultury",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 9,
+    "followups": [
+     {
+      "url": "https://puszczykowo.pl/strefa-miejska/kultura/wydarzenia-kulturalne",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 6
+     }
+    ],
+    "geo": {
+     "hits": 3,
+     "misses": 3
+    },
+    "llm": {
+     "calls": 2,
+     "promptTokens": 7879,
+     "completionTokens": 2564,
+     "costUsd": 0.020699000000000002
+    },
+    "ms": 19009,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 6667,
+    "changed": true,
+    "llmByTask": {
+     "extract": {
+      "calls": 2,
+      "promptTokens": 7879,
+      "completionTokens": 2564,
+      "costUsd": 0.020699000000000002
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/puszczykowo-city/bd815845c4d1e49ed71e20f4f653ab881c5b77904528875f641da30dcb22554b.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/puszczykowo-city/0013-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/puszczykowo-city__followup/137a7ad4a7052a3556858d6c62589328dc47df76c8aec1923b7ecedc59484dae.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/puszczykowo-city/0014-anthropic_claude-haiku-4.5.json"
+    ],
+    "produced": [
+     {
+      "title": "Letni Czyn Wędkarski w Puszczykowie",
+      "date": "2026-08-02",
+      "url": "https://puszczykowo.pl/wydarzenia/letni-czyn-wedkarski-w-puszczykowie"
+     },
+     {
+      "title": "Puchar Polski: Future Puszczykowo – KP LAS Puszczykowo",
+      "date": "2026-08-02",
+      "url": "https://puszczykowo.pl/wydarzenia/puchar-polski-future-puszczykowo-kp-las-puszczykowo"
+     },
+     {
+      "title": "XIV Letnie Koncerty Organowe w Wielkopolskim Parku Narodowym - zagra Anna Pikulska",
+      "date": "2026-08-02",
+      "url": "https://puszczykowo.pl/wydarzenia/xiv-letnie-koncerte-organowe-w-wielkopolskim-parku-narodowym",
+      "mergedInto": "puszczykowo-city"
+     },
+     {
+      "title": "XIV Letnie Koncerty Organowe w Wielkopolskim Parku Narodowym - zagra Anna Pikulska",
+      "date": "2026-08-02",
+      "url": "https://puszczykowo.pl/wydarzenia/xiv-letnie-koncerte-organowe-w-wielkopolskim-parku-narodowym"
+     },
+     {
+      "title": "Biblioteka Miejska zaprasza na bezpłatne - Czułe Czytanki: Podwodne Skarby",
+      "date": "2026-08-04",
+      "url": "https://puszczykowo.pl/wydarzenia/biblioteka-miejska-zaprasza-na-bezplatne-czule-czytanki-podwodne-skarby-2"
+     },
+     {
+      "title": "Biblioteka Miejska zaprasza na bezpłatne - Czułe Czytanki: Podwodne Skarby",
+      "date": "2026-08-05",
+      "url": "https://puszczykowo.pl/wydarzenia/biblioteka-miejska-zaprasza-na-bezplatne-czule-czytanki-podwodne-skarby"
+     },
+     {
+      "title": "Biblioteka Miejska zaprasza na bezpłatne - Czułe Czytanki: Podwodne Skarby",
+      "date": "2026-08-06",
+      "url": "https://puszczykowo.pl/wydarzenia/biblioteka-miejska-zaprasza-na-bezplatne-czule-czytanki-podwodne-skarby-1"
+     },
+     {
+      "title": "Koncert Mis i Gongów w Willi Mimoza",
+      "date": "2026-08-07",
+      "url": "https://puszczykowo.pl/wydarzenia/koncert-mis-i-gongow-w-willi-mimoza-1"
+     },
+     {
+      "title": "PUFA SOFA SESSIONS – Hubert Szczęsny",
+      "date": "2026-08-07",
+      "url": "https://puszczykowo.pl/wydarzenia/pufa-sofa-sessions-hubert-szczesny"
+     }
+    ]
+   },
+   {
+    "id": "puszczykowo-bmcak",
+    "name": "Biblioteka Miejska CAK Puszczykowo",
+    "town": "Puszczykowo",
+    "url": "https://www.puszczykowo-mbp.sowa.pl/",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 5363,
+     "completionTokens": 207,
+     "costUsd": 0.006398
+    },
+    "ms": 5093,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 8568,
+    "changed": true,
+    "llmByTask": {
+     "extract": {
+      "calls": 1,
+      "promptTokens": 5363,
+      "completionTokens": 207,
+      "costUsd": 0.006398
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/puszczykowo-bmcak/a01b0003c60645b543c06e60fdf38164645489d95eb3ced9a17f57d55c60d7ce.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/puszczykowo-bmcak/0015-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "mosina-city",
+    "name": "Gmina Mosina – kalendarz wydarzeń",
+    "town": "Mosina",
+    "url": "https://www.mosina.pl/wydarzenia?page=1",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 4339,
+     "completionTokens": 2111,
+     "costUsd": 0.014894
+    },
+    "ms": 13800,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 7478,
+    "changed": true,
+    "llmByTask": {
+     "extract": {
+      "calls": 1,
+      "promptTokens": 4339,
+      "completionTokens": 2111,
+      "costUsd": 0.014894
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/mosina-city/94d289cbc408aa4f0c56a6e950da4241e67974a9c35e15905a26dca9ad74dc2a.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/mosina-city/0016-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "mosina-mok",
+    "name": "Mosiński Ośrodek Kultury",
+    "town": "Mosina",
+    "url": "https://www.kultura.gmina.pl/aktualnosci/",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [
+     {
+      "url": "https://www.kultura.gmina.pl/aktualnosci/page/1",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 13797,
+     "completionTokens": 1914,
+     "costUsd": 0.023367
+    },
+    "ms": 13845,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 26164,
+    "changed": false,
+    "followupsRechecked": 1,
+    "cached": 0,
+    "llmByTask": {
+     "extract": {
+      "calls": 1,
+      "promptTokens": 13797,
+      "completionTokens": 1914,
+      "costUsd": 0.023367
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/mosina-mok/e1ff256c604ec348227648cf74786598909c31b89f2cebeff5f7a59effbdabc2.json",
+     "raw/2026-08-02/mosina-mok__followup/e1ff256c604ec348227648cf74786598909c31b89f2cebeff5f7a59effbdabc2.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/mosina-mok/0017-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "mosina-osir",
+    "name": "OSiR Mosina – wydarzenia + programy PDF",
+    "town": "Mosina",
+    "url": "https://osirmosina.pl/index.php/kalendarz/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 10,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 1
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 2586,
+    "httpStatus": 200,
+    "kind": "feed",
+    "chars": 144491,
+    "changed": true,
+    "structured": {
+     "kind": "jsonld",
+     "url": "https://osirmosina.pl/index.php/kalendarz/",
+     "seen": 11,
+     "items": 10,
+     "dropped": {
+      "past": 1,
+      "noDate": 0,
+      "noTitle": 0
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/mosina-osir/88733eb7bd68bd0ae420fde9d8de8360b08d62a287d62270a343d8c000c95676.json"
+    ],
+    "produced": [
+     {
+      "title": "NINJACON – Festiwal klocków i fantastyki",
+      "date": "2026-08-02",
+      "url": "https://osirmosina.pl/index.php/kalendarz/"
+     },
+     {
+      "title": "Deskorolka na Skateparku",
+      "date": "2026-08-04",
+      "url": "https://osirmosina.pl/index.php/kalendarz/"
+     },
+     {
+      "title": "Deskorolka na Skateparku",
+      "date": "2026-08-04",
+      "url": "https://osirmosina.pl/index.php/kalendarz/",
+      "mergedInto": "mosina-osir"
+     },
+     {
+      "title": "\"Zdrowy kręgosłup\" na trawie",
+      "date": "2026-08-05",
+      "url": "https://osirmosina.pl/index.php/kalendarz/"
+     },
+     {
+      "title": "Wakacyjne wyjazdy",
+      "date": "2026-08-11",
+      "url": "https://osirmosina.pl/index.php/kalendarz/"
+     },
+     {
+      "title": "\"Zdrowy kręgosłup\" na trawie",
+      "date": "2026-08-12",
+      "url": "https://osirmosina.pl/index.php/kalendarz/"
+     },
+     {
+      "title": "Wakacyjne wyjazdy",
+      "date": "2026-08-13",
+      "url": "https://osirmosina.pl/index.php/kalendarz/"
+     },
+     {
+      "title": "Wakacyjne wyjazdy",
+      "date": "2026-08-18",
+      "url": "https://osirmosina.pl/index.php/kalendarz/"
+     },
+     {
+      "title": "\"Zdrowy kręgosłup\" na trawie",
+      "date": "2026-08-19",
+      "url": "https://osirmosina.pl/index.php/kalendarz/"
+     },
+     {
+      "title": "Wakacyjne wyjazdy",
+      "date": "2026-08-25",
+      "url": "https://osirmosina.pl/index.php/kalendarz/"
+     }
+    ]
+   },
+   {
+    "id": "mosina-biblioteka",
+    "name": "Mosińska Biblioteka Publiczna",
+    "town": "Mosina",
+    "url": "http://bibliotekamosina.pl/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 5,
+    "followups": [
+     {
+      "url": "http://bibliotekamosina.pl/filie/czapury/aktualnosci-czapury",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 0
+     },
+     {
+      "url": "http://bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/akcja-lato-z-biblioteka",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 4
+     },
+     {
+      "url": "http://bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/spektakl-klaudek-i-klaudynka-w-bibliotece",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 5
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 4625,
+     "completionTokens": 312,
+     "costUsd": 0.006185
+    },
+    "ms": 11889,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 11029,
+    "changed": false,
+    "followupsRechecked": 3,
+    "cached": 1,
+    "llmByTask": {
+     "extract": {
+      "calls": 1,
+      "promptTokens": 4625,
+      "completionTokens": 312,
+      "costUsd": 0.006185
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/mosina-biblioteka/f4614d6a37603c87906144e4db3e7cbe603525780657965ba84a9c8d9f6cfbb8.json",
+     "raw/2026-08-02/mosina-biblioteka__followup/4c7f79d21b48249abb14874f13bcd11a6eb475b585febd4d562f3b6df616c91a.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/mosina-biblioteka/0018-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/mosina-biblioteka__followup/d5d00eba7d130738cb9fd722ecc1a2476abdf194a9ef800a66dea9e60bc9fb1f.json",
+     "raw/2026-08-02/mosina-biblioteka__followup/c64a3af5e671bf5d2893e572785134708b5012e9f0a876d34888da9ac3436e52.json"
+    ],
+    "produced": [
+     {
+      "title": "Akcja Lato z Biblioteką",
+      "date": "2026-07-01",
+      "url": "http://bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/akcja-lato-z-biblioteka"
+     },
+     {
+      "title": "Moliki w Ptasim Parku – literackie spotkania dla najmłodszych",
+      "date": "2026-07-01",
+      "url": "http://bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/akcja-lato-z-biblioteka"
+     },
+     {
+      "title": "Twórcze warsztaty plastyczne i sensoryczne",
+      "date": "2026-07-01",
+      "url": "http://bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/akcja-lato-z-biblioteka"
+     },
+     {
+      "title": "Emocjonujące planszówki i biblioteczne łamigłówki",
+      "date": "2026-07-01",
+      "url": "http://bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/akcja-lato-z-biblioteka"
+     },
+     {
+      "title": "Egzotyczne podróże (kierunek: Hiszpania!) oraz przygody z Nelą",
+      "date": "2026-07-01",
+      "url": "http://bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/akcja-lato-z-biblioteka"
+     }
+    ]
+   },
+   {
+    "id": "mosina-galeria",
+    "name": "Galeria Sztuki w Mosinie",
+    "town": "Mosina",
+    "url": "https://www.galeriamosina.pl/",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [
+     {
+      "url": "https://www.galeriamosina.pl/index.php?option=com_content&view=category&id=8&Itemid=114",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2385,
+     "completionTokens": 388,
+     "costUsd": 0.004325
+    },
+    "ms": 6145,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 5068,
+    "changed": false,
+    "followupsRechecked": 1,
+    "cached": 0,
+    "llmByTask": {
+     "extract": {
+      "calls": 1,
+      "promptTokens": 2385,
+      "completionTokens": 388,
+      "costUsd": 0.004325
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/mosina-galeria/bfb017c3a63f56739ab0a0848abab189d72917aaee2c767968f4d1d898a8faf1.json",
+     "raw/2026-08-02/mosina-galeria__followup/de0a82fa24be9bfc9e77da824dddd8f8a08f6c325470594f47203f874124c366.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/mosina-galeria/0019-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "mosina-fb",
+    "name": "Gmina Mosina – Facebook",
+    "town": "Mosina",
+    "url": "https://www.facebook.com/gminamosina/",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "komorniki-city",
+    "name": "Gmina Komorniki – kultura i sport",
+    "town": "Komorniki",
+    "url": "https://www.komorniki.pl/kultura-i-sport.html",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 21,
+    "followups": [
+     {
+      "url": "https://www.komorniki.pl/kalendarz-wydarzen/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 7
+     },
+     {
+      "url": "https://gokkomorniki.pl/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 12
+     },
+     {
+      "url": "https://gosirkomorniki.pl/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 0
+     },
+     {
+      "url": "https://www.biblioteka-komorniki.pl/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 2
+     }
+    ],
+    "geo": {
+     "hits": 8,
+     "misses": 12
+    },
+    "llm": {
+     "calls": 5,
+     "promptTokens": 35620,
+     "completionTokens": 6234,
+     "costUsd": 0.06679
+    },
+    "ms": 50052,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 15424,
+    "changed": true,
+    "llmByTask": {
+     "extract": {
+      "calls": 5,
+      "promptTokens": 35620,
+      "completionTokens": 6234,
+      "costUsd": 0.06679
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/komorniki-city/f54bdaaeacddc617c71e1d11c42eeb05b22210cb196eb4e426fc655bd9505e74.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/komorniki-city/0020-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/komorniki-city__followup/3acf1bb8701024e1d071332cda77cfdd66a0195f8ace76e1244fa8fcfaf3f5e8.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/komorniki-city/0021-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/komorniki-city__followup/1060ba86f3d7c790f0326a394006d3371fe88ccbe94beca06b0c784de3679361.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/komorniki-city/0022-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/komorniki-city__followup/8774c5aab5754a6edea05e16a83a3a67d5c6da2cea5d8f30988e157a79ae3f9c.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/komorniki-city/0023-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/komorniki-city__followup/66b9d12f9fe85f7a1e581f4648d04fa2dbf021232d528e11cb25b17e2d0e8312.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/komorniki-city/0024-anthropic_claude-haiku-4.5.json"
+    ],
+    "produced": [
+     {
+      "title": "Głuchowo - Kreatywne warsztaty letnie",
+      "date": "2026-08-03",
+      "url": "https://www.gokkomorniki.pl/aktualnosci/03-06082026-gluchowo-kreatywne-warsztaty-letnie.html"
+     },
+     {
+      "title": "Webinar dotyczący naboru wniosków w ramach projektu \"Mikroretencja\"",
+      "date": "2026-08-07",
+      "url": "https://www.komorniki.pl/kalendarz-wydarzen/"
+     },
+     {
+      "title": "Łęczyca - Wieczór poezji przy ognisku",
+      "date": "2026-08-13",
+      "url": "https://www.gokkomorniki.pl/aktualnosci/13082026-leczyca-wieczor-poezji-przy-ognisku.html"
+     },
+     {
+      "title": "Rosnówko - Karaoke dla dzieci",
+      "date": "2026-08-14",
+      "url": "https://www.gokkomorniki.pl/aktualnosci/14082026-rosnowko-karaoke-dla-dzieci.html"
+     },
+     {
+      "title": "Łęczyca - Dźwięki skrzypiec w zieleni",
+      "date": "2026-08-20",
+      "url": "https://www.gokkomorniki.pl/aktualnosci/20082026-leczyca-dzwieki-skrzypiec-w-zieleni.html"
+     },
+     {
+      "title": "Komorniki Jazz Club No. 7 – Dixie Company & Patrycja Kubale",
+      "date": "2026-08-22",
+      "url": "https://www.gokkomorniki.pl/aktualnosci/komorniki-jazz-club-no-7-dixie-company-patrycja-kubale.html"
+     },
+     {
+      "title": "XII Podróż Rodzinna pod Parą",
+      "date": "2026-08-29",
+      "url": "https://gosirkomorniki.pl/aktualnosci/xii-podroz-rodzinnapo-para.html"
+     },
+     {
+      "title": "Kreatywne warsztaty letnie w Głuchowie",
+      "date": "2026-08-03",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/kreatywne-warsztaty-letnie-w-gluchowie.html"
+     },
+     {
+      "title": "Kino letnie w Wirach",
+      "date": "2026-08-05",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/kino-letnie-w-wirach.html"
+     },
+     {
+      "title": "Kino letnie w Wirach",
+      "date": "2026-08-07",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/886-kino-letnie-w-wirach.html"
+     },
+     {
+      "title": "Warsztaty kreatywne dla dorosłych - Dworek",
+      "date": "2026-08-13",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/warsztaty-kreatywne-dla-doroslych-dworek.html"
+     },
+     {
+      "title": "Wieczór poezji przy ognisku w Łęczycy",
+      "date": "2026-08-13",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/wieczor-poezji-przy-ognisku-w-leczycy.html"
+     },
+     {
+      "title": "Kino letnie w Wirach",
+      "date": "2026-08-19",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/887-kino-letnie-w-wirach.html"
+     },
+     {
+      "title": "Dźwięki skrzypiec w zieleni w Łęczycy",
+      "date": "2026-08-20",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/dzwieki-skrzypiec-w-zieleni-w-leczycy.html"
+     },
+     {
+      "title": "Kino letnie w Wirach",
+      "date": "2026-08-21",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/888-kino-letnie-w-wirach.html"
+     },
+     {
+      "title": "Dixie Company & Patrycja Kubale",
+      "date": "2026-08-22",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/dixie-company-patrycja-kubale.html"
+     },
+     {
+      "title": "Święto pyry - Komorniki",
+      "date": "2026-08-22",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/swieto-pyry-komorniki.html",
+      "mergedInto": "komorniki-gok"
+     },
+     {
+      "title": "Kurs tańca towarzyskiego - Wiry",
+      "date": "2026-08-28",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/858-kurs-tanca-towarzyskiego-wiry.html"
+     },
+     {
+      "title": "Karaoke dla dzieci - Rosnówko",
+      "date": "2026-08-14",
+      "url": "https://gokkomorniki.pl/aktualnosci/14082026-rosnowko-karaoke-dla-dzieci.html",
+      "mergedInto": "komorniki-gok"
+     },
+     {
+      "title": "Spotkanie Dyskusyjnego Klubu Książki w Plewiskach",
+      "date": "2026-07-16",
+      "url": "https://www.biblioteka-komorniki.pl/kalendarz-wydarzen/336-spotkanie-dyskusyjnego-klubu-ksiazki-w-plewiskach.html"
+     },
+     {
+      "title": "Warsztaty naukowe w Plewiskach",
+      "date": "2026-07-06",
+      "url": "https://www.biblioteka-komorniki.pl/kalendarz-wydarzen/warsztaty-naukowe-w-plewiskach.html"
+     }
+    ]
+   },
+   {
+    "id": "komorniki-gok",
+    "name": "GOK Komorniki (DK Koło, Remiza Plewiska…)",
+    "town": "Komorniki",
+    "url": "https://gokkomorniki.pl/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 24,
+    "followups": [
+     {
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 11
+     },
+     {
+      "url": "https://gokkomorniki.pl/aktualnosci/wakacyjne-warsztaty-z-tworzenia-rolek.html",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 1
+     },
+     {
+      "url": "https://gokkomorniki.pl/aktualnosci/kino-letnie-w-wirach-wakacyjne-seanse-pod-golym-niebem-kopia.html",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 11,
+     "misses": 12
+    },
+    "llm": {
+     "calls": 4,
+     "promptTokens": 23566,
+     "completionTokens": 7331,
+     "costUsd": 0.060221
+    },
+    "ms": 44303,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 15440,
+    "changed": true,
+    "llmByTask": {
+     "extract": {
+      "calls": 4,
+      "promptTokens": 23566,
+      "completionTokens": 7331,
+      "costUsd": 0.060221
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/komorniki-gok/1060ba86f3d7c790f0326a394006d3371fe88ccbe94beca06b0c784de3679361.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/komorniki-gok/0025-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/komorniki-gok__followup/787aae50b044e3aab37e7a84ff6bd661bfd60f8f2037da10959c6c27b20e3bcd.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/komorniki-gok/0026-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/komorniki-gok__followup/1d5d87a6348079fd851215e5e1b9cbb348b6640ed5915a7875fd8c6e1a970e0e.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/komorniki-gok/0027-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/komorniki-gok__followup/b05c2300071fe41e265ae59fc93100bb4870d748b6b914e68f2e5b6611caf395.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/komorniki-gok/0028-anthropic_claude-haiku-4.5.json"
+    ],
+    "produced": [
+     {
+      "title": "Kreatywne warsztaty letnie w Głuchowie",
+      "date": "2026-08-03",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/kreatywne-warsztaty-letnie-w-gluchowie.html",
+      "mergedInto": "komorniki-city"
+     },
+     {
+      "title": "Kino letnie w Wirach",
+      "date": "2026-08-05",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/kino-letnie-w-wirach.html",
+      "mergedInto": "komorniki-city"
+     },
+     {
+      "title": "Kino letnie w Wirach",
+      "date": "2026-08-07",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/886-kino-letnie-w-wirach.html",
+      "mergedInto": "komorniki-city"
+     },
+     {
+      "title": "Warsztaty kreatywne dla dorosłych - Dworek",
+      "date": "2026-08-13",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/warsztaty-kreatywne-dla-doroslych-dworek.html",
+      "mergedInto": "komorniki-city"
+     },
+     {
+      "title": "Wieczór poezji przy ognisku w Łęczycy",
+      "date": "2026-08-13",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/wieczor-poezji-przy-ognisku-w-leczycy.html",
+      "mergedInto": "komorniki-city"
+     },
+     {
+      "title": "Kino letnie w Wirach",
+      "date": "2026-08-19",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/887-kino-letnie-w-wirach.html",
+      "mergedInto": "komorniki-city"
+     },
+     {
+      "title": "Dźwięki skrzypiec w zieleni w Łęczycy",
+      "date": "2026-08-20",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/dzwieki-skrzypiec-w-zieleni-w-leczycy.html",
+      "mergedInto": "komorniki-city"
+     },
+     {
+      "title": "Kino letnie w Wirach",
+      "date": "2026-08-21",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/888-kino-letnie-w-wirach.html",
+      "mergedInto": "komorniki-city"
+     },
+     {
+      "title": "Dixie Company & Patrycja Kubale",
+      "date": "2026-08-22",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/dixie-company-patrycja-kubale.html",
+      "mergedInto": "komorniki-city"
+     },
+     {
+      "title": "Święto pyry - Komorniki",
+      "date": "2026-08-22",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/swieto-pyry-komorniki.html"
+     },
+     {
+      "title": "Kurs tańca towarzyskiego - Wiry",
+      "date": "2026-08-28",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/858-kurs-tanca-towarzyskiego-wiry.html",
+      "mergedInto": "komorniki-city"
+     },
+     {
+      "title": "Karaoke dla dzieci - Rosnówko",
+      "date": "2026-08-14",
+      "url": "https://gokkomorniki.pl/aktualnosci/14082026-rosnowko-karaoke-dla-dzieci.html"
+     },
+     {
+      "title": "Kreatywne warsztaty letnie w Głuchowie",
+      "date": "2026-08-03",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/",
+      "mergedInto": "komorniki-city"
+     },
+     {
+      "title": "Kino letnie w Wirach - seans: Dora i Miasto Złota",
+      "date": "2026-08-05",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/"
+     },
+     {
+      "title": "Kino letnie w Wirach - seans: Nomadland",
+      "date": "2026-08-07",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/"
+     },
+     {
+      "title": "Wieczór poezji przy ognisku w Łęczycy",
+      "date": "2026-08-13",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/",
+      "mergedInto": "komorniki-city"
+     },
+     {
+      "title": "Warsztaty kreatywne dla dorosłych - kwieciste tamborki",
+      "date": "2026-08-13",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/"
+     },
+     {
+      "title": "Kino letnie w Wirach - seans: Krudowie 2",
+      "date": "2026-08-19",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/"
+     },
+     {
+      "title": "Dźwięki skrzypiec w zieleni w Łęczycy",
+      "date": "2026-08-20",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/",
+      "mergedInto": "komorniki-city"
+     },
+     {
+      "title": "Kino letnie w Wirach - seans: Rocketman",
+      "date": "2026-08-21",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/"
+     },
+     {
+      "title": "Święto pyry - Komorniki",
+      "date": "2026-08-22",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/",
+      "mergedInto": "komorniki-gok"
+     },
+     {
+      "title": "Dixie Company & Patrycja Kubale",
+      "date": "2026-08-22",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/",
+      "mergedInto": "komorniki-city"
+     },
+     {
+      "title": "Kurs tańca towarzyskiego - Wiry",
+      "date": "2026-08-28",
+      "url": "https://gokkomorniki.pl/kalendarz-wydarzen/",
+      "mergedInto": "komorniki-city"
+     },
+     {
+      "title": "Wakacyjne warsztaty z tworzenia rolek",
+      "date": "2026-08-04",
+      "url": "https://gokkomorniki.pl/aktualnosci/wakacyjne-warsztaty-z-tworzenia-rolek.html"
+     }
+    ]
+   },
+   {
+    "id": "dopiewo-city",
+    "name": "Gmina Dopiewo",
+    "town": "Dopiewo",
+    "url": "https://dopiewo.pl/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 12,
+    "followups": [
+     {
+      "url": "https://dopiewo.pl/wydarzenia?page=1",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 9
+     },
+     {
+      "url": "https://dopiewo.pl/aktualnosci/2026-06-25/lato-w-gminie-dopiewo",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 6,
+     "misses": 1
+    },
+    "llm": {
+     "calls": 3,
+     "promptTokens": 17374,
+     "completionTokens": 7258,
+     "costUsd": 0.053664
+    },
+    "ms": 38665,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 13501,
+    "changed": true,
+    "llmByTask": {
+     "extract": {
+      "calls": 3,
+      "promptTokens": 17374,
+      "completionTokens": 7258,
+      "costUsd": 0.053664
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/dopiewo-city/f2e7f496f8965173f7a3b045847a2c056124a7e6c8a52a85a0592aaf012c09ba.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/dopiewo-city/0029-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/dopiewo-city__followup/009f95bdd722ba3d0232d1597c52025a6b208519a615a2ed583a01808b12389f.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/dopiewo-city/0030-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/dopiewo-city__followup/e8a720a5487911ef08bb7566ed0260add14f9bc95af7cd0697e58ca08cab8516.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/dopiewo-city/0031-anthropic_claude-haiku-4.5.json"
+    ],
+    "produced": [
+     {
+      "title": "PLANSZÓWKI NA DWORCU",
+      "date": "2026-08-03",
+      "url": "https://dopiewo.pl/wydarzenia/2026-07-10/planszowki-na-dworcu-1"
+     },
+     {
+      "title": "PLANSZÓWKI NA DWORCU",
+      "date": "2026-08-04",
+      "url": "https://dopiewo.pl/wydarzenia/2026-07-10/planszowki-na-dworcu-2"
+     },
+     {
+      "title": "PLANSZÓWKI NA DWORCU",
+      "date": "2026-08-04",
+      "url": "https://dopiewo.pl/wydarzenia/2026-07-10/planszowki-na-dworcu-3",
+      "mergedInto": "dopiewo-city"
+     },
+     {
+      "title": "KROK W PRZYSZŁOŚĆ",
+      "date": "2026-08-06",
+      "url": "https://dopiewo.pl/wydarzenia/2026-07-02/krok-w-przyszlosc-3"
+     },
+     {
+      "title": "WARSZTATY DOŚWIADCZENIOWE DLA DOROSŁYCH",
+      "date": "2026-08-06",
+      "url": "https://dopiewo.pl/wydarzenia/2026-07-10/warsztaty-doswiadczeniowe-dla-doroslych"
+     },
+     {
+      "title": "KOD RUCH",
+      "date": "2026-08-06",
+      "url": "https://dopiewo.pl/wydarzenia/2026-07-03/kod-ruch-0"
+     },
+     {
+      "title": "POLSKI NA LUZIE - KLUB ROZMOWY PO POLSKU",
+      "date": "2026-08-06",
+      "url": "https://dopiewo.pl/wydarzenia/2026-07-07/polski-na-luzie-klub-rozmowy-po-polsku-0"
+     },
+     {
+      "title": "WARSZTATY DOŚWIADCZENIOWE DLA MŁODZIEŻY W WIEKU 13-16 LAT",
+      "date": "2026-08-07",
+      "url": "https://dopiewo.pl/wydarzenia/2026-07-10/warsztaty-doswiadczeniowe-dla-mlodziezy-w-wieku-13"
+     },
+     {
+      "title": "SPORTOWE SOBOTY GOSIR W LETNIEJ ODSŁONIE",
+      "date": "2026-08-08",
+      "url": "https://dopiewo.pl/wydarzenia/2026-07-15/sportowe-soboty-gosir-w-letniej-odslonie-1"
+     },
+     {
+      "title": "PLANSZÓWKI NA DWORCU",
+      "date": "2026-08-03",
+      "url": "https://dopiewo.pl/wydarzenia/2026-07-10/planszowki-na-dworcu-1",
+      "mergedInto": "dopiewo-city"
+     },
+     {
+      "title": "PLANSZÓWKI NA DWORCU",
+      "date": "2026-08-04",
+      "url": "https://dopiewo.pl/wydarzenia/2026-07-10/planszowki-na-dworcu-2",
+      "mergedInto": "dopiewo-city"
+     },
+     {
+      "title": "PLANSZÓWKI NA DWORCU",
+      "date": "2026-08-04",
+      "url": "https://dopiewo.pl/wydarzenia/2026-07-10/planszowki-na-dworcu-3",
+      "mergedInto": "dopiewo-city"
+     }
+    ]
+   },
+   {
+    "id": "dopiewo-gosir",
+    "name": "GOSiR Dopiewo / CRK Konarzewo",
+    "town": "Dopiewo",
+    "url": "https://gosir.dopiewo.pl/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 2,
+    "followups": [
+     {
+      "url": "https://gosir.dopiewo.pl/kalendarz",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 0
+     },
+     {
+      "url": "https://gosir.dopiewo.pl/aktualnosci/sportowe-soboty-lato-2026",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 1,
+     "misses": 1
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 3222,
+     "completionTokens": 255,
+     "costUsd": 0.004497
+    },
+    "ms": 5415,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 11038,
+    "changed": false,
+    "followupsRechecked": 2,
+    "cached": 2,
+    "llmByTask": {
+     "extract": {
+      "calls": 1,
+      "promptTokens": 3222,
+      "completionTokens": 255,
+      "costUsd": 0.004497
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/dopiewo-gosir/4077dded2709a5767ecedf46014a6141cf42a1b8b7e41d9bfafe4208cc273a35.json",
+     "raw/2026-08-02/dopiewo-gosir__followup/4420a5659552e84322a02283e6f6bf55d15c8874e378093fc5510f47fe5a1f1f.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/dopiewo-gosir/0032-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/dopiewo-gosir__followup/7bd7922945ba775a681c0318a2024b18b30428717a836139a22d09d500c705ef.json"
+    ],
+    "produced": [
+     {
+      "title": "Sportowo-Kulturalne Półkolonie Letnie z GOSiR w Dopiewie",
+      "date": "2026-08-24",
+      "url": "https://gosir.dopiewo.pl/aktualnosci/sportowo-kulturalne-polkolonie-letnie-z-gosir-w-dopiewie"
+     },
+     {
+      "title": "Zborowo na Sportowo - II edycja",
+      "date": "2026-08-02",
+      "url": "https://gosir.dopiewo.pl/aktualnosci/w-pierwsza-niedziele-sierpnia-zapraszamy-na-ii-edycje-zborowo-na-sportowo"
+     }
+    ]
+   },
+   {
+    "id": "tarnowo-city",
+    "name": "Gmina Tarnowo Podgórne",
+    "town": "Tarnowo Podgórne",
+    "url": "https://www.tarnowo-podgorne.pl/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 1,
+    "followups": [
+     {
+      "url": "https://www.tarnowo-podgorne.pl/wydarzenia/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 1
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 3127,
+     "completionTokens": 1621,
+     "costUsd": 0.011232
+    },
+    "ms": 11880,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 7809,
+    "changed": false,
+    "followupsRechecked": 1,
+    "cached": 1,
+    "llmByTask": {
+     "extract": {
+      "calls": 1,
+      "promptTokens": 3127,
+      "completionTokens": 1621,
+      "costUsd": 0.011232
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/tarnowo-city/290defaed284a50970048ea37b42dcdf5e77eb4d463320d1ae6cd2f7628e0fb0.json",
+     "raw/2026-08-02/tarnowo-city__followup/013dd18c5686e936cefe69c2c536acecf24555cf03be9c883e0fc04a67bd0bb1.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/tarnowo-city/0033-anthropic_claude-haiku-4.5.json"
+    ],
+    "produced": [
+     {
+      "title": "Uczczenie 82. rocznicy wybuchu Powstania Warszawskiego",
+      "date": "2026-08-01",
+      "url": "https://www.tarnowo-podgorne.pl/aktualnosci/uczcijmy-pamiec-o-powstancach-warszawskich/"
+     }
+    ]
+   },
+   {
+    "id": "tarnowo-gok",
+    "name": "GOK Sezam (Tarnowo Podgórne)",
+    "town": "Tarnowo Podgórne",
+    "url": "https://goksezam.pl/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 18,
+    "followups": [
+     {
+      "url": "https://goksezam.pl/wydarzenia.html",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 11
+     },
+     {
+      "url": "https://www.blusowo.pl/#program",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 1
+     }
+    ],
+    "geo": {
+     "hits": 11,
+     "misses": 4
+    },
+    "llm": {
+     "calls": 2,
+     "promptTokens": 10460,
+     "completionTokens": 4591,
+     "costUsd": 0.033415
+    },
+    "ms": 27274,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 8153,
+    "changed": true,
+    "llmByTask": {
+     "extract": {
+      "calls": 2,
+      "promptTokens": 10460,
+      "completionTokens": 4591,
+      "costUsd": 0.033415
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/tarnowo-gok/7dd94af373b5c499ebbf52e28aac8cd03e7809f5614b6ae400b0991795056374.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/tarnowo-gok/0034-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/tarnowo-gok__followup/2a388880c9d19a77bc60f3ba7eb29c53f6f6e908293fb393404b1793d668ca3f.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/tarnowo-gok/0035-anthropic_claude-haiku-4.5.json"
+    ],
+    "produced": [
+     {
+      "title": "LSM: Poznań Group Ensemble",
+      "date": "2026-08-02",
+      "url": "https://goksezam.pl/wydarzenie-819-lsm_poznan_group_ensemble-szczegoly-7277.html"
+     },
+     {
+      "title": "Kino Sezamu dla dzieci: \"Wyschnięci\"",
+      "date": "2026-08-06",
+      "url": "https://goksezam.pl/wydarzenie-824-kino_sezamu_dla_dzieci_wyschnieci-szczegoly-7267.html"
+     },
+     {
+      "title": "Kino Sezamu: \"O czym sobie nie mówimy\"",
+      "date": "2026-08-07",
+      "url": "https://goksezam.pl/wydarzenie-825-kino_sezamu_o_czym_sobie_nie_mowimy-szczegoly-7268.html"
+     },
+     {
+      "title": "Festiwal BLusowo",
+      "date": "2026-08-08",
+      "url": "https://goksezam.pl/wydarzenie-822-festiwal_blusowo-szczegoly-7288.html",
+      "mergedInto": "tarnowo-gok"
+     },
+     {
+      "title": "Kino Sezamu dla dzieci: \"Vaiana\"",
+      "date": "2026-08-13",
+      "url": "https://goksezam.pl/wydarzenie-828-kino_sezamu_dla_dzieci_vaiana-szczegoly-7273.html"
+     },
+     {
+      "title": "Kino Sezamu: \"Młody Waszyngton\"",
+      "date": "2026-08-14",
+      "url": "https://goksezam.pl/wydarzenie-826-kino_sezamu_mlody_waszyngton-szczegoly-7269.html"
+     },
+     {
+      "title": "LSM: Poznań Group Ensemble",
+      "date": "2026-08-02",
+      "url": "https://goksezam.pl/wydarzenie-819-lsm_poznan_group_ensemble-szczegoly-7277.html",
+      "mergedInto": "tarnowo-gok"
+     },
+     {
+      "title": "Kino Sezamu dla dzieci: \"Wyschnięci\"",
+      "date": "2026-08-06",
+      "url": "https://goksezam.pl/wydarzenie-824-kino_sezamu_dla_dzieci_wyschnieci-szczegoly-7267.html",
+      "mergedInto": "tarnowo-gok"
+     },
+     {
+      "title": "Kino Sezamu: \"O czym sobie nie mówimy\"",
+      "date": "2026-08-07",
+      "url": "https://goksezam.pl/wydarzenie-825-kino_sezamu_o_czym_sobie_nie_mowimy-szczegoly-7268.html",
+      "mergedInto": "tarnowo-gok"
+     },
+     {
+      "title": "Festiwal BLusowo",
+      "date": "2026-08-08",
+      "url": "https://goksezam.pl/wydarzenie-822-festiwal_blusowo-szczegoly-7288.html"
+     },
+     {
+      "title": "Kino Sezamu dla dzieci: \"Vaiana\"",
+      "date": "2026-08-13",
+      "url": "https://goksezam.pl/wydarzenie-828-kino_sezamu_dla_dzieci_vaiana-szczegoly-7273.html",
+      "mergedInto": "tarnowo-gok"
+     },
+     {
+      "title": "Kino Sezamu: \"Młody Waszyngton\"",
+      "date": "2026-08-14",
+      "url": "https://goksezam.pl/wydarzenie-826-kino_sezamu_mlody_waszyngton-szczegoly-7269.html",
+      "mergedInto": "tarnowo-gok"
+     },
+     {
+      "title": "Teatr \"Skok na księżyc\" - rodzinny spektakl plenerowy",
+      "date": "2026-08-21",
+      "url": "https://goksezam.pl/wydarzenie-820-skok_na_ksiezyc_rodzinny_spektakl-szczegoly-7278.html"
+     },
+     {
+      "title": "Warsztaty \"Na folkową nutę z Lusowiakami\"",
+      "date": "2026-08-28",
+      "url": "https://goksezam.pl/wydarzenie-827-na_folkowa_nute_z_lusowiakami-szczegoly-7270.html"
+     },
+     {
+      "title": "Wieczornik - otwarty koncert plenerowy",
+      "date": "2026-08-28",
+      "url": "https://goksezam.pl/wydarzenie-823-wieczornik_otwarty_koncert_plenerowy-szczegoly-7279.html"
+     },
+     {
+      "title": "Emocjonujący finał lata. Pokaz cyrkowy",
+      "date": "2026-08-30",
+      "url": "https://goksezam.pl/wydarzenie-821-emocjonujacy_final_lata_pokaz_cyrkowy-szczegoly-7261.html"
+     },
+     {
+      "title": "Daria ze Śląska w CK Przeźmierowo!",
+      "date": "2026-09-19",
+      "url": "https://goksezam.pl/wydarzenie-799-daria_ze_slaska_w_ck_przezmierowo-szczegoly-7275.html"
+     },
+     {
+      "title": "BLusowo Festiwal",
+      "date": "2026-08-08",
+      "url": "https://www.blusowo.pl/#program"
+     }
+    ]
+   },
+   {
+    "id": "rokietnica-city",
+    "name": "Gmina Rokietnica",
+    "town": "Rokietnica",
+    "url": "https://rokietnica.pl/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 3,
+    "followups": [
+     {
+      "url": "https://rokietnica.pl/kalendarz-wydarzen/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 1
+     }
+    ],
+    "geo": {
+     "hits": 2,
+     "misses": 1
+    },
+    "llm": {
+     "calls": 2,
+     "promptTokens": 11602,
+     "completionTokens": 837,
+     "costUsd": 0.015787
+    },
+    "ms": 9731,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 15994,
+    "changed": true,
+    "llmByTask": {
+     "extract": {
+      "calls": 2,
+      "promptTokens": 11602,
+      "completionTokens": 837,
+      "costUsd": 0.015787
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/rokietnica-city/c9d68688c523b06af06c77dd6b42f2e7586319617fba60ef3efddfcc43368b79.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/rokietnica-city/0036-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/rokietnica-city__followup/4daad9f4a8cea2dede04607937c5aea3f73734c629b4c939dfe5d3bd617bd8a7.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/rokietnica-city/0037-anthropic_claude-haiku-4.5.json"
+    ],
+    "produced": [
+     {
+      "title": "Uruchomienie syren alarmowych - uczczenie 82. Rocznicy Powstania Warszawskiego",
+      "date": "2026-08-01",
+      "url": "https://rokietnica.pl/aktualnosci/1-sierpnia-uruchomienie-syren-alarmowych.html"
+     },
+     {
+      "title": "14 sierpnia Urząd Gminy będzie zamknięty",
+      "date": "2026-08-14",
+      "url": "https://rokietnica.pl/kalendarz-wydarzen/374-14-sierpnia-urzad-gminy-bedzie-zamkniety.html"
+     },
+     {
+      "title": "Urząd Gminy będzie zamknięty",
+      "date": "2026-08-14",
+      "url": "https://rokietnica.pl/kalendarz-wydarzen/"
+     }
+    ]
+   },
+   {
+    "id": "rokietnica-gok",
+    "name": "GOK Rokietnica",
+    "town": "Rokietnica",
+    "url": "https://gokrokietnica.pl/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 7,
+    "followups": [
+     {
+      "url": "https://gokrokietnica.pl/category/wydarzenia/page/1",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 0
+     },
+     {
+      "url": "https://gokrokietnica.pl/2026/07/30/piknik-wakacyjny/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 1
+     },
+     {
+      "url": "https://gokrokietnica.pl/2026/07/22/zajecia-muzyczne-w-wakacje/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 1
+     },
+     {
+      "url": "https://gokrokietnica.pl/2026/07/10/nowy-termin-kina-plenerowego-3/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 2
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 6
+    },
+    "llm": {
+     "calls": 4,
+     "promptTokens": 14390,
+     "completionTokens": 3781,
+     "costUsd": 0.033295000000000005
+    },
+    "ms": 35384,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 10154,
+    "changed": false,
+    "followupsRechecked": 4,
+    "cached": 3,
+    "llmByTask": {
+     "extract": {
+      "calls": 4,
+      "promptTokens": 14390,
+      "completionTokens": 3781,
+      "costUsd": 0.033295000000000005
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/rokietnica-gok/1e8bae20de97d29cb51066c384405e813b61edc2d433e80f5a5d81ae99e1055b.json",
+     "raw/2026-08-02/rokietnica-gok__followup/ac085ea14827847a524d27239dece274d91a8bebb51c8f59fc88bd71ef2a9416.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/rokietnica-gok/0038-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/rokietnica-gok__followup/9daab17e740e7e9415ffcf5fb6deee6ae9b01f26f4fb00416cf94e96c82e68ed.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/rokietnica-gok/0039-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/rokietnica-gok__followup/0299b12d86d2f7f639af9d04b04b72e18e4c89696dc5c7b04aa7d1b00cd4fa74.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/rokietnica-gok/0040-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/rokietnica-gok__followup/0a1b218ec1819636fb9ad970f86ff72bc609c29800ee4950a040d16854ac03fa.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/rokietnica-gok/0041-anthropic_claude-haiku-4.5.json"
+    ],
+    "produced": [
+     {
+      "title": "Piknik wakacyjny na Polanie Rumpuciowej",
+      "date": "2026-08-01",
+      "url": "https://gokrokietnica.pl/2026/07/30/piknik-wakacyjny/"
+     },
+     {
+      "title": "Wakacyjne warsztaty wokalne dla dzieci - Wakacyjna energia z muzyką Gospel",
+      "date": "2026-08-01",
+      "url": "https://gokrokietnica.pl/2026/07/22/zajecia-muzyczne-w-wakacje/",
+      "mergedInto": "rokietnica-gok"
+     },
+     {
+      "title": "Rajd rowerowy \"Łączy nas rower\"",
+      "date": "2026-06-14",
+      "url": "https://gokrokietnica.pl/2026/05/27/rajd-rowerowy-2/"
+     },
+     {
+      "title": "PIKNIK WAKACYJNY",
+      "date": "2026-08-02",
+      "url": "https://gokrokietnica.pl/2026/07/30/piknik-wakacyjny/"
+     },
+     {
+      "title": "Wakacyjne warsztaty wokalne dla dzieci - Wakacyjna energia z muzyką Gospel",
+      "date": "2026-08-01",
+      "url": "https://gokrokietnica.pl/2026/07/22/zajecia-muzyczne-w-wakacje/"
+     },
+     {
+      "title": "Kino plenerowe",
+      "date": "2026-08-01",
+      "url": "https://gokrokietnica.pl/2026/07/10/nowy-termin-kina-plenerowego-3/"
+     },
+     {
+      "title": "Wakacyjne warsztaty wokalne dla dzieci - Wakacyjna energia z muzyką Gospel",
+      "date": "2026-08-01",
+      "url": "https://gokrokietnica.pl/2026/07/10/nowy-termin-kina-plenerowego-3/",
+      "mergedInto": "rokietnica-gok"
+     }
+    ]
+   },
+   {
+    "id": "suchylas-city",
+    "name": "Gmina Suchy Las",
+    "town": "Suchy Las",
+    "url": "https://www.suchylas.pl/",
+    "fetch": "plain",
+    "status": "error",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 45234,
+    "err": "HTTP 403 https://www.suchylas.pl/",
+    "httpStatus": 403
+   },
+   {
+    "id": "suchylas-ckbp",
+    "name": "CKiBP Suchy Las (Centrum Kultury i Biblioteka)",
+    "town": "Suchy Las",
+    "url": "https://www.osrodekkultury.pl/",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 3828,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 8537,
+    "changed": false,
+    "cached": 0,
+    "archive": [
+     "raw/2026-08-02/suchylas-ckbp/5d42a695db75d73cf98043c1ea3fac8f22ba8686d8ee1112ee55851e3370c5eb.json"
+    ]
+   },
+   {
+    "id": "czerwonak-city",
+    "name": "Gmina Czerwonak",
+    "town": "Czerwonak",
+    "url": "https://www.czerwonak.pl/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 3,
+    "followups": [
+     {
+      "url": "https://www.czerwonak.pl/pl/mieszkaniec/kalendarz",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 0
+     },
+     {
+      "url": "https://www.czerwonak.pl/mieszkaniec/informacje/aktualnosci/wakacyjne-atrakcje-i-wydarzenia-w-gminie-czerwonak/10375",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 3,
+     "promptTokens": 39020,
+     "completionTokens": 5872,
+     "costUsd": 0.06838000000000001
+    },
+    "ms": 35377,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 37769,
+    "changed": true,
+    "droppedInvalid": 3,
+    "llmByTask": {
+     "extract": {
+      "calls": 3,
+      "promptTokens": 39020,
+      "completionTokens": 5872,
+      "costUsd": 0.06838000000000001
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/czerwonak-city/adabd0565a50b40c3075d889ce63d04bdc6656a165bb0f0c33048403bdea3966.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/czerwonak-city/0042-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/czerwonak-city__followup/37b6354fa5f717794172f89c272ace6d744e270bbeb5ed9986c460a70b975005.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/czerwonak-city/0043-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/czerwonak-city__followup/adc54371ac9b6d5510802db73920966cee63f75b4a0092fe5b978b45dde2d0cc.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/czerwonak-city/0044-anthropic_claude-haiku-4.5.json"
+    ],
+    "produced": [
+     {
+      "title": "Warsztaty rodzinne ze zwierzętami w naturze",
+      "date": "2026-08-02",
+      "url": "https://www.czerwonak.pl/mieszkaniec/k-kalendarz/2026/sierpnia/przyrodnicze-2/warsztaty-rodzinne-ze-zwierzetami-w-naturze/10505"
+     },
+     {
+      "title": "Rejs edukacyjny po Warcie",
+      "date": "2026-08-03",
+      "url": "https://www.czerwonak.pl/mieszkaniec/k-kalendarz/2026/sierpnia/dzieci/rejs-edukacyjny-po-warcie/10531"
+     },
+     {
+      "title": "Siatkówka dla młodzieży w Czerwonaku",
+      "date": "2026-08-04",
+      "url": "https://www.czerwonak.pl/mieszkaniec/k-kalendarz/2026/sierpnia/sport/siatkowka-dla-mlodziezy-w-czerwonaku/10526"
+     }
+    ]
+   },
+   {
+    "id": "czerwonak-gok",
+    "name": "GOK Sokół (Czerwonak)",
+    "town": "Czerwonak",
+    "url": "https://gok-sokol.pl/",
+    "fetch": "plain",
+    "status": "error",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 2105,
+    "err": "HTTP 403 https://gok-sokol.pl/",
+    "httpStatus": 403
+   },
+   {
+    "id": "swarzedz-city",
+    "name": "Miasto i Gmina Swarzędz",
+    "town": "Swarzędz",
+    "url": "https://www.swarzedz.pl/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 6,
+    "followups": [
+     {
+      "url": "https://ok-swarzedz.pl/summer-swaj-party-noc-z-muzyka-klubowa-2026/",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 0
+     },
+     {
+      "url": "https://ok-swarzedz.pl/miedzynarodowy-festiwal-sztuki-ludowej/",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 1
+     },
+     {
+      "url": "https://swarzedz.pl/index.php?id=618",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 0
+     },
+     {
+      "url": "https://swarzedz.pl/index.php?id=615",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 3
+     }
+    ],
+    "geo": {
+     "hits": 1,
+     "misses": 2
+    },
+    "llm": {
+     "calls": 3,
+     "promptTokens": 45827,
+     "completionTokens": 2034,
+     "costUsd": 0.055997
+    },
+    "ms": 27503,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 26876,
+    "changed": true,
+    "llmByTask": {
+     "extract": {
+      "calls": 3,
+      "promptTokens": 45827,
+      "completionTokens": 2034,
+      "costUsd": 0.055997
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/swarzedz-city/483c37ec9308119596bf995b29ae3fdb7e0ffa1f40de2b424873d3bf07c43227.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/swarzedz-city/0045-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/swarzedz-city__followup/2ef9c874d14d9949560e04c5688e06d01156cd2994da32bb7d8836e9d6e15d41.json",
+     "raw/2026-08-02/swarzedz-city__followup/2c3b74ce9b17d0278efab2fe0f230dfe96d2338096e301e41c683850d2934e1b.json",
+     "raw/2026-08-02/swarzedz-city__followup/405bf4526b0ae38983a7c06adad34590d8b1ad947e114a591004426f996d6f41.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/swarzedz-city/0046-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/swarzedz-city__followup/31bcd70c6211f30cdf7134566525b3bdb920cc3a157bbc63ba680135d171a655.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/swarzedz-city/0047-anthropic_claude-haiku-4.5.json"
+    ],
+    "produced": [
+     {
+      "title": "1 SIERPNIA USŁYSZYMY SYRENY",
+      "date": "2026-08-01",
+      "url": "https://www.swarzedz.pl/index.php?id=49&no_cache=1&tx_ttnews%5Btt_news%5D=24275&tx_ttnews%5BbackPid%5D=18&cHash=55b3ac52be9f47718d2b57d8f1464b8f"
+     },
+     {
+      "title": "Festyn rodzinny – Dzień Latawca",
+      "date": "2026-08-01",
+      "url": "https://swarzedz.pl/index.php?id=374"
+     },
+     {
+      "title": "19. Międzynarodowy Festiwal Sztuki Ludowej",
+      "date": "2026-08-16",
+      "url": "https://ok-swarzedz.pl/miedzynarodowy-festiwal-sztuki-ludowej/"
+     },
+     {
+      "title": "Józefinki 2026",
+      "date": "2026-05-01",
+      "url": "https://swarzedz.pl/index.php?id=615"
+     },
+     {
+      "title": "Mebloberek - Gra Miejska",
+      "date": "2026-05-01",
+      "url": "https://swarzedz.pl/index.php?id=615"
+     },
+     {
+      "title": "Swarzędzkie Spotkanie Józefów",
+      "date": "2026-05-01",
+      "url": "https://swarzedz.pl/index.php?id=615"
+     }
+    ]
+   },
+   {
+    "id": "swarzedz-ok",
+    "name": "Ośrodek Kultury w Swarzędzu",
+    "town": "Swarzędz",
+    "url": "https://ok-swarzedz.pl/category/aktualnosci/",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [
+     {
+      "url": "https://ok-swarzedz.pl/category/aktualnosci/page/1",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 8540,
+     "completionTokens": 1843,
+     "costUsd": 0.017755
+    },
+    "ms": 19557,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 15997,
+    "changed": false,
+    "followupsRechecked": 1,
+    "cached": 0,
+    "llmByTask": {
+     "extract": {
+      "calls": 1,
+      "promptTokens": 8540,
+      "completionTokens": 1843,
+      "costUsd": 0.017755
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/swarzedz-ok/3ad75ca07e187dab0a3a01802c139253451f2cdc44e04207f352428a2f5a9d15.json",
+     "raw/2026-08-02/swarzedz-ok__followup/3ad75ca07e187dab0a3a01802c139253451f2cdc44e04207f352428a2f5a9d15.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/swarzedz-ok/0048-anthropic_claude-haiku-4.5.json"
+    ]
+   },
+   {
+    "id": "kornik-city",
+    "name": "Miasto i Gmina Kórnik",
+    "town": "Kórnik",
+    "url": "https://www.kornik.pl/",
+    "fetch": "plain",
+    "status": "unchanged",
+    "events": 17,
+    "followups": [
+     {
+      "url": "https://www.kornik.pl/kalendarium/letni-festiwal-muzyka-z-kornika-2026",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 5
+     },
+     {
+      "url": "https://www.kornik.pl/kalendarium/letnie-kino-plenerowe-kok-2026",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 6
+     },
+     {
+      "url": "https://www.kornik.pl/kalendarium",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 3
+     }
+    ],
+    "geo": {
+     "hits": 1,
+     "misses": 15
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 3187,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 11456,
+    "changed": false,
+    "followupsRechecked": 3,
+    "cached": 17,
+    "archive": [
+     "raw/2026-08-02/kornik-city/ae9421a33d7a2bf6c7c270bc0f9c41f19b00508ac1c0585d2d36349d6e8b57ba.json",
+     "raw/2026-08-02/kornik-city__followup/b7838337c4278af41e609fcabb823f630fe80f8c962fbe89a06baea0babccd01.json",
+     "raw/2026-08-02/kornik-city__followup/1ab662ca482c1c5ff62e9efb1710aef40c303f5bc31f9a4bc80d22a47acf89fb.json",
+     "raw/2026-08-02/kornik-city__followup/1e1e0b00abc21a4334651bf00ba1ea3c9713797c5dbd372874f7da5f693d92bd.json"
+    ],
+    "produced": [
+     {
+      "title": "Ćwiczenia z użyciem syren alarmowych w Gminie Kórnik",
+      "date": "2026-08-01",
+      "url": "https://www.kornik.pl/aktualnosci/cwiczenia-z-uzyciem-syren-alarmowych-w-gminie-kornik"
+     },
+     {
+      "title": "XI Festyn Ekologiczny",
+      "date": "2026-09-19",
+      "url": "https://www.kornik.pl/aktualnosci/wazna-zmiana-podczas-xi-festynu-ekologicznego"
+     },
+     {
+      "title": "Dożynki Miasta i Gminy Kórnik",
+      "date": "2026-08-22",
+      "url": "https://www.kornik.pl/kalendarium/dozynki-miasta-i-gminy-kornik-0",
+      "mergedInto": "kornik-kok"
+     },
+     {
+      "title": "LETNI FESTIWAL MUZYKA Z KÓRNIKA 2026 - Koncert inauguracyjny zespołu Raz, Dwa, Trzy",
+      "date": "2026-07-05",
+      "url": "https://www.kornik.pl/kalendarium/letni-festiwal-muzyka-z-kornika-2026"
+     },
+     {
+      "title": "LETNI FESTIWAL MUZYKA Z KÓRNIKA 2026 - Koncert piosenek Marka Grechuty \"Świecie nasz\" zespołu Arete",
+      "date": "2026-07-12",
+      "url": "https://www.kornik.pl/kalendarium/letni-festiwal-muzyka-z-kornika-2026"
+     },
+     {
+      "title": "LETNI FESTIWAL MUZYKA Z KÓRNIKA 2026 - Koncert Aleksandry Idkowskiej z okazji 200-lecia Arboretum Kórnickiego",
+      "date": "2026-07-19",
+      "url": "https://www.kornik.pl/kalendarium/letni-festiwal-muzyka-z-kornika-2026"
+     },
+     {
+      "title": "LETNI FESTIWAL MUZYKA Z KÓRNIKA 2026 - Koncert \"Niech żyje bal\" - największych polskich przebojów lat 70. i 80. Grand Royal Orchestra",
+      "date": "2026-07-26",
+      "url": "https://www.kornik.pl/kalendarium/letni-festiwal-muzyka-z-kornika-2026"
+     },
+     {
+      "title": "LETNI FESTIWAL MUZYKA Z KÓRNIKA 2026 - Koncert finałowy z okazji Roku Kórnickiego Dziedzictwa",
+      "date": "2026-08-02",
+      "url": "https://www.kornik.pl/kalendarium/letni-festiwal-muzyka-z-kornika-2026"
+     },
+     {
+      "title": "Letnie kino plenerowe KOK 2026 - \"Wielki Marty\"",
+      "date": "2026-07-03",
+      "url": "https://www.kornik.pl/kalendarium/letnie-kino-plenerowe-kok-2026"
+     },
+     {
+      "title": "Letnie kino plenerowe KOK 2026 - \"Bez wyjścia\"",
+      "date": "2026-07-10",
+      "url": "https://www.kornik.pl/kalendarium/letnie-kino-plenerowe-kok-2026"
+     },
+     {
+      "title": "Letnie kino plenerowe KOK 2026 - \"Gdzie jest trzeci król?\"",
+      "date": "2026-07-18",
+      "url": "https://www.kornik.pl/kalendarium/letnie-kino-plenerowe-kok-2026"
+     },
+     {
+      "title": "Letnie kino plenerowe KOK 2026 - \"Dalej jazda 2\"",
+      "date": "2026-07-24",
+      "url": "https://www.kornik.pl/kalendarium/letnie-kino-plenerowe-kok-2026"
+     },
+     {
+      "title": "Letnie kino plenerowe KOK 2026 - \"Beetlejuice\"",
+      "date": "2026-07-31",
+      "url": "https://www.kornik.pl/kalendarium/letnie-kino-plenerowe-kok-2026"
+     },
+     {
+      "title": "Letnie kino plenerowe KOK 2026 - \"Pomoc domowa\"",
+      "date": "2026-08-07",
+      "url": "https://www.kornik.pl/kalendarium/letnie-kino-plenerowe-kok-2026"
+     },
+     {
+      "title": "LETNI FESTIWAL MUZYKA Z KÓRNIKA 2026",
+      "date": "2026-08-02",
+      "url": "https://www.kornik.pl/kalendarium/letni-festiwal-muzyka-z-kornika-2026"
+     },
+     {
+      "title": "LETNIE KINO PLENEROWE KOK 2026",
+      "date": "2026-08-07",
+      "url": "https://www.kornik.pl/kalendarium/letnie-kino-plenerowe-kok-2026"
+     },
+     {
+      "title": "DOŻYNKI MIASTA I GMINY KÓRNIK",
+      "date": "2026-08-22",
+      "url": "https://www.kornik.pl/kalendarium/dozynki-miasta-i-gminy-kornik-0",
+      "mergedInto": "kornik-kok"
+     }
+    ]
+   },
+   {
+    "id": "kornik-kok",
+    "name": "Kórnicki Ośrodek Kultury",
+    "town": "Kórnik",
+    "url": "https://www.kornickiosrodekkultury.pl/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 20,
+    "followups": [
+     {
+      "url": "https://www.kornickiosrodekkultury.pl/?start=1",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 5
+     },
+     {
+      "url": "https://www.kornickiosrodekkultury.pl/letnie-kino-plenerowe-kok-2026",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 6
+     },
+     {
+      "url": "https://www.kornickiosrodekkultury.pl/letni-festiwal-muzyka-z-kornika-2026",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 5
+     },
+     {
+      "url": "https://www.kornickiosrodekkultury.pl/xxxi-kornickie-spotkania-z-biala-dama-13-14-czerwca-2026",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 2
+     },
+     {
+      "url": "https://www.kornickiosrodekkultury.pl/kalendarz-wydarzen-kulturalnych",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 5,
+     "misses": 14
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 3840,
+     "completionTokens": 1470,
+     "costUsd": 0.01119
+    },
+    "ms": 13206,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 6383,
+    "changed": false,
+    "followupsRechecked": 5,
+    "cached": 2,
+    "llmByTask": {
+     "extract": {
+      "calls": 1,
+      "promptTokens": 3840,
+      "completionTokens": 1470,
+      "costUsd": 0.01119
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/kornik-kok/7e2a0a3d1b7acf4e01d0673c84b6fd5088ac805741bc373cb5ba4345c88fb4ec.json",
+     "raw/2026-08-02/kornik-kok__followup/7edbb56f0b01bca38b257ee9486a87038343a5604e83a26a764834bdfdf2d373.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/kornik-kok/0049-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/kornik-kok__followup/39ba400de750f2ff31f62bc1fe363518afb48f2b09a6c0ed3ebce62402005187.json",
+     "raw/2026-08-02/kornik-kok__followup/d5d041e4e3b2db918b169b4f1e6ed5c7ceaf04959a4b86325d8c32761868a129.json",
+     "raw/2026-08-02/kornik-kok__followup/24c72f7b9f20e9062a0126315dfbd1c68c09dbaa66fa3596e65f8dadb9b836e4.json",
+     "raw/2026-08-02/kornik-kok__followup/afae200430d4d0e7ae13b2da7ee4f94f0e127eb9b43a7cd04ccadc780a3c5835.json"
+    ],
+    "produced": [
+     {
+      "title": "DOŻYNKI MIASTA I GMINY KÓRNIK",
+      "date": "2026-08-22",
+      "url": "https://www.kornickiosrodekkultury.pl/dozynki-miasta-i-gminy-kornik-22-sierpnia-2026"
+     },
+     {
+      "title": "KÓRNICKIE WIANKI 2026",
+      "date": "2026-06-20",
+      "url": "https://www.kornickiosrodekkultury.pl/kornickie-wianki-2026"
+     },
+     {
+      "title": "Kórnickie Wianki 2026",
+      "date": "2026-06-20",
+      "url": "https://www.kornickiosrodekkultury.pl/?start=1",
+      "mergedInto": "kornik-kok"
+     },
+     {
+      "title": "XXXI Kórnickie Spotkania z Białą Damą 2026",
+      "date": "2026-06-13",
+      "url": "https://www.kornickiosrodekkultury.pl/?start=1"
+     },
+     {
+      "title": "Letni Festiwal Muzyka z Kórnika 2026",
+      "date": "2026-06-19",
+      "url": "https://www.kornickiosrodekkultury.pl/?start=1"
+     },
+     {
+      "title": "Letnie kino plenerowe KOK 2026",
+      "date": "2026-06-19",
+      "url": "https://www.kornickiosrodekkultury.pl/?start=1"
+     },
+     {
+      "title": "Wakacyjne warsztaty artystyczne w KOK 2026",
+      "date": "2026-06-21",
+      "url": "https://www.kornickiosrodekkultury.pl/?start=1"
+     },
+     {
+      "title": "Wielki Marty",
+      "date": "2026-07-03",
+      "url": "https://www.kornickiosrodekkultury.pl/letnie-kino-plenerowe-kok-2026"
+     },
+     {
+      "title": "Bez wyjścia",
+      "date": "2026-07-10",
+      "url": "https://www.kornickiosrodekkultury.pl/letnie-kino-plenerowe-kok-2026"
+     },
+     {
+      "title": "Gdzie jest trzeci król?",
+      "date": "2026-07-18",
+      "url": "https://www.kornickiosrodekkultury.pl/letnie-kino-plenerowe-kok-2026"
+     },
+     {
+      "title": "Dalej jazda 2",
+      "date": "2026-07-24",
+      "url": "https://www.kornickiosrodekkultury.pl/letnie-kino-plenerowe-kok-2026"
+     },
+     {
+      "title": "Beetlejuice",
+      "date": "2026-07-31",
+      "url": "https://www.kornickiosrodekkultury.pl/letnie-kino-plenerowe-kok-2026"
+     },
+     {
+      "title": "Pomoc domowa",
+      "date": "2026-08-07",
+      "url": "https://www.kornickiosrodekkultury.pl/letnie-kino-plenerowe-kok-2026"
+     },
+     {
+      "title": "Letni Festiwal Muzyka z Kórnika 2026 - Koncert inauguracyjny zespołu Raz, Dwa, Trzy",
+      "date": "2026-07-05",
+      "url": "https://www.kornickiosrodekkultury.pl/letni-festiwal-muzyka-z-kornika-2026",
+      "mergedInto": "kornik-city"
+     },
+     {
+      "title": "Letni Festiwal Muzyka z Kórnika 2026 - Koncert piosenek Marka Grechuty \"Świecie nasz\" zespołu Arete",
+      "date": "2026-07-12",
+      "url": "https://www.kornickiosrodekkultury.pl/letni-festiwal-muzyka-z-kornika-2026",
+      "mergedInto": "kornik-city"
+     },
+     {
+      "title": "Letni Festiwal Muzyka z Kórnika 2026 - Koncert Aleksandry Idkowskiej z okazji 200-lecia Arboretum Kórnickiego",
+      "date": "2026-07-19",
+      "url": "https://www.kornickiosrodekkultury.pl/letni-festiwal-muzyka-z-kornika-2026",
+      "mergedInto": "kornik-city"
+     },
+     {
+      "title": "Letni Festiwal Muzyka z Kórnika 2026 - Koncert \"Niech żyje bal\" - największych polskich przebojów lat 70. i 80. Grand Royal Orchestra",
+      "date": "2026-07-26",
+      "url": "https://www.kornickiosrodekkultury.pl/letni-festiwal-muzyka-z-kornika-2026",
+      "mergedInto": "kornik-city"
+     },
+     {
+      "title": "Letni Festiwal Muzyka z Kórnika 2026 - Koncert finałowy z okazji Roku Kórnickiego Dziedzictwa",
+      "date": "2026-08-02",
+      "url": "https://www.kornickiosrodekkultury.pl/letni-festiwal-muzyka-z-kornika-2026",
+      "mergedInto": "kornik-city"
+     },
+     {
+      "title": "XXXI Kórnickie Spotkania z Białą Damą - dzień 1",
+      "date": "2026-06-13",
+      "url": "https://www.kornickiosrodekkultury.pl/xxxi-kornickie-spotkania-z-biala-dama-13-14-czerwca-2026"
+     },
+     {
+      "title": "XXXI Kórnickie Spotkania z Białą Damą - dzień 2",
+      "date": "2026-06-14",
+      "url": "https://www.kornickiosrodekkultury.pl/xxxi-kornickie-spotkania-z-biala-dama-13-14-czerwca-2026"
+     }
+    ]
+   },
+   {
+    "id": "kornik-arboretum",
+    "name": "Arboretum Kórnickie",
+    "town": "Kórnik",
+    "url": "https://www.idpan.poznan.pl/pl/o-arboretum-i-lesie-doswiadczalnym/o-arboretum",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 2697,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 20773,
+    "changed": false,
+    "cached": 0,
+    "archive": [
+     "raw/2026-08-02/kornik-arboretum/e8bd30cc9c1a1cc39acfb2b3c89866c72488df64be15fdc9f8aa7cb1590fed06.json"
+    ]
+   },
+   {
+    "id": "kleszczewo-gokis",
+    "name": "GOKiS Kleszczewo",
+    "town": "Kleszczewo",
+    "url": "https://gokis.kleszczewo.pl/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 9,
+    "followups": [
+     {
+      "url": "https://gokis.kleszczewo.pl/kalendarz-wydarzen/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 2
+     },
+     {
+      "url": "https://gokis.kleszczewo.pl/aktualnosci/akcja-lato-poznaj-caly-program-wydarzen.html",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 0
+     },
+     {
+      "url": "https://gokis.kleszczewo.pl/aktualnosci/letnie-spotkania-kameralne-morskie-opowiesci.html",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 1
+     },
+     {
+      "url": "https://gokis.kleszczewo.pl/aktualnosci/6-zlot-klasykow-prl-w-gowarzewie-.html",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 1
+     }
+    ],
+    "geo": {
+     "hits": 4,
+     "misses": 1
+    },
+    "llm": {
+     "calls": 5,
+     "promptTokens": 27594,
+     "completionTokens": 4227,
+     "costUsd": 0.048728999999999995
+    },
+    "ms": 35870,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 11446,
+    "changed": true,
+    "llmByTask": {
+     "extract": {
+      "calls": 5,
+      "promptTokens": 27594,
+      "completionTokens": 4227,
+      "costUsd": 0.048728999999999995
+     }
+    },
+    "archive": [
+     "raw/2026-08-02/kleszczewo-gokis/32f518fb3960d0d71dde11214fdf072dcae3edbfe55407efcb9ce4cfe7b41304.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/kleszczewo-gokis/0050-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/kleszczewo-gokis__followup/dbeb73f7a74343eee204c243343a881027937c3e8012431360088d6ec036acd5.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/kleszczewo-gokis/0051-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/kleszczewo-gokis__followup/4c29efe0d43d15602facf8a4f574106d1efffd56e65ca53b92e73c12d8b3da1e.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/kleszczewo-gokis/0052-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/kleszczewo-gokis__followup/7a18632c1cdd0837db16cb40de6e506db76bb9a18cc65329672cadfc2ab1ad2f.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/kleszczewo-gokis/0053-anthropic_claude-haiku-4.5.json",
+     "raw/2026-08-02/kleszczewo-gokis__followup/c50499a998f9d3678a62ed9d40ee33058a3a160d97ba9e678e4019587882da7f.json",
+     "llm/2026-08-02/2026-08-02T06-28-41-191Z/kleszczewo-gokis/0054-anthropic_claude-haiku-4.5.json"
+    ],
+    "produced": [
+     {
+      "title": "Letnie Spotkania Kameralne - Morskie Opowieści",
+      "date": "2026-08-01",
+      "url": "https://gokis.kleszczewo.pl/aktualnosci/letnie-spotkania-kameralne-morskie-opowiesci.html",
+      "mergedInto": "kleszczewo-gokis"
+     },
+     {
+      "title": "Akcja Lato - program wydarzeń",
+      "date": "2026-08-31",
+      "url": "https://gokis.kleszczewo.pl/aktualnosci/akcja-lato-poznaj-caly-program-wydarzen.html"
+     },
+     {
+      "title": "6. Zlot Klasyków PRL w Gowarzewie",
+      "date": "2026-08-30",
+      "url": "https://gokis.kleszczewo.pl/kalendarz-wydarzen/6-zlot-klasykow-prl-w-gowarzewie-.html",
+      "mergedInto": "kleszczewo-gokis"
+     },
+     {
+      "title": "Przepiszmy to razem! \"Dziady\" Adama Mickiewicza",
+      "date": "2026-09-05",
+      "url": "https://gokis.kleszczewo.pl/kalendarz-wydarzen/przepiszmy-to-razem-dziady-adama-mickiewicza.html"
+     },
+     {
+      "title": "Konkurs Plastyczny \"Cztery Pory Roku – Lato\"",
+      "date": "2026-09-14",
+      "url": "https://gokis.kleszczewo.pl/kalendarz-wydarzen/konkurs-plastyczny-cztery-pory-roku-lato.html"
+     },
+     {
+      "title": "Letnie Spotkania Kameralne - Morskie Opowieści",
+      "date": "2026-08-01",
+      "url": "https://gokis.kleszczewo.pl/kalendarz-wydarzen/",
+      "mergedInto": "kleszczewo-gokis"
+     },
+     {
+      "title": "6. Zlot Klasyków PRL w Gowarzewie",
+      "date": "2026-08-30",
+      "url": "https://gokis.kleszczewo.pl/kalendarz-wydarzen/"
+     },
+     {
+      "title": "Letnie Spotkania Kameralne - Morskie Opowieści",
+      "date": "2026-08-01",
+      "url": "https://gokis.kleszczewo.pl/aktualnosci/letnie-spotkania-kameralne-morskie-opowiesci.html"
+     },
+     {
+      "title": "6. Zlot Klasyków PRL w Gowarzewie",
+      "date": "2026-08-30",
+      "url": "https://gokis.kleszczewo.pl/aktualnosci/6-zlot-klasykow-prl-w-gowarzewie-.html",
+      "mergedInto": "kleszczewo-gokis"
+     }
+    ]
+   }
+  ],
+  "brightdata": {
+   "triggers": 0,
+   "inputs": 0,
+   "polls": 0,
+   "records": 0,
+   "errors": 0,
+   "snapshots": [],
+   "byDataset": {}
+  },
+  "costs": [
+   {
+    "day": "2026-08-02",
+    "at": "2026-08-02T06:40:10.517Z",
+    "stage": "daily",
+    "run": "2026-08-02T06:28:41.191Z",
+    "category": "llm-extract",
+    "usd": 0.814576,
+    "estimated": false,
+    "units": 54,
+    "unit": "calls",
+    "tokensIn": 417541,
+    "tokensOut": 79407,
+    "top": [
+     {
+      "id": "czerwonak-city",
+      "usd": 0.06838,
+      "units": 3
+     },
+     {
+      "id": "komorniki-city",
+      "usd": 0.06679,
+      "units": 5
+     },
+     {
+      "id": "komorniki-gok",
+      "usd": 0.060221,
+      "units": 4
+     },
+     {
+      "id": "swarzedz-city",
+      "usd": 0.055997,
+      "units": 3
+     },
+     {
+      "id": "poznan-events",
+      "usd": 0.054393,
+      "units": 2
+     }
+    ]
+   },
+   {
+    "day": "2026-08-02",
+    "at": "2026-08-02T06:40:10.517Z",
+    "stage": "daily",
+    "run": "2026-08-02T06:28:41.191Z",
+    "category": "scrape",
+    "usd": 0,
+    "estimated": true,
+    "units": 107,
+    "unit": "fetches"
+   },
+   {
+    "day": "2026-08-02",
+    "at": "2026-08-02T06:40:10.517Z",
+    "stage": "daily",
+    "run": "2026-08-02T06:28:41.191Z",
+    "category": "geo",
+    "usd": 0,
+    "estimated": true,
+    "units": 20,
+    "unit": "lookups"
+   },
+   {
+    "day": "2026-08-02",
+    "at": "2026-08-02T06:40:10.517Z",
+    "stage": "daily",
+    "run": "2026-08-02T06:28:41.191Z",
+    "category": "storage",
+    "usd": 0,
+    "estimated": true,
+    "units": 3.273,
     "unit": "MB"
    }
   ]

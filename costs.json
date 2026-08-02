@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-01T06:34:54.403Z",
+ "updated": "2026-08-02T06:40:10.530Z",
  "rates": {
   "bdPerRecord": 0.0015,
   "searchPerQuery": 0.001,
@@ -622,6 +622,79 @@
    "usd": 0,
    "estimated": true,
    "units": 2.475,
+   "unit": "MB"
+  },
+  {
+   "day": "2026-08-02",
+   "at": "2026-08-02T06:40:10.517Z",
+   "stage": "daily",
+   "run": "2026-08-02T06:28:41.191Z",
+   "category": "llm-extract",
+   "usd": 0.814576,
+   "estimated": false,
+   "units": 54,
+   "unit": "calls",
+   "tokensIn": 417541,
+   "tokensOut": 79407,
+   "top": [
+    {
+     "id": "czerwonak-city",
+     "usd": 0.06838,
+     "units": 3
+    },
+    {
+     "id": "komorniki-city",
+     "usd": 0.06679,
+     "units": 5
+    },
+    {
+     "id": "komorniki-gok",
+     "usd": 0.060221,
+     "units": 4
+    },
+    {
+     "id": "swarzedz-city",
+     "usd": 0.055997,
+     "units": 3
+    },
+    {
+     "id": "poznan-events",
+     "usd": 0.054393,
+     "units": 2
+    }
+   ]
+  },
+  {
+   "day": "2026-08-02",
+   "at": "2026-08-02T06:40:10.517Z",
+   "stage": "daily",
+   "run": "2026-08-02T06:28:41.191Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 107,
+   "unit": "fetches"
+  },
+  {
+   "day": "2026-08-02",
+   "at": "2026-08-02T06:40:10.517Z",
+   "stage": "daily",
+   "run": "2026-08-02T06:28:41.191Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 20,
+   "unit": "lookups"
+  },
+  {
+   "day": "2026-08-02",
+   "at": "2026-08-02T06:40:10.517Z",
+   "stage": "daily",
+   "run": "2026-08-02T06:28:41.191Z",
+   "category": "storage",
+   "usd": 0,
+   "estimated": true,
+   "units": 3.273,
    "unit": "MB"
   }
  ]
