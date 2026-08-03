@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-02T10:48:34.837Z",
+ "updated": "2026-08-03T07:13:18.384Z",
  "rates": {
   "bdPerRecord": 0.0015,
   "searchPerQuery": 0.001,
@@ -891,6 +891,99 @@
    "estimated": true,
    "units": 10,
    "unit": "queries"
+  },
+  {
+   "day": "2026-08-03",
+   "at": "2026-08-03T07:13:18.368Z",
+   "stage": "daily",
+   "run": "2026-08-03T06:54:58.643Z",
+   "category": "llm-extract",
+   "usd": 0.874468,
+   "estimated": false,
+   "units": 72,
+   "unit": "calls",
+   "tokensIn": 400308,
+   "tokensOut": 94832,
+   "top": [
+    {
+     "id": "dopiewo-city",
+     "usd": 0.090753,
+     "units": 3
+    },
+    {
+     "id": "komorniki-city",
+     "usd": 0.067908,
+     "units": 5
+    },
+    {
+     "id": "czerwonak-city",
+     "usd": 0.063075,
+     "units": 4
+    },
+    {
+     "id": "poznan-events",
+     "usd": 0.057649,
+     "units": 2
+    },
+    {
+     "id": "komorniki-gok",
+     "usd": 0.056199,
+     "units": 5
+    }
+   ]
+  },
+  {
+   "day": "2026-08-03",
+   "at": "2026-08-03T07:13:18.368Z",
+   "stage": "daily",
+   "run": "2026-08-03T06:54:58.643Z",
+   "category": "llm-vision",
+   "usd": 0.015656,
+   "estimated": false,
+   "units": 3,
+   "unit": "calls",
+   "tokensIn": 6701,
+   "tokensOut": 1791,
+   "top": [
+    {
+     "id": "lubon-ok",
+     "usd": 0.015656,
+     "units": 3
+    }
+   ]
+  },
+  {
+   "day": "2026-08-03",
+   "at": "2026-08-03T07:13:18.368Z",
+   "stage": "daily",
+   "run": "2026-08-03T06:54:58.643Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 110,
+   "unit": "fetches"
+  },
+  {
+   "day": "2026-08-03",
+   "at": "2026-08-03T07:13:18.368Z",
+   "stage": "daily",
+   "run": "2026-08-03T06:54:58.643Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 59,
+   "unit": "lookups"
+  },
+  {
+   "day": "2026-08-03",
+   "at": "2026-08-03T07:13:18.368Z",
+   "stage": "daily",
+   "run": "2026-08-03T06:54:58.643Z",
+   "category": "storage",
+   "usd": 0,
+   "estimated": true,
+   "units": 3.167,
+   "unit": "MB"
   }
  ]
 }
