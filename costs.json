@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-04T06:40:26.776Z",
+ "updated": "2026-08-05T06:37:52.821Z",
  "rates": {
   "bdPerRecord": 0.0015,
   "searchPerQuery": 0.001,
@@ -1056,6 +1056,79 @@
    "usd": 0,
    "estimated": true,
    "units": 3.175,
+   "unit": "MB"
+  },
+  {
+   "day": "2026-08-05",
+   "at": "2026-08-05T06:37:52.803Z",
+   "stage": "daily",
+   "run": "2026-08-05T06:22:40.718Z",
+   "category": "llm-extract",
+   "usd": 0.707034,
+   "estimated": false,
+   "units": 46,
+   "unit": "calls",
+   "tokensIn": 304349,
+   "tokensOut": 80537,
+   "top": [
+    {
+     "id": "dopiewo-city",
+     "usd": 0.092713,
+     "units": 3
+    },
+    {
+     "id": "brama-poznania",
+     "usd": 0.063836,
+     "units": 2
+    },
+    {
+     "id": "poznan-events",
+     "usd": 0.057471,
+     "units": 2
+    },
+    {
+     "id": "poznan-kultura",
+     "usd": 0.055319,
+     "units": 2
+    },
+    {
+     "id": "komorniki-gok",
+     "usd": 0.054955,
+     "units": 4
+    }
+   ]
+  },
+  {
+   "day": "2026-08-05",
+   "at": "2026-08-05T06:37:52.803Z",
+   "stage": "daily",
+   "run": "2026-08-05T06:22:40.718Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 108,
+   "unit": "fetches"
+  },
+  {
+   "day": "2026-08-05",
+   "at": "2026-08-05T06:37:52.803Z",
+   "stage": "daily",
+   "run": "2026-08-05T06:22:40.718Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 27,
+   "unit": "lookups"
+  },
+  {
+   "day": "2026-08-05",
+   "at": "2026-08-05T06:37:52.803Z",
+   "stage": "daily",
+   "run": "2026-08-05T06:22:40.718Z",
+   "category": "storage",
+   "usd": 0,
+   "estimated": true,
+   "units": 2.722,
    "unit": "MB"
   }
  ]
