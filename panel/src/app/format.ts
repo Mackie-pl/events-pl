@@ -96,6 +96,9 @@ export const STEP_META: Record<
   'fb.harvest': { icon: '@tui.link', tone: 'plain' },
   geo: { icon: '@tui.map-pin', tone: 'plain' },
   'dedupe.dropped': { icon: '@tui.merge', tone: 'loss' },
+  // 'save', nie 'loss': zwinięcie serii nic nie usuwa z serwisu, tylko przestaje płacić
+  // tokenami i wierszami digestu za dwudziestokrotne powtórzenie tego samego wpisu
+  series: { icon: '@tui.repeat', tone: 'save' },
   pii: { icon: '@tui.shield', tone: 'plain' },
   done: { icon: '@tui.flag', tone: 'plain' },
 };

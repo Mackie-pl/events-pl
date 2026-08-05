@@ -83,6 +83,7 @@ export function fbEventToItem(rec: BdRecord, today: string): EventItem | null {
     title,
     date_start: start.date,
     date_end: end.date && end.date !== start.date ? end.date : null,
+    repeat: "", // rekord FB opisuje jeden termin; serie zwija foldSeries()
     time_start: start.time,
     time_end: end.time,
     // "" zamiast null w polach czysto tekstowych — kontrakt schematu, patrz orEmpty()

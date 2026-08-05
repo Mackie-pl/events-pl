@@ -1,5 +1,6 @@
 /** Które dni pokrywa dzisiejszy digest i które wydarzenia do nich pasują. */
 import { addDays, dayOfWeek, fmtDayPl } from "../../shared/dates.js";
+import { occursIn } from "../../shared/series.js";
 import type { EventItem } from "../../types/index.js";
 
 export interface Section {
@@ -40,11 +41,6 @@ export function sectionsFor(today: string): Section[] {
 
 // ---------------- filtrowanie ----------------
 
-function overlaps(ev: EventItem, from: string, to: string): boolean {
-  const end = ev.date_end ?? ev.date_start;
-  return ev.date_start <= to && end >= from;
-}
-
 function ageOk(ev: EventItem, childAge: number | null): boolean {
   if (!ev.age) return true;
   if (childAge === null) return true;
@@ -53,6 +49,16 @@ function ageOk(ev: EventItem, childAge: number | null): boolean {
   return true;
 }
 
+/**
+ * Pierwszy termin wydarzenia widoczny w tej sekcji.
+ *
+ * Sortowanie idzie po NIM, a nie po `date_start`: seria zaczęta w czerwcu wisiałaby inaczej
+ * na górze każdej listy do końca sezonu. Renderowi ta sama data mówi, którą sobotę właściwie
+ * pokazuje.
+ */
+export const dateIn = (ev: EventItem, s: Section): string =>
+  occursIn(ev, s.from, s.to)[0] ?? ev.date_start;
+
 export function pick(
   events: EventItem[],
   s: Section,
@@ -60,7 +66,7 @@ export function pick(
 ): EventItem[] {
   return events
     .filter(
-      (e) => !e.is_noise && overlaps(e, s.from, s.to) && ageOk(e, childAge),
+      (e) => !e.is_noise && occursIn(e, s.from, s.to).length > 0 && ageOk(e, childAge),
     )
     .sort((a, b) => {
       // rodzinne na górę, potem chronologicznie
@@ -68,7 +74,7 @@ export function pick(
         Number(b.family_friendly === true) - Number(a.family_friendly === true);
       return (
         fam ||
-        a.date_start.localeCompare(b.date_start) ||
+        dateIn(a, s).localeCompare(dateIn(b, s)) ||
         (a.time_start ?? "").localeCompare(b.time_start ?? "")
       );
     });

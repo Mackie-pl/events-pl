@@ -16,6 +16,15 @@ export interface EventItem extends ModelEvent {
   source_id?: string;
   /** dopisywane po geokodowaniu (Nominatim + cache) */
   geo?: { lat: number; lon: number } | null;
+  /**
+   * Terminy serii, rosnąco; brak pola = wydarzenie jednorazowe. Dopisuje foldSeries().
+   *
+   * Jawna LISTA, nie reguła — „Kino letnie w Wirach" to środy i piątki, ale co drugi
+   * tydzień, więc rytm rozciągnięty na zakres wymyśliłby dwa nieistniejące seanse.
+   * Niezmiennik: `date_start` to pierwszy element, `date_end` ostatni. Dzięki temu
+   * wszystko, co czyta sam zakres (np. wygasanie cache'u w fb-events.ts), dalej działa.
+   */
+  dates?: string[];
 }
 
 export interface ExtractionResult {

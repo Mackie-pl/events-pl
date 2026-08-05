@@ -24,7 +24,7 @@ export type AuditKind =
   | "capability.fallback"
   /** wywołanie modelu (ekstrakcja tekstu albo plakat) */
   | "llm"
-  /** wydarzenie odrzucone przez potok (dziś: brak daty startu) */
+  /** wydarzenie odrzucone przez potok (brak daty startu, niezgodność ze schematem, półkolonie) */
   | "event.dropped"
   /** model wskazał podstrony / PDF-y / plakaty do dociągnięcia */
   | "followup.proposed"
@@ -36,6 +36,8 @@ export type AuditKind =
   | "geo"
   /** rekord przegrał scalanie duplikatów */
   | "dedupe.dropped"
+  /** wydarzenie cykliczne: rytm rozwinięty na terminy albo powtórzenia zwinięte w serię */
+  | "series"
   /** redakcja danych kontaktowych przed publikacją */
   | "pii"
   /** domknięcie: status źródła i tyle wydarzeń poszło dalej */

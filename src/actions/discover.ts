@@ -220,6 +220,21 @@ function startRun(startedAt: string): void {
  * projekt jest w fazie PoC, a wartość resetu polega właśnie na tym, że discovery musi
  * odtworzyć rejestr wyłącznie z tego, co realnie stoi w sieci i da się znaleźć.
  * Spis skasowanych zostaje w raporcie, więc widać, czego wyszukiwarka NIE odtworzyła.
+ *
+ * To jest PRZYRZĄD POMIAROWY, nie sposób budowania rejestru — i różnica jest mierzalna.
+ * Cztery przebiegi `--reset "Luboń" 1` w ciągu doby (2026-08-01/02) dały 17 różnych źródeł,
+ * z czego tylko **9 pojawiło się w każdym**. Wyszukiwarka była stabilna (59-61 unikalnych
+ * adresów na przebieg, ±3%) — 9 z 10 pominięć to „model widział wynik i go nie wziął".
+ * Wypadały przy tym rzeczy pierwszorzędne: `lubon.pl/news/content/4766`, czyli oficjalny
+ * kalendarz imprez miejskich na 2026, był w trzech przebiegach na cztery.
+ *
+ * Bez resetu nic z tego nie boli, bo pudło NIE kasuje źródła: reconcile() nalicza
+ * `missedRuns`, do degradacji potrzeba dwóch pudeł Z RZĘDU przy zerowym plonie, a wpis
+ * wraca sam przy pierwszym trafieniu (patrz pipeline/discover/reconcile.ts). Reset zdejmuje
+ * całą tę siatkę i czyni JEDNO losowanie modelu wyrocznią nad rejestrem.
+ *
+ * Czyli: `npm run discover -- "<gmina>" <km>` do budowania, `--reset` wyłącznie wtedy,
+ * gdy pytanie brzmi „ile z tego rejestru wyszukiwarka odtworzy sama".
  */
 function resetRegistry(report: DiscoverRunReport, cfg: SourcesFile): void {
   const removed: RemovedSource[] = cfg.sources.map((s) => ({

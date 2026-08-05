@@ -15,8 +15,37 @@ import { EventSchema } from "../types/event-schema.js";
 
 const EVENT_BLOCK = renderSchemaBlock(EventSchema);
 
+/**
+ * Reguła cykliczności — wspólna dla obu promptów ekstrakcji, bo plakat generuje serie
+ * CZĘŚCIEJ niż strona: „Kalendarz wydarzeń na plaży (czerwiec–lipiec)" to jedna „Animacja
+ * dla dzieci" powtórzona trzydzieści razy, a wywołanie plakatowe ma sufit 2000 tokenów,
+ * więc bez tej reguły odpowiedź nie tyle drożeje, co po prostu zostaje ucięta.
+ *
+ * Model podaje RYTM, konkretne daty wylicza potok (shared/series.ts). Odwrotny podział
+ * nie działa: „w każdą sobotę od 20.06 do 31.08" to dla taniego modelu dwadzieścia działań
+ * na kalendarzu, a tam się myli.
+ *
+ * Ostatnie zdanie nie jest ozdobą. W events.json stoją obok siebie „Kino letnie w Wirach"
+ * (jedna seria) i „Kino letnie w Wirach - seans: Nomadland" (osobne filmy) — te drugie mają
+ * zostać osobno, bo różnią się treścią, a nie tylko terminem.
+ */
+const RECURRING_RULE = `WYDARZENIA CYKLICZNE: gdy ten sam wpis powtarza się w regularnym rytmie
+(„codziennie", „w każdą sobotę i niedzielę", „wtorki i czwartki") — NIE wypisuj każdego terminu osobno.
+Zwróć JEDEN wpis: "date_start" = pierwszy termin, "date_end" = ostatni, "repeat" = rytm. Konkretne daty
+wyliczy potok. Gdy terminy są nieregularne albo każdy ma inny tytuł/program (repertuar kina, kolejne
+seanse) — zostaw "repeat":"" i wypisz je osobno.`;
+
 // ============ STAGE 1: discovery (raz w miesiącu, mocny model) ============
 
+/**
+ * Uwaga na cudzysłowy w tym prompcie — modele przepisują jego typografię.
+ *
+ * Luboń, 2026-08-02: model odpowiedział `"why": "…o nazwie „Wydarzenia w Luboniu"…"` — polski
+ * cudzysłów otwierający, ASCII zamykający, czyli literał JSON-a urwany w połowie wartości.
+ * Bez structured outputs kosztowało to trzy ostatnie propozycje (wszystkie grupy FB), z nimi
+ * gramatyka domyka string na tym znaku i zdanie zostaje ucięte w pół. Prompt sam pokazywał
+ * ten wzorzec w zdaniu o „czemu ten adres tu jest" — stąd zakaz i stąd przykłady bez cudzysłowów.
+ */
 export const DISCOVERY_SYSTEM = `Jesteś asystentem budującym rejestr źródeł lokalnych wydarzeń w Polsce.
 Dostajesz wyniki wyszukiwania dla miasta/gminy. Wybierz strony, które PUBLIKUJĄ wydarzenia:
 - portale urzędów miast/gmin (kalendarze, aktualności)
@@ -33,8 +62,9 @@ Rozpoznawanie FB po URL:
 Zwróć JSON: {"sources":[{"id","name","type","url","town","fetch":"plain|headless|pdf|api|fb|fb_group","confidence":0-1,"why","notes"}]}
 Typy: city_portal, culture_center, library, sports, venue, fb_page, fb_group, rss, api, pdf_program.
 "why": JEDNO zdanie po polsku — co w wyniku wyszukiwania przekonało cię, że ta strona publikuje wydarzenia
-(np. "kalendarz imprez GOK w opisie wyniku"). To pole trafia do rejestru i po miesiącach jest jedyną
-odpowiedzią na pytanie „czemu ten adres tu jest?". Nie powtarzaj nazwy instytucji, nie pisz ogólników.`;
+(np. kalendarz imprez GOK w opisie wyniku). To pole trafia do rejestru i po miesiącach jest jedyną
+odpowiedzią na pytanie, czemu ten adres tu jest. Nie powtarzaj nazwy instytucji, nie pisz ogólników.
+W polach tekstowych NIE UŻYWAJ ŻADNYCH CUDZYSŁOWÓW — nazwy własne podawaj gołym tekstem.`;
 
 export const DISCOVERY_QUERIES: readonly string[] = [
   "{town} dom kultury wydarzenia",
@@ -96,6 +126,8 @@ z konkretnymi terminami — rozbij na osobne wydarzenia i ustaw "container": naz
 Jeśli program jest POD LINKIEM (PDF, podstrona, plakat JPG) — NIE zgaduj; dodaj URL do "followups":
 [{"url": str, "reason": "program PDF"|"szczegóły wydarzenia"|"plakat"}]. Maks 5 followupów, tylko z tej samej domeny lub oficjalnych.
 
+${RECURRING_RULE}
+
 Nie wymyślaj danych. Brak informacji zapisuj tak, jak pokazuje schemat: null tam, gdzie w typie jest "|null",
 a pusty string "" w polach czysto tekstowych (venue, town, registration, conditional, container). Daty przeszłe pomijaj.
 
@@ -113,7 +145,9 @@ export const POSTER_SYSTEM = `Na obrazie jest plakat wydarzenia (PL). Wyciągnij
 ${EVENT_BLOCK}
 
 Zwróć uwagę na: daty, godziny, miejsce, ceny, ograniczenia wiekowe, program wielogodzinny.
-Bez konkretnego "date_start" nie zwracaj wpisu — plakat oferty stałej pomiń.`;
+Bez konkretnego "date_start" nie zwracaj wpisu — plakat oferty stałej pomiń.
+
+${RECURRING_RULE}`;
 
 export const DEDUPE_SYSTEM = `Dostajesz listę wydarzeń z różnych źródeł. Znajdź duplikaty (to samo wydarzenie
 opisane przez urząd, GOK i FB). Kryteria: zbliżony tytuł/data/miejsce. Zwróć JSON:

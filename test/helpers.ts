@@ -6,6 +6,7 @@ export function event(over: Partial<EventItem> = {}): EventItem {
     title: "Wydarzenie",
     date_start: "2026-08-01",
     date_end: null,
+    repeat: "",
     time_start: null,
     time_end: null,
     // "" a nie null w polach czysto tekstowych — patrz orEmpty() w types/event-schema.ts

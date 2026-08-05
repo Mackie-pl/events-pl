@@ -126,6 +126,9 @@ function toItem(d: Draft, today: string, dropped: CapabilityYield["dropped"]): E
     title: d.title,
     date_start: d.start.date,
     date_end: d.end.date && d.end.date !== d.start.date ? d.end.date : null,
+    // kalendarze wypisują każdy termin osobno, więc rytmu nie ma czego opisywać —
+    // powtórzenia zwija dopiero foldSeries() po scalaniu duplikatów
+    repeat: "",
     time_start: d.start.time,
     time_end: d.end.time,
     venue: d.venue,

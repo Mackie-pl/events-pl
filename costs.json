@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-02T10:48:34.837Z",
+ "updated": "2026-08-02T18:24:02.068Z",
  "rates": {
   "bdPerRecord": 0.0015,
   "searchPerQuery": 0.001,
@@ -891,6 +891,252 @@
    "estimated": true,
    "units": 10,
    "unit": "queries"
+  },
+  {
+   "day": "2026-08-02",
+   "at": "2026-08-02T12:42:55.099Z",
+   "stage": "discover",
+   "run": "2026-08-02T12:41:24.043Z",
+   "category": "llm-discover",
+   "usd": 0.059208,
+   "estimated": false,
+   "units": 1,
+   "unit": "calls",
+   "tokensIn": 11866,
+   "tokensOut": 1574,
+   "top": [
+    {
+     "id": "Luboń",
+     "usd": 0.059208,
+     "units": 1
+    }
+   ]
+  },
+  {
+   "day": "2026-08-02",
+   "at": "2026-08-02T12:42:55.099Z",
+   "stage": "discover",
+   "run": "2026-08-02T12:41:24.043Z",
+   "category": "llm-verify",
+   "usd": 0.017401,
+   "estimated": false,
+   "units": 6,
+   "unit": "calls",
+   "tokensIn": 13606,
+   "tokensOut": 759,
+   "top": [
+    {
+     "id": "ok-lubon-wydarzenia",
+     "usd": 0.003904,
+     "units": 1
+    },
+    {
+     "id": "lubon-pl-kalendarium",
+     "usd": 0.003357,
+     "units": 1
+    },
+    {
+     "id": "lubon-pl-kalendarz-2026",
+     "usd": 0.003239,
+     "units": 1
+    },
+    {
+     "id": "biblub-wydarzenia",
+     "usd": 0.002663,
+     "units": 1
+    },
+    {
+     "id": "gazeta-lubon-kalendarium",
+     "usd": 0.002146,
+     "units": 1
+    }
+   ]
+  },
+  {
+   "day": "2026-08-02",
+   "at": "2026-08-02T12:42:55.099Z",
+   "stage": "discover",
+   "run": "2026-08-02T12:41:24.043Z",
+   "category": "search",
+   "usd": 0.01,
+   "estimated": true,
+   "units": 10,
+   "unit": "queries"
+  },
+  {
+   "day": "2026-08-02",
+   "at": "2026-08-02T12:42:55.099Z",
+   "stage": "discover",
+   "run": "2026-08-02T12:41:24.043Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 32,
+   "unit": "fetches"
+  },
+  {
+   "day": "2026-08-02",
+   "at": "2026-08-02T17:45:17.672Z",
+   "stage": "discover",
+   "run": "2026-08-02T17:44:04.506Z",
+   "category": "llm-discover",
+   "usd": 0.057288,
+   "estimated": false,
+   "units": 1,
+   "unit": "calls",
+   "tokensIn": 11621,
+   "tokensOut": 1495,
+   "top": [
+    {
+     "id": "Luboń",
+     "usd": 0.057288,
+     "units": 1
+    }
+   ]
+  },
+  {
+   "day": "2026-08-02",
+   "at": "2026-08-02T17:45:17.672Z",
+   "stage": "discover",
+   "run": "2026-08-02T17:44:04.506Z",
+   "category": "llm-verify",
+   "usd": 0.014069,
+   "estimated": false,
+   "units": 5,
+   "unit": "calls",
+   "tokensIn": 10909,
+   "tokensOut": 632,
+   "top": [
+    {
+     "id": "ok-lubon-wydarzenia",
+     "usd": 0.003889,
+     "units": 1
+    },
+    {
+     "id": "lubon-pl-kalendarz",
+     "usd": 0.003286,
+     "units": 1
+    },
+    {
+     "id": "biblub-wydarzenia",
+     "usd": 0.002683,
+     "units": 1
+    },
+    {
+     "id": "lubon-pl-wydarzenia",
+     "usd": 0.002112,
+     "units": 1
+    },
+    {
+     "id": "gazeta-lubon-kalendarium",
+     "usd": 0.002099,
+     "units": 1
+    }
+   ]
+  },
+  {
+   "day": "2026-08-02",
+   "at": "2026-08-02T17:45:17.672Z",
+   "stage": "discover",
+   "run": "2026-08-02T17:44:04.506Z",
+   "category": "search",
+   "usd": 0.01,
+   "estimated": true,
+   "units": 10,
+   "unit": "queries"
+  },
+  {
+   "day": "2026-08-02",
+   "at": "2026-08-02T17:45:17.672Z",
+   "stage": "discover",
+   "run": "2026-08-02T17:44:04.506Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 26,
+   "unit": "fetches"
+  },
+  {
+   "day": "2026-08-02",
+   "at": "2026-08-02T18:24:02.054Z",
+   "stage": "discover",
+   "run": "2026-08-02T18:15:26.346Z",
+   "category": "llm-discover",
+   "usd": 0.060021,
+   "estimated": false,
+   "units": 1,
+   "unit": "calls",
+   "tokensIn": 11887,
+   "tokensOut": 1624,
+   "top": [
+    {
+     "id": "Luboń",
+     "usd": 0.060021,
+     "units": 1
+    }
+   ]
+  },
+  {
+   "day": "2026-08-02",
+   "at": "2026-08-02T18:24:02.054Z",
+   "stage": "discover",
+   "run": "2026-08-02T18:15:26.346Z",
+   "category": "llm-verify",
+   "usd": 0.129726,
+   "estimated": false,
+   "units": 45,
+   "unit": "calls",
+   "tokensIn": 102996,
+   "tokensOut": 5346,
+   "top": [
+    {
+     "id": "lubon-city",
+     "usd": 0.008083,
+     "units": 2
+    },
+    {
+     "id": "mosina-galeria",
+     "usd": 0.004481,
+     "units": 1
+    },
+    {
+     "id": "mosina-city",
+     "usd": 0.004043,
+     "units": 1
+    },
+    {
+     "id": "mosina-biblioteka",
+     "usd": 0.004037,
+     "units": 1
+    },
+    {
+     "id": "ok-lubon-wydarzenia",
+     "usd": 0.003919,
+     "units": 1
+    }
+   ]
+  },
+  {
+   "day": "2026-08-02",
+   "at": "2026-08-02T18:24:02.054Z",
+   "stage": "discover",
+   "run": "2026-08-02T18:15:26.346Z",
+   "category": "search",
+   "usd": 0.01,
+   "estimated": true,
+   "units": 10,
+   "unit": "queries"
+  },
+  {
+   "day": "2026-08-02",
+   "at": "2026-08-02T18:24:02.054Z",
+   "stage": "discover",
+   "run": "2026-08-02T18:15:26.346Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 244,
+   "unit": "fetches"
   }
  ]
 }

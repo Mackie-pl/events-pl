@@ -20,7 +20,7 @@
    "fetch": "api",
    "verified": true,
    "notes": "SOAP/XML, getEvents(dateFrom,dateTo), max 250 wyników | martwy URL (2026-07-30): Adres to WSDL web service (interfejs techniczny), nie strona HTML z listą wydarzeń dla użytkownika.",
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "previous_urls": [
     "https://www.um.poznan.pl/web-service/events?wsdl"
    ],
@@ -35,19 +35,20 @@
    "fetch": "plain",
    "verified": true,
    "notes": "paginacja p=0..N; widok dzienny jest JS-only — używać listy",
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "previous_urls": [
     "https://kultura.poznan.pl/mim/public/kultura/events.html?co=list&lang=pl&category=&p={page}"
    ],
    "reach": "ok",
    "entrypoints": [
     {
-     "url": "https://kultura.poznan.pl/mim/kultura/seances/",
+     "url": "https://kultura.poznan.pl/mim/public/kultura/events.html?co=list&lang=pl&category=&p={page}",
      "kind": "listing",
      "confidence": 0.9,
      "via": "llm",
-     "detailPattern": "/mim/kultura/seances/{slug}.html",
-     "detailCount": 50
+     "detailPattern": "/mim/kultura/events/{slug}.html",
+     "detailCount": 20,
+     "paginated": true
     }
    ]
   },
@@ -59,7 +60,7 @@
    "town": "Poznań",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "previous_urls": [
     "https://kultura.poznan.pl/mim/feeds/"
    ],
@@ -73,7 +74,7 @@
    "town": "Poznań",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "reach": "ok",
    "entrypoints": [
     {
@@ -82,7 +83,8 @@
      "confidence": 0.9,
      "via": "llm",
      "detailPattern": "/mim/events/seances/{slug}.html",
-     "detailCount": 40
+     "detailCount": 36,
+     "barrenRuns": 1
     }
    ]
   },
@@ -98,7 +100,7 @@
     "https://ckzamek.pl/wydarzenia/"
    ],
    "reach": "ok",
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "notes": "URL naprawiony 2026-07-30 (stary w previous_urls)",
    "entrypoints": [
     {
@@ -119,7 +121,7 @@
    "town": "Poznań",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "reach": "ok",
    "entrypoints": [
     {
@@ -128,7 +130,7 @@
      "confidence": 0.9,
      "via": "llm",
      "detailPattern": "/event/{slug}",
-     "detailCount": 27
+     "detailCount": 24
     }
    ],
    "capabilities": [
@@ -137,7 +139,7 @@
      "url": "https://estrada.poznan.pl/wp-json/wp/v2/event?per_page=5",
      "itemsSeen": 5,
      "datesParsed": 0,
-     "checked": "2026-08-01"
+     "checked": "2026-08-02"
     }
    ]
   },
@@ -153,8 +155,18 @@
     "https://bramapoznania.pl/wydarzenia"
    ],
    "reach": "ok",
-   "checked": "2026-08-01",
-   "notes": "URL naprawiony 2026-07-30 (stary w previous_urls) | 2026-08-01: Strona główna nie zawiera listy wydarzeń; loader wskazuje na dynamiczny content, który nie został zaindeksowany."
+   "checked": "2026-08-02",
+   "notes": "URL naprawiony 2026-07-30 (stary w previous_urls) | 2026-08-01: Strona główna nie zawiera listy wydarzeń; loader wskazuje na dynamiczny content, który nie został zaindeksowany.",
+   "entrypoints": [
+    {
+     "url": "https://bramapoznania.pl/kalendarium",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/event/{id}/{slug}",
+     "detailCount": 767
+    }
+   ]
   },
   {
    "id": "teatr-animacji",
@@ -164,8 +176,8 @@
    "town": "Poznań",
    "fetch": "plain",
    "verified": true,
-   "notes": "strona spektaklu ma pole WIEK | martwy URL (2026-07-30): Strona repertuaru nie wczytała się (Wczytywanie...) — nie można zweryfikować obecności listy wydarzeń z datami. | 2026-08-01: Strona nie załadowała się (Wczytywanie...) — nie można ocenić zawartości; repertuar to lista spektakli, nie nadchodzących dat.",
-   "checked": "2026-08-01",
+   "notes": "strona spektaklu ma pole WIEK | martwy URL (2026-07-30): Strona repertuaru nie wczytała się (Wczytywanie...) — nie można zweryfikować obecności listy wydarzeń z datami. | 2026-08-01: Strona nie załadowała się (Wczytywanie...) — nie można ocenić zawartości; repertuar to lista spektakli, nie nadchodzących dat. | 2026-08-02: Strona nie załadowała się (Wczytywanie...), nie można zweryfikować obecności listy wydarzeń z datami.",
+   "checked": "2026-08-02",
    "reach": "ok"
   },
   {
@@ -180,7 +192,7 @@
     "https://bracz.edu.pl/wydarzenia/"
    ],
    "reach": "ok",
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "notes": "URL naprawiony 2026-07-30 (stary w previous_urls)",
    "entrypoints": [
     {
@@ -189,7 +201,8 @@
      "confidence": 0.9,
      "via": "llm",
      "detailPattern": "/{slug}",
-     "detailCount": 27
+     "detailCount": 27,
+     "barrenRuns": 1
     }
    ],
    "capabilities": [
@@ -197,36 +210,36 @@
      "kind": "rss",
      "url": "https://bracz.edu.pl/feed/",
      "itemsSeen": 11,
-     "datesParsed": 11,
-     "checked": "2026-08-01"
+     "datesParsed": 1,
+     "checked": "2026-08-02"
     },
     {
      "kind": "rss",
      "url": "https://bracz.edu.pl/comments/feed/",
      "itemsSeen": 1,
-     "datesParsed": 1,
-     "checked": "2026-08-01"
+     "datesParsed": 0,
+     "checked": "2026-08-02"
     },
     {
      "kind": "wp-rest",
      "url": "https://bracz.edu.pl/wp-json/wp/v2/tribe_venue?per_page=5",
      "itemsSeen": 5,
      "datesParsed": 0,
-     "checked": "2026-08-01"
+     "checked": "2026-08-02"
     },
     {
      "kind": "tribe",
      "url": "https://bracz.edu.pl/wp-json/tribe/events/v1/events",
      "itemsSeen": 11,
      "datesParsed": 11,
-     "checked": "2026-08-01"
+     "checked": "2026-08-02"
     },
     {
      "kind": "ical",
      "url": "https://bracz.edu.pl/kalendarz/?ical=1",
-     "itemsSeen": 22,
-     "datesParsed": 24,
-     "checked": "2026-08-01"
+     "itemsSeen": 21,
+     "datesParsed": 23,
+     "checked": "2026-08-02"
     }
    ]
   },
@@ -238,7 +251,7 @@
    "town": "Poznań",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "reach": "ok",
    "entrypoints": [
     {
@@ -255,8 +268,8 @@
      "kind": "rss",
      "url": "https://palmiarnia.poznan.pl/feed/",
      "itemsSeen": 10,
-     "datesParsed": 10,
-     "checked": "2026-08-01"
+     "datesParsed": 1,
+     "checked": "2026-08-02"
     }
    ]
   },
@@ -268,7 +281,7 @@
    "town": "Poznań",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-07-30",
+   "checked": "2026-08-02",
    "reach": "ok",
    "entrypoints": [
     {
@@ -286,22 +299,22 @@
      "kind": "rss",
      "url": "https://zoo.poznan.pl/feed/",
      "itemsSeen": 10,
-     "datesParsed": 10,
-     "checked": "2026-07-30"
+     "datesParsed": 0,
+     "checked": "2026-08-02"
     },
     {
      "kind": "rss",
      "url": "https://zoo.poznan.pl/comments/feed/",
      "itemsSeen": 6,
-     "datesParsed": 6,
-     "checked": "2026-07-30"
+     "datesParsed": 0,
+     "checked": "2026-08-02"
     },
     {
      "kind": "wp-rest",
      "url": "https://zoo.poznan.pl/wp-json/wp/v2/tribe_venue?per_page=5",
      "itemsSeen": 5,
      "datesParsed": 0,
-     "checked": "2026-07-30"
+     "checked": "2026-08-02"
     }
    ]
   },
@@ -327,29 +340,29 @@
     "https://www.psm-winogrady.pl/domy-kultury/"
    ],
    "reach": "ok",
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "notes": "URL naprawiony 2026-07-30 (stary w previous_urls) | martwy URL (2026-07-30): Strona zawiera aktualności spółdzielni mieszkaniowej, a nie listę wydarzeń kulturalnych Domu Kultury Pod Lipami z datami imprez. | 2026-08-01: Strona zawiera aktualności spółdzielni mieszkaniowej, a nie listę wydarzeń kulturalnych Domu Kultury — brak informacji o repertuarze, imprezach i terminach zajęć.",
    "capabilities": [
     {
      "kind": "rss",
      "url": "https://psmwinogrady.pl/feed",
      "itemsSeen": 10,
-     "datesParsed": 10,
-     "checked": "2026-08-01"
+     "datesParsed": 0,
+     "checked": "2026-08-02"
     },
     {
      "kind": "wp-rest",
      "url": "https://psmwinogrady.pl/wp-json/wp/v2/tribe_venue?per_page=5",
      "itemsSeen": 5,
      "datesParsed": 0,
-     "checked": "2026-08-01"
+     "checked": "2026-08-02"
     },
     {
      "kind": "tribe",
      "url": "https://psmwinogrady.pl/wp-json/tribe/events/v1/events",
      "itemsSeen": 10,
      "datesParsed": 10,
-     "checked": "2026-08-01"
+     "checked": "2026-08-02"
     }
    ]
   },
@@ -366,28 +379,28 @@
     "https://www.psm-winogrady.pl/domy-kultury/"
    ],
    "reach": "ok",
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "capabilities": [
     {
      "kind": "rss",
      "url": "https://psmwinogrady.pl/feed",
      "itemsSeen": 10,
-     "datesParsed": 10,
-     "checked": "2026-08-01"
+     "datesParsed": 0,
+     "checked": "2026-08-02"
     },
     {
      "kind": "wp-rest",
      "url": "https://psmwinogrady.pl/wp-json/wp/v2/tribe_venue?per_page=5",
      "itemsSeen": 5,
      "datesParsed": 0,
-     "checked": "2026-08-01"
+     "checked": "2026-08-02"
     },
     {
      "kind": "tribe",
      "url": "https://psmwinogrady.pl/wp-json/tribe/events/v1/events",
      "itemsSeen": 10,
      "datesParsed": 10,
-     "checked": "2026-08-01"
+     "checked": "2026-08-02"
     }
    ]
   },
@@ -408,34 +421,25 @@
    "town": "Luboń",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "reach": "ok",
-   "entrypoints": [
-    {
-     "url": "https://lubon.pl/artykuly/350/wydarzenia",
-     "kind": "listing",
-     "confidence": 0.6,
-     "via": "heuristic",
-     "detailPattern": "/artykuly/{id}/{slug}",
-     "detailCount": 63
-    }
-   ],
    "capabilities": [
     {
      "kind": "rss",
      "url": "https://lubon.pl/atom",
      "itemsSeen": 100,
-     "datesParsed": 100,
-     "checked": "2026-08-01"
+     "datesParsed": 18,
+     "checked": "2026-08-02"
     },
     {
      "kind": "rss",
      "url": "https://lubon.pl/rss",
      "itemsSeen": 100,
-     "datesParsed": 100,
-     "checked": "2026-08-01"
+     "datesParsed": 18,
+     "checked": "2026-08-02"
     }
-   ]
+   ],
+   "missedRuns": 1
   },
   {
    "id": "lubon-ok",
@@ -445,7 +449,7 @@
    "town": "Luboń",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "reach": "ok",
    "entrypoints": [
     {
@@ -462,19 +466,41 @@
      "kind": "rss",
      "url": "https://www.oklubon.pl/feed",
      "itemsSeen": 10,
-     "datesParsed": 10,
-     "checked": "2026-08-01"
+     "datesParsed": 0,
+     "checked": "2026-08-02"
     }
-   ]
+   ],
+   "missedRuns": 1
   },
   {
-   "id": "lubon-ok-fb",
-   "name": "OK Luboń – Facebook",
+   "id": "fb-osrodek-kultury-lubon",
+   "name": "Ośrodek Kultury w Luboniu – Facebook",
    "type": "fb_page",
-   "url": "https://www.facebook.com/OsrodekKulturyLubon/",
+   "url": "https://www.facebook.com/OsrodekKulturyLubon",
    "town": "Luboń",
    "fetch": "fb",
-   "verified": true
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.95,
+   "provenance": {
+    "run": "2026-08-02T17:44:04.506Z",
+    "town": "Luboń",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com Luboń wydarzenia",
+    "hit": {
+     "title": "Ośrodek Kultury w Luboniu | Lubon",
+     "url": "https://www.facebook.com/OsrodekKulturyLubon/",
+     "desc": "Spotkanie podróżnicze: Piersi w Arktyce. Żeńska eksploracja fiordów Spitzbergenu. Jana III Sobieskiego 97, 62-030 Lubon, Poland. 15 people interested."
+    },
+    "confidence": 0.95,
+    "why": "Fanpage instytucji regularnie publikuje zaproszenia na konkretne wydarzenia z datami (kino na leżakach, warsztaty, półkolonie).",
+    "archive": [
+     "raw/2026-08-02/discover-lubon/50e39e80af3b1533d66b530061b83e5ed7537a78ce145c99b0c292b178b35557.json",
+     "llm/2026-08-02/2026-08-02T17-44-04-506Z/discover-lubon/0001-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-02T18:15:26.346Z",
+   "missedRuns": 0
   },
   {
    "id": "lubon-plaza",
@@ -484,22 +510,63 @@
    "town": "Luboń",
    "fetch": "fb",
    "verified": false,
-   "notes": "przykład kalendarza-venue wskazany przez użytkownika"
+   "notes": "przykład kalendarza-venue wskazany przez użytkownika",
+   "lastSeenRun": "2026-08-02T18:15:26.346Z",
+   "missedRuns": 0,
+   "provenance": {
+    "run": "2026-08-02T18:15:26.346Z",
+    "town": "Luboń",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com Luboń wydarzenia",
+    "hit": {
+     "title": "plaża miejska LUBOŃ | Lubon",
+     "url": "https://www.facebook.com/PlazaMiejskaLubon/",
+     "desc": "Już jutro, 25 lipca 2026 roku zapraszamy Was na wydarzenie w stylu latynoamerykańskim „Kolorowa Fiesta” Co znajdziecie w programie wydarzenia? 12.00 ..."
+    },
+    "confidence": 0.85,
+    "why": "Fanpage plaży miejskiej zaprasza na datowane wydarzenia plenerowe, m.in. impreza latynoamerykańska z programem godzinowym."
+   }
   },
   {
-   "id": "lubon-biblioteka",
+   "id": "biblub-wydarzenia",
    "name": "Biblioteka Miejska w Luboniu",
    "type": "library",
    "url": "https://biblub.com/",
    "town": "Luboń",
    "fetch": "plain",
    "verified": true,
-   "previous_urls": [
-    "https://biblub.com.pl/"
-   ],
+   "discovered": "auto",
+   "confidence": 0.88,
+   "provenance": {
+    "run": "2026-08-02T17:44:04.506Z",
+    "town": "Luboń",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Luboń biblioteka wydarzenia dla dzieci",
+    "hit": {
+     "title": "Biblioteka Miejska w Luboniu - Luboń",
+     "url": "https://biblub.com/",
+     "desc": "Informujemy, że biblioteka nie wprowadza przerwy wakacyjnej i pozostaje otwarta dla Czytelników przez cały okres letni. ... 62-030 Luboń. tel: 61 813 09 72."
+    },
+    "confidence": 0.88,
+    "why": "Strona biblioteki zawiera podstronę z wydarzeniami (warsztaty, spotkania, Kino KAMERAlne) z konkretnymi datami.",
+    "archive": [
+     "raw/2026-08-02/discover-lubon/50e39e80af3b1533d66b530061b83e5ed7537a78ce145c99b0c292b178b35557.json",
+     "llm/2026-08-02/2026-08-02T17-44-04-506Z/discover-lubon/0001-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-02T17:44:59.100Z",
+     "url": "https://biblub.com/",
+     "ok": true,
+     "ms": 1899,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 68113
+    }
+   },
+   "lastSeenRun": "2026-08-02T18:15:26.346Z",
+   "missedRuns": 0,
    "reach": "ok",
-   "checked": "2026-08-01",
-   "notes": "URL naprawiony 2026-07-30 (stary w previous_urls)",
+   "checked": "2026-08-02",
    "entrypoints": [
     {
      "url": "https://biblub.com/category/aktualnosci/page/{page}",
@@ -508,7 +575,8 @@
      "via": "llm",
      "detailPattern": "/aktualnosci/{slug}",
      "detailCount": 6,
-     "paginated": true
+     "paginated": true,
+     "barrenRuns": 1
     }
    ],
    "capabilities": [
@@ -516,8 +584,8 @@
      "kind": "rss",
      "url": "https://biblub.com/feed",
      "itemsSeen": 10,
-     "datesParsed": 10,
-     "checked": "2026-08-01"
+     "datesParsed": 1,
+     "checked": "2026-08-02"
     }
    ]
   },
@@ -529,7 +597,7 @@
    "town": "Puszczykowo",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "reach": "ok",
    "entrypoints": [
     {
@@ -554,8 +622,8 @@
     "https://www.biblioteka.puszczykowo.pl/"
    ],
    "reach": "ok",
-   "checked": "2026-08-01",
-   "notes": "URL naprawiony 2026-07-30 (stary w previous_urls) | martwy URL (2026-07-30): Kandydat to katalog zbiorów bibliotecznych bez sekcji z listą wydarzeń, imprez czy aktualności. | 2026-08-01: Kandydat to katalog zbiorów bibliotecznych bez sekcji z listą wydarzeń, imprez czy aktualności."
+   "checked": "2026-08-02",
+   "notes": "URL naprawiony 2026-07-30 (stary w previous_urls) | martwy URL (2026-07-30): Kandydat to katalog zbiorów bibliotecznych bez sekcji z listą wydarzeń, imprez czy aktualności. | 2026-08-01: Kandydat to katalog zbiorów bibliotecznych bez sekcji z listą wydarzeń, imprez czy aktualności. | 2026-08-02: Kandydat to katalog zbiorów bibliotecznych bez sekcji z listą wydarzeń, imprez czy aktualności."
   },
   {
    "id": "mosina-city",
@@ -566,7 +634,7 @@
    "fetch": "plain",
    "verified": true,
    "notes": "czysty HTML, paginacja",
-   "checked": "2026-07-30",
+   "checked": "2026-08-02",
    "reach": "ok",
    "entrypoints": [
     {
@@ -588,7 +656,7 @@
    "town": "Mosina",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "reach": "ok",
    "entrypoints": [
     {
@@ -598,7 +666,8 @@
      "via": "llm",
      "detailPattern": "/{slug}",
      "detailCount": 22,
-     "paginated": true
+     "paginated": true,
+     "barrenRuns": 1
     }
    ],
    "capabilities": [
@@ -606,8 +675,8 @@
      "kind": "rss",
      "url": "https://www.kultura.gmina.pl/feed/",
      "itemsSeen": 10,
-     "datesParsed": 10,
-     "checked": "2026-08-01"
+     "datesParsed": 3,
+     "checked": "2026-08-02"
     }
    ]
   },
@@ -624,21 +693,21 @@
     "https://osirmosina.pl/wydarzenia"
    ],
    "reach": "ok",
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "capabilities": [
     {
      "kind": "rss",
      "url": "https://osirmosina.pl/index.php/feed/",
      "itemsSeen": 10,
-     "datesParsed": 10,
-     "checked": "2026-08-01"
+     "datesParsed": 1,
+     "checked": "2026-08-02"
     },
     {
      "kind": "jsonld",
      "url": "https://osirmosina.pl/index.php/kalendarz/",
      "itemsSeen": 11,
      "datesParsed": 11,
-     "checked": "2026-08-01"
+     "checked": "2026-08-02"
     }
    ]
   },
@@ -650,7 +719,7 @@
    "town": "Mosina",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-07-30",
+   "checked": "2026-08-02",
    "reach": "ok",
    "entrypoints": [
     {
@@ -659,7 +728,8 @@
      "confidence": 0.9,
      "via": "llm",
      "detailPattern": "/{slug}",
-     "detailCount": 11
+     "detailCount": 11,
+     "barrenRuns": 1
     }
    ]
   },
@@ -671,14 +741,15 @@
    "town": "Mosina",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "reach": "ok",
    "entrypoints": [
     {
      "url": "https://www.galeriamosina.pl/index.php?option=com_content&view=category&id=8&Itemid=114",
      "kind": "listing",
      "confidence": 0.9,
-     "via": "llm"
+     "via": "llm",
+     "barrenRuns": 1
     }
    ]
   },
@@ -699,7 +770,7 @@
    "town": "Komorniki",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "reach": "ok",
    "entrypoints": [
     {
@@ -716,8 +787,8 @@
      "kind": "rss",
      "url": "https://www.komorniki.pl/rss/aktualnosci_pl.xml",
      "itemsSeen": 1000,
-     "datesParsed": 1000,
-     "checked": "2026-08-01"
+     "datesParsed": 295,
+     "checked": "2026-08-02"
     }
    ]
   },
@@ -729,7 +800,7 @@
    "town": "Komorniki",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "reach": "ok",
    "entrypoints": [
     {
@@ -746,8 +817,8 @@
      "kind": "rss",
      "url": "https://www.gokkomorniki.pl/rss/aktualnosci_pl.xml",
      "itemsSeen": 369,
-     "datesParsed": 369,
-     "checked": "2026-08-01"
+     "datesParsed": 87,
+     "checked": "2026-08-02"
     }
    ]
   },
@@ -759,7 +830,7 @@
    "town": "Dopiewo",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "reach": "ok",
    "entrypoints": [
     {
@@ -781,7 +852,7 @@
    "town": "Dopiewo",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "reach": "ok",
    "entrypoints": [
     {
@@ -790,7 +861,8 @@
      "confidence": 0.9,
      "via": "llm",
      "detailPattern": "/kategorie/{slug}",
-     "detailCount": 11
+     "detailCount": 11,
+     "barrenRuns": 1
     }
    ],
    "capabilities": [
@@ -798,22 +870,22 @@
      "kind": "rss",
      "url": "https://gosir.dopiewo.pl/rss.xml",
      "itemsSeen": 2,
-     "datesParsed": 2,
-     "checked": "2026-08-01"
+     "datesParsed": 1,
+     "checked": "2026-08-02"
     },
     {
      "kind": "rss",
      "url": "https://gosir.dopiewo.pl/rss/wydarzenia_pl.xml",
      "itemsSeen": 10,
-     "datesParsed": 10,
-     "checked": "2026-08-01"
+     "datesParsed": 2,
+     "checked": "2026-08-02"
     },
     {
      "kind": "rss",
      "url": "https://gosir.dopiewo.pl/rss/aktualnosci_pl.xml",
      "itemsSeen": 10,
-     "datesParsed": 10,
-     "checked": "2026-08-01"
+     "datesParsed": 2,
+     "checked": "2026-08-02"
     }
    ]
   },
@@ -825,7 +897,7 @@
    "town": "Tarnowo Podgórne",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "reach": "ok",
    "entrypoints": [
     {
@@ -834,7 +906,8 @@
      "confidence": 0.9,
      "via": "llm",
      "detailPattern": "/wydarzenia/{slug}",
-     "detailCount": 6
+     "detailCount": 6,
+     "barrenRuns": 1
     }
    ],
    "capabilities": [
@@ -842,15 +915,15 @@
      "kind": "rss",
      "url": "https://www.tarnowo-podgorne.pl/feed/",
      "itemsSeen": 6,
-     "datesParsed": 6,
-     "checked": "2026-08-01"
+     "datesParsed": 2,
+     "checked": "2026-08-02"
     },
     {
      "kind": "wp-rest",
      "url": "https://www.tarnowo-podgorne.pl/wp-json/wp/v2/wydarzenia?per_page=5",
      "itemsSeen": 5,
      "datesParsed": 0,
-     "checked": "2026-08-01"
+     "checked": "2026-08-02"
     }
    ]
   },
@@ -862,7 +935,7 @@
    "town": "Tarnowo Podgórne",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "reach": "ok",
    "entrypoints": [
     {
@@ -879,8 +952,8 @@
      "kind": "rss",
      "url": "https://goksezam.pl/aktualnosci.xml",
      "itemsSeen": 10,
-     "datesParsed": 10,
-     "checked": "2026-08-01"
+     "datesParsed": 0,
+     "checked": "2026-08-02"
     }
    ]
   },
@@ -892,7 +965,7 @@
    "town": "Rokietnica",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "reach": "ok",
    "entrypoints": [
     {
@@ -909,15 +982,15 @@
      "kind": "rss",
      "url": "https://rokietnica.pl/rss/aktualnosci_pl.xml",
      "itemsSeen": 217,
-     "datesParsed": 217,
-     "checked": "2026-08-01"
+     "datesParsed": 54,
+     "checked": "2026-08-02"
     },
     {
      "kind": "rss",
      "url": "https://rokietnica.pl/rss/informacje_pl.xml",
      "itemsSeen": 1,
      "datesParsed": 1,
-     "checked": "2026-08-01"
+     "checked": "2026-08-02"
     }
    ]
   },
@@ -933,7 +1006,7 @@
     "https://kultura.rokietnica.pl/"
    ],
    "reach": "ok",
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "notes": "URL naprawiony 2026-07-30 (stary w previous_urls)",
    "entrypoints": [
     {
@@ -943,7 +1016,8 @@
      "via": "llm",
      "detailPattern": "/{id}/{id}/{id}/{slug}",
      "detailCount": 10,
-     "paginated": true
+     "paginated": true,
+     "barrenRuns": 1
     }
    ],
    "capabilities": [
@@ -951,8 +1025,8 @@
      "kind": "rss",
      "url": "https://gokrokietnica.pl/feed/",
      "itemsSeen": 10,
-     "datesParsed": 10,
-     "checked": "2026-08-01"
+     "datesParsed": 1,
+     "checked": "2026-08-02"
     }
    ]
   },
@@ -964,7 +1038,7 @@
    "town": "Suchy Las",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-07-30",
+   "checked": "2026-08-02",
    "reach": "ok",
    "entrypoints": [
     {
@@ -981,43 +1055,43 @@
      "kind": "rss",
      "url": "https://www.suchylas.pl/feed/",
      "itemsSeen": 10,
-     "datesParsed": 10,
-     "checked": "2026-07-30"
+     "datesParsed": 3,
+     "checked": "2026-08-02"
     },
     {
      "kind": "rss",
      "url": "https://www.suchylas.pl/comments/feed/",
      "itemsSeen": 1,
-     "datesParsed": 1,
-     "checked": "2026-07-30"
+     "datesParsed": 0,
+     "checked": "2026-08-02"
     },
     {
      "kind": "wp-rest",
      "url": "https://www.suchylas.pl/wp-json/wp/v2/tribe_venue?per_page=5",
      "itemsSeen": 5,
      "datesParsed": 0,
-     "checked": "2026-07-30"
+     "checked": "2026-08-02"
     },
     {
      "kind": "tribe",
      "url": "https://www.suchylas.pl/wp-json/tribe/events/v1/events",
      "itemsSeen": 8,
      "datesParsed": 8,
-     "checked": "2026-07-30"
+     "checked": "2026-08-02"
     },
     {
      "kind": "ical",
      "url": "https://www.suchylas.pl/wydarzenia/category/kultura/?ical=1",
      "itemsSeen": 1,
      "datesParsed": 3,
-     "checked": "2026-07-30"
+     "checked": "2026-08-02"
     },
     {
      "kind": "jsonld",
      "url": "https://www.suchylas.pl/wydarzenia/category/kultura/",
      "itemsSeen": 8,
      "datesParsed": 8,
-     "checked": "2026-07-30"
+     "checked": "2026-08-02"
     }
    ]
   },
@@ -1029,14 +1103,14 @@
    "town": "Suchy Las",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "reach": "ok",
    "entrypoints": [
     {
      "url": "https://www.osrodekkultury.pl/",
      "kind": "listing",
-     "confidence": 0.6,
-     "via": "heuristic",
+     "confidence": 0.9,
+     "via": "llm",
      "detailPattern": "/wydarzenia/{slug}",
      "detailCount": 6
     }
@@ -1046,15 +1120,15 @@
      "kind": "rss",
      "url": "https://osrodekkultury.pl/feed/",
      "itemsSeen": 1,
-     "datesParsed": 1,
-     "checked": "2026-08-01"
+     "datesParsed": 0,
+     "checked": "2026-08-02"
     },
     {
      "kind": "rss",
      "url": "https://www.osrodekkultury.pl/rss.xml",
      "itemsSeen": 50,
      "datesParsed": 0,
-     "checked": "2026-08-01"
+     "checked": "2026-08-02"
     }
    ]
   },
@@ -1066,7 +1140,7 @@
    "town": "Czerwonak",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "reach": "ok",
    "entrypoints": [
     {
@@ -1075,7 +1149,8 @@
      "confidence": 0.9,
      "via": "llm",
      "detailPattern": "/pl/mieszkaniec/pl/mieszkaniec/{slug}/{id}/kwietnia/sport/{slug}/{id}",
-     "detailCount": 35
+     "detailCount": 35,
+     "barrenRuns": 1
     }
    ]
   },
@@ -1091,14 +1166,16 @@
     "https://goksokol.pl/"
    ],
    "reach": "ok",
-   "checked": "2026-07-30",
+   "checked": "2026-08-02",
    "notes": "URL naprawiony 2026-07-30 (stary w previous_urls)",
    "entrypoints": [
     {
-     "url": "https://gok-sokol.pl/wp-admin/admin-ajax.php?action=eventon_ics_download&event_id=27886&sunix=20260706T070000Z&eunix=20260814T120000Z&loca=&locn=",
+     "url": "https://gok-sokol.pl/",
      "kind": "listing",
      "confidence": 0.9,
-     "via": "llm"
+     "via": "llm",
+     "detailPattern": "/wydarzenia/{slug}",
+     "detailCount": 4
     }
    ],
    "capabilities": [
@@ -1106,15 +1183,8 @@
      "kind": "rss",
      "url": "https://gok-sokol.pl/feed/",
      "itemsSeen": 10,
-     "datesParsed": 10,
-     "checked": "2026-07-30"
-    },
-    {
-     "kind": "ical",
-     "url": "https://gok-sokol.pl/wp-admin/admin-ajax.php?action=eventon_ics_download&event_id=27886&sunix=20260706T070000Z&eunix=20260814T120000Z&loca=&locn=&ical=1",
-     "itemsSeen": 1,
-     "datesParsed": 1,
-     "checked": "2026-07-30"
+     "datesParsed": 4,
+     "checked": "2026-08-02"
     }
    ]
   },
@@ -1126,9 +1196,9 @@
    "town": "Swarzędz",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "reach": "ok",
-   "notes": "martwy URL (2026-07-30): Wszyscy kandydaci to strony główne/ogólne bez listy wydarzeń; brak odnośników do podstron z kalendarzem imprez. | 2026-08-01: Kandydaci zawierają tylko fragmenty nagłówka/stopki strony bez treści — brak listy wydarzeń, dat lub aktualności."
+   "notes": "martwy URL (2026-07-30): Wszyscy kandydaci to strony główne/ogólne bez listy wydarzeń; brak odnośników do podstron z kalendarzem imprez. | 2026-08-01: Kandydaci zawierają tylko fragmenty nagłówka/stopki strony bez treści — brak listy wydarzeń, dat lub aktualności. | 2026-08-02: Kandydaci zawierają tylko fragmenty nagłówków i stopek strony bez treści wydarzeń; brak danych o listach imprez, datach lub kalendarzu."
   },
   {
    "id": "swarzedz-ok",
@@ -1138,7 +1208,7 @@
    "town": "Swarzędz",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "previous_urls": [
     "https://www.ok-swarzedz.pl/"
    ],
@@ -1151,7 +1221,8 @@
      "via": "llm",
      "detailPattern": "/tag/{slug}",
      "detailCount": 25,
-     "paginated": true
+     "paginated": true,
+     "barrenRuns": 1
     }
    ]
   },
@@ -1163,7 +1234,7 @@
    "town": "Kórnik",
    "fetch": "plain",
    "verified": true,
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "reach": "ok",
    "entrypoints": [
     {
@@ -1180,8 +1251,8 @@
      "kind": "rss",
      "url": "https://www.kornik.pl/rss.xml",
      "itemsSeen": 10,
-     "datesParsed": 10,
-     "checked": "2026-08-01"
+     "datesParsed": 1,
+     "checked": "2026-08-02"
     }
    ]
   },
@@ -1197,7 +1268,7 @@
     "https://kok.kornik.pl/"
    ],
    "reach": "ok",
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "notes": "URL naprawiony 2026-07-30 (stary w previous_urls)",
    "entrypoints": [
     {
@@ -1215,15 +1286,15 @@
      "kind": "rss",
      "url": "https://www.kornickiosrodekkultury.pl/?format=feed&amp;type=rss",
      "itemsSeen": 6,
-     "datesParsed": 6,
-     "checked": "2026-08-01"
+     "datesParsed": 1,
+     "checked": "2026-08-02"
     },
     {
      "kind": "rss",
      "url": "https://www.kornickiosrodekkultury.pl/?format=feed&amp;type=atom",
      "itemsSeen": 6,
-     "datesParsed": 6,
-     "checked": "2026-08-01"
+     "datesParsed": 1,
+     "checked": "2026-08-02"
     }
    ]
   },
@@ -1239,8 +1310,8 @@
     "https://www.idpan.poznan.pl/arboretum/"
    ],
    "reach": "ok",
-   "checked": "2026-08-01",
-   "notes": "URL naprawiony 2026-07-30 (stary w previous_urls) | martwy URL (2026-07-30): Wszyscy kandydaci to podstrony o strukturze instytutu, edukacji i arboretum — brak dedykowanej listy wydarzeń z datami. | 2026-08-01: Wszyscy kandydaci to podstrony o strukturze instytutu, edukacji i arboretum — brak dedykowanej listy wydarzeń z datami."
+   "checked": "2026-08-02",
+   "notes": "URL naprawiony 2026-07-30 (stary w previous_urls) | martwy URL (2026-07-30): Wszyscy kandydaci to podstrony o strukturze instytutu, edukacji i arboretum — brak dedykowanej listy wydarzeń z datami. | 2026-08-01: Wszyscy kandydaci to podstrony o strukturze instytutu, edukacji i arboretum — brak dedykowanej listy wydarzeń z datami. | 2026-08-02: Wszyscy kandydaci to podstrony instytutu naukowego (o kierownictwie, szkole doktorskiej, arboretum) bez listy nadchodzących wydarzeń z datami — brakuje dedykowanej podstrony z kalendarzem imprez."
   },
   {
    "id": "kleszczewo-gokis",
@@ -1254,7 +1325,7 @@
     "https://gokis-kleszczewo.pl/"
    ],
    "reach": "ok",
-   "checked": "2026-08-01",
+   "checked": "2026-08-02",
    "notes": "URL naprawiony 2026-07-30 (stary w previous_urls)",
    "entrypoints": [
     {
@@ -1271,8 +1342,618 @@
      "kind": "rss",
      "url": "https://gokis.kleszczewo.pl/rss/aktualnosci_pl.xml",
      "itemsSeen": 318,
-     "datesParsed": 318,
-     "checked": "2026-08-01"
+     "datesParsed": 103,
+     "checked": "2026-08-02"
+    }
+   ]
+  },
+  {
+   "id": "ok-lubon-wydarzenia",
+   "name": "Ośrodek Kultury w Luboniu – Koncerty i wydarzenia",
+   "type": "culture_center",
+   "url": "https://www.oklubon.pl/wydarzenia",
+   "town": "Luboń",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.98,
+   "provenance": {
+    "run": "2026-08-02T17:44:04.506Z",
+    "town": "Luboń",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Luboń dom kultury wydarzenia",
+    "hit": {
+     "title": "Koncerty i wydarzenia",
+     "url": "https://www.oklubon.pl/wydarzenia",
+     "desc": "Letnie półkolonie. 13 lipca 2026 - 24 lipca 2026 0:00 ; Budowa sali koncertowej w Luboniu. 3 lipca 2026 - 31 grudnia 2026 ; Wycieczka do Leszna. 2 lipca 2026 8:30 ..."
+    },
+    "confidence": 0.98,
+    "why": "Strona zawiera listę nadchodzących wydarzeń z datami (półkolonie, wycieczki, koncerty) publikowanych przez główną instytucję kultury w mieście.",
+    "archive": [
+     "raw/2026-08-02/discover-lubon/50e39e80af3b1533d66b530061b83e5ed7537a78ce145c99b0c292b178b35557.json",
+     "llm/2026-08-02/2026-08-02T17-44-04-506Z/discover-lubon/0001-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-02T17:44:44.485Z",
+     "url": "https://www.oklubon.pl/wydarzenia",
+     "ok": true,
+     "ms": 417,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 104543
+    }
+   },
+   "lastSeenRun": "2026-08-02T18:15:26.346Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-02",
+   "entrypoints": [
+    {
+     "url": "https://www.oklubon.pl/wydarzenia",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/wydarzenia/{slug}",
+     "detailCount": 23
+    }
+   ],
+   "capabilities": [
+    {
+     "kind": "rss",
+     "url": "https://www.oklubon.pl/feed",
+     "itemsSeen": 10,
+     "datesParsed": 0,
+     "checked": "2026-08-02"
+    }
+   ]
+  },
+  {
+   "id": "lubon-pl-kalendarz",
+   "name": "Urząd Miasta Luboń – Kalendarz wydarzeń miejskich",
+   "type": "city_portal",
+   "url": "https://lubon.pl/kalendarium/5/1/5",
+   "town": "Luboń",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.95,
+   "notes": "Dodatkowa strona z pełnym kalendarzem: https://lubon.pl/news/content/4766",
+   "provenance": {
+    "run": "2026-08-02T17:44:04.506Z",
+    "town": "Luboń",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Luboń kalendarz wydarzeń urząd",
+    "hit": {
+     "title": "Wydarzenia kulturalne - Kalendarz wydarzeń",
+     "url": "https://lubon.pl/kalendarium/5/1/5",
+     "desc": "Kalendarz wydarzeń: Wyszukiwarka ... Wszystkie prawa zastrzeżone. Projekt i wykonanie: Logonet Sp. z o.o.. Projekt i wykonanie: Logonet Sp. z o.o.. W ramach ..."
+    },
+    "confidence": 0.95,
+    "why": "Oficjalny portal urzędu miasta zawiera dedykowany kalendarz wydarzeń kulturalnych z datami imprez miejskich.",
+    "archive": [
+     "raw/2026-08-02/discover-lubon/50e39e80af3b1533d66b530061b83e5ed7537a78ce145c99b0c292b178b35557.json",
+     "llm/2026-08-02/2026-08-02T17-44-04-506Z/discover-lubon/0001-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-02T17:44:49.430Z",
+     "url": "https://lubon.pl/kalendarium/5/1/5",
+     "ok": true,
+     "ms": 452,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 89440
+    }
+   },
+   "lastSeenRun": "2026-08-02T18:15:26.346Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-02",
+   "entrypoints": [
+    {
+     "url": "https://lubon.pl/kalendarium/1/5",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/artykuly/{id}/{slug}",
+     "detailCount": 56
+    }
+   ],
+   "capabilities": [
+    {
+     "kind": "rss",
+     "url": "https://lubon.pl/atom",
+     "itemsSeen": 100,
+     "datesParsed": 18,
+     "checked": "2026-08-02"
+    },
+    {
+     "kind": "rss",
+     "url": "https://lubon.pl/rss",
+     "itemsSeen": 100,
+     "datesParsed": 18,
+     "checked": "2026-08-02"
+    }
+   ]
+  },
+  {
+   "id": "lubon-pl-wydarzenia",
+   "name": "Urząd Miasta Luboń – Wydarzenia",
+   "type": "city_portal",
+   "url": "https://lubon.pl/artykuly/350/wydarzenia",
+   "town": "Luboń",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.9,
+   "provenance": {
+    "run": "2026-08-02T17:44:04.506Z",
+    "town": "Luboń",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Luboń kalendarz wydarzeń urząd",
+    "hit": {
+     "title": "Wydarzenia - Urząd Miasta Luboń portal informacyjny",
+     "url": "https://lubon.pl/artykuly/350/wydarzenia",
+     "desc": "Kalendarz imprez miejskich w 2026 roku · Stacja Luboń · Oferta partnerska · Relacje z wydarzeń miejskich · Wydarzenia pod honorowym patronatem Burmistrz Miasta ..."
+    },
+    "confidence": 0.9,
+    "why": "Sekcja wydarzeń portalu urzędu miasta zawiera opisy imprez miejskich takich jak Wigilia Miejska i inne cykliczne uroczystości.",
+    "archive": [
+     "raw/2026-08-02/discover-lubon/50e39e80af3b1533d66b530061b83e5ed7537a78ce145c99b0c292b178b35557.json",
+     "llm/2026-08-02/2026-08-02T17-44-04-506Z/discover-lubon/0001-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-02T17:44:54.788Z",
+     "url": "https://lubon.pl/artykuly/350/wydarzenia",
+     "ok": true,
+     "ms": 191,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 117218
+    }
+   },
+   "lastSeenRun": "2026-08-02T17:44:04.506Z",
+   "missedRuns": 1,
+   "reach": "ok",
+   "checked": "2026-08-02",
+   "entrypoints": [
+    {
+     "url": "https://lubon.pl/artykuly/350/wydarzenia",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/artykuly/{id}/{slug}",
+     "detailCount": 63,
+     "barrenRuns": 1
+    }
+   ],
+   "capabilities": [
+    {
+     "kind": "rss",
+     "url": "https://lubon.pl/atom",
+     "itemsSeen": 100,
+     "datesParsed": 18,
+     "checked": "2026-08-02"
+    },
+    {
+     "kind": "rss",
+     "url": "https://lubon.pl/rss",
+     "itemsSeen": 100,
+     "datesParsed": 18,
+     "checked": "2026-08-02"
+    }
+   ]
+  },
+  {
+   "id": "fb-miasto-lubon",
+   "name": "Miasto Luboń – Facebook",
+   "type": "fb_page",
+   "url": "https://www.facebook.com/MiastoLubon",
+   "town": "Luboń",
+   "fetch": "fb",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.93,
+   "provenance": {
+    "run": "2026-08-02T17:44:04.506Z",
+    "town": "Luboń",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com Luboń wydarzenia",
+    "hit": {
+     "title": "Miasto Luboń | Lubon",
+     "url": "https://www.facebook.com/MiastoLubon/",
+     "desc": "W najbliższą sobotę, 25 lipca 2026 roku zapraszamy Was na plaża miejska LUBOŃ na wydarzenie w stylu latynoamerykańskim „Kolorowa Fiesta” Co znajdziecie w ..."
+    },
+    "confidence": 0.93,
+    "why": "Oficjalny fanpage miasta zaprasza na konkretne wydarzenia z datami (Kolorowa Fiesta, Dni Lubonia, treningi).",
+    "archive": [
+     "raw/2026-08-02/discover-lubon/50e39e80af3b1533d66b530061b83e5ed7537a78ce145c99b0c292b178b35557.json",
+     "llm/2026-08-02/2026-08-02T17-44-04-506Z/discover-lubon/0001-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-02T18:15:26.346Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "fb-biblioteka-lubon",
+   "name": "Biblioteka Miejska w Luboniu – Facebook",
+   "type": "fb_page",
+   "url": "https://www.facebook.com/biblioteka.lubon",
+   "town": "Luboń",
+   "fetch": "fb",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.88,
+   "provenance": {
+    "run": "2026-08-02T17:44:04.506Z",
+    "town": "Luboń",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Luboń biblioteka wydarzenia dla dzieci",
+    "hit": {
+     "title": "Biblioteka Miejska w Luboniu | Lubon",
+     "url": "https://www.facebook.com/biblioteka.lubon/?locale=pl_PL",
+     "desc": "W tym czasie dzieje się u nas naprawdę dużo: zajęcia plastyczne, wydarzenia dla mieszkańców, spotkania klubowe… ... Nowości w Wypożyczalni dla Dzieci ..."
+    },
+    "confidence": 0.88,
+    "why": "Fanpage biblioteki informuje o zajęciach plastycznych, wydarzeniach dla mieszkańców i spotkaniach klubowych z datami.",
+    "archive": [
+     "raw/2026-08-02/discover-lubon/50e39e80af3b1533d66b530061b83e5ed7537a78ce145c99b0c292b178b35557.json",
+     "llm/2026-08-02/2026-08-02T17-44-04-506Z/discover-lubon/0001-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-02T18:15:26.346Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "fb-losir-lubon",
+   "name": "LOSiR Luboń – Facebook",
+   "type": "fb_page",
+   "url": "https://www.facebook.com/losir.lubon",
+   "town": "Luboń",
+   "fetch": "fb",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.82,
+   "provenance": {
+    "run": "2026-08-02T17:44:04.506Z",
+    "town": "Luboń",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Luboń OSiR wydarzenia",
+    "hit": {
+     "title": "LOSIR Luboń | Lubon",
+     "url": "https://www.facebook.com/losir.lubon/?locale=pl_PL",
+     "desc": "Catering Lubońskie Smaki zawsze chętnie wspiera wydarzenia pełne dobrej energii, rodzinnej atmosfery i działań promujących zdrowie wśród najmłodszych."
+    },
+    "confidence": 0.82,
+    "why": "Fanpage Lubońskiego Ośrodka Sportu i Rekreacji publikuje informacje o imprezach sportowych i wydarzeniach w hali widowiskowo-sportowej.",
+    "archive": [
+     "raw/2026-08-02/discover-lubon/50e39e80af3b1533d66b530061b83e5ed7537a78ce145c99b0c292b178b35557.json",
+     "llm/2026-08-02/2026-08-02T17-44-04-506Z/discover-lubon/0001-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-02T18:15:26.346Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "gazeta-lubon-kalendarium",
+   "name": "Gazeta Lubońska – Kalendarium wydarzeń",
+   "type": "city_portal",
+   "url": "https://www.gazeta-lubon.pl/2026/losir-kalendarium/",
+   "town": "Luboń",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.8,
+   "notes": "URL prowadzi do konkretnego wpisu; warto monitorować kategorię kalendarza na gazeta-lubon.pl",
+   "provenance": {
+    "run": "2026-08-02T17:44:04.506Z",
+    "town": "Luboń",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Luboń OSiR wydarzenia",
+    "hit": {
+     "title": "LOSiR - kalendarium",
+     "url": "https://www.gazeta-lubon.pl/2026/losir-kalendarium/",
+     "desc": "Marcowe imprezy sportowe w LOSiR. 7 marca, godz. 18.30-22: Lubońska Amatorska Liga Siatkówki (wstęp wolny). 8, 15, 22 i 29 marca, godz."
+    },
+    "confidence": 0.8,
+    "why": "Lokalna gazeta publikuje szczegółowe kalendarium imprez sportowych i miejskich z datami i godzinami.",
+    "archive": [
+     "raw/2026-08-02/discover-lubon/50e39e80af3b1533d66b530061b83e5ed7537a78ce145c99b0c292b178b35557.json",
+     "llm/2026-08-02/2026-08-02T17-44-04-506Z/discover-lubon/0001-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-02T17:45:12.664Z",
+     "url": "https://www.gazeta-lubon.pl/2026/losir-kalendarium/",
+     "ok": true,
+     "ms": 330,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 52926
+    }
+   },
+   "lastSeenRun": "2026-08-02T17:44:04.506Z",
+   "missedRuns": 1,
+   "reach": "ok",
+   "checked": "2026-08-02",
+   "entrypoints": [
+    {
+     "url": "https://www.gazeta-lubon.pl/2026/losir-kalendarium/",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/{id}/{slug}",
+     "detailCount": 6
+    }
+   ],
+   "capabilities": [
+    {
+     "kind": "rss",
+     "url": "https://www.gazeta-lubon.pl/feed/",
+     "itemsSeen": 15,
+     "datesParsed": 2,
+     "checked": "2026-08-02"
+    },
+    {
+     "kind": "rss",
+     "url": "https://www.gazeta-lubon.pl/comments/feed/",
+     "itemsSeen": 15,
+     "datesParsed": 0,
+     "checked": "2026-08-02"
+    }
+   ]
+  },
+  {
+   "id": "fb-wydarzenia-w-luboniu",
+   "name": "Wydarzenia w Luboniu – grupa Facebook",
+   "type": "fb_group",
+   "url": "https://www.facebook.com/groups/947448988718568",
+   "town": "Luboń",
+   "fetch": "fb_group",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.85,
+   "provenance": {
+    "run": "2026-08-02T17:44:04.506Z",
+    "town": "Luboń",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com Luboń wydarzenia",
+    "hit": {
+     "title": "Wydarzenia w Luboniu",
+     "url": "https://www.facebook.com/groups/947448988718568/",
+     "desc": "Co robicie w poniedziałek o 17:30? Bo ja zapraszam na rower. W ostatnich dniach czerwca dokręcamy kilometry dla Miasto Luboń w rywalizacji Aktywne Miasta."
+    },
+    "confidence": 0.85,
+    "why": "Publiczna grupa o nazwie wprost „Wydarzenia w Luboniu",
+    "archive": [
+     "raw/2026-08-02/discover-lubon/50e39e80af3b1533d66b530061b83e5ed7537a78ce145c99b0c292b178b35557.json",
+     "llm/2026-08-02/2026-08-02T17-44-04-506Z/discover-lubon/0001-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-02T18:15:26.346Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "fb-lubon-grupa-informacyjna",
+   "name": "Luboń – grupa informacyjno-dyskusyjna Facebook",
+   "type": "fb_group",
+   "url": "https://www.facebook.com/groups/15461809069",
+   "town": "Luboń",
+   "fetch": "fb_group",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.72,
+   "provenance": {
+    "run": "2026-08-02T17:44:04.506Z",
+    "town": "Luboń",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com/groups Luboń",
+    "hit": {
+     "title": "Luboń",
+     "url": "https://www.facebook.com/groups/15461809069/",
+     "desc": "Grupa stworzona w celach informacyjnych oraz dyskusyjnych dla mieszkańców miasta Luboń. Zanim dołączysz do grupy zapoznaj się z naszymi regułami i odpowiedz ..."
+    },
+    "confidence": 0.72,
+    "why": "Publiczna grupa informacyjna dla mieszkańców Lubonia, w której pojawiają się ogłoszenia o lokalnych wydarzeniach.",
+    "archive": [
+     "raw/2026-08-02/discover-lubon/50e39e80af3b1533d66b530061b83e5ed7537a78ce145c99b0c292b178b35557.json",
+     "llm/2026-08-02/2026-08-02T17-44-04-506Z/discover-lubon/0001-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-02T18:15:26.346Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "fb-mieszkancy-lubonia-675",
+   "name": "Mieszkańcy Lubonia – grupa Facebook",
+   "type": "fb_group",
+   "url": "https://www.facebook.com/groups/675331569965320",
+   "town": "Luboń",
+   "fetch": "fb_group",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.7,
+   "provenance": {
+    "run": "2026-08-02T17:44:04.506Z",
+    "town": "Luboń",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com/groups Luboń",
+    "hit": {
+     "title": "Mieszkańcy Lubonia",
+     "url": "https://www.facebook.com/groups/675331569965320/",
+     "desc": "Luboń - 17:25 - Armii Krajowej 27 i 21:10 - przy SP6. Inne punkty odbioru widoczne są na zdjęciu Dla osób, które nie miały jeszcze okazji spróbować ..."
+    },
+    "confidence": 0.7,
+    "why": "Otwarta grupa mieszkańców, w której pojawiają się posty z zaproszeniami na lokalne imprezy i wydarzenia.",
+    "archive": [
+     "raw/2026-08-02/discover-lubon/50e39e80af3b1533d66b530061b83e5ed7537a78ce145c99b0c292b178b35557.json",
+     "llm/2026-08-02/2026-08-02T17-44-04-506Z/discover-lubon/0001-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-02T18:15:26.346Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "fb-lubon-ogloszenia",
+   "name": "LUBOŃ – grupa Facebook",
+   "type": "fb_group",
+   "url": "https://www.facebook.com/groups/252325852818718",
+   "town": "Luboń",
+   "fetch": "fb_group",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.68,
+   "provenance": {
+    "run": "2026-08-02T17:44:04.506Z",
+    "town": "Luboń",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com/groups Luboń",
+    "hit": {
+     "title": "LUBOŃ",
+     "url": "https://www.facebook.com/groups/252325852818718/",
+     "desc": "Grupa skierowana dla mieszkańców Lubonia i sympatyków naszego miasta. W tej grupie nie poruszamy spraw polityki i spraw bez związku z naszym miastem."
+    },
+    "confidence": 0.68,
+    "why": "Publiczna grupa dla mieszkańców Lubonia skupiona na sprawach lokalnych, bez polityki – mieszkańcy wrzucają tam informacje o wydarzeniach.",
+    "archive": [
+     "raw/2026-08-02/discover-lubon/50e39e80af3b1533d66b530061b83e5ed7537a78ce145c99b0c292b178b35557.json",
+     "llm/2026-08-02/2026-08-02T17-44-04-506Z/discover-lubon/0001-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-02T17:44:04.506Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "lubon-pl-kalendarz-2026",
+   "name": "Urząd Miasta Luboń - Kalendarz wydarzeń miejskich 2026",
+   "type": "city_portal",
+   "url": "https://lubon.pl/news/content/4766",
+   "town": "Luboń",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.93,
+   "notes": "Coroczny zbiorczy kalendarz imprez miejskich publikowany przez UM Luboń.",
+   "provenance": {
+    "run": "2026-08-02T18:15:26.346Z",
+    "town": "Luboń",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Luboń dom kultury wydarzenia",
+    "hit": {
+     "title": "KALENDARZ WYDARZEŃ MIEJSKICH W 2026 ROKU",
+     "url": "https://lubon.pl/news/content/4766",
+     "desc": "25 stycznia, FINAŁ WIELKIEJ ORKIESTRY ŚWIĄTECZNEJ POMOCY, Ośrodek Kultury w Luboniu ; 6 lutego o godz. 18.30. GALA ROZDANIA NAGRÓD „SIEWCA ROKU 2025\". Hala ..."
+    },
+    "confidence": 0.93,
+    "why": "Strona zawiera pełny kalendarz wydarzeń miejskich na 2026 rok z datami i miejscami imprez.",
+    "archive": [
+     "raw/2026-08-02/discover-lubon/22dc4e3663161a90d10031400c0b98906f02818287583d8cf1f8804305c3715d.json",
+     "llm/2026-08-02/2026-08-02T18-15-26-346Z/discover-lubon/0001-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-02T18:23:53.046Z",
+     "url": "https://lubon.pl/news/content/4766",
+     "ok": true,
+     "ms": 1436,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 165104
+    }
+   },
+   "lastSeenRun": "2026-08-02T18:15:26.346Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-02",
+   "entrypoints": [
+    {
+     "url": "https://lubon.pl/artykuly/350/wydarzenia",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/artykuly/{id}/{slug}",
+     "detailCount": 63
+    }
+   ],
+   "capabilities": [
+    {
+     "kind": "rss",
+     "url": "https://lubon.pl/atom",
+     "itemsSeen": 100,
+     "datesParsed": 18,
+     "checked": "2026-08-02"
+    },
+    {
+     "kind": "rss",
+     "url": "https://lubon.pl/rss",
+     "itemsSeen": 100,
+     "datesParsed": 18,
+     "checked": "2026-08-02"
+    }
+   ]
+  },
+  {
+   "id": "gazeta-lubon-kalendarium-2",
+   "name": "Gazeta Lubońska - Kalendarium wydarzeń miejskich",
+   "type": "city_portal",
+   "url": "https://www.gazeta-lubon.pl/2025/kalendarium-wydarzen-miejskich-4/",
+   "town": "Luboń",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.78,
+   "notes": "Adres może się zmieniać co rok - warto sprawdzić aktualny URL.",
+   "provenance": {
+    "run": "2026-08-02T18:15:26.346Z",
+    "town": "Luboń",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Luboń kalendarz wydarzeń urząd",
+    "hit": {
+     "title": "Kalendarium wydarzeń miejskich",
+     "url": "https://www.gazeta-lubon.pl/2025/kalendarium-wydarzen-miejskich-4/",
+     "desc": "11 listopada – 13. Luboński Bieg Niepodległości. Organizator: Ronin Running. Wydarzenie dofinansowane z budżetu Miasta Luboń. 16 listopada, godz ..."
+    },
+    "confidence": 0.78,
+    "why": "Lokalna gazeta publikuje datowane kalendarium wydarzeń miejskich z podziałem na miesiące i organizatorów.",
+    "archive": [
+     "raw/2026-08-02/discover-lubon/22dc4e3663161a90d10031400c0b98906f02818287583d8cf1f8804305c3715d.json",
+     "llm/2026-08-02/2026-08-02T18-15-26-346Z/discover-lubon/0001-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-02T18:23:58.793Z",
+     "url": "https://www.gazeta-lubon.pl/2025/kalendarium-wydarzen-miejskich-4/",
+     "ok": true,
+     "ms": 116,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 55546
+    }
+   },
+   "lastSeenRun": "2026-08-02T18:15:26.346Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-02",
+   "entrypoints": [
+    {
+     "url": "https://www.gazeta-lubon.pl/2025/kalendarium-wydarzen-miejskich-4/",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/{id}/{slug}",
+     "detailCount": 5
+    }
+   ],
+   "capabilities": [
+    {
+     "kind": "rss",
+     "url": "https://www.gazeta-lubon.pl/feed/",
+     "itemsSeen": 15,
+     "datesParsed": 2,
+     "checked": "2026-08-02"
+    },
+    {
+     "kind": "rss",
+     "url": "https://www.gazeta-lubon.pl/comments/feed/",
+     "itemsSeen": 15,
+     "datesParsed": 0,
+     "checked": "2026-08-02"
     }
    ]
   }

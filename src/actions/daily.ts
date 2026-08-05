@@ -12,11 +12,13 @@ import { setCallRecorder } from "../adapters/openrouter.js";
 import {
   archiveEnabled, archiveEventsFull, archiveLlmCall, archiveStats, beginRun,
 } from "../adapters/supabase-archive.js";
+import { withoutCamps } from "../pipeline/camps.js";
 import { dedupe } from "../pipeline/dedupe.js";
 import { harvestEventUrls, isEventUrl } from "../pipeline/facebook.js";
 import { resolveFbEvents } from "../pipeline/extract/fb-events.js";
 import { newSourceRun, processSource } from "../pipeline/extract/process-source.js";
 import { redactEvents, redactText } from "../pipeline/pii.js";
+import { foldSeries } from "../pipeline/series.js";
 import { auditStore, redactTrail } from "../reporting/audit-trail.js";
 import { recordCosts } from "../reporting/cost-ledger.js";
 import { buildDailyCosts } from "../reporting/daily-costs.js";
@@ -103,6 +105,9 @@ async function run(): Promise<void> {
   }
 
   beginAuditSource(RUN_SCOPE);
+  // przed scalaniem, bo półkolonie potrafią przyjść z dwóch źródeł naraz i wtedy dedupe
+  // wybierałby zwycięzcę spośród rekordów, z których żaden nie ma prawa się opublikować
+  allEvents = withoutCamps(allEvents);
   const merged = dedupe(allEvents);
   allEvents = merged.events;
   // przegrany trafia do śladu SWOJEGO źródła — tam go szuka ktoś, kto pyta „czemu to zniknęło?"
@@ -113,6 +118,17 @@ async function run(): Promise<void> {
   }
   audit("dedupe.dropped", `scalanie: ${merged.dropped.length} duplikatów, zostaje ${allEvents.length} wydarzeń`,
     { dropped: merged.dropped.length, kept: allEvents.length });
+
+  // dopiero PO dedupe: tamto scala to samo wydarzenie w tym samym dniu z różnych źródeł,
+  // to scala te same wydarzenia w różnych dniach. Odwrotna kolejność zwijałaby w serię
+  // duplikaty międzyźródłowe.
+  const folded = foldSeries(allEvents);
+  allEvents = folded.events;
+  if (folded.dropped.length) {
+    audit("series", `serie: ${folded.dropped.length} powtórzeń zwiniętych, `
+      + `zostaje ${allEvents.length} wydarzeń`,
+    { folded: folded.dropped.length, kept: allEvents.length });
+  }
 
   // pełna wersja (z kontaktami) do prywatnego archiwum — MUSI polecieć przed redakcją
   await archiveEventsFull({ generated: new Date().toISOString().slice(0, 10), startedAt, events: allEvents, errors });
@@ -129,8 +145,10 @@ async function run(): Promise<void> {
     if (sr.err) sr.err = redactText(sr.err, pii);
     for (const fu of sr.followups) if (fu.err) fu.err = redactText(fu.err, pii);
   }
-  // dopiero teraz: refy niosą tytuły, więc muszą powstać z rekordów PO redakcji
-  attachProduced(producedBy, merged.dropped);
+  // dopiero teraz: refy niosą tytuły, więc muszą powstać z rekordów PO redakcji.
+  // Wchłonięci przez serię idą razem z przegranymi dedupe — z punktu widzenia raportu
+  // źródła to ta sama odpowiedź: „dałeś ten rekord, wsiąkł w tamten".
+  attachProduced(producedBy, [...merged.dropped, ...folded.dropped]);
   audit("pii", `usunięto ${pii.phones} numerów komórkowych i ${pii.emails} adresów e-mail`,
     { phones: pii.phones, emails: pii.emails });
   audit("done", `publikacja: ${allEvents.length} wydarzeń, ${errors.length} błędów potoku`,

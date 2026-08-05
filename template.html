@@ -22,6 +22,8 @@
   .card h3{margin:0 0 3px;font-size:15px} .card h3 a{color:inherit;text-decoration:none} .card h3 a:hover{text-decoration:underline}
   .meta{font-size:12.5px;color:var(--muted)}
   .note{font-size:12px;color:#92400e;background:#fef3c7;border-radius:8px;padding:3px 8px;display:inline-block;margin-top:5px}
+  /* cykl to informacja, nie ostrzeżenie — stąd chłodny kolor, inny niż .note */
+  .cycle{font-size:12px;color:#3730a3;background:#e0e7ff;border-radius:8px;padding:3px 8px;display:inline-block;margin-top:5px}
   .tags{margin-top:6px;display:flex;flex-wrap:wrap;gap:5px}
   .tag{font-size:11px;padding:2px 8px;border-radius:999px;background:#f0ede5;color:#5b564b;cursor:pointer}
   .tag.family{background:var(--green-soft);color:var(--green)} .tag.age{background:#ffe4e6;color:#9f1239;font-weight:600}
@@ -59,7 +61,11 @@ const dni=["nd","pon","wt","śr","czw","pt","sob"];
 function nextWeekend(){const t=new Date();const sat=new Date(t);sat.setDate(t.getDate()+((6-t.getDay())%7));const sun=new Date(sat);sun.setDate(sat.getDate()+1);const f=d=>d.toISOString().slice(0,10);return[f(sat),f(sun)];}
 const WK=nextWeekend();
 const fmt=iso=>{const d=new Date(iso+"T12:00:00");return dni[d.getDay()]+" "+d.getDate()+"."+String(d.getMonth()+1).padStart(2,"0")};
-const inWk=e=>WK.includes(e.date_start)||(e.date_end&&e.date_start<=WK[1]&&e.date_end>=WK[0]);
+const TODAY=new Date().toISOString().slice(0,10);
+// wpis cykliczny ma pokazywać NAJBLIŻSZY termin, nie pierwszy z czerwca — inaczej seria
+// wisiałaby na początku listy przez cały sezon, z datą, która dawno minęła
+const nextDate=e=>(e.dates||[]).find(d=>d>=TODAY)||e.date_start;
+const inWk=e=>e.dates?e.dates.some(d=>d>=WK[0]&&d<=WK[1]):(WK.includes(e.date_start)||(e.date_end&&e.date_start<=WK[1]&&e.date_end>=WK[0]));
 function ageOk(e,w){if(w==null||isNaN(w))return true;const a=e.age||{};if(a.min!=null&&w<a.min)return false;if(a.max!=null&&w>a.max)return false;return true;}
 function matches(e){
   if(e.is_noise)return false;
@@ -72,14 +78,15 @@ function matches(e){
   return true;
 }
 function render(){
-  const evs=EVENTS.filter(matches).sort((a,b)=>(a.date_start||"").localeCompare(b.date_start||"")||(a.time_start||"").localeCompare(b.time_start||""));
+  const evs=EVENTS.filter(matches).sort((a,b)=>(nextDate(a)||"").localeCompare(nextDate(b)||"")||(a.time_start||"").localeCompare(b.time_start||""));
   document.getElementById("list").innerHTML=evs.map(e=>{
     const a=e.age||{},p=e.price||{};
     return `<div class="card">
-      <div class="when"><div class="d">${fmt(e.date_start)}${e.date_end?"<br>–"+fmt(e.date_end):""}</div><div class="t">${e.time_start||""}${e.time_end?"–"+e.time_end:""}</div></div>
+      <div class="when"><div class="d">${fmt(nextDate(e))}${e.date_end&&!e.dates?"<br>–"+fmt(e.date_end):""}</div><div class="t">${e.time_start||""}${e.time_end?"–"+e.time_end:""}</div></div>
       <div style="flex:1">
         <h3><a href="${e.source_url}" target="_blank" rel="noopener">${e.title}</a></h3>
         <div class="meta">📍 ${e.venue||"?"} · ${e.town||""}${e.geo?` · <a href="https://www.openstreetmap.org/?mlat=${e.geo.lat}&mlon=${e.geo.lon}#map=16/${e.geo.lat}/${e.geo.lon}" target="_blank">mapa</a>`:""}${e.registration?` · zapisy: ${e.registration}`:""}</div>
+        ${e.cycle?`<div class="cycle">🔁 ${e.cycle}</div>`:""}
         ${e.container?`<div class="meta">↳ część: ${e.container}</div>`:""}
         ${e.conditional?`<div class="note">⚠️ ${e.conditional}</div>`:""}
         ${e.sub_slots?`<div class="slots">${e.sub_slots.map(s=>`⏱ ${s.time} — ${s.label}${s.age&&s.age.label?" ("+s.age.label+")":""}`).join("<br>")}</div>`:""}

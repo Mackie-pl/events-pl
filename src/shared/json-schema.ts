@@ -11,7 +11,15 @@
  *
  * fillMissing() idzie w drugą stronę: łata odpowiedź modelu PRZED walidacją.
  */
-import type { TSchema } from "@sinclair/typebox";
+import { type TSchema, Type } from "@sinclair/typebox";
+
+/**
+ * Obiekt zamknięty na dodatkowe pola. `additionalProperties: false` to wymóg trybu strict
+ * structured outputs, nie ozdoba — a że dotyczy KAŻDEGO schematu, który wysyłamy na drut
+ * (wydarzenia i propozycje źródeł), konstruktor stoi tutaj, nie przy jednym z nich.
+ */
+export const closed = <T extends Record<string, TSchema>>(props: T) =>
+  Type.Object(props, { additionalProperties: false });
 
 /** Fragment JSON Schema w zakresie, w jakim czytają go funkcje z tego pliku. */
 interface Node {

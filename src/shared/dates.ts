@@ -27,10 +27,15 @@ export const DAY_NAMES = [
   "niedziela", "poniedziałek", "wtorek", "środa", "czwartek", "piątek", "sobota",
 ] as const;
 
+/** „27.07" — sama data, bez dnia tygodnia. Używa jej etykieta cyklu, gdzie dzień tygodnia jest już w treści. */
+export function fmtShortPl(iso: string): string {
+  const d = new Date(`${iso}T12:00:00Z`);
+  return `${d.getUTCDate()}.${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
+}
+
 /** „poniedziałek 27.07" — nagłówek sekcji digestu. */
 export function fmtDayPl(iso: string): string {
-  const d = new Date(`${iso}T12:00:00Z`);
-  return `${DAY_NAMES[d.getUTCDay()]} ${d.getUTCDate()}.${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
+  return `${DAY_NAMES[dayOfWeek(iso)]} ${fmtShortPl(iso)}`;
 }
 
 /**

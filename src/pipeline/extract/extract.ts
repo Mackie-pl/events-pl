@@ -8,6 +8,7 @@ import { fillMissing, toWireSchema } from "../../shared/json-schema.js";
 import { EventSchema, ExtractionSchema } from "../../types/event-schema.js";
 import type { EventItem, ExtractionResult, Followup } from "../../types/index.js";
 import { POSTER_SYSTEM, extractionSystem } from "../prompts.js";
+import { expandRepeat } from "../series.js";
 
 const MAX_INPUT_CHARS = 40_000; // ~10k tokenów
 
@@ -127,6 +128,9 @@ export async function extractEvents(text: string, sourceUrl: string): Promise<Ex
       : `nie dało się odczytać odpowiedzi modelu (${result.parse})`,
     { task: "extract", url: sourceUrl, why: result.parse });
   }
+  // po kroku „llm", nie przed: ten ma mówić, co zwrócił MODEL. Rozwinięcie rytmu jest
+  // decyzją potoku i dostaje własny krok śladu.
+  result.events = expandRepeat(result.events);
   return result;
 }
 
@@ -145,5 +149,6 @@ export async function extractPoster(
   const result = parseModelJson(out, wasTruncated());
   audit("llm", `odczyt plakatu (${img.mediaType}) → ${result.events.length} wydarzeń`,
     { model: MODEL_EXTRACT, task: "poster", events: result.events.length, url: sourceUrl });
+  result.events = expandRepeat(result.events);
   return result;
 }

@@ -9,30 +9,10 @@ stąd zostaje zamknięty, przenieś uzasadnienie do kodu i skasuj go z tej listy
 
 ---
 
-## 1. Decyzja do podjęcia: co z rejestrem
+## 1. Eval promptów i modeli
 
-`sources.json` w drzewie roboczym ma **15 źródeł Lubonia** (z `--reset "Luboń" 1`), a w historii
-gita leży wersja z **46 źródłami Poznania i okolic**. Są rozłączne — Luboń był w tamtej wersji
-opisany innymi wpisami (`lubon-city`, `lubon-ok`, `lubon-biblioteka`).
-
-Trzy wyjścia:
-- `git checkout sources.json` → wraca 46, **znika 15 świeżo znalezionych**,
-- scalenie obu list (świeże wpisy Lubonia mają proweniencję, stare nie mają jej wcale),
-- zostawić 15 i odbudować resztę przez `npm run discover -- "Poznań" 15`.
-
-Dopóki to nie jest rozstrzygnięte, `npm run daily` chodzi po 15 źródłach zamiast po 46, a `--yield`
-pokazuje 15 pozycji w sekcji „w rejestrze, bez danych w oknie".
-
-**Uwaga na koszt przy trzecim wariancie:** naprawiony Overpass zwraca dla Poznania +15 km
-**20 gmin**, nie 13 (dochodzą Stęszew, Murowana Goślina, Kostrzyn, Kaźmierz, Pobiedziska, Buk,
-Granowo). To ~200 zapytań Serpera (budżet 300) i ~20 wywołań Sonneta, rząd **$2-4** za przebieg.
-
----
-
-## 2. Eval promptów i modeli
-
-Powód, dla którego to jest najwyżej na liście po decyzji o rejestrze: **wszystkie zmiany z sierpnia
-2026 poszły w ciemno.** Nowe limity tokenów, structured outputs, wycięty `header` — każda z nich
+Powód, dla którego to jest najwyżej na liście: **wszystkie zmiany z sierpnia 2026 poszły
+w ciemno.** Nowe limity tokenów, structured outputs, wycięty `header` — każda z nich
 „wygląda lepiej" i żadnej nie umiemy zmierzyć.
 
 ### Co już jest, a czego nie ma
@@ -67,11 +47,11 @@ Koszt: średnie wywołanie ekstrakcji $0.0133 (53 wywołania × $0.7026 w przebi
 
 `MODEL_EXTRACT` jest podmieniany z `.env` i **nie ma dziś żadnego sposobu, żeby porównać modele**.
 Pytanie „czy zejdziemy na tańszy" albo „czy nowszy jest lepszy" jest warte wielokrotnie więcej niż
-oszczędność z punktu 3. Warto to przewidzieć w projekcie runnera, a nie doklejać potem.
+oszczędność z punktu 2. Warto to przewidzieć w projekcie runnera, a nie doklejać potem.
 
 ---
 
-## 3. Blok schematu w prompcie jest zdublowany
+## 2. Blok schematu w prompcie jest zdublowany
 
 `extractionSystem()` zawiera `renderSchemaBlock(EventSchema)` (1827 znaków, ~520 tokenów), a przy
 włączonym `response_format` ten sam kształt leci drugi raz jako JSON Schema (~2300 tokenów narzutu).
@@ -88,11 +68,11 @@ Pola ocenne (`is_noise`, `family_friendly: "maybe"`, wnioskowanie roku) to najba
 Reguły MIĘDZYpolowe (kontenery, followupy, „bez daty = nie wydarzenie") zostają prozą niezależnie od
 decyzji — ale stoją tuż obok bloku, więc eval musi sprawdzić, czy wycięcie sąsiada ich nie osłabia.
 
-Zablokowane na punkcie 2. **Sam z siebie nie uzasadnia budowy evala.**
+Zablokowane na punkcie 1. **Sam z siebie nie uzasadnia budowy evala.**
 
 ---
 
-## 4. Źródła jałowe ze statusem `error`
+## 3. Źródła jałowe ze statusem `error`
 
 `--yield` na 5 przebiegach pokazał 25 jałowych źródeł. Trzy z `status: empty` naprawione (ucięcie
 odpowiedzi + structured outputs). **Zostają te z `error`, nietknięte:**
@@ -109,9 +89,9 @@ jedno źródło na żądanie.
 
 ---
 
-## 5. Profiler entrypointów: dwie wady widziane na żywo
+## 4. Profiler entrypointów: dwie wady widziane na żywo
 
-### 5a. Brak werdyktu „archiwalne"
+### 4a. Brak werdyktu „archiwalne"
 
 `gazeta-lubon.pl/2025/kalendarium-wydarzen-miejskich-4/` wszedł do rejestru z `confidence 0.88`
 i werdyktem profilera `events`. Strona jest prawdziwym kalendarium — **z listopada 2025**.
@@ -128,7 +108,7 @@ tylko rok w URL-u. Naprawa musi siedzieć w profilerze, który ma treść strony
 Sieć bezpieczeństwa działa, ale wolno: `BARREN_LIMIT = 2`, czyli dwa dni płatnej ekstrakcji zanim
 entrypoint wypadnie.
 
-### 5b. Menu nawigacyjne udaje listing
+### 4b. Menu nawigacyjne udaje listing
 
 `lubon.pl/kalendarium/5/1/5` dostał `confidence 0.9` i `detailCount: 56` ze wzorcem
 `/artykuly/{id}/{slug}`. To **nie są wpisy kalendarza — to linki menu**. Cała strona po odtagowaniu
@@ -147,7 +127,7 @@ nie wymaga modelu i ma realną treść.
 
 ---
 
-## 6. `--yield`: czego ten rachunek NIE mierzy
+## 5. `--yield`: czego ten rachunek NIE mierzy
 
 Obie rzeczy są wypisane w stopce raportu, ale wymagają decyzji, a nie tylko świadomości.
 
@@ -170,18 +150,34 @@ powtórzenia, gdy `daily` zobaczy grupy FB Lubonia, bo tego przypadku okno jeszc
 
 ---
 
-## 7. Discovery wpuszcza wszystko
+## 6. Discovery wpuszcza wszystko — ale odsiew NIE jest tam, gdzie go szukaliśmy
 
-Przebieg dla Lubonia: **15 propozycji, 15 dodanych, zero odrzuceń.** W tym pięć grup FB dla
-30-tysięcznego miasta — bo 3 z 10 zapytań w `DISCOVERY_QUERIES` są FB-owe, a `MIN_CONFIDENCE = 0.5`
-przepuszcza wszystko od 0.75 w górę.
+Pierwotna obserwacja: przebieg dla Lubonia to **15 propozycji, 15 dodanych, zero odrzuceń**,
+w tym pięć grup FB dla 30-tysięcznego miasta — bo 3 z 10 zapytań w `DISCOVERY_QUERIES` są FB-owe,
+a `MIN_CONFIDENCE = 0.5` przepuszcza wszystko od 0.75 w górę. Wniosek brzmiał: dołożyć limit
+na gminę i typ.
 
-Tanie ograniczenie, niezależne od jakiegokolwiek pomiaru plonu: limit na gminę i typ przy dodawaniu.
-Ale najpierw punkt 6 — może się okazać, że te grupy zarabiają na siebie.
+**Pomiar z 2026-08-02 ten wniosek odwraca.** Cztery przebiegi `--reset "Luboń" 1` w dobę: 17 różnych
+źródeł, tylko **9 w każdym przebiegu**. Wyszukiwarka stabilna (59-61 adresów, ±3%), więc 9 z 10
+pominięć to „model widział wynik i go nie wziął" — m.in. `lubon.pl/news/content/4766`, oficjalny
+kalendarz imprez miejskich na 2026, nieobecny w jednym przebiegu na cztery.
+
+Czyli `MIN_CONFIDENCE` nie jest wąskim gardłem: **model odsiewa ~połowę sam, bez uzasadnienia
+i bez powtarzalności**, zanim cokolwiek dojdzie do progu. Limit na gminę i typ dokładałby drugi
+odsiew nad pierwszym, którego nie kontrolujemy — i kosztowałby dokładnie te źródła, które i tak
+wypadają najczęściej.
+
+Właściwe pytanie brzmi więc inaczej: czy filtr ma zostać w triage'u (gust modelu, jedno losowanie),
+czy przenieść się do weryfikacji, która i tak pobiera stronę i ocenia ją na dowodach (~$0.003/źródło,
+przy 60 kandydatach ≈ +$0.05 na przebieg). To zmiana projektowa, nie parametr.
+
+Doraźnie kosztu nie ma: budowanie rejestru bez `--reset` sumuje przebiegi, a pudło degraduje
+zamiast kasować (patrz `resetRegistry` w actions/discover.ts oraz reconcile.ts). Punkt 5 dalej
+z przodu — może się okazać, że te grupy zarabiają na siebie.
 
 ---
 
-## 8. Pułapki zapisane, żeby ich nie powtórzyć
+## 7. Pułapki zapisane, żeby ich nie powtórzyć
 
 Nie do zrobienia — do NIEzrobienia. Każda wyglądała na oczywiste ulepszenie.
 

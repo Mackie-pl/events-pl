@@ -22,6 +22,7 @@ export type AuditKind =
   | 'fb.harvest'
   | 'geo'
   | 'dedupe.dropped'
+  | 'series'
   | 'pii'
   | 'done';
 

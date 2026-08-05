@@ -94,6 +94,29 @@ describe("buildDigest", () => {
     assert.ok(!d.text.includes("Za tydzień"));
   });
 
+  it("seria pokazuje się tylko w dniach swoich terminów", () => {
+    // środy: 29.07 i 05.08. Sekcja JUTRO to poniedziałek, weekend to 1–2.08 — żadne nie jest środą
+    const seria = event({
+      title: "Zdrowy kręgosłup",
+      date_start: "2026-07-29",
+      date_end: "2026-08-05",
+      dates: ["2026-07-29", "2026-08-05"],
+    });
+    assert.equal(buildDigest(file([seria]), SUNDAY, null).total, 0,
+      "bez `dates` zakres 29.07–05.08 nakryłby obie sekcje");
+
+    // czwartek: JUTRO to piątek, weekend 1–2.08 — nadal nie środa, ale wtorkowa seria trafia w weekend
+    const weekendowa = event({
+      title: "Animacje dla dzieci",
+      date_start: "2026-07-25",
+      date_end: "2026-08-09",
+      dates: ["2026-07-25", "2026-07-26", "2026-08-01", "2026-08-02", "2026-08-08", "2026-08-09"],
+    });
+    const d = buildDigest(file([weekendowa]), THURSDAY, null);
+    assert.equal(d.total, 1, "sobota i niedziela to jedna sekcja, więc jeden wpis");
+    assert.match(d.text, /soboty i niedziele do 9\.08/, "etykieta cyklu zamiast powtórzeń");
+  });
+
   it("wydarzenie wielodniowe łapie się przez nakładanie zakresów", () => {
     const d = buildDigest(
       file([event({ title: "Festiwal", date_start: "2026-07-20", date_end: "2026-08-05" })]),

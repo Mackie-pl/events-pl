@@ -28,6 +28,8 @@
  */
 import { FormatRegistry, type Static, type TSchema, Type } from "@sinclair/typebox";
 
+import { closed } from "../shared/json-schema.js";
+
 /** YYYY-MM-DD — kontrakt events.json; wszystko inne to dla nas brak daty. */
 export const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -37,10 +39,6 @@ export const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
  * ten format deklaruje: rozjechanie się tych dwóch miejsc jest ciche i kosztuje dzień danych.
  */
 FormatRegistry.Set("date", (value) => ISO_DATE.test(value));
-
-/** Obiekt zamknięty: `additionalProperties: false` to wymóg trybu strict, nie ozdoba. */
-const closed = <T extends Record<string, TSchema>>(props: T) =>
-  Type.Object(props, { additionalProperties: false });
 
 /** „T albo null". Uwaga idzie na unię, nie na gałąź — renderer czyta description z pola. */
 const orNull = <T extends TSchema>(schema: T, note?: string) =>
@@ -70,6 +68,8 @@ const DATE_NOTE = "wywnioskuj rok z kontekstu; pomiń wydarzenia zakończone prz
 const NOISE_NOTE = "komisje rady, wybory sołeckie, przetargi, ogłoszenia urzędowe → true";
 const SLOTS_NOTE = "etapy wydarzenia (np. 12-18 dzieci, 18-22 dorośli)";
 const CONTAINER_NOTE = 'nazwa wydarzenia-kontenera, z którego rozbito wpis; "" gdy samodzielne';
+const REPEAT_NOTE = 'rytm powtórzeń w zakresie date_start–date_end: "codziennie" albo dni tygodnia '
+  + "po przecinku (pn,wt,sr,cz,pt,sb,nd); gdy ustawisz, date_end jest obowiązkowe";
 const REASON_NOTE = '"program PDF" | "szczegóły wydarzenia" | "plakat"';
 
 export const AgeSchema = closed({
@@ -95,6 +95,10 @@ export const EventSchema = closed({
   title: Type.String(),
   date_start: Type.String({ ...ISO_DAY, description: DATE_NOTE }),
   date_end: orNull(Type.String(ISO_DAY)),
+  // Tekst, a nie obiekt reguły: budżet pól unijnych jest wyczerpany (16/16), a `orEmpty`
+  // kosztuje zero. Rozwija go expandRepeat() zaraz po ekstrakcji — na drucie to wyłącznie
+  // kompresja, w events.json liczy się już jawna lista `dates`.
+  repeat: orEmpty(REPEAT_NOTE),
   time_start: orNull(Type.String(HHMM)),
   time_end: orNull(Type.String(HHMM)),
   venue: orEmpty("pełna nazwa miejsca + adres jeśli podany"),

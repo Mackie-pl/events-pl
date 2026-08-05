@@ -7,11 +7,13 @@ import { archiveRaw, beginSource, sourcePaths } from "../../adapters/supabase-ar
 import { todayIso } from "../../shared/dates.js";
 import { describeError } from "../../shared/errors.js";
 import { salvageArray } from "../../shared/json-salvage.js";
+import { toWireSchema } from "../../shared/json-schema.js";
 import { slug, str, trim } from "../../shared/text.js";
 import { urlKey } from "../../shared/url.js";
 import type {
   SearchResult, Source, SourceProposal, SourceProvenance, TownDiscoveryRun,
 } from "../../types/index.js";
+import { DiscoverySchema } from "../../types/source-schema.js";
 import { DISCOVERY_QUERIES, DISCOVERY_SYSTEM } from "../prompts.js";
 
 import { MIN_CONFIDENCE, matchHit } from "./proposal-match.js";
@@ -30,6 +32,15 @@ import { toSource } from "./to-source.js";
  * płacimy za tokeny FAKTYCZNIE wygenerowane, więc małe gminy nic na tym nie tracą.
  */
 const MAX_TOKENS = Number(process.env["DISCOVER_MAX_TOKENS"] ?? 12_000);
+
+/**
+ * Schemat wysyłany jako `response_format`. Liczony raz: jest stały, a discovery chodzi
+ * po gminach w pętli i serializowałoby go od nowa przy każdej.
+ *
+ * Nazwa `zrodla` bez ogonków — jedzie w `json_schema.name`, którego dostawcy zawężają
+ * do [a-zA-Z0-9_-].
+ */
+const RESPONSE_SCHEMA = { name: "zrodla", schema: toWireSchema(DiscoverySchema) };
 
 /** Kontekst potwierdzenia — te same cztery rzeczy, z których buduje się proweniencję. */
 export interface Confirmation {
@@ -129,6 +140,8 @@ export async function discoverTown(town: string, reg: Registry, runStartedAt: st
       system: DISCOVERY_SYSTEM,
       user: `Miasto/gmina: ${town}\nWyniki wyszukiwania:\n${JSON.stringify(hits.map((h) => h.result))}`,
       maxTokens: MAX_TOKENS,
+      // bez tego jeden cudzysłów w polu „why" kasuje ogon listy — patrz types/source-schema.ts
+      schema: RESPONSE_SCHEMA,
     });
     const finish = finishReason();
     run.responseChars = out.length;

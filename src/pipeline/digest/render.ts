@@ -1,4 +1,5 @@
 /** Złożenie digestu w trzech formatach: tekst, HTML i wiadomości Telegrama. */
+import { seriesLabel } from "../../shared/series.js";
 import type { EventItem, EventsFile } from "../../types/index.js";
 
 import { pick, sectionsFor } from "./sections.js";
@@ -17,8 +18,9 @@ function lineTxt(e: EventItem): string {
         : null,
     e.family_friendly === true ? "👨‍👦" : null,
   ].filter(Boolean);
+  const cycle = seriesLabel(e);
   const warn = e.conditional ? `\n    ⚠️ ${e.conditional}` : "";
-  return `  • ${bits.join(" · ")}${warn}\n    ${e.source_url}`;
+  return `  • ${bits.join(" · ")}${cycle ? `\n    🔁 ${cycle}` : ""}${warn}\n    ${e.source_url}`;
 }
 
 function lineHtml(e: EventItem): string {
@@ -34,9 +36,11 @@ function lineHtml(e: EventItem): string {
   ]
     .filter(Boolean)
     .join(" · ");
+  const cycle = seriesLabel(e);
   return `<li style="margin-bottom:8px">
     <b>${e.time_start ?? ""}</b> <a href="${e.source_url}">${e.title}</a> ${e.family_friendly === true ? "👨‍👦" : ""}<br>
     <span style="color:#666;font-size:13px">${meta}</span>
+    ${cycle ? `<br><span style="color:#3730a3;font-size:13px">🔁 ${cycle}</span>` : ""}
     ${e.conditional ? `<br><span style="color:#92400e;font-size:13px">⚠️ ${e.conditional}</span>` : ""}
   </li>`;
 }
@@ -60,10 +64,12 @@ function lineTg(e: EventItem): string {
     .filter(Boolean)
     .map((x) => esc(String(x)))
     .join(" · ");
+  const cycle = seriesLabel(e);
+  const rep = cycle ? `\n   🔁 ${esc(cycle)}` : "";
   const warn = e.conditional ? `\n   ⚠️ <i>${esc(e.conditional)}</i>` : "";
   const time = e.time_start ? `<b>${e.time_start}</b> ` : "";
   const fam = e.family_friendly === true ? " 👨‍👦" : "";
-  return `• ${time}<a href="${e.source_url}">${esc(e.title)}</a>${fam}\n   <i>${meta}</i>${warn}`;
+  return `• ${time}<a href="${e.source_url}">${esc(e.title)}</a>${fam}\n   <i>${meta}</i>${rep}${warn}`;
 }
 
 export interface Digest {

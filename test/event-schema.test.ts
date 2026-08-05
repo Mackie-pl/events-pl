@@ -62,6 +62,20 @@ describe("blok schematu w prompcie", () => {
     assert.ok(POSTER_SYSTEM.includes(block), "brak bloku w prompcie plakatowym");
   });
 
+  /**
+   * Reguła cykliczności jest prozą, więc żaden typ jej nie pilnuje — a w prompcie PLAKATOWYM
+   * jest ważniejsza niż w tekstowym: kalendarz sezonowy na obrazku to trzydzieści powtórzeń
+   * jednego wpisu przy sufiscie 2000 tokenów, czyli odpowiedź ucięta, a nie tylko droga.
+   */
+  it("reguła cykliczności też trafia do OBU promptów", () => {
+    for (const [name, prompt] of [
+      ["tekstowy", extractionSystem("2026-07-28")], ["plakatowy", POSTER_SYSTEM],
+    ] as const) {
+      assert.match(prompt, /WYDARZENIA CYKLICZNE/, `brak reguły w prompcie ${name}`);
+      assert.match(prompt, /"repeat" = rytm/, `brak instrukcji o repeat w prompcie ${name}`);
+    }
+  });
+
   it("konkretna data 'dziś' zostaje w prozie promptu, bo schemat jej nie zna", () => {
     assert.ok(extractionSystem("2026-07-28").includes("2026-07-28"));
   });

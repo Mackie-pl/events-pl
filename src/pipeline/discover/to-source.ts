@@ -2,14 +2,12 @@
 import { slug, str, trim } from "../../shared/text.js";
 import { normalizeFbGroupUrl } from "../../shared/url.js";
 import type { FetchStrategy, Source, SourceType } from "../../types/index.js";
+import { FETCH_STRATEGIES, SOURCE_TYPES } from "../../types/source-schema.js";
 
-const SOURCE_TYPES = new Set<string>([
-  "city_portal", "culture_center", "library", "sports", "venue",
-  "fb_page", "fb_group", "rss", "api", "pdf_program",
-]);
-const FETCH_STRATEGIES = new Set<string>([
-  "plain", "headless", "pdf", "api", "fb", "fb_group", "fb_event", "rss",
-]);
+// te same listy, którymi ograniczamy odpowiedź modelu (`enum` w schemacie) — inaczej
+// schemat wpuszczałby wartość, którą walidacja i tak podmienia
+const ALLOWED_TYPES = new Set<string>(SOURCE_TYPES);
+const ALLOWED_FETCH = new Set<string>(FETCH_STRATEGIES);
 
 /** Model bywa oszczędny: „gok.pl" zamiast pełnego adresu. Doklejamy schemat, ale śmieci odrzucamy. */
 function normalizeProposedUrl(raw: unknown): { url: string; fixes: string[] } | { err: string } {
@@ -54,11 +52,11 @@ function normalizeFbFields(
     fetchStrategy = "fb";
     fixes.push('fetch → "fb" (adres facebook.com)');
   }
-  if (!FETCH_STRATEGIES.has(fetchStrategy)) {
+  if (!ALLOWED_FETCH.has(fetchStrategy)) {
     fixes.push(`nieznane fetch "${trim(fetchStrategy, 30)}" → "plain"`);
     fetchStrategy = "plain";
   }
-  if (!SOURCE_TYPES.has(type)) {
+  if (!ALLOWED_TYPES.has(type)) {
     fixes.push(`nieznany type "${trim(type, 30)}" → "venue"`);
     type = "venue";
   }
