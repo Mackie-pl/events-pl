@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-05T06:37:52.821Z",
+ "updated": "2026-08-06T06:42:24.502Z",
  "rates": {
   "bdPerRecord": 0.0015,
   "searchPerQuery": 0.001,
@@ -1129,6 +1129,79 @@
    "usd": 0,
    "estimated": true,
    "units": 2.722,
+   "unit": "MB"
+  },
+  {
+   "day": "2026-08-06",
+   "at": "2026-08-06T06:42:24.483Z",
+   "stage": "daily",
+   "run": "2026-08-06T06:25:05.390Z",
+   "category": "llm-extract",
+   "usd": 0.798704,
+   "estimated": false,
+   "units": 47,
+   "unit": "calls",
+   "tokensIn": 346634,
+   "tokensOut": 90414,
+   "top": [
+    {
+     "id": "dopiewo-city",
+     "usd": 0.106039,
+     "units": 6
+    },
+    {
+     "id": "estrada",
+     "usd": 0.103669,
+     "units": 3
+    },
+    {
+     "id": "ck-zamek",
+     "usd": 0.080913,
+     "units": 1
+    },
+    {
+     "id": "poznan-events",
+     "usd": 0.059447,
+     "units": 2
+    },
+    {
+     "id": "poznan-kultura",
+     "usd": 0.054754,
+     "units": 2
+    }
+   ]
+  },
+  {
+   "day": "2026-08-06",
+   "at": "2026-08-06T06:42:24.483Z",
+   "stage": "daily",
+   "run": "2026-08-06T06:25:05.390Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 116,
+   "unit": "fetches"
+  },
+  {
+   "day": "2026-08-06",
+   "at": "2026-08-06T06:42:24.483Z",
+   "stage": "daily",
+   "run": "2026-08-06T06:25:05.390Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 41,
+   "unit": "lookups"
+  },
+  {
+   "day": "2026-08-06",
+   "at": "2026-08-06T06:42:24.483Z",
+   "stage": "daily",
+   "run": "2026-08-06T06:25:05.390Z",
+   "category": "storage",
+   "usd": 0,
+   "estimated": true,
+   "units": 2.898,
    "unit": "MB"
   }
  ]
