@@ -6,3 +6,8 @@ dist/
 
 # ustawienia lokalne Claude Code (per-maszyna), launch.json zostaje
 .claude/settings.local.json
+
+# surowe zrzuty stron do analizy ad hoc — to CUDZA treść bez redakcji PII, a repo jest
+# publiczne. Ta sama granica, co przy archiwum: do repo idą metryki, treść zostaje lokalnie
+# albo w prywatnym buckecie (patrz adapters/supabase-archive.ts).
+eval/*/Untitled-*.md

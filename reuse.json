@@ -1,0 +1,6809 @@
+{
+ "generated": "2026-08-06T20:01:45.162Z",
+ "from": "2026-07-26",
+ "to": "2026-08-06",
+ "days": 12,
+ "segment": {
+  "maxChars": 4000,
+  "targetParas": 6
+ },
+ "totals": {
+  "chars": 11732035,
+  "pairs": 558,
+  "ceiling": 0.869371244234274,
+  "reuse": 0.7565907363897226,
+  "freeDays": 245,
+  "freeUsd": 0.5035780000000001,
+  "shrinkUsd": 2.6955671106174743
+ },
+ "sources": [
+  {
+   "id": "czerwonak-city",
+   "followup": false,
+   "days": 12,
+   "chars": 412244,
+   "ceiling": 0.9814506899863322,
+   "reuse": 0.8910451092071686,
+   "freeDays": 2,
+   "freeUsd": 0,
+   "shrinkUsd": 0.3333655252126479,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 37198,
+     "blocks": 42,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 37218,
+     "blocks": 43,
+     "newBlocks": 3,
+     "newChars": 4732,
+     "ceiling": 0.9812100105288734,
+     "reuse": 0.8728572196249127
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 37218,
+     "blocks": 43,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 37389,
+     "blocks": 43,
+     "newBlocks": 3,
+     "newChars": 5069,
+     "ceiling": 0.9778297323444051,
+     "reuse": 0.8644253657492845
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 37676,
+     "blocks": 42,
+     "newBlocks": 4,
+     "newChars": 7454,
+     "ceiling": 0.9755713790436569,
+     "reuse": 0.8021552181760272,
+     "usd": 0.049911
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 37654,
+     "blocks": 44,
+     "newBlocks": 3,
+     "newChars": 4921,
+     "ceiling": 0.9858854291736706,
+     "reuse": 0.8693100334625803,
+     "usd": 0.02758
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 37534,
+     "blocks": 45,
+     "newBlocks": 3,
+     "newChars": 1883,
+     "ceiling": 0.9884103744546452,
+     "reuse": 0.9498321521820217,
+     "usd": 0.06838000000000001
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 37496,
+     "blocks": 44,
+     "newBlocks": 2,
+     "newChars": 1845,
+     "ceiling": 0.9938104552396774,
+     "reuse": 0.9507947514401536,
+     "usd": 0.06307499999999999
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 37488,
+     "blocks": 45,
+     "newBlocks": 3,
+     "newChars": 1837,
+     "ceiling": 0.9947742194827818,
+     "reuse": 0.9509976525821596,
+     "usd": 0.105296
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 37784,
+     "blocks": 43,
+     "newBlocks": 6,
+     "newChars": 9961,
+     "ceiling": 0.9560985986651421,
+     "reuse": 0.7363698920177852,
+     "usd": 0.021841
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 37589,
+     "blocks": 44,
+     "newBlocks": 6,
+     "newChars": 7214,
+     "ceiling": 0.9429357994333671,
+     "reuse": 0.8080821516933145,
+     "usd": 0.034914
+    }
+   ],
+   "samples": "reuse/czerwonak-city.json"
+  },
+  {
+   "id": "dopiewo-city",
+   "followup": false,
+   "days": 11,
+   "chars": 133697,
+   "ceiling": 0.8530627640817895,
+   "reuse": 0.5121057316170146,
+   "freeDays": 0,
+   "freeUsd": 0,
+   "shrinkUsd": 0.30055109217503395,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 14516,
+     "blocks": 15,
+     "newBlocks": 4,
+     "newChars": 3710,
+     "ceiling": 0.9623611111111111,
+     "reuse": 0.7444199503995591
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 14175,
+     "blocks": 16,
+     "newBlocks": 12,
+     "newChars": 13270,
+     "ceiling": 0.8012797724848916,
+     "reuse": 0.06384479717813052
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 14187,
+     "blocks": 15,
+     "newBlocks": 8,
+     "newChars": 9083,
+     "ceiling": 0.623614663256607,
+     "reuse": 0.35976598294213014
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-29",
+     "chars": 14239,
+     "blocks": 16,
+     "newBlocks": 10,
+     "newChars": 10768,
+     "ceiling": 0.8397027600849257,
+     "reuse": 0.24376711847742116,
+     "usd": 0.013117
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 13452,
+     "blocks": 16,
+     "newBlocks": 7,
+     "newChars": 8338,
+     "ceiling": 0.6721630939889072,
+     "reuse": 0.38016651798989,
+     "usd": 0.036486000000000005
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 13281,
+     "blocks": 16,
+     "newBlocks": 2,
+     "newChars": 2494,
+     "ceiling": 0.9482954976843064,
+     "reuse": 0.8122129357729087,
+     "usd": 0.053664
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 12449,
+     "blocks": 15,
+     "newBlocks": 1,
+     "newChars": 1734,
+     "ceiling": 1,
+     "reuse": 0.8607117037513053,
+     "usd": 0.090753
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 12473,
+     "blocks": 14,
+     "newBlocks": 3,
+     "newChars": 3699,
+     "ceiling": 0.9798625151637687,
+     "reuse": 0.7034394291670008,
+     "usd": 0.08969
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 12652,
+     "blocks": 13,
+     "newBlocks": 3,
+     "newChars": 3642,
+     "ceiling": 0.9114176367405518,
+     "reuse": 0.7121403730635473,
+     "usd": 0.092713
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 12273,
+     "blocks": 15,
+     "newBlocks": 9,
+     "newChars": 8492,
+     "ceiling": 0.8214843428947152,
+     "reuse": 0.308074635378473,
+     "usd": 0.106039
+    }
+   ],
+   "samples": "reuse/dopiewo-city.json"
+  },
+  {
+   "id": "estrada",
+   "followup": false,
+   "days": 12,
+   "chars": 336195,
+   "ceiling": 0.9830327449371616,
+   "reuse": 0.8620592215827124,
+   "freeDays": 2,
+   "freeUsd": 0,
+   "shrinkUsd": 0.24209120916155621,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 33270,
+     "blocks": 44,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 32647,
+     "blocks": 40,
+     "newBlocks": 3,
+     "newChars": 6154,
+     "ceiling": 0.9917622106783881,
+     "reuse": 0.8114987594572243
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 32068,
+     "blocks": 37,
+     "newBlocks": 2,
+     "newChars": 2925,
+     "ceiling": 0.9921757636454682,
+     "reuse": 0.9087875764001496
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 32117,
+     "blocks": 38,
+     "newBlocks": 5,
+     "newChars": 5407,
+     "ceiling": 0.9715928622769462,
+     "reuse": 0.8316467914188748
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 30710,
+     "blocks": 37,
+     "newBlocks": 3,
+     "newChars": 6114,
+     "ceiling": 0.9916334400941238,
+     "reuse": 0.8009117551286226,
+     "usd": 0.033361
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 32019,
+     "blocks": 37,
+     "newBlocks": 8,
+     "newChars": 10476,
+     "ceiling": 0.8888052917019342,
+     "reuse": 0.6728192635622599,
+     "usd": 0.033932
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 29845,
+     "blocks": 34,
+     "newBlocks": 1,
+     "newChars": 2962,
+     "ceiling": 1,
+     "reuse": 0.9007538951248115,
+     "usd": 0.033044
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 28967,
+     "blocks": 33,
+     "newBlocks": 1,
+     "newChars": 3493,
+     "ceiling": 1,
+     "reuse": 0.8794145061621845,
+     "usd": 0.042591
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 28967,
+     "blocks": 33,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 28129,
+     "blocks": 33,
+     "newBlocks": 4,
+     "newChars": 6266,
+     "ceiling": 0.983830668189606,
+     "reuse": 0.7772405702300117,
+     "usd": 0.040383
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 27456,
+     "blocks": 33,
+     "newBlocks": 1,
+     "newChars": 2578,
+     "ceiling": 1,
+     "reuse": 0.9061043123543123,
+     "usd": 0.103669
+    }
+   ],
+   "samples": "reuse/estrada.json"
+  },
+  {
+   "id": "poznan-kultura",
+   "followup": false,
+   "days": 12,
+   "chars": 234159,
+   "ceiling": 0.8099857174110251,
+   "reuse": 0.5871694019875384,
+   "freeDays": 0,
+   "freeUsd": 0,
+   "shrinkUsd": 0.2399305167226818,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 20714,
+     "blocks": 25,
+     "newBlocks": 10,
+     "newChars": 13187,
+     "ceiling": 0.7036263896305646,
+     "reuse": 0.36337742589552957
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 20712,
+     "blocks": 23,
+     "newBlocks": 3,
+     "newChars": 3435,
+     "ceiling": 0.9762540669159423,
+     "reuse": 0.834154113557358
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 21538,
+     "blocks": 22,
+     "newBlocks": 4,
+     "newChars": 8342,
+     "ceiling": 0.8566092356539198,
+     "reuse": 0.6126845575262327
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 22035,
+     "blocks": 25,
+     "newBlocks": 8,
+     "newChars": 10683,
+     "ceiling": 0.774315693430657,
+     "reuse": 0.5151803948264125
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 19615,
+     "blocks": 22,
+     "newBlocks": 8,
+     "newChars": 11529,
+     "ceiling": 0.7354570637119113,
+     "reuse": 0.41223553403007906,
+     "usd": 0.029521
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 20233,
+     "blocks": 27,
+     "newBlocks": 13,
+     "newChars": 12461,
+     "ceiling": 0.576036179306232,
+     "reuse": 0.384124944397766,
+     "usd": 0.029681
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 22343,
+     "blocks": 22,
+     "newBlocks": 7,
+     "newChars": 13639,
+     "ceiling": 0.6620466204662047,
+     "reuse": 0.3895627265810321,
+     "usd": 0.053398
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 22179,
+     "blocks": 25,
+     "newBlocks": 6,
+     "newChars": 5487,
+     "ceiling": 0.9306562726613488,
+     "reuse": 0.752603814419045,
+     "usd": 0.054303
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 22179,
+     "blocks": 25,
+     "newBlocks": 1,
+     "newChars": 93,
+     "ceiling": 0.9957396664249456,
+     "reuse": 0.9958068443121872,
+     "usd": 0.091056
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 21320,
+     "blocks": 21,
+     "newBlocks": 7,
+     "newChars": 10909,
+     "ceiling": 0.782988158701703,
+     "reuse": 0.48832082551594747,
+     "usd": 0.05531899999999999
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 21291,
+     "blocks": 24,
+     "newBlocks": 8,
+     "newChars": 6903,
+     "ceiling": 0.8955322565410408,
+     "reuse": 0.6757784979568833,
+     "usd": 0.054754
+    }
+   ],
+   "samples": "reuse/poznan-kultura.json"
+  },
+  {
+   "id": "komorniki-city",
+   "followup": false,
+   "days": 12,
+   "chars": 153271,
+   "ceiling": 0.9964092245614913,
+   "reuse": 0.6830972591031571,
+   "freeDays": 3,
+   "freeUsd": 0.124433,
+   "shrinkUsd": 0.0970709159684513,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 15418,
+     "blocks": 6,
+     "newBlocks": 1,
+     "newChars": 4585,
+     "ceiling": 0.9937202538339502,
+     "reuse": 0.7026203139187962
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 15396,
+     "blocks": 6,
+     "newBlocks": 1,
+     "newChars": 4563,
+     "ceiling": 0.9951674831192904,
+     "reuse": 0.7036243180046766
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 15403,
+     "blocks": 6,
+     "newBlocks": 1,
+     "newChars": 4570,
+     "ceiling": 0.9947065440349369,
+     "reuse": 0.7033045510614815
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 15397,
+     "blocks": 6,
+     "newBlocks": 1,
+     "newChars": 4564,
+     "ceiling": 0.995101608525849,
+     "reuse": 0.7035786192115348
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 15395,
+     "blocks": 6,
+     "newBlocks": 1,
+     "newChars": 4562,
+     "ceiling": 0.9952333664349553,
+     "reuse": 0.7036700227346542,
+     "usd": 0.049786
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 15403,
+     "blocks": 6,
+     "newBlocks": 1,
+     "newChars": 4570,
+     "ceiling": 0.9947065440349369,
+     "reuse": 0.7033045510614815,
+     "usd": 0.04707
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 15407,
+     "blocks": 6,
+     "newBlocks": 2,
+     "newChars": 12601,
+     "ceiling": 0.9956340543758683,
+     "reuse": 0.18212500811319532,
+     "usd": 0.06679
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 11363,
+     "blocks": 5,
+     "newBlocks": 1,
+     "newChars": 8557,
+     "ceiling": 1,
+     "reuse": 0.24694182874240955,
+     "usd": 0.067908
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 11363,
+     "blocks": 5,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.036302
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 11363,
+     "blocks": 5,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.043006
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 11363,
+     "blocks": 5,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.045125
+    }
+   ],
+   "samples": "reuse/komorniki-city.json"
+  },
+  {
+   "id": "poznan-events",
+   "followup": false,
+   "days": 12,
+   "chars": 327934,
+   "ceiling": 0.7816674432986369,
+   "reuse": 0.5842883019144096,
+   "freeDays": 0,
+   "freeUsd": 0,
+   "shrinkUsd": 0.21827237087641302,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 31740,
+     "blocks": 41,
+     "newBlocks": 10,
+     "newChars": 15332,
+     "ceiling": 0.7168766221434449,
+     "reuse": 0.516950220541903
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 30860,
+     "blocks": 40,
+     "newBlocks": 7,
+     "newChars": 9127,
+     "ceiling": 0.9263154467309195,
+     "reuse": 0.704244977316915
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 29875,
+     "blocks": 38,
+     "newBlocks": 8,
+     "newChars": 14492,
+     "ceiling": 0.8323520506005451,
+     "reuse": 0.5149121338912134
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 29731,
+     "blocks": 37,
+     "newBlocks": 10,
+     "newChars": 14307,
+     "ceiling": 0.7272542854244852,
+     "reuse": 0.5187851064545423
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 29980,
+     "blocks": 37,
+     "newBlocks": 9,
+     "newChars": 14647,
+     "ceiling": 0.7540736270368135,
+     "reuse": 0.5114409606404269,
+     "usd": 0.034258
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 30553,
+     "blocks": 36,
+     "newBlocks": 9,
+     "newChars": 17368,
+     "ceiling": 0.6332083168838005,
+     "reuse": 0.43154518377900697,
+     "usd": 0.03447
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 28422,
+     "blocks": 48,
+     "newBlocks": 20,
+     "newChars": 14971,
+     "ceiling": 0.6352999399059706,
+     "reuse": 0.473260150587573,
+     "usd": 0.054393
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 28268,
+     "blocks": 43,
+     "newBlocks": 7,
+     "newChars": 10532,
+     "ceiling": 0.7945317499822229,
+     "reuse": 0.6274232347530777,
+     "usd": 0.057649000000000006
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 28353,
+     "blocks": 44,
+     "newBlocks": 6,
+     "newChars": 5818,
+     "ceiling": 0.9284018005883813,
+     "reuse": 0.7948012555990548,
+     "usd": 0.05713599999999999
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 29344,
+     "blocks": 42,
+     "newBlocks": 11,
+     "newChars": 10068,
+     "ceiling": 0.7905821917808219,
+     "reuse": 0.6568974918211559,
+     "usd": 0.057471
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 30808,
+     "blocks": 40,
+     "newBlocks": 4,
+     "newChars": 9664,
+     "ceiling": 0.860665362035225,
+     "reuse": 0.6863152427940795,
+     "usd": 0.059447
+    }
+   ],
+   "samples": "reuse/poznan-events.json"
+  },
+  {
+   "id": "ck-zamek",
+   "followup": false,
+   "days": 7,
+   "chars": 242273,
+   "ceiling": 0.9547738025970999,
+   "reuse": 0.733457710929406,
+   "freeDays": 0,
+   "freeUsd": 0,
+   "shrinkUsd": 0.1969642832930063,
+   "pairs": [
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 47789,
+     "blocks": 72,
+     "newBlocks": 7,
+     "newChars": 12873,
+     "ceiling": 0.9851835991863827,
+     "reuse": 0.7306283872857771,
+     "usd": 0.040129
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 45142,
+     "blocks": 66,
+     "newBlocks": 6,
+     "newChars": 14169,
+     "ceiling": 0.987482993197279,
+     "reuse": 0.6861237871605157,
+     "usd": 0.040134
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 34331,
+     "blocks": 61,
+     "newBlocks": 4,
+     "newChars": 4735,
+     "ceiling": 0.9949194842236615,
+     "reuse": 0.8620780053013312,
+     "usd": 0.030056
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 40379,
+     "blocks": 77,
+     "newBlocks": 32,
+     "newChars": 17804,
+     "ceiling": 0.8209806445100563,
+     "reuse": 0.5590777384283909,
+     "usd": 0.034378
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 37893,
+     "blocks": 73,
+     "newBlocks": 11,
+     "newChars": 7686,
+     "ceiling": 0.9569403727710389,
+     "reuse": 0.7971657034280738,
+     "usd": 0.037836
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 36739,
+     "blocks": 71,
+     "newBlocks": 7,
+     "newChars": 7309,
+     "ceiling": 0.9823271556985906,
+     "reuse": 0.801056098424018,
+     "usd": 0.080913
+    }
+   ],
+   "samples": "reuse/ck-zamek.json"
+  },
+  {
+   "id": "poznan-kultura-rss",
+   "followup": false,
+   "days": 12,
+   "chars": 204904,
+   "ceiling": 0.9984482921781367,
+   "reuse": 0.9830896419786826,
+   "freeDays": 9,
+   "freeUsd": 0.14618399999999998,
+   "shrinkUsd": 0.01075768973490348,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 18644,
+     "blocks": 34,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 18644,
+     "blocks": 34,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 18644,
+     "blocks": 34,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 18646,
+     "blocks": 33,
+     "newBlocks": 1,
+     "newChars": 2830,
+     "ceiling": 0.9829480242662731,
+     "reuse": 0.8482248203368015
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 18646,
+     "blocks": 33,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.050865999999999995
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 18646,
+     "blocks": 33,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.051078
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 18646,
+     "blocks": 33,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.04424
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 18597,
+     "blocks": 33,
+     "newBlocks": 1,
+     "newChars": 635,
+     "ceiling": 1,
+     "reuse": 0.9658547077485616,
+     "usd": 0.011138
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 18597,
+     "blocks": 33,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 18597,
+     "blocks": 33,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 18597,
+     "blocks": 33,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    }
+   ],
+   "samples": "reuse/poznan-kultura-rss.json"
+  },
+  {
+   "id": "swarzedz-city",
+   "followup": false,
+   "days": 11,
+   "chars": 267646,
+   "ceiling": 0.9493643843165155,
+   "reuse": 0.7063023546027215,
+   "freeDays": 1,
+   "freeUsd": 0,
+   "shrinkUsd": 0.14477015731049617,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 26844,
+     "blocks": 18,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 26890,
+     "blocks": 15,
+     "newBlocks": 2,
+     "newChars": 6667,
+     "ceiling": 0.9165369871332599,
+     "reuse": 0.7520639642989959
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 26921,
+     "blocks": 15,
+     "newBlocks": 3,
+     "newChars": 9849,
+     "ceiling": 0.9710743801652892,
+     "reuse": 0.6341517774228298
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 26867,
+     "blocks": 15,
+     "newBlocks": 2,
+     "newChars": 5815,
+     "ceiling": 0.9724585929190093,
+     "reuse": 0.7835634793612982
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-30",
+     "chars": 26798,
+     "blocks": 15,
+     "newBlocks": 3,
+     "newChars": 9726,
+     "ceiling": 0.9170443725004761,
+     "reuse": 0.6370624673483096,
+     "usd": 0.018584
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 26809,
+     "blocks": 15,
+     "newBlocks": 1,
+     "newChars": 3789,
+     "ceiling": 0.9889971826696109,
+     "reuse": 0.8586668656048342,
+     "usd": 0.055997
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 26558,
+     "blocks": 17,
+     "newBlocks": 5,
+     "newChars": 11148,
+     "ceiling": 0.9418117529497675,
+     "reuse": 0.5802394758641464,
+     "usd": 0.018758
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 26496,
+     "blocks": 17,
+     "newBlocks": 2,
+     "newChars": 5149,
+     "ceiling": 0.978618484416535,
+     "reuse": 0.8056687801932367,
+     "usd": 0.043205999999999994
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 26428,
+     "blocks": 17,
+     "newBlocks": 4,
+     "newChars": 6915,
+     "ceiling": 0.9721503341187376,
+     "reuse": 0.7383456939609505,
+     "usd": 0.044975
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 27035,
+     "blocks": 16,
+     "newBlocks": 11,
+     "newChars": 19549,
+     "ceiling": 0.8363780478598928,
+     "reuse": 0.2769003144072498,
+     "usd": 0.021478
+    }
+   ],
+   "samples": "reuse/swarzedz-city.json"
+  },
+  {
+   "id": "komorniki-gok",
+   "followup": false,
+   "days": 11,
+   "chars": 142057,
+   "ceiling": 0.9314172636609748,
+   "reuse": 0.4849250652906932,
+   "freeDays": 0,
+   "freeUsd": 0,
+   "shrinkUsd": 0.14471212635181718,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 15800,
+     "blocks": 14,
+     "newBlocks": 1,
+     "newChars": 4157,
+     "ceiling": 0.9943520751364386,
+     "reuse": 0.7368987341772152
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 15764,
+     "blocks": 15,
+     "newBlocks": 4,
+     "newChars": 6111,
+     "ceiling": 0.9793945560925973,
+     "reuse": 0.6123445825932504
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 15617,
+     "blocks": 18,
+     "newBlocks": 8,
+     "newChars": 9271,
+     "ceiling": 0.9468010010909325,
+     "reuse": 0.40635205225075244
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-29",
+     "chars": 15588,
+     "blocks": 16,
+     "newBlocks": 4,
+     "newChars": 8656,
+     "ceiling": 0.9016077170418006,
+     "reuse": 0.44470105209135236,
+     "usd": 0.057398
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 15392,
+     "blocks": 16,
+     "newBlocks": 8,
+     "newChars": 11170,
+     "ceiling": 0.843393892036205,
+     "reuse": 0.2742983367983368,
+     "usd": 0.040666999999999995
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 15396,
+     "blocks": 16,
+     "newBlocks": 2,
+     "newChars": 8254,
+     "ceiling": 0.9957034047262548,
+     "reuse": 0.46388672382437,
+     "usd": 0.060221
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 11773,
+     "blocks": 14,
+     "newBlocks": 4,
+     "newChars": 7767,
+     "ceiling": 0.9625500042556814,
+     "reuse": 0.34027010957275117,
+     "usd": 0.056199
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 12089,
+     "blocks": 11,
+     "newBlocks": 5,
+     "newChars": 8683,
+     "ceiling": 0.7820714818807529,
+     "reuse": 0.2817437339730333,
+     "usd": 0.06564299999999999
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 12317,
+     "blocks": 13,
+     "newBlocks": 5,
+     "newChars": 7853,
+     "ceiling": 0.9009844601741112,
+     "reuse": 0.3624259154014776,
+     "usd": 0.054955
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 12321,
+     "blocks": 13,
+     "newBlocks": 3,
+     "newChars": 1248,
+     "ceiling": 0.9843838958926393,
+     "reuse": 0.8987095203311419,
+     "usd": 0.025105
+    }
+   ],
+   "samples": "reuse/komorniki-gok.json"
+  },
+  {
+   "id": "brama-poznania",
+   "followup": false,
+   "days": 7,
+   "chars": 64365,
+   "ceiling": 0.9923441219365083,
+   "reuse": 0.7841528781169891,
+   "freeDays": 3,
+   "freeUsd": 0,
+   "shrinkUsd": 0.09835028043822111,
+   "pairs": [
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 10745,
+     "blocks": 14,
+     "newBlocks": 2,
+     "newChars": 4666,
+     "ceiling": 0.9815248991840946,
+     "reuse": 0.5657515123313168,
+     "usd": 0.055460999999999996
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 10745,
+     "blocks": 14,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 10745,
+     "blocks": 14,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 10745,
+     "blocks": 14,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 10679,
+     "blocks": 14,
+     "newBlocks": 2,
+     "newChars": 4600,
+     "ceiling": 0.9910351986411249,
+     "reuse": 0.5692480569341698,
+     "usd": 0.063836
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 10706,
+     "blocks": 14,
+     "newBlocks": 2,
+     "newChars": 4627,
+     "ceiling": 0.981457078313253,
+     "reuse": 0.5678124416215207,
+     "usd": 0.053952
+    }
+   ],
+   "samples": "reuse/brama-poznania.json"
+  },
+  {
+   "id": "mosina-city",
+   "followup": false,
+   "days": 12,
+   "chars": 78332,
+   "ceiling": 0.9531337758819733,
+   "reuse": 0.6482791196445897,
+   "freeDays": 3,
+   "freeUsd": 0,
+   "shrinkUsd": 0.09211636341481425,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 7259,
+     "blocks": 8,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 7222,
+     "blocks": 9,
+     "newBlocks": 3,
+     "newChars": 4742,
+     "ceiling": 0.9577563295565813,
+     "reuse": 0.34339518139019665
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 7408,
+     "blocks": 7,
+     "newBlocks": 3,
+     "newChars": 5238,
+     "ceiling": 0.8899195198472242,
+     "reuse": 0.29292656587473
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 7408,
+     "blocks": 7,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 7322,
+     "blocks": 5,
+     "newBlocks": 2,
+     "newChars": 5275,
+     "ceiling": 0.9569120287253142,
+     "reuse": 0.2795684239278886,
+     "usd": 0.012284
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 7322,
+     "blocks": 5,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 7460,
+     "blocks": 7,
+     "newBlocks": 1,
+     "newChars": 396,
+     "ceiling": 0.9455505891913856,
+     "reuse": 0.946916890080429,
+     "usd": 0.014894
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 6704,
+     "blocks": 8,
+     "newBlocks": 3,
+     "newChars": 4162,
+     "ceiling": 0.9927721728655323,
+     "reuse": 0.3791766109785203,
+     "usd": 0.014678
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 6599,
+     "blocks": 9,
+     "newBlocks": 2,
+     "newChars": 1145,
+     "ceiling": 0.9541144080758642,
+     "reuse": 0.8264888619487801,
+     "usd": 0.055606
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 6723,
+     "blocks": 7,
+     "newBlocks": 1,
+     "newChars": 2134,
+     "ceiling": 0.9369179933914088,
+     "reuse": 0.6825821805741484,
+     "usd": 0.011301
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 6905,
+     "blocks": 5,
+     "newBlocks": 3,
+     "newChars": 4459,
+     "ceiling": 0.8474253949678174,
+     "reuse": 0.35423606082548875,
+     "usd": 0.043309
+    }
+   ],
+   "samples": "reuse/mosina-city.json"
+  },
+  {
+   "id": "rokietnica-gok",
+   "followup": false,
+   "days": 7,
+   "chars": 44828,
+   "ceiling": 0.987425851084647,
+   "reuse": 0.8524805924868386,
+   "freeDays": 4,
+   "freeUsd": 0.062003,
+   "shrinkUsd": 0.025305022780890283,
+   "pairs": [
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 10102,
+     "blocks": 14,
+     "newBlocks": 3,
+     "newChars": 1345,
+     "ceiling": 0.9442017474185862,
+     "reuse": 0.8668580479113047,
+     "usd": 0.023780000000000003
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 10102,
+     "blocks": 14,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.033295000000000005
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 6156,
+     "blocks": 5,
+     "newBlocks": 4,
+     "newChars": 5268,
+     "ceiling": 1,
+     "reuse": 0.1442495126705653,
+     "usd": 0.032521
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 6156,
+     "blocks": 5,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.009923999999999999
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 6156,
+     "blocks": 5,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.009600999999999998
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 6156,
+     "blocks": 5,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.009183
+    }
+   ],
+   "samples": "reuse/rokietnica-gok.json"
+  },
+  {
+   "id": "dopiewo-gosir",
+   "followup": false,
+   "days": 12,
+   "chars": 122342,
+   "ceiling": 0.9843487174457709,
+   "reuse": 0.9237547203740335,
+   "freeDays": 7,
+   "freeUsd": 0.004497,
+   "shrinkUsd": 0.06672980486177185,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 11649,
+     "blocks": 19,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 11649,
+     "blocks": 19,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 11649,
+     "blocks": 19,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 11649,
+     "blocks": 19,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 11649,
+     "blocks": 19,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 10908,
+     "blocks": 20,
+     "newBlocks": 6,
+     "newChars": 1498,
+     "ceiling": 0.9412041392285984,
+     "reuse": 0.8626696002933627,
+     "usd": 0.015731
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 10908,
+     "blocks": 20,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.004497
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 10562,
+     "blocks": 19,
+     "newBlocks": 3,
+     "newChars": 4364,
+     "ceiling": 1,
+     "reuse": 0.5868206779019125,
+     "usd": 0.038971
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 10562,
+     "blocks": 19,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 10640,
+     "blocks": 21,
+     "newBlocks": 6,
+     "newChars": 1276,
+     "ceiling": 0.9343424604704975,
+     "reuse": 0.8800751879699248,
+     "usd": 0.021297999999999997
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 10517,
+     "blocks": 19,
+     "newBlocks": 4,
+     "newChars": 2190,
+     "ceiling": 0.9453391898487067,
+     "reuse": 0.7917657126557003,
+     "usd": 0.014583
+    }
+   ],
+   "samples": "reuse/dopiewo-gosir.json"
+  },
+  {
+   "id": "mosina-biblioteka",
+   "followup": false,
+   "days": 12,
+   "chars": 107962,
+   "ceiling": 0.9802633755404748,
+   "reuse": 0.8409718234193513,
+   "freeDays": 5,
+   "freeUsd": 0.024548,
+   "shrinkUsd": 0.04504200136751766,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 10936,
+     "blocks": 11,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 10936,
+     "blocks": 11,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 11106,
+     "blocks": 11,
+     "newBlocks": 3,
+     "newChars": 4499,
+     "ceiling": 0.9174354243542435,
+     "reuse": 0.5949036556816135
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 11106,
+     "blocks": 11,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 10947,
+     "blocks": 10,
+     "newBlocks": 1,
+     "newChars": 3942,
+     "ceiling": 0.9312669725629741,
+     "reuse": 0.6399013428336531,
+     "usd": 0.011002
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 10947,
+     "blocks": 10,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.018363
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 10947,
+     "blocks": 10,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.006185
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 7834,
+     "blocks": 8,
+     "newBlocks": 1,
+     "newChars": 286,
+     "ceiling": 1,
+     "reuse": 0.9634924687260659,
+     "usd": 0.015641000000000002
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 7773,
+     "blocks": 8,
+     "newBlocks": 1,
+     "newChars": 337,
+     "ceiling": 1,
+     "reuse": 0.9566447960890261,
+     "usd": 0.009112
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 7653,
+     "blocks": 8,
+     "newBlocks": 1,
+     "newChars": 3822,
+     "ceiling": 0.9717588335741495,
+     "reuse": 0.5005880047040376,
+     "usd": 0.013603
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 7777,
+     "blocks": 8,
+     "newBlocks": 2,
+     "newChars": 4283,
+     "ceiling": 0.968459152016546,
+     "reuse": 0.44927349877844924,
+     "usd": 0.016483
+    }
+   ],
+   "samples": "reuse/mosina-biblioteka.json"
+  },
+  {
+   "id": "kornik-city",
+   "followup": false,
+   "days": 12,
+   "chars": 122758,
+   "ceiling": 0.9811469061827609,
+   "reuse": 0.8245246745629613,
+   "freeDays": 6,
+   "freeUsd": 0,
+   "shrinkUsd": 0.06033214218195529,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 11254,
+     "blocks": 20,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 11254,
+     "blocks": 20,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 11304,
+     "blocks": 19,
+     "newBlocks": 4,
+     "newChars": 3943,
+     "ceiling": 0.9581657280772325,
+     "reuse": 0.6511854210898798
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 11304,
+     "blocks": 19,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 11304,
+     "blocks": 19,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 11332,
+     "blocks": 17,
+     "newBlocks": 3,
+     "newChars": 4975,
+     "ceiling": 0.9453215591829454,
+     "reuse": 0.5609777620896577,
+     "usd": 0.037296
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 11332,
+     "blocks": 17,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 10896,
+     "blocks": 16,
+     "newBlocks": 2,
+     "newChars": 3303,
+     "ceiling": 0.9905380333951762,
+     "reuse": 0.6968612334801763,
+     "usd": 0.018528
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 10896,
+     "blocks": 16,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 10927,
+     "blocks": 17,
+     "newBlocks": 5,
+     "newChars": 5324,
+     "ceiling": 0.9492277813742717,
+     "reuse": 0.5127665415942162,
+     "usd": 0.019179
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 10955,
+     "blocks": 16,
+     "newBlocks": 3,
+     "newChars": 3996,
+     "ceiling": 0.9485192360918904,
+     "reuse": 0.6352350524874486,
+     "usd": 0.026233
+    }
+   ],
+   "samples": "reuse/kornik-city.json"
+  },
+  {
+   "id": "tarnowo-gok",
+   "followup": false,
+   "days": 12,
+   "chars": 86680,
+   "ceiling": 0.9623601621207593,
+   "reuse": 0.2535071527457314,
+   "freeDays": 0,
+   "freeUsd": 0,
+   "shrinkUsd": 0.057740445741570015,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 8106,
+     "blocks": 7,
+     "newBlocks": 2,
+     "newChars": 5779,
+     "ceiling": 0.9724360566178296,
+     "reuse": 0.2870713052060202
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 8106,
+     "blocks": 7,
+     "newBlocks": 2,
+     "newChars": 5779,
+     "ceiling": 0.9724360566178296,
+     "reuse": 0.2870713052060202
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 8106,
+     "blocks": 7,
+     "newBlocks": 2,
+     "newChars": 5779,
+     "ceiling": 0.9724360566178296,
+     "reuse": 0.2870713052060202
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 8106,
+     "blocks": 7,
+     "newBlocks": 2,
+     "newChars": 5779,
+     "ceiling": 0.9724360566178296,
+     "reuse": 0.2870713052060202
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 8105,
+     "blocks": 7,
+     "newBlocks": 3,
+     "newChars": 6536,
+     "ceiling": 0.9177946107040854,
+     "reuse": 0.19358420727945713,
+     "usd": 0.040781
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 8107,
+     "blocks": 6,
+     "newBlocks": 2,
+     "newChars": 6538,
+     "ceiling": 0.9724326338010679,
+     "reuse": 0.19353644998149744,
+     "usd": 0.036138
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 8106,
+     "blocks": 7,
+     "newBlocks": 2,
+     "newChars": 5907,
+     "ceiling": 0.9724360566178296,
+     "reuse": 0.271280532938564,
+     "usd": 0.033415
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 7483,
+     "blocks": 7,
+     "newBlocks": 3,
+     "newChars": 5914,
+     "ceiling": 0.9214582495644016,
+     "reuse": 0.2096752639315782,
+     "usd": 0.032365
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 7484,
+     "blocks": 7,
+     "newBlocks": 2,
+     "newChars": 5564,
+     "ceiling": 0.9702492629321897,
+     "reuse": 0.256547300908605,
+     "usd": 0.03576
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 7485,
+     "blocks": 7,
+     "newBlocks": 2,
+     "newChars": 5565,
+     "ceiling": 0.9702532493635267,
+     "reuse": 0.25651302605210424,
+     "usd": 0.035815
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 7486,
+     "blocks": 7,
+     "newBlocks": 2,
+     "newChars": 5566,
+     "ceiling": 0.9702572347266881,
+     "reuse": 0.25647876035265826,
+     "usd": 0.033686
+    }
+   ],
+   "samples": "reuse/tarnowo-gok.json"
+  },
+  {
+   "id": "kornik-kok",
+   "followup": false,
+   "days": 7,
+   "chars": 31834,
+   "ceiling": 1,
+   "reuse": 0.9619274989005466,
+   "freeDays": 5,
+   "freeUsd": 0.01119,
+   "shrinkUsd": 0.0359182967903293,
+   "pairs": [
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 6321,
+     "blocks": 12,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 6321,
+     "blocks": 12,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.01119
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 4798,
+     "blocks": 10,
+     "newBlocks": 3,
+     "newChars": 1212,
+     "ceiling": 1,
+     "reuse": 0.7473947478115881,
+     "usd": 0.048058
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 4798,
+     "blocks": 10,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 4798,
+     "blocks": 10,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 4798,
+     "blocks": 10,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    }
+   ],
+   "samples": "reuse/kornik-kok.json"
+  },
+  {
+   "id": "lubon-ok",
+   "followup": false,
+   "days": 12,
+   "chars": 101840,
+   "ceiling": 0.9641153550336085,
+   "reuse": 0.9151904948939513,
+   "freeDays": 8,
+   "freeUsd": 0,
+   "shrinkUsd": 0.04503677144282363,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 9328,
+     "blocks": 9,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 9328,
+     "blocks": 9,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 9328,
+     "blocks": 9,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 9328,
+     "blocks": 9,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 9330,
+     "blocks": 9,
+     "newBlocks": 1,
+     "newChars": 2480,
+     "ceiling": 0.9826321467098166,
+     "reuse": 0.7341907824222937,
+     "usd": 0.012631
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 9645,
+     "blocks": 8,
+     "newBlocks": 2,
+     "newChars": 4345,
+     "ceiling": 0.6379004487112595,
+     "reuse": 0.5495075168481078,
+     "usd": 0.014302
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 9645,
+     "blocks": 8,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 8977,
+     "blocks": 8,
+     "newBlocks": 1,
+     "newChars": 1812,
+     "ceiling": 1,
+     "reuse": 0.7981508298986298,
+     "usd": 0.034961
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 8977,
+     "blocks": 8,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 8977,
+     "blocks": 8,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 8977,
+     "blocks": 8,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    }
+   ],
+   "samples": "reuse/lubon-ok.json"
+  },
+  {
+   "id": "kleszczewo-gokis",
+   "followup": false,
+   "days": 7,
+   "chars": 56542,
+   "ceiling": 0.9788128402747852,
+   "reuse": 0.6610661101482084,
+   "freeDays": 3,
+   "freeUsd": 0,
+   "shrinkUsd": 0.04425876152830467,
+   "pairs": [
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 11425,
+     "blocks": 7,
+     "newBlocks": 3,
+     "newChars": 6706,
+     "ceiling": 0.9132536473896994,
+     "reuse": 0.41304157549234133,
+     "usd": 0.040916
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 11425,
+     "blocks": 6,
+     "newBlocks": 2,
+     "newChars": 7730,
+     "ceiling": 0.9818917018284107,
+     "reuse": 0.3234135667396061,
+     "usd": 0.048728999999999995
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 8423,
+     "blocks": 6,
+     "newBlocks": 2,
+     "newChars": 4728,
+     "ceiling": 1,
+     "reuse": 0.4386798052950255,
+     "usd": 0.026441
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 8423,
+     "blocks": 6,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 8423,
+     "blocks": 6,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 8423,
+     "blocks": 6,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    }
+   ],
+   "samples": "reuse/kleszczewo-gokis.json"
+  },
+  {
+   "id": "puszczykowo-city",
+   "followup": false,
+   "days": 12,
+   "chars": 68541,
+   "ceiling": 0.9028662391598283,
+   "reuse": 0.3545469135262106,
+   "freeDays": 0,
+   "freeUsd": 0,
+   "shrinkUsd": 0.04025189221587908,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 6553,
+     "blocks": 7,
+     "newBlocks": 1,
+     "newChars": 4062,
+     "ceiling": 0.9183515974687452,
+     "reuse": 0.3801312376010987
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 6565,
+     "blocks": 7,
+     "newBlocks": 1,
+     "newChars": 4074,
+     "ceiling": 0.9166538283777538,
+     "reuse": 0.3794364051789795
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 6604,
+     "blocks": 7,
+     "newBlocks": 1,
+     "newChars": 4113,
+     "ceiling": 0.9111791730474732,
+     "reuse": 0.37719563900666264
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 6638,
+     "blocks": 7,
+     "newBlocks": 1,
+     "newChars": 4147,
+     "ceiling": 0.9064594759293114,
+     "reuse": 0.3752636336245857
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 6640,
+     "blocks": 7,
+     "newBlocks": 1,
+     "newChars": 4149,
+     "ceiling": 0.906183368869936,
+     "reuse": 0.3751506024096386,
+     "usd": 0.007769
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 6599,
+     "blocks": 7,
+     "newBlocks": 1,
+     "newChars": 4108,
+     "ceiling": 0.9118773946360154,
+     "reuse": 0.3774814365813002,
+     "usd": 0.007519
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 6619,
+     "blocks": 7,
+     "newBlocks": 1,
+     "newChars": 4128,
+     "ceiling": 0.9090909090909091,
+     "reuse": 0.37634083698443876,
+     "usd": 0.020699000000000002
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 5557,
+     "blocks": 5,
+     "newBlocks": 1,
+     "newChars": 3841,
+     "ceiling": 0.8890710382513661,
+     "reuse": 0.30879971207486057,
+     "usd": 0.02259
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 5570,
+     "blocks": 5,
+     "newBlocks": 1,
+     "newChars": 3854,
+     "ceiling": 0.8869707432309649,
+     "reuse": 0.30807899461400357,
+     "usd": 0.021733000000000002
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 5625,
+     "blocks": 5,
+     "newBlocks": 1,
+     "newChars": 3909,
+     "ceiling": 0.87819359481828,
+     "reuse": 0.3050666666666667,
+     "usd": 0.020974
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 5571,
+     "blocks": 5,
+     "newBlocks": 1,
+     "newChars": 3855,
+     "ceiling": 0.8868095930232558,
+     "reuse": 0.3080236941303177,
+     "usd": 0.021554999999999998
+    }
+   ],
+   "samples": "reuse/puszczykowo-city.json"
+  },
+  {
+   "id": "nowe-zoo",
+   "followup": false,
+   "days": 12,
+   "chars": 178139,
+   "ceiling": 0.9869712275958928,
+   "reuse": 0.9211121652192951,
+   "freeDays": 9,
+   "freeUsd": 0.010591,
+   "shrinkUsd": 0.028298151545013354,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 17237,
+     "blocks": 36,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 17237,
+     "blocks": 36,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 17237,
+     "blocks": 36,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 17237,
+     "blocks": 36,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 17237,
+     "blocks": 36,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 17237,
+     "blocks": 36,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 17237,
+     "blocks": 36,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.010591
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 14928,
+     "blocks": 33,
+     "newBlocks": 10,
+     "newChars": 9595,
+     "ceiling": 0.8816631848507311,
+     "reuse": 0.3572481243301179,
+     "usd": 0.018378
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 14184,
+     "blocks": 34,
+     "newBlocks": 3,
+     "newChars": 4458,
+     "ceiling": 0.960913669575087,
+     "reuse": 0.6857021996615905,
+     "usd": 0.031694
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 14184,
+     "blocks": 34,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 14184,
+     "blocks": 34,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    }
+   ],
+   "samples": "reuse/nowe-zoo.json"
+  },
+  {
+   "id": "tarnowo-city",
+   "followup": false,
+   "days": 12,
+   "chars": 77336,
+   "ceiling": 0.9329704401300983,
+   "reuse": 0.507732491983035,
+   "freeDays": 3,
+   "freeUsd": 0.011232,
+   "shrinkUsd": 0.02511023055119052,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 7887,
+     "blocks": 5,
+     "newBlocks": 2,
+     "newChars": 6208,
+     "ceiling": 0.9080826109127996,
+     "reuse": 0.21288195765183215
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 7887,
+     "blocks": 5,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 7962,
+     "blocks": 6,
+     "newBlocks": 4,
+     "newChars": 7576,
+     "ceiling": 0.9051887387956066,
+     "reuse": 0.04848028133634763
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 7962,
+     "blocks": 6,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 7870,
+     "blocks": 6,
+     "newBlocks": 3,
+     "newChars": 5391,
+     "ceiling": 0.9174862689998723,
+     "reuse": 0.31499364675984753,
+     "usd": 0.016082
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 7787,
+     "blocks": 5,
+     "newBlocks": 2,
+     "newChars": 4870,
+     "ceiling": 0.9322055785123967,
+     "reuse": 0.3745986901245666,
+     "usd": 0.005497
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 7787,
+     "blocks": 5,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.011232
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 5508,
+     "blocks": 6,
+     "newBlocks": 3,
+     "newChars": 1914,
+     "ceiling": 1,
+     "reuse": 0.6525054466230937,
+     "usd": 0.004473
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 5725,
+     "blocks": 4,
+     "newBlocks": 2,
+     "newChars": 4934,
+     "ceiling": 0.8789898281304805,
+     "reuse": 0.1381659388646288,
+     "usd": 0.004504
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 5498,
+     "blocks": 6,
+     "newBlocks": 3,
+     "newChars": 3495,
+     "ceiling": 0.7964957108961489,
+     "reuse": 0.3643142961076755,
+     "usd": 0.019357999999999997
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 5463,
+     "blocks": 4,
+     "newBlocks": 2,
+     "newChars": 3682,
+     "ceiling": 0.8691176470588236,
+     "reuse": 0.3260113490755995,
+     "usd": 0.022674
+    }
+   ],
+   "samples": "reuse/tarnowo-city.json"
+  },
+  {
+   "id": "swarzedz-ok",
+   "followup": false,
+   "days": 12,
+   "chars": 137775,
+   "ceiling": 0.9935245472411078,
+   "reuse": 0.8884703320631464,
+   "freeDays": 8,
+   "freeUsd": 0.017755,
+   "shrinkUsd": 0.01576878985884844,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 15953,
+     "blocks": 11,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 15953,
+     "blocks": 11,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 15953,
+     "blocks": 11,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 15953,
+     "blocks": 11,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 15953,
+     "blocks": 11,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 15953,
+     "blocks": 11,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 15953,
+     "blocks": 11,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.017755
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 6522,
+     "blocks": 4,
+     "newBlocks": 4,
+     "newChars": 6522,
+     "ceiling": 1,
+     "reuse": 0,
+     "usd": 0.020435000000000002
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 6562,
+     "blocks": 4,
+     "newBlocks": 2,
+     "newChars": 4448,
+     "ceiling": 0.9519068770102619,
+     "reuse": 0.3221578786955197,
+     "usd": 0.022523
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 6510,
+     "blocks": 6,
+     "newBlocks": 4,
+     "newChars": 4396,
+     "ceiling": 0.9114334207684,
+     "reuse": 0.3247311827956989,
+     "usd": 0.026215000000000002
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 6510,
+     "blocks": 6,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    }
+   ],
+   "samples": "reuse/swarzedz-ok.json"
+  },
+  {
+   "id": "mosina-galeria",
+   "followup": false,
+   "days": 12,
+   "chars": 54412,
+   "ceiling": 1,
+   "reuse": 0.9706682349481732,
+   "freeDays": 10,
+   "freeUsd": 0.019294000000000002,
+   "shrinkUsd": 0.014067976374660255,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 5040,
+     "blocks": 9,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 5040,
+     "blocks": 9,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 5040,
+     "blocks": 9,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 5040,
+     "blocks": 9,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 5040,
+     "blocks": 9,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 5040,
+     "blocks": 9,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 5040,
+     "blocks": 9,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.004325
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 4783,
+     "blocks": 9,
+     "newBlocks": 1,
+     "newChars": 1596,
+     "ceiling": 1,
+     "reuse": 0.6663182103282459,
+     "usd": 0.021113
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 4783,
+     "blocks": 9,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.004324
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 4783,
+     "blocks": 9,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.004244
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 4783,
+     "blocks": 9,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.006401
+    }
+   ],
+   "samples": "reuse/mosina-galeria.json"
+  },
+  {
+   "id": "suchylas-ckbp",
+   "followup": false,
+   "days": 12,
+   "chars": 89123,
+   "ceiling": 0.9867250536038408,
+   "reuse": 0.9605040225306599,
+   "freeDays": 8,
+   "freeUsd": 0.012095,
+   "shrinkUsd": 0.02034050000408548,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 7711,
+     "blocks": 16,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 7711,
+     "blocks": 16,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 7635,
+     "blocks": 17,
+     "newBlocks": 5,
+     "newChars": 1239,
+     "ceiling": 0.9526666666666667,
+     "reuse": 0.8377210216110019
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 7635,
+     "blocks": 17,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 8449,
+     "blocks": 19,
+     "newBlocks": 4,
+     "newChars": 2168,
+     "ceiling": 0.9027443428021185,
+     "reuse": 0.7434015859865073,
+     "usd": 0.011489
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 8449,
+     "blocks": 19,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 8449,
+     "blocks": 19,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 8271,
+     "blocks": 19,
+     "newBlocks": 1,
+     "newChars": 113,
+     "ceiling": 1,
+     "reuse": 0.9863378067948253,
+     "usd": 0.011963
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 8271,
+     "blocks": 19,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 8271,
+     "blocks": 19,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 8271,
+     "blocks": 19,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.012095
+    }
+   ],
+   "samples": "reuse/suchylas-ckbp.json"
+  },
+  {
+   "id": "rokietnica-city",
+   "followup": false,
+   "days": 12,
+   "chars": 169274,
+   "ceiling": 0.9501065767846597,
+   "reuse": 0.5519040136110684,
+   "freeDays": 2,
+   "freeUsd": 0,
+   "shrinkUsd": 0.028263770044912928,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 16741,
+     "blocks": 9,
+     "newBlocks": 1,
+     "newChars": 4316,
+     "ceiling": 0.9947882345893488,
+     "reuse": 0.7421898333432889
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 17966,
+     "blocks": 8,
+     "newBlocks": 5,
+     "newChars": 14935,
+     "ceiling": 0.8605482052140904,
+     "reuse": 0.16870755872203047
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 18005,
+     "blocks": 9,
+     "newBlocks": 4,
+     "newChars": 10016,
+     "ceiling": 0.9436894285396012,
+     "reuse": 0.4437100805331853
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 17972,
+     "blocks": 9,
+     "newBlocks": 3,
+     "newChars": 8953,
+     "ceiling": 0.943083533284973,
+     "reuse": 0.5018361896283108
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 17253,
+     "blocks": 8,
+     "newBlocks": 3,
+     "newChars": 9264,
+     "ceiling": 0.9225135150845782,
+     "reuse": 0.46304990436445836,
+     "usd": 0.009296
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 15947,
+     "blocks": 7,
+     "newBlocks": 4,
+     "newChars": 12916,
+     "ceiling": 0.9458949355143127,
+     "reuse": 0.19006709725967263,
+     "usd": 0.010427
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 15964,
+     "blocks": 7,
+     "newBlocks": 2,
+     "newChars": 6859,
+     "ceiling": 0.994281045751634,
+     "reuse": 0.5703457780005011,
+     "usd": 0.015787
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 12177,
+     "blocks": 6,
+     "newBlocks": 1,
+     "newChars": 3072,
+     "ceiling": 1,
+     "reuse": 0.7477211135747721,
+     "usd": 0.011772000000000001
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 12177,
+     "blocks": 6,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 12536,
+     "blocks": 7,
+     "newBlocks": 3,
+     "newChars": 5520,
+     "ceiling": 0.8783297336213103,
+     "reuse": 0.5596681557115507,
+     "usd": 0.007453
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 12536,
+     "blocks": 7,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    }
+   ],
+   "samples": "reuse/rokietnica-city.json"
+  },
+  {
+   "id": "palmiarnia",
+   "followup": false,
+   "days": 12,
+   "chars": 119570,
+   "ceiling": 1,
+   "reuse": 1,
+   "freeDays": 11,
+   "freeUsd": 0.025054,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 10870,
+     "blocks": 12,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 10870,
+     "blocks": 12,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 10870,
+     "blocks": 12,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 10870,
+     "blocks": 12,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 10870,
+     "blocks": 12,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.014433
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 10870,
+     "blocks": 12,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 10870,
+     "blocks": 12,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.010621
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 10870,
+     "blocks": 12,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 10870,
+     "blocks": 12,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 10870,
+     "blocks": 12,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 10870,
+     "blocks": 12,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    }
+   ]
+  },
+  {
+   "id": "mosina-mok",
+   "followup": false,
+   "days": 12,
+   "chars": 289064,
+   "ceiling": 0.9878410633375383,
+   "reuse": 0.9613096061771788,
+   "freeDays": 10,
+   "freeUsd": 0.023367,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 26720,
+     "blocks": 13,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 26720,
+     "blocks": 13,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 26720,
+     "blocks": 13,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 26113,
+     "blocks": 13,
+     "newBlocks": 4,
+     "newChars": 11184,
+     "ceiling": 0.8654037886340977,
+     "reuse": 0.571707578600697
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 26113,
+     "blocks": 13,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 26113,
+     "blocks": 13,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 26113,
+     "blocks": 13,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.023367
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 26113,
+     "blocks": 13,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 26113,
+     "blocks": 13,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 26113,
+     "blocks": 13,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 26113,
+     "blocks": 13,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    }
+   ],
+   "samples": "reuse/mosina-mok.json"
+  },
+  {
+   "id": "lubon-city",
+   "followup": false,
+   "days": 10,
+   "chars": 121077,
+   "ceiling": 0.9810533962444071,
+   "reuse": 0.9339758996341171,
+   "freeDays": 7,
+   "freeUsd": 0.006308,
+   "shrinkUsd": 0.00953728409232689,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 16908,
+     "blocks": 13,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-27",
+     "chars": 16908,
+     "blocks": 13,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 15804,
+     "blocks": 15,
+     "newBlocks": 8,
+     "newChars": 6285,
+     "ceiling": 0.8548470043713037,
+     "reuse": 0.6023158694001518
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 15804,
+     "blocks": 15,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 15804,
+     "blocks": 15,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 15804,
+     "blocks": 15,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.006308
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 8015,
+     "blocks": 7,
+     "newBlocks": 1,
+     "newChars": 1709,
+     "ceiling": 1,
+     "reuse": 0.7867747972551467,
+     "usd": 0.012122
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 8015,
+     "blocks": 7,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 8015,
+     "blocks": 7,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    }
+   ],
+   "samples": "reuse/lubon-city.json"
+  },
+  {
+   "id": "kornik-arboretum",
+   "followup": false,
+   "days": 6,
+   "chars": 77369,
+   "ceiling": 1,
+   "reuse": 0.9879796817846941,
+   "freeDays": 4,
+   "freeUsd": 0,
+   "shrinkUsd": 0.006553529860228717,
+   "pairs": [
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 20705,
+     "blocks": 7,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 14166,
+     "blocks": 5,
+     "newBlocks": 1,
+     "newChars": 930,
+     "ceiling": 1,
+     "reuse": 0.9343498517577298,
+     "usd": 0.007014
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 14166,
+     "blocks": 5,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 14166,
+     "blocks": 5,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 14166,
+     "blocks": 5,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    }
+   ],
+   "samples": "reuse/kornik-arboretum.json"
+  },
+  {
+   "id": "lubon-biblioteka",
+   "followup": false,
+   "days": 7,
+   "chars": 27498,
+   "ceiling": 1,
+   "reuse": 1,
+   "freeDays": 6,
+   "freeUsd": 0.005027,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 4583,
+     "blocks": 10,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 4583,
+     "blocks": 10,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0.005027
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 4583,
+     "blocks": 10,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 4583,
+     "blocks": 10,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 4583,
+     "blocks": 10,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 4583,
+     "blocks": 10,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    }
+   ]
+  },
+  {
+   "id": "mosina-osir",
+   "followup": false,
+   "days": 7,
+   "chars": 721858,
+   "ceiling": 0.5658707340846068,
+   "reuse": 0.41857124254354733,
+   "freeDays": 0,
+   "freeUsd": 0,
+   "shrinkUsd": 0.005014312025170747,
+   "pairs": [
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 13031,
+     "blocks": 12,
+     "newBlocks": 11,
+     "newChars": 9856,
+     "ceiling": 0.5451416053825693,
+     "reuse": 0.2436497582687438,
+     "usd": 0.02058
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 143367,
+     "blocks": 34,
+     "newBlocks": 34,
+     "newChars": 143367,
+     "ceiling": 0,
+     "reuse": 0,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 143421,
+     "blocks": 34,
+     "newBlocks": 4,
+     "newChars": 63535,
+     "ceiling": 0.7128868783462651,
+     "reuse": 0.5570035071572503,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 143236,
+     "blocks": 34,
+     "newBlocks": 4,
+     "newChars": 63350,
+     "ceiling": 0.7138321280362377,
+     "reuse": 0.5577229188192913,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 139400,
+     "blocks": 34,
+     "newBlocks": 5,
+     "newChars": 76258,
+     "ceiling": 0.7061880331814602,
+     "reuse": 0.45295552367288383,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 139403,
+     "blocks": 34,
+     "newBlocks": 4,
+     "newChars": 63343,
+     "ceiling": 0.7061724396814415,
+     "reuse": 0.5456123612834731,
+     "usd": 0
+    }
+   ],
+   "samples": "reuse/mosina-osir.json"
+  },
+  {
+   "id": "biblraczynskich",
+   "followup": false,
+   "days": 7,
+   "chars": 87727,
+   "ceiling": 0.006233670349358468,
+   "reuse": 0.0025989718102750583,
+   "freeDays": 0,
+   "freeUsd": 0,
+   "shrinkUsd": 0.0015934866141732286,
+   "pairs": [
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 635,
+     "blocks": 4,
+     "newBlocks": 1,
+     "newChars": 407,
+     "ceiling": 0.861198738170347,
+     "reuse": 0.35905511811023627,
+     "usd": 0.004438
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 17428,
+     "blocks": 1,
+     "newBlocks": 1,
+     "newChars": 17428,
+     "ceiling": 0,
+     "reuse": 0,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 17428,
+     "blocks": 1,
+     "newBlocks": 1,
+     "newChars": 17428,
+     "ceiling": 0,
+     "reuse": 0,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 17428,
+     "blocks": 1,
+     "newBlocks": 1,
+     "newChars": 17428,
+     "ceiling": 0,
+     "reuse": 0,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 17398,
+     "blocks": 1,
+     "newBlocks": 1,
+     "newChars": 17398,
+     "ceiling": 0,
+     "reuse": 0,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 17410,
+     "blocks": 1,
+     "newBlocks": 1,
+     "newChars": 17410,
+     "ceiling": 0,
+     "reuse": 0,
+     "usd": 0
+    }
+   ],
+   "samples": "reuse/biblraczynskich.json"
+  },
+  {
+   "id": "puszczykowo-bmcak",
+   "followup": false,
+   "days": 6,
+   "chars": 38953,
+   "ceiling": 0.5831783912106084,
+   "reuse": 0.04490026442122556,
+   "freeDays": 0,
+   "freeUsd": 0,
+   "shrinkUsd": 0.001451410075779435,
+   "pairs": [
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 8549,
+     "blocks": 4,
+     "newBlocks": 1,
+     "newChars": 7931,
+     "ceiling": 0.6364913924347113,
+     "reuse": 0.07228915662650603,
+     "usd": 0.006398
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 7580,
+     "blocks": 2,
+     "newBlocks": 2,
+     "newChars": 7580,
+     "ceiling": 0.5335446381405177,
+     "reuse": 0,
+     "usd": 0.00567
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 7780,
+     "blocks": 2,
+     "newBlocks": 1,
+     "newChars": 7403,
+     "ceiling": 0.5750128667009778,
+     "reuse": 0.0484575835475578,
+     "usd": 0.007199
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 7555,
+     "blocks": 2,
+     "newBlocks": 1,
+     "newChars": 7178,
+     "ceiling": 0.572412879289784,
+     "reuse": 0.04990072799470546,
+     "usd": 0.005658
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 7489,
+     "blocks": 2,
+     "newBlocks": 1,
+     "newChars": 7112,
+     "ceiling": 0.5918994786793209,
+     "reuse": 0.050340499399118666,
+     "usd": 0.007106
+    }
+   ],
+   "samples": "reuse/puszczykowo-bmcak.json"
+  },
+  {
+   "id": "brama-poznania__followup",
+   "followup": true,
+   "days": 7,
+   "chars": 1793112,
+   "ceiling": 0.9997833112725171,
+   "reuse": 0.9943327577976167,
+   "freeDays": 3,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 298852,
+     "blocks": 316,
+     "newBlocks": 2,
+     "newChars": 2476,
+     "ceiling": 0.9986998676351029,
+     "reuse": 0.9917149625901784
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 298852,
+     "blocks": 316,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 298852,
+     "blocks": 316,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 298852,
+     "blocks": 316,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 298852,
+     "blocks": 316,
+     "newBlocks": 2,
+     "newChars": 3843,
+     "ceiling": 1,
+     "reuse": 0.9871407920977607
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 298852,
+     "blocks": 316,
+     "newBlocks": 2,
+     "newChars": 3843,
+     "ceiling": 1,
+     "reuse": 0.9871407920977607
+    }
+   ],
+   "samples": "reuse/brama-poznania__followup.json"
+  },
+  {
+   "id": "czerwonak-city__followup",
+   "followup": true,
+   "days": 12,
+   "chars": 1419324,
+   "ceiling": 0.8596980315163129,
+   "reuse": 0.9693445612136482,
+   "freeDays": 6,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 163103,
+     "blocks": 382,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 170685,
+     "blocks": 401,
+     "newBlocks": 26,
+     "newChars": 15137,
+     "ceiling": 0.9549402406882197,
+     "reuse": 0.9113161672086006
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 170685,
+     "blocks": 401,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 7275,
+     "blocks": 7,
+     "newBlocks": 5,
+     "newChars": 6290,
+     "ceiling": 0.19582353754667403,
+     "reuse": 0.1353951890034364
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 7161,
+     "blocks": 13,
+     "newBlocks": 10,
+     "newChars": 6153,
+     "ceiling": 0.23454367026496564,
+     "reuse": 0.1407624633431085
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 5635,
+     "blocks": 7,
+     "newBlocks": 4,
+     "newChars": 4627,
+     "ceiling": 0.5121298608633607,
+     "reuse": 0.17888198757763973
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 178956,
+     "blocks": 420,
+     "newBlocks": 22,
+     "newChars": 11303,
+     "ceiling": 0.008907433545709642,
+     "reuse": 0.9368392230492412
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 178956,
+     "blocks": 420,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 178956,
+     "blocks": 420,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 178956,
+     "blocks": 420,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 178956,
+     "blocks": 420,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    }
+   ],
+   "samples": "reuse/czerwonak-city__followup.json"
+  },
+  {
+   "id": "swarzedz-city__followup",
+   "followup": true,
+   "days": 10,
+   "chars": 668679,
+   "ceiling": 0.9943545408185392,
+   "reuse": 0.9943545408185392,
+   "freeDays": 8,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 94447,
+     "blocks": 7,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-27",
+     "chars": 94447,
+     "blocks": 7,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 94447,
+     "blocks": 7,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-30",
+     "chars": 94447,
+     "blocks": 7,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 94447,
+     "blocks": 7,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 94447,
+     "blocks": 7,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 94447,
+     "blocks": 7,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 3775,
+     "blocks": 8,
+     "newBlocks": 8,
+     "newChars": 3775,
+     "ceiling": 0,
+     "reuse": 0
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 3775,
+     "blocks": 8,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    }
+   ],
+   "samples": "reuse/swarzedz-city__followup.json"
+  },
+  {
+   "id": "poznan-kultura-rss__followup",
+   "followup": true,
+   "days": 8,
+   "chars": 211161,
+   "ceiling": 0.7474785082516074,
+   "reuse": 0.5252721856782265,
+   "freeDays": 0,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 31740,
+     "blocks": 41,
+     "newBlocks": 10,
+     "newChars": 15332,
+     "ceiling": 0.7168766221434449,
+     "reuse": 0.516950220541903
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 30860,
+     "blocks": 40,
+     "newBlocks": 7,
+     "newChars": 9127,
+     "ceiling": 0.9263154467309195,
+     "reuse": 0.704244977316915
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 29875,
+     "blocks": 38,
+     "newBlocks": 8,
+     "newChars": 14492,
+     "ceiling": 0.8323520506005451,
+     "reuse": 0.5149121338912134
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 29731,
+     "blocks": 37,
+     "newBlocks": 10,
+     "newChars": 14307,
+     "ceiling": 0.7272542854244852,
+     "reuse": 0.5187851064545423
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 29980,
+     "blocks": 37,
+     "newBlocks": 9,
+     "newChars": 14647,
+     "ceiling": 0.7540736270368135,
+     "reuse": 0.5114409606404269
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 30553,
+     "blocks": 36,
+     "newBlocks": 9,
+     "newChars": 17368,
+     "ceiling": 0.6332083168838005,
+     "reuse": 0.43154518377900697
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 28422,
+     "blocks": 48,
+     "newBlocks": 20,
+     "newChars": 14971,
+     "ceiling": 0.6352999399059706,
+     "reuse": 0.473260150587573
+    }
+   ],
+   "samples": "reuse/poznan-kultura-rss__followup.json"
+  },
+  {
+   "id": "dk-orbita",
+   "followup": false,
+   "days": 6,
+   "chars": 195270,
+   "ceiling": 0,
+   "reuse": 0,
+   "freeDays": 0,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 39435,
+     "blocks": 1,
+     "newBlocks": 1,
+     "newChars": 39435,
+     "ceiling": 0,
+     "reuse": 0,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 39435,
+     "blocks": 1,
+     "newBlocks": 1,
+     "newChars": 39435,
+     "ceiling": 0,
+     "reuse": 0,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 38800,
+     "blocks": 1,
+     "newBlocks": 1,
+     "newChars": 38800,
+     "ceiling": 0,
+     "reuse": 0,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 38800,
+     "blocks": 1,
+     "newBlocks": 1,
+     "newChars": 38800,
+     "ceiling": 0,
+     "reuse": 0,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 38800,
+     "blocks": 1,
+     "newBlocks": 1,
+     "newChars": 38800,
+     "ceiling": 0,
+     "reuse": 0,
+     "usd": 0
+    }
+   ],
+   "samples": "reuse/dk-orbita.json"
+  },
+  {
+   "id": "dk-pod-lipami",
+   "followup": false,
+   "days": 6,
+   "chars": 195270,
+   "ceiling": 0,
+   "reuse": 0,
+   "freeDays": 0,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 39435,
+     "blocks": 1,
+     "newBlocks": 1,
+     "newChars": 39435,
+     "ceiling": 0,
+     "reuse": 0,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 39435,
+     "blocks": 1,
+     "newBlocks": 1,
+     "newChars": 39435,
+     "ceiling": 0,
+     "reuse": 0,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 38800,
+     "blocks": 1,
+     "newBlocks": 1,
+     "newChars": 38800,
+     "ceiling": 0,
+     "reuse": 0,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 38800,
+     "blocks": 1,
+     "newBlocks": 1,
+     "newChars": 38800,
+     "ceiling": 0,
+     "reuse": 0,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 38800,
+     "blocks": 1,
+     "newBlocks": 1,
+     "newChars": 38800,
+     "ceiling": 0,
+     "reuse": 0,
+     "usd": 0
+    }
+   ],
+   "samples": "reuse/dk-pod-lipami.json"
+  },
+  {
+   "id": "poznan-events__followup",
+   "followup": true,
+   "days": 5,
+   "chars": 167488,
+   "ceiling": 0.8249677562645829,
+   "reuse": 0.2988930550248376,
+   "freeDays": 0,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 40989,
+     "blocks": 59,
+     "newBlocks": 36,
+     "newChars": 28950,
+     "ceiling": 0.8342428201777983,
+     "reuse": 0.2937129473761253
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 42001,
+     "blocks": 57,
+     "newBlocks": 33,
+     "newChars": 29327,
+     "ceiling": 0.8286951298863807,
+     "reuse": 0.30175472012571125
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 42054,
+     "blocks": 59,
+     "newBlocks": 35,
+     "newChars": 29380,
+     "ceiling": 0.8193213313690729,
+     "reuse": 0.3013744233604413
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 42444,
+     "blocks": 77,
+     "newBlocks": 53,
+     "newChars": 29770,
+     "ceiling": 0.8179167181514889,
+     "reuse": 0.29860522099707854
+    }
+   ],
+   "samples": "reuse/poznan-events__followup.json"
+  },
+  {
+   "id": "komorniki-city__followup",
+   "followup": true,
+   "days": 12,
+   "chars": 165665,
+   "ceiling": 0.8420356774019039,
+   "reuse": 0.45599251501524163,
+   "freeDays": 0,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 17306,
+     "blocks": 14,
+     "newBlocks": 2,
+     "newChars": 4846,
+     "ceiling": 0.9945472475201578,
+     "reuse": 0.7199815093031319
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 17277,
+     "blocks": 14,
+     "newBlocks": 2,
+     "newChars": 7291,
+     "ceiling": 0.9893666472980825,
+     "reuse": 0.5779938646755802
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 17165,
+     "blocks": 14,
+     "newBlocks": 2,
+     "newChars": 7179,
+     "ceiling": 0.9831569097608047,
+     "reuse": 0.5817652199242644
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 17034,
+     "blocks": 15,
+     "newBlocks": 3,
+     "newChars": 7048,
+     "ceiling": 0.9956396205291379,
+     "reuse": 0.5862392861336152
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 17270,
+     "blocks": 16,
+     "newBlocks": 4,
+     "newChars": 7284,
+     "ceiling": 0.9819840762480386,
+     "reuse": 0.5782281412854662
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 15392,
+     "blocks": 16,
+     "newBlocks": 13,
+     "newChars": 13311,
+     "ceiling": 0.25421631829133295,
+     "reuse": 0.13520010395010396
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 15396,
+     "blocks": 16,
+     "newBlocks": 3,
+     "newChars": 8296,
+     "ceiling": 0.9957034047262548,
+     "reuse": 0.46115874253052735
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 11773,
+     "blocks": 14,
+     "newBlocks": 4,
+     "newChars": 7767,
+     "ceiling": 0.9625500042556814,
+     "reuse": 0.34027010957275117
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 12089,
+     "blocks": 11,
+     "newBlocks": 5,
+     "newChars": 8683,
+     "ceiling": 0.7820714818807529,
+     "reuse": 0.2817437339730333
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 12317,
+     "blocks": 13,
+     "newBlocks": 5,
+     "newChars": 7853,
+     "ceiling": 0.9009844601741112,
+     "reuse": 0.3624259154014776
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 12646,
+     "blocks": 20,
+     "newBlocks": 17,
+     "newChars": 10565,
+     "ceiling": 0.2585563408242674,
+     "reuse": 0.16455796299225056
+    }
+   ],
+   "samples": "reuse/komorniki-city__followup.json"
+  },
+  {
+   "id": "poznan-kultura__followup",
+   "followup": true,
+   "days": 5,
+   "chars": 145413,
+   "ceiling": 0.8375560969136097,
+   "reuse": 0.18397942412301513,
+   "freeDays": 0,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 35713,
+     "blocks": 29,
+     "newBlocks": 11,
+     "newChars": 28759,
+     "ceiling": 0.8454440257543839,
+     "reuse": 0.19471900988435586
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 36590,
+     "blocks": 28,
+     "newBlocks": 11,
+     "newChars": 29663,
+     "ceiling": 0.8369908682417742,
+     "reuse": 0.18931402022410493
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 36477,
+     "blocks": 29,
+     "newBlocks": 17,
+     "newChars": 30731,
+     "ceiling": 0.826500072642743,
+     "reuse": 0.1575239191819503
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 36633,
+     "blocks": 29,
+     "newBlocks": 12,
+     "newChars": 29507,
+     "ceiling": 0.841439773154712,
+     "reuse": 0.19452406300330305
+    }
+   ],
+   "samples": "reuse/poznan-kultura__followup.json"
+  },
+  {
+   "id": "palmiarnia__followup",
+   "followup": true,
+   "days": 12,
+   "chars": 136724,
+   "ceiling": 0.9898773816160288,
+   "reuse": 0.9338594540826776,
+   "freeDays": 9,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 11877,
+     "blocks": 10,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 12379,
+     "blocks": 10,
+     "newBlocks": 2,
+     "newChars": 4446,
+     "ceiling": 0.9365925682880814,
+     "reuse": 0.6408433637612085
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 12379,
+     "blocks": 10,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 12379,
+     "blocks": 10,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 12530,
+     "blocks": 10,
+     "newBlocks": 2,
+     "newChars": 4597,
+     "ceiling": 0.9521880064829822,
+     "reuse": 0.633120510774142
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 12530,
+     "blocks": 10,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 12530,
+     "blocks": 10,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 12530,
+     "blocks": 10,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 12530,
+     "blocks": 10,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 12530,
+     "blocks": 10,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 12530,
+     "blocks": 10,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    }
+   ],
+   "samples": "reuse/palmiarnia__followup.json"
+  },
+  {
+   "id": "komorniki-gok__followup",
+   "followup": true,
+   "days": 11,
+   "chars": 111251,
+   "ceiling": 0.5875959588874113,
+   "reuse": 0.36522817772424515,
+   "freeDays": 1,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 11463,
+     "blocks": 8,
+     "newBlocks": 5,
+     "newChars": 9382,
+     "ceiling": 0.502582056892779,
+     "reuse": 0.1815406089156416
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 14368,
+     "blocks": 14,
+     "newBlocks": 11,
+     "newChars": 12287,
+     "ceiling": 0.4530159173415247,
+     "reuse": 0.14483574610244987
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 11459,
+     "blocks": 10,
+     "newBlocks": 7,
+     "newChars": 9378,
+     "ceiling": 0.5588827598283863,
+     "reuse": 0.18160397940483464
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-29",
+     "chars": 11451,
+     "blocks": 10,
+     "newBlocks": 2,
+     "newChars": 4403,
+     "ceiling": 0.993691404538684,
+     "reuse": 0.6154920967601083
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 11579,
+     "blocks": 10,
+     "newBlocks": 2,
+     "newChars": 6004,
+     "ceiling": 0.9626548825924963,
+     "reuse": 0.48147508420416274
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 11583,
+     "blocks": 10,
+     "newBlocks": 2,
+     "newChars": 4475,
+     "ceiling": 0.994283239497618,
+     "reuse": 0.6136579469912804
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 6888,
+     "blocks": 7,
+     "newBlocks": 2,
+     "newChars": 3331,
+     "ceiling": 0.5276198804838945,
+     "reuse": 0.5164053426248548
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 14420,
+     "blocks": 10,
+     "newBlocks": 10,
+     "newChars": 14420,
+     "ceiling": 0,
+     "reuse": 0
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 9020,
+     "blocks": 8,
+     "newBlocks": 5,
+     "newChars": 6939,
+     "ceiling": 0,
+     "reuse": 0.23070953436807096
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 9020,
+     "blocks": 8,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    }
+   ],
+   "samples": "reuse/komorniki-gok__followup.json"
+  },
+  {
+   "id": "tarnowo-gok__followup",
+   "followup": true,
+   "days": 12,
+   "chars": 107593,
+   "ceiling": 0.9715312233017127,
+   "reuse": 0.6064706811781435,
+   "freeDays": 0,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 9932,
+     "blocks": 8,
+     "newBlocks": 2,
+     "newChars": 2624,
+     "ceiling": 0.9775780224219776,
+     "reuse": 0.7358034635521546
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 9932,
+     "blocks": 8,
+     "newBlocks": 2,
+     "newChars": 2624,
+     "ceiling": 0.9775780224219776,
+     "reuse": 0.7358034635521546
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 9932,
+     "blocks": 8,
+     "newBlocks": 2,
+     "newChars": 2624,
+     "ceiling": 0.9775780224219776,
+     "reuse": 0.7358034635521546
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 9932,
+     "blocks": 8,
+     "newBlocks": 2,
+     "newChars": 2624,
+     "ceiling": 0.9775780224219776,
+     "reuse": 0.7358034635521546
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 9930,
+     "blocks": 9,
+     "newBlocks": 4,
+     "newChars": 8011,
+     "ceiling": 0.9503080496919503,
+     "reuse": 0.1932527693856999
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 9932,
+     "blocks": 8,
+     "newBlocks": 2,
+     "newChars": 2624,
+     "ceiling": 0.9775780224219776,
+     "reuse": 0.7358034635521546
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 9931,
+     "blocks": 9,
+     "newBlocks": 2,
+     "newChars": 1993,
+     "ceiling": 0.9775802868107453,
+     "reuse": 0.7993152754002618
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 9432,
+     "blocks": 9,
+     "newBlocks": 4,
+     "newChars": 7513,
+     "ceiling": 0.9761828814460394,
+     "reuse": 0.20345631891433413
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 9433,
+     "blocks": 9,
+     "newBlocks": 2,
+     "newChars": 2100,
+     "ceiling": 0.9763980438018286,
+     "reuse": 0.7773772924838334
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 9434,
+     "blocks": 9,
+     "newBlocks": 2,
+     "newChars": 2101,
+     "ceiling": 0.9764005527798448,
+     "reuse": 0.7772948908204367
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 9773,
+     "blocks": 9,
+     "newBlocks": 3,
+     "newChars": 7503,
+     "ceiling": 0.94233531705315,
+     "reuse": 0.23227258774173742
+    }
+   ],
+   "samples": "reuse/tarnowo-gok__followup.json"
+  },
+  {
+   "id": "mosina-mok__followup",
+   "followup": true,
+   "days": 5,
+   "chars": 104452,
+   "ceiling": 1,
+   "reuse": 1,
+   "freeDays": 4,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 26113,
+     "blocks": 13,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 26113,
+     "blocks": 13,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 26113,
+     "blocks": 13,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 26113,
+     "blocks": 13,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    }
+   ]
+  },
+  {
+   "id": "dopiewo-gosir__followup",
+   "followup": true,
+   "days": 12,
+   "chars": 96032,
+   "ceiling": 0.9455989377660722,
+   "reuse": 0.7792090136621126,
+   "freeDays": 7,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 9174,
+     "blocks": 9,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 9174,
+     "blocks": 9,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 9174,
+     "blocks": 9,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 9174,
+     "blocks": 9,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 9174,
+     "blocks": 9,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 9090,
+     "blocks": 11,
+     "newBlocks": 5,
+     "newChars": 5468,
+     "ceiling": 0.9489680199591745,
+     "reuse": 0.3984598459845985
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 9090,
+     "blocks": 11,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 9518,
+     "blocks": 14,
+     "newBlocks": 5,
+     "newChars": 5783,
+     "ceiling": 0.7276853252647504,
+     "reuse": 0.3924143727673881
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 9518,
+     "blocks": 14,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 8147,
+     "blocks": 12,
+     "newBlocks": 6,
+     "newChars": 6449,
+     "ceiling": 0.7874635198578861,
+     "reuse": 0.20842027740272495
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 4799,
+     "blocks": 8,
+     "newBlocks": 4,
+     "newChars": 3503,
+     "ceiling": 0.9089526292916124,
+     "reuse": 0.2700562617211919
+    }
+   ],
+   "samples": "reuse/dopiewo-gosir__followup.json"
+  },
+  {
+   "id": "dopiewo-city__followup",
+   "followup": true,
+   "days": 9,
+   "chars": 80781,
+   "ceiling": 0.9196132496666016,
+   "reuse": 0.5879724192570035,
+   "freeDays": 0,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 10570,
+     "blocks": 10,
+     "newBlocks": 4,
+     "newChars": 4762,
+     "ceiling": 0.9484986697073357,
+     "reuse": 0.5494796594134342
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-27",
+     "chars": 10512,
+     "blocks": 12,
+     "newBlocks": 6,
+     "newChars": 4704,
+     "ceiling": 0.8335243553008596,
+     "reuse": 0.5525114155251142
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-29",
+     "chars": 10597,
+     "blocks": 9,
+     "newBlocks": 3,
+     "newChars": 4789,
+     "ceiling": 0.8272822068442507,
+     "reuse": 0.5480796451825989
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 10428,
+     "blocks": 8,
+     "newBlocks": 2,
+     "newChars": 4620,
+     "ceiling": 0.9343804201194835,
+     "reuse": 0.5569620253164558
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 9596,
+     "blocks": 7,
+     "newBlocks": 1,
+     "newChars": 1671,
+     "ceiling": 1,
+     "reuse": 0.8258649437265527
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 9618,
+     "blocks": 7,
+     "newBlocks": 2,
+     "newChars": 4642,
+     "ceiling": 0.9739866276640201,
+     "reuse": 0.5173632771886048
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 9790,
+     "blocks": 8,
+     "newBlocks": 2,
+     "newChars": 4108,
+     "ceiling": 0.910014364867638,
+     "reuse": 0.580388151174668
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 9670,
+     "blocks": 7,
+     "newBlocks": 1,
+     "newChars": 3988,
+     "ceiling": 0.9427472984206151,
+     "reuse": 0.5875904860392969
+    }
+   ],
+   "samples": "reuse/dopiewo-city__followup.json"
+  },
+  {
+   "id": "lubon-ok__followup",
+   "followup": true,
+   "days": 12,
+   "chars": 78836,
+   "ceiling": 0.89985696492681,
+   "reuse": 0.8414810492668324,
+   "freeDays": 8,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 7136,
+     "blocks": 8,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 7136,
+     "blocks": 8,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 7136,
+     "blocks": 8,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 7136,
+     "blocks": 8,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 4226,
+     "blocks": 5,
+     "newBlocks": 5,
+     "newChars": 4226,
+     "ceiling": 0.5058153334915737,
+     "reuse": 0
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 8123,
+     "blocks": 12,
+     "newBlocks": 12,
+     "newChars": 8123,
+     "ceiling": 0.28518380987746006,
+     "reuse": 0
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 8123,
+     "blocks": 12,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 7455,
+     "blocks": 12,
+     "newBlocks": 1,
+     "newChars": 148,
+     "ceiling": 1,
+     "reuse": 0.9801475519785379
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 7455,
+     "blocks": 12,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 7455,
+     "blocks": 12,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 7455,
+     "blocks": 12,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    }
+   ],
+   "samples": "reuse/lubon-ok__followup.json"
+  },
+  {
+   "id": "lubon-city__followup",
+   "followup": true,
+   "days": 7,
+   "chars": 58685,
+   "ceiling": 0.9300036650828831,
+   "reuse": 0.8764761012183693,
+   "freeDays": 4,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 17297,
+     "blocks": 43,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-27",
+     "chars": 17297,
+     "blocks": 43,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-07-29",
+     "chars": 10762,
+     "blocks": 6,
+     "newBlocks": 3,
+     "newChars": 4800,
+     "ceiling": 0.6183111954459203,
+     "reuse": 0.5539862479093105
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 4443,
+     "blocks": 4,
+     "newBlocks": 2,
+     "newChars": 2449,
+     "ceiling": 1,
+     "reuse": 0.4487958586540626
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 4443,
+     "blocks": 4,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 4443,
+     "blocks": 4,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    }
+   ],
+   "samples": "reuse/lubon-city__followup.json"
+  },
+  {
+   "id": "mosina-biblioteka__followup",
+   "followup": true,
+   "days": 10,
+   "chars": 57457,
+   "ceiling": 0.9514643570728116,
+   "reuse": 0.7768418121377726,
+   "freeDays": 4,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 7680,
+     "blocks": 8,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 7680,
+     "blocks": 8,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 7923,
+     "blocks": 8,
+     "newBlocks": 1,
+     "newChars": 2748,
+     "ceiling": 0.8831287542439279,
+     "reuse": 0.6531616811813707
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 7923,
+     "blocks": 8,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-30",
+     "chars": 7762,
+     "blocks": 8,
+     "newBlocks": 1,
+     "newChars": 2587,
+     "ceiling": 0.9020941710017341,
+     "reuse": 0.6667096109250193
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 7762,
+     "blocks": 8,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 3894,
+     "blocks": 4,
+     "newBlocks": 1,
+     "newChars": 2566,
+     "ceiling": 0.8728682170542635,
+     "reuse": 0.34103749357986646
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-03",
+     "chars": 3398,
+     "blocks": 4,
+     "newBlocks": 2,
+     "newChars": 2814,
+     "ceiling": 0.8679301154871187,
+     "reuse": 0.17186580341377278
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 3435,
+     "blocks": 4,
+     "newBlocks": 1,
+     "newChars": 2107,
+     "ceiling": 0.9537199765670767,
+     "reuse": 0.386608442503639
+    }
+   ],
+   "samples": "reuse/mosina-biblioteka__followup.json"
+  },
+  {
+   "id": "nowe-zoo__followup",
+   "followup": true,
+   "days": 6,
+   "chars": 57453,
+   "ceiling": 0.8200205992761981,
+   "reuse": 0.608793274502637,
+   "freeDays": 2,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-08-02",
+     "prev": "2026-07-26",
+     "chars": 13729,
+     "blocks": 26,
+     "newBlocks": 9,
+     "newChars": 9819,
+     "ceiling": 0.40492906245429283,
+     "reuse": 0.2847986015004734
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 11486,
+     "blocks": 24,
+     "newBlocks": 11,
+     "newChars": 9412,
+     "ceiling": 0.862889122070654,
+     "reuse": 0.1805676475709559
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 10746,
+     "blocks": 24,
+     "newBlocks": 2,
+     "newChars": 3245,
+     "ceiling": 0.9445587135377711,
+     "reuse": 0.6980271729015448
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 10746,
+     "blocks": 24,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 10746,
+     "blocks": 24,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    }
+   ],
+   "samples": "reuse/nowe-zoo__followup.json"
+  },
+  {
+   "id": "kleszczewo-gokis__followup",
+   "followup": true,
+   "days": 7,
+   "chars": 47727,
+   "ceiling": 0.7555240697696376,
+   "reuse": 0.5508202904016595,
+   "freeDays": 3,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 10659,
+     "blocks": 10,
+     "newBlocks": 7,
+     "newChars": 8679,
+     "ceiling": 0.5886618325642716,
+     "reuse": 0.18575851393188858
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 11308,
+     "blocks": 11,
+     "newBlocks": 8,
+     "newChars": 9328,
+     "ceiling": 0.524181382553909,
+     "reuse": 0.17509727626459148
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 6440,
+     "blocks": 12,
+     "newBlocks": 6,
+     "newChars": 3431,
+     "ceiling": 0.7044887780548629,
+     "reuse": 0.4672360248447205
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 6440,
+     "blocks": 12,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 6440,
+     "blocks": 12,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 6440,
+     "blocks": 12,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    }
+   ],
+   "samples": "reuse/kleszczewo-gokis__followup.json"
+  },
+  {
+   "id": "rokietnica-gok__followup",
+   "followup": true,
+   "days": 7,
+   "chars": 39276,
+   "ceiling": 0.6737747796731727,
+   "reuse": 0.500916590284143,
+   "freeDays": 3,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 4478,
+     "blocks": 10,
+     "newBlocks": 6,
+     "newChars": 3873,
+     "ceiling": 0.16349384098544234,
+     "reuse": 0.1351049575703439
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 10294,
+     "blocks": 11,
+     "newBlocks": 6,
+     "newChars": 9603,
+     "ceiling": 0.11920077972709552,
+     "reuse": 0.06712648144550226
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 6126,
+     "blocks": 5,
+     "newBlocks": 5,
+     "newChars": 6126,
+     "ceiling": 1,
+     "reuse": 0
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 6126,
+     "blocks": 5,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 6126,
+     "blocks": 5,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 6126,
+     "blocks": 5,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    }
+   ],
+   "samples": "reuse/rokietnica-gok__followup.json"
+  },
+  {
+   "id": "mosina-galeria__followup",
+   "followup": true,
+   "days": 6,
+   "chars": 33640,
+   "ceiling": 0.742459509833679,
+   "reuse": 0.8890309155766944,
+   "freeDays": 3,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-08-02",
+     "prev": "2026-07-26",
+     "chars": 3256,
+     "blocks": 3,
+     "newBlocks": 3,
+     "newChars": 3256,
+     "ceiling": 0.37488457987072943,
+     "reuse": 0
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 7596,
+     "blocks": 6,
+     "newBlocks": 1,
+     "newChars": 477,
+     "ceiling": 0.12739780394232042,
+     "reuse": 0.9372037914691943
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 7596,
+     "blocks": 6,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 7596,
+     "blocks": 6,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 7596,
+     "blocks": 6,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    }
+   ],
+   "samples": "reuse/mosina-galeria__followup.json"
+  },
+  {
+   "id": "puszczykowo-city__followup",
+   "followup": true,
+   "days": 6,
+   "chars": 32562,
+   "ceiling": 0.8238251910579529,
+   "reuse": 0.4872857932559425,
+   "freeDays": 0,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-08-02",
+     "prev": "2026-07-28",
+     "chars": 7354,
+     "blocks": 11,
+     "newBlocks": 5,
+     "newChars": 4703,
+     "ceiling": 0.7429471377704738,
+     "reuse": 0.36048409029099815
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 6286,
+     "blocks": 10,
+     "newBlocks": 3,
+     "newChars": 3088,
+     "ceiling": 0.8346948582412301,
+     "reuse": 0.5087496022908049
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 6299,
+     "blocks": 10,
+     "newBlocks": 1,
+     "newChars": 2227,
+     "ceiling": 0.9005754475703325,
+     "reuse": 0.646451817748849
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 6357,
+     "blocks": 10,
+     "newBlocks": 3,
+     "newChars": 3372,
+     "ceiling": 0.8207158694963573,
+     "reuse": 0.4695611137328929
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 6266,
+     "blocks": 10,
+     "newBlocks": 4,
+     "newChars": 3305,
+     "ceiling": 0.8338421982966415,
+     "reuse": 0.472550271305458
+    }
+   ],
+   "samples": "reuse/puszczykowo-city__followup.json"
+  },
+  {
+   "id": "kornik-kok__followup",
+   "followup": true,
+   "days": 7,
+   "chars": 31718,
+   "ceiling": 0.9318376906584888,
+   "reuse": 0.85881833659121,
+   "freeDays": 4,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 6195,
+     "blocks": 13,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 6323,
+     "blocks": 12,
+     "newBlocks": 5,
+     "newChars": 3266,
+     "ceiling": 0.6580781072759683,
+     "reuse": 0.4834730349517634
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 4800,
+     "blocks": 10,
+     "newBlocks": 3,
+     "newChars": 1212,
+     "ceiling": 1,
+     "reuse": 0.7475
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 4800,
+     "blocks": 10,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 4800,
+     "blocks": 10,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 4800,
+     "blocks": 10,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    }
+   ],
+   "samples": "reuse/kornik-kok__followup.json"
+  },
+  {
+   "id": "kornik-city__followup",
+   "followup": true,
+   "days": 12,
+   "chars": 31500,
+   "ceiling": 0.638796174402411,
+   "reuse": 0.6363174603174603,
+   "freeDays": 7,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 1159,
+     "blocks": 3,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 1159,
+     "blocks": 3,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 6321,
+     "blocks": 12,
+     "newBlocks": 12,
+     "newChars": 6321,
+     "ceiling": 0.011022856216566705,
+     "reuse": 0
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 6321,
+     "blocks": 12,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 6321,
+     "blocks": 12,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 2802,
+     "blocks": 10,
+     "newBlocks": 8,
+     "newChars": 2326,
+     "ceiling": 0.013508579773640015,
+     "reuse": 0.16987865810135616
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 2802,
+     "blocks": 10,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 897,
+     "blocks": 5,
+     "newBlocks": 4,
+     "newChars": 885,
+     "ceiling": 0.3677639046538025,
+     "reuse": 0.013377926421404673
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 897,
+     "blocks": 5,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 897,
+     "blocks": 5,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 1924,
+     "blocks": 5,
+     "newBlocks": 5,
+     "newChars": 1924,
+     "ceiling": 0.06687565308254964,
+     "reuse": 0
+    }
+   ],
+   "samples": "reuse/kornik-city__followup.json"
+  },
+  {
+   "id": "discover-lubon",
+   "followup": false,
+   "days": 2,
+   "chars": 29300,
+   "ceiling": 0.7563096735992895,
+   "reuse": 0,
+   "freeDays": 0,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 29300,
+     "blocks": 1,
+     "newBlocks": 1,
+     "newChars": 29300,
+     "ceiling": 0.7563096735992895,
+     "reuse": 0
+    }
+   ],
+   "samples": "reuse/discover-lubon.json"
+  },
+  {
+   "id": "tarnowo-city__followup",
+   "followup": true,
+   "days": 7,
+   "chars": 28581,
+   "ceiling": 0.9392756597173297,
+   "reuse": 0.5501556978412232,
+   "freeDays": 1,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-26",
+     "chars": 5598,
+     "blocks": 6,
+     "newBlocks": 3,
+     "newChars": 1136,
+     "ceiling": 0.953450754852624,
+     "reuse": 0.7970703822793855
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 5598,
+     "blocks": 6,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-31",
+     "prev": "2026-07-30",
+     "chars": 5596,
+     "blocks": 8,
+     "newBlocks": 5,
+     "newChars": 5196,
+     "ceiling": 0.960294646065397,
+     "reuse": 0.0714796283059328
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-07-31",
+     "chars": 5544,
+     "blocks": 5,
+     "newBlocks": 1,
+     "newChars": 1084,
+     "ceiling": 0.9704066811909949,
+     "reuse": 0.8044733044733045
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-02",
+     "chars": 3150,
+     "blocks": 4,
+     "newBlocks": 2,
+     "newChars": 2748,
+     "ceiling": 0.7190688775510204,
+     "reuse": 0.12761904761904763
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 3095,
+     "blocks": 5,
+     "newBlocks": 3,
+     "newChars": 2693,
+     "ceiling": 0.9341550437885177,
+     "reuse": 0.12988691437802913
+    }
+   ],
+   "samples": "reuse/tarnowo-city__followup.json"
+  },
+  {
+   "id": "lubon-biblioteka__followup",
+   "followup": true,
+   "days": 7,
+   "chars": 28562,
+   "ceiling": 0.8763376635101766,
+   "reuse": 0.8634549401302429,
+   "freeDays": 5,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 3747,
+     "blocks": 8,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 4963,
+     "blocks": 11,
+     "newBlocks": 6,
+     "newChars": 3900,
+     "ceiling": 0.2883248730964467,
+     "reuse": 0.21418496876888982
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 4963,
+     "blocks": 11,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 4963,
+     "blocks": 11,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 4963,
+     "blocks": 11,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 4963,
+     "blocks": 11,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    }
+   ],
+   "samples": "reuse/lubon-biblioteka__followup.json"
+  },
+  {
+   "id": "swarzedz-ok__followup",
+   "followup": true,
+   "days": 5,
+   "chars": 26104,
+   "ceiling": 0.9658230346362099,
+   "reuse": 0.4113545816733068,
+   "freeDays": 1,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 6522,
+     "blocks": 4,
+     "newBlocks": 4,
+     "newChars": 6522,
+     "ceiling": 1,
+     "reuse": 0
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 6562,
+     "blocks": 4,
+     "newBlocks": 2,
+     "newChars": 4448,
+     "ceiling": 0.9519068770102619,
+     "reuse": 0.3221578786955197
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 6510,
+     "blocks": 6,
+     "newBlocks": 4,
+     "newChars": 4396,
+     "ceiling": 0.9114334207684,
+     "reuse": 0.3247311827956989
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 6510,
+     "blocks": 6,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    }
+   ],
+   "samples": "reuse/swarzedz-ok__followup.json"
+  },
+  {
+   "id": "rokietnica-city__followup",
+   "followup": true,
+   "days": 5,
+   "chars": 14716,
+   "ceiling": 1,
+   "reuse": 0.9463169339494428,
+   "freeDays": 3,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 3679,
+     "blocks": 5,
+     "newBlocks": 1,
+     "newChars": 790,
+     "ceiling": 1,
+     "reuse": 0.7852677357977711
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 3679,
+     "blocks": 5,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 3679,
+     "blocks": 5,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 3679,
+     "blocks": 5,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    }
+   ],
+   "samples": "reuse/rokietnica-city__followup.json"
+  },
+  {
+   "id": "mosina-city__followup",
+   "followup": true,
+   "days": 2,
+   "chars": 7209,
+   "ceiling": 0.6409288012309414,
+   "reuse": 0.3405465390484117,
+   "freeDays": 0,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-04",
+     "chars": 7209,
+     "blocks": 8,
+     "newBlocks": 5,
+     "newChars": 4754,
+     "ceiling": 0.6409288012309414,
+     "reuse": 0.3405465390484117
+    }
+   ],
+   "samples": "reuse/mosina-city__followup.json"
+  },
+  {
+   "id": "biblraczynskich__followup",
+   "followup": true,
+   "days": 2,
+   "chars": 635,
+   "ceiling": 0.8611987381703469,
+   "reuse": 0.35905511811023627,
+   "freeDays": 0,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-31",
+     "chars": 635,
+     "blocks": 4,
+     "newBlocks": 1,
+     "newChars": 407,
+     "ceiling": 0.861198738170347,
+     "reuse": 0.35905511811023627
+    }
+   ],
+   "samples": "reuse/biblraczynskich__followup.json"
+  },
+  {
+   "id": "teatr-animacji",
+   "followup": false,
+   "days": 11,
+   "chars": 140,
+   "ceiling": 1,
+   "reuse": 1,
+   "freeDays": 10,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 14,
+     "blocks": 1,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 14,
+     "blocks": 1,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 14,
+     "blocks": 1,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 14,
+     "blocks": 1,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-30",
+     "chars": 14,
+     "blocks": 1,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 14,
+     "blocks": 1,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 14,
+     "blocks": 1,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 14,
+     "blocks": 1,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 14,
+     "blocks": 1,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 14,
+     "blocks": 1,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1,
+     "usd": 0
+    }
+   ]
+  },
+  {
+   "id": "teatr-animacji__followup",
+   "followup": true,
+   "days": 11,
+   "chars": 140,
+   "ceiling": 1,
+   "reuse": 1,
+   "freeDays": 10,
+   "freeUsd": 0,
+   "shrinkUsd": 0,
+   "pairs": [
+    {
+     "day": "2026-07-27",
+     "prev": "2026-07-26",
+     "chars": 14,
+     "blocks": 1,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-28",
+     "prev": "2026-07-27",
+     "chars": 14,
+     "blocks": 1,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-29",
+     "prev": "2026-07-28",
+     "chars": 14,
+     "blocks": 1,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-07-30",
+     "prev": "2026-07-29",
+     "chars": 14,
+     "blocks": 1,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-01",
+     "prev": "2026-07-30",
+     "chars": 14,
+     "blocks": 1,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-02",
+     "prev": "2026-08-01",
+     "chars": 14,
+     "blocks": 1,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-03",
+     "prev": "2026-08-02",
+     "chars": 14,
+     "blocks": 1,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-04",
+     "prev": "2026-08-03",
+     "chars": 14,
+     "blocks": 1,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-05",
+     "prev": "2026-08-04",
+     "chars": 14,
+     "blocks": 1,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    },
+    {
+     "day": "2026-08-06",
+     "prev": "2026-08-05",
+     "chars": 14,
+     "blocks": 1,
+     "newBlocks": 0,
+     "newChars": 0,
+     "ceiling": 1,
+     "reuse": 1
+    }
+   ]
+  }
+ ]
+}

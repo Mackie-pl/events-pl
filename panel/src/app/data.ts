@@ -6,6 +6,7 @@ import type {
   CostLedger,
   DiscoverRunReport,
   EventsFile,
+  ReuseReport,
   RunReport,
   RunTrail,
   SourceTrail,
@@ -77,10 +78,9 @@ export class DataService {
   });
 
   /** Stage 1 (miesięczny): skąd wzięły się źródła w rejestrze. */
-  readonly discoverRuns = httpResource<DiscoverRunReport[]>(
-    () => this.file('discover-runs.json'),
-    { defaultValue: [] },
-  );
+  readonly discoverRuns = httpResource<DiscoverRunReport[]>(() => this.file('discover-runs.json'), {
+    defaultValue: [],
+  });
 
   /**
    * Księga kosztów obu etapów (90 dni). Osobny plik od raportów przebiegów, bo trend
@@ -89,6 +89,22 @@ export class DataService {
   readonly costs = httpResource<CostLedger>(() => this.file('costs.json'), {
     defaultValue: EMPTY_LEDGER,
   });
+
+  /**
+   * Pomiar powtarzalności treści (`npm run measure-reuse`). Jak audit.json: potrzebny
+   * wyłącznie na własnej zakładce, więc pobranie startuje dopiero, gdy ta o niego poprosi.
+   * Plik powstaje na żądanie, nie w cronie — jego brak jest normalnym stanem, nie awarią.
+   */
+  private readonly reuseRequested = signal(false);
+
+  readonly reuse = httpResource<ReuseReport | null>(
+    () => (this.reuseRequested() ? this.file('reuse.json') : undefined),
+    { defaultValue: null },
+  );
+
+  requestReuse(): void {
+    this.reuseRequested.set(true);
+  }
 
   /**
    * Ślad decyzyjny. Największy plik w zestawie, a potrzebny tylko wtedy, gdy ktoś schodzi

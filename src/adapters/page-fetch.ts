@@ -53,8 +53,16 @@ const TEXT_SELECTORS = [
   { selector: "[role=search]", format: "skip" },
 ];
 
-/** Jedno przejście HTML → tekst dla WSZYSTKICH ścieżek pobrania. */
-const toText = (html: string): string => htmlToText(html, { wordwrap: false, selectors: TEXT_SELECTORS });
+/**
+ * Jedno przejście HTML → tekst dla WSZYSTKICH ścieżek pobrania.
+ *
+ * Eksportowane, bo podział na bloki po DOM-ie (extract/dom-blocks.ts) renderuje każdy
+ * fragment osobno i MUSI robić to tą samą funkcją. Gdyby miał własną, tekst bloku różniłby
+ * się od tekstu tego samego fragmentu w całej stronie — a to hasze bloków, więc cache
+ * chybiałby zawsze i nikt by nie zgadł dlaczego.
+ */
+export const toText = (html: string): string =>
+  htmlToText(html, { wordwrap: false, selectors: TEXT_SELECTORS });
 
 export type Fetched = {
   kind: "html" | "pdf" | "skip" | "not-modified" | "feed";
@@ -62,6 +70,15 @@ export type Fetched = {
   httpStatus: number;
   etag?: string;
   lastModified?: string;
+  /**
+   * Surowy HTML — WYŁĄCZNIE do podziału na bloki (extract/dom-blocks.ts), który potrzebuje
+   * struktury, a `text` ją już stracił. Nie idzie do modelu, nie idzie do archiwum
+   * (archiwum trzyma to, co dostał model) i nie przeżywa przebiegu.
+   *
+   * Puste dla PDF-ów, feedów i 304 — tam podział po DOM-ie i tak nie ma czego szukać,
+   * a wywołujący schodzi wtedy na podział po akapitach.
+   */
+  html?: string;
 };
 
 /**
@@ -104,7 +121,7 @@ export async function fetchPlain(url: string, extraHeaders: Record<string, strin
     return { kind: "pdf", text, httpStatus: status, ...v };
   }
   const html = await res.text();
-  return { kind: "html", text: toText(html), httpStatus: status, ...v };
+  return { kind: "html", text: toText(html), html, httpStatus: status, ...v };
 }
 
 /**
@@ -143,7 +160,7 @@ export async function fetchHeadless(url: string): Promise<Fetched> {
     // ta sama konwersja co w fetchPlain. Wcześniej headless leciał BEZ selektorów, więc
     // ścieżka ratunkowa po 403 wysyłała do modelu menu i stopkę, których zwykła nie wysyłała —
     // dwie różne treści dla tego samego adresu, zależnie od tego, czy serwis nas odbił
-    return { kind: "html", text: toText(html), httpStatus: status };
+    return { kind: "html", text: toText(html), html, httpStatus: status };
   } finally {
     await browser.close();
   }

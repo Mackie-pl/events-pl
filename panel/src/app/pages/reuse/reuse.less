@@ -1,0 +1,264 @@
+.page-title {
+  margin-bottom: 1.25rem;
+}
+
+.page-loader {
+  margin: 4rem auto;
+}
+
+.error-box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: var(--tui-status-negative-pale);
+  color: var(--tui-status-negative);
+}
+
+.empty {
+  padding: 2rem;
+  border-radius: 0.9rem;
+  border: 1px dashed var(--tui-border-normal);
+  color: var(--tui-text-secondary);
+
+  p + p {
+    margin-bottom: 0;
+  }
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.filter-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--tui-text-secondary);
+  margin-right: 0.25rem;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 1rem 1.15rem;
+  border-radius: 0.9rem;
+  background: var(--tui-background-neutral-1);
+  border: 1px solid var(--tui-border-normal);
+
+  &.hero {
+    grid-column: span 2;
+  }
+}
+
+.card-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--tui-text-secondary);
+}
+
+.card-value {
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+
+  &.big {
+    font-size: 3rem;
+  }
+}
+
+.card-sub {
+  font-size: 0.8rem;
+  color: var(--tui-text-secondary);
+}
+
+// ---------------- tabela źródeł ----------------
+
+.tbl {
+  width: 100%;
+  font-variant-numeric: tabular-nums;
+
+  .right {
+    text-align: right;
+  }
+
+  .money {
+    font-weight: 600;
+  }
+
+  code {
+    font-size: 0.85em;
+  }
+}
+
+.row {
+  cursor: pointer;
+
+  &:hover {
+    background: var(--tui-background-neutral-1);
+  }
+
+  &.open {
+    background: var(--tui-background-neutral-1);
+    font-weight: 600;
+  }
+
+  tui-icon {
+    vertical-align: -0.15em;
+    margin-right: 0.3rem;
+    color: var(--tui-text-secondary);
+  }
+}
+
+// Odzysk poniżej połowy i luka ponad ćwierć to progi do PATRZENIA, nie do alarmu:
+// oznaczają „tu segmentacja nie działa", a nie „tu jest awaria". Stąd wydźwięk
+// ostrzegawczy, a nie negatywny.
+.weak {
+  color: var(--tui-status-warning);
+}
+
+.alert {
+  color: var(--tui-status-warning);
+  font-weight: 700;
+}
+
+.detail > td {
+  padding: 0.75rem 1rem 1.25rem;
+  background: var(--tui-background-neutral-1);
+}
+
+.pairs {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+
+  th,
+  td {
+    padding: 0.3rem 0.5rem;
+    border-bottom: 1px solid var(--tui-border-normal);
+  }
+
+  th {
+    text-align: left;
+    font-weight: 600;
+    color: var(--tui-text-secondary);
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+  }
+
+  .right {
+    text-align: right;
+  }
+
+  .money {
+    font-weight: 600;
+  }
+
+  // dzień bez ani jednego nowego bloku — czyli ten, za który już byśmy nie zapłacili
+  .free {
+    background: var(--tui-status-positive-pale);
+  }
+}
+
+// ---------------- przykłady ----------------
+
+.samples {
+  margin-top: 1rem;
+
+  p {
+    margin: 0.5rem 0;
+  }
+}
+
+.sample-day {
+  margin-top: 0.75rem;
+
+  h4 {
+    margin: 0 0 0.35rem;
+    font-size: 0.9rem;
+  }
+}
+
+.block {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--tui-border-normal);
+  background: var(--tui-background-base);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  max-height: 22rem;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.block-meta {
+  display: block;
+  margin: 0.2rem 0 0.75rem;
+  font-size: 0.75rem;
+}
+
+.muted {
+  color: var(--tui-text-secondary);
+  font-size: 0.85rem;
+}
+
+.warn {
+  color: var(--tui-status-warning);
+  font-size: 0.85rem;
+}
+
+// ---------------- legenda ----------------
+
+.legend {
+  margin-top: 2rem;
+  padding: 1.25rem 1.4rem;
+  border-radius: 0.9rem;
+  background: var(--tui-background-neutral-1);
+  border: 1px solid var(--tui-border-normal);
+
+  h2 {
+    margin: 0 0 0.75rem;
+    font-size: 1rem;
+  }
+
+  dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.4rem 1rem;
+  }
+
+  dt {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  dd {
+    margin: 0;
+    color: var(--tui-text-secondary);
+    font-size: 0.9rem;
+  }
+}

@@ -22,6 +22,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/costs/costs').then((m) => m.CostsPage),
   },
   {
+    path: 'reuse',
+    title: 'Powtarzalność · events-pl',
+    loadComponent: () => import('./pages/reuse/reuse').then((m) => m.ReusePage),
+  },
+  {
     path: 'discovery',
     title: 'Discovery · events-pl',
     loadComponent: () => import('./pages/discovery/discovery').then((m) => m.DiscoveryPage),

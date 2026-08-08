@@ -3,7 +3,8 @@
  * strona na GitHub Pages zrobić nie może:
  *
  *   GET  /file?name=runs.json        oddaje plik z DRZEWA ROBOCZEGO, nie z gałęzi main
- *   GET  /object?path=…              czyta obiekt z prywatnego archiwum (Supabase Storage)
+ *   GET  /object?path=…              czyta obiekt z prywatnego archiwum (Supabase Storage):
+ *                                    zrzuty `raw/`, wywołania `llm/` i przykłady `reuse/`
  *   POST /probe?source=<id>[&force=1] sprawdza JEDNO źródło tu i teraz, bez zapisu
  *
  * `/file` istnieje, bo panel domyślnie czyta raw.githubusercontent.com — czyli stan
@@ -34,7 +35,7 @@ import { fetchUrl } from "../adapters/http.js";
 import { ProbeError, probeSource } from "../pipeline/extract/probe-source.js";
 import { describeError } from "../shared/errors.js";
 import {
-  AUDIT_PATH, COSTS_PATH, DISCOVER_RUNS_PATH, EVENTS_PATH, RUNS_PATH, SOURCES_PATH,
+  AUDIT_PATH, COSTS_PATH, DISCOVER_RUNS_PATH, EVENTS_PATH, REUSE_PATH, RUNS_PATH, SOURCES_PATH,
 } from "../shared/paths.js";
 
 const PORT = Number(process.env["ARCHIVE_PORT"] ?? 8787);
@@ -61,6 +62,7 @@ const LOCAL_FILES: Readonly<Record<string, string>> = {
   "audit.json": AUDIT_PATH,
   "discover-runs.json": DISCOVER_RUNS_PATH,
   "costs.json": COSTS_PATH,
+  "reuse.json": REUSE_PATH,
 };
 
 const cors = (origin: string | undefined): Record<string, string> =>
@@ -141,7 +143,7 @@ function routeObject(url: URL, res: ServerResponse, headers: Record<string, stri
   }
   const path = url.searchParams.get("path") ?? "";
   // tylko ścieżki, które sami zapisujemy — bez wycieczek po całym buckecie
-  if (!/^(raw|llm|events)\/[\w./:-]+$/.test(path) || path.includes("..")) {
+  if (!/^(raw|llm|events|reuse)\/[\w./:-]+$/.test(path) || path.includes("..")) {
     json(res, 400, { error: "niedozwolona ścieżka" }, headers);
     return;
   }

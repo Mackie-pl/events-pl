@@ -14,17 +14,23 @@
     "probe": "tsx --env-file-if-exists=.env src/actions/probe.ts",
     "check:structured": "tsx --env-file-if-exists=.env src/actions/check-structured.ts",
     "backfill-costs": "tsx --env-file-if-exists=.env src/actions/backfill-costs.ts",
+    "measure-reuse": "tsx --env-file-if-exists=.env src/actions/measure-reuse.ts",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "node --import tsx --test \"test/**/*.test.ts\"",
     "test:live": "node --import tsx --test \"test/live/*.live.ts\"",
     "build": "tsc",
-    "panel-server": "tsx --env-file-if-exists=.env src/actions/panel-server.ts"
+    "panel-server": "tsx --env-file-if-exists=.env src/actions/panel-server.ts",
+    "compare-segmentation": "tsx --env-file-if-exists=.env src/actions/compare-segmentation.ts"
   },
   "dependencies": {
     "@sinclair/typebox": "^0.34.52",
+    "dom-serializer": "^2.0.0",
+    "domhandler": "^5.0.3",
+    "domutils": "^3.2.2",
     "html-to-text": "^9.0.5",
+    "htmlparser2": "^8.0.2",
     "unpdf": "^0.12.1"
   },
   "optionalDependencies": {

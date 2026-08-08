@@ -1,0 +1,88 @@
+/**
+ * Testujemy jedną własność, na której stoi cały pomysł: usunięcie karty z listy ma
+ * unieważnić TYLKO blok z tą kartą. Gdyby granice liczyły się od pozycji, a nie od treści,
+ * wypadnięcie wczorajszego wydarzenia przesunęłoby wszystkie kolejne i cache dawałby zero
+ * trafień akurat w najczęstszym przypadku — a raport z pomiaru pokazywałby wtedy, że
+ * „bloki nie pomagają", zamiast że pomylono się w segmentacji.
+ */
+import { strict as assert } from "node:assert";
+import { describe, it } from "node:test";
+
+import { ceilingReuse, paragraphs, reuseAgainst, segment } from "../src/pipeline/extract/blocks.js";
+
+/**
+ * Strona-lista: nagłówek + N kart wydarzeń o tym samym kształcie.
+ *
+ * Karta zależy WYŁĄCZNIE od tytułu — również data, choć naturalniej byłoby ją numerować
+ * pozycją na liście. Przy numerowaniu pozycją usunięcie jednej karty przepisuje daty
+ * wszystkich następnych, więc test mierzyłby wtedy własną atrapę zamiast segmentacji
+ * (i pokazywał 4 nowe bloki tam, gdzie zmieniła się jedna karta).
+ */
+const page = (titles: string[]): string =>
+  ["ESTRADA POZNAŃSKA\n\nDZIEJE SIĘ!", ...titles.map((t) =>
+    `Okładka wydarzenia - ${t}\n\n${t.toUpperCase()}\n\n${String(t.length).padStart(2, "0")} / 08 / 26 19:00\n\n` +
+    `Opis wydarzenia ${t}, w którym stoi tyle tekstu, ile zwykle stoi w zajawce karty.\n\n` +
+    `[https://www.estrada.poznan.pl/event/${t.toLowerCase()}/]`)].join("\n\n");
+
+/**
+ * Dwadzieścia kart, bo tyle mniej więcej wypisuje prawdziwa lista (estrada.poznan.pl miała
+ * przy audycie wejścia 24 odnośniki do podstron). Na ośmiu kartach jeden unieważniony blok
+ * to jeszcze ~30% strony i próg odzysku mierzyłby rozmiar atrapy, a nie segmentację.
+ */
+const TITLES = [
+  "Peregrinus", "Robotarobota", "Kwadrofonik", "Lautari", "Bastarda", "Hania", "Kroke", "Vlodi",
+  "Meritum", "Nokturn", "Pogodno", "Rebeka", "Sutari", "Tulia", "Waglewski", "Ziyo",
+  "Antonia", "Bemibem", "Cisza", "Dagadana",
+];
+
+describe("podział na bloki", () => {
+  it("tnie na szwach akapitów, nigdy w połowie wiersza", () => {
+    const blocks = segment(page(TITLES));
+    assert.ok(blocks.length > 1, "strona z ośmioma kartami ma dać więcej niż jeden blok");
+    for (const b of blocks) assert.equal(b.text, b.text.trim());
+    // suma bloków to wszystkie akapity strony, bez gubienia i bez powtórek
+    assert.deepEqual(
+      blocks.flatMap((b) => paragraphs(b.text)),
+      paragraphs(page(TITLES)),
+    );
+  });
+
+  it("usunięcie karty unieważnia tylko jej blok", () => {
+    const before = segment(page(TITLES));
+    const after = segment(page(TITLES.filter((t) => t !== "Kwadrofonik")));
+
+    const seen = new Set(before.map((b) => b.hash));
+    const stat = reuseAgainst(after, seen);
+    assert.ok(stat.newBlocks <= 1, `spodziewane ≤1 nowego bloku, było ${stat.newBlocks}`);
+    assert.ok(stat.reuse > 0.7, `spodziewane >70% odzysku, było ${(stat.reuse * 100).toFixed(1)}%`);
+  });
+
+  it("dzień bez zmian nie daje ani jednego nowego bloku", () => {
+    const seen = new Set(segment(page(TITLES)).map((b) => b.hash));
+    assert.equal(reuseAgainst(segment(page(TITLES)), seen).newBlocks, 0);
+  });
+
+  it("dopisanie karty kosztuje mniej więcej tę kartę", () => {
+    const seen = new Set(segment(page(TITLES)).map((b) => b.hash));
+    const stat = reuseAgainst(segment(page([...TITLES, "Mitch"])), seen);
+    assert.ok(stat.newBlocks >= 1, "nowa treść musi trafić do modelu");
+    assert.ok(stat.reuse > 0.7, `spodziewane >70% odzysku, było ${(stat.reuse * 100).toFixed(1)}%`);
+  });
+});
+
+describe("sufit odzysku", () => {
+  it("identyczna treść to 100%, rozłączna to 0%", () => {
+    assert.equal(ceilingReuse(page(TITLES), page(TITLES)), 1);
+    assert.equal(ceilingReuse("alfa\nbeta", "gamma\ndelta"), 0);
+  });
+
+  it("jest górnym ograniczeniem dla podziału na bloki", () => {
+    const prev = page(TITLES);
+    const next = page([...TITLES.filter((t) => t !== "Lautari"), "Mitch"]);
+    const stat = reuseAgainst(segment(next), new Set(segment(prev).map((b) => b.hash)));
+    assert.ok(
+      stat.reuse <= ceilingReuse(prev, next) + 1e-9,
+      `bloki (${stat.reuse}) nie mogą odzyskać więcej niż sufit (${ceilingReuse(prev, next)})`,
+    );
+  });
+});

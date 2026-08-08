@@ -29,6 +29,8 @@ export const DISCOVER_RUNS_PATH = join(ROOT, "discover-runs.json");
 export const COSTS_PATH = join(ROOT, "costs.json");
 /** Log zużycia Bright Data per przebieg (rozliczenie per-rekord). */
 export const BD_USAGE_LOG = join(ROOT, "brightdata-usage.jsonl");
+/** Pomiar powtarzalności treści — same liczby, treść stron zostaje w prywatnym archiwum. */
+export const REUSE_PATH = join(ROOT, "reuse.json");
 
 /** Szablon strony i wyrenderowany serwis. */
 export const TEMPLATE_HTML = join(ROOT, "template.html");

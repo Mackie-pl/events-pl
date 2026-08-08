@@ -76,6 +76,17 @@ export class BridgeService {
   }
 
   /**
+   * Obiekt archiwum sparsowany do typu — dla widoków, które renderują jego POLA, a nie
+   * surowy JSON (przykłady pomiaru powtarzalności). `null` zamiast wyjątku: brak mostu
+   * jest normalnym stanem wdrożonego panelu, a nie awarią do pokazania w konsoli.
+   */
+  objectJson<T>(path: string): Observable<T | null> {
+    return this.http
+      .get<T>(`${this.base}/object`, { params: { path } })
+      .pipe(catchError(() => of(null)));
+  }
+
+  /**
    * Sprawdź jedno źródło TERAZ. `force` pomija cache, czyli gwarantuje pobranie i wywołanie
    * modelu — bez tego niezmieniona strona wraca z cache w 200 ms i niczego nie sprawdza.
    *
@@ -85,9 +96,9 @@ export class BridgeService {
    */
   probe(sourceId: string, force: boolean): Observable<ProbeResult | { error: string }> {
     const params = { source: sourceId, ...(force ? { force: '1' } : {}) };
-    return this.http.post<ProbeResult>(`${this.base}/probe`, null, { params }).pipe(
-      catchError((e: unknown) => of({ error: message(e) })),
-    );
+    return this.http
+      .post<ProbeResult>(`${this.base}/probe`, null, { params })
+      .pipe(catchError((e: unknown) => of({ error: message(e) })));
   }
 }
 

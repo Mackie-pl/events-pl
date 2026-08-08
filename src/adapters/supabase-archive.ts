@@ -180,6 +180,80 @@ export async function put(path: string, body: string, contentType = "application
   }
 }
 
+/**
+ * Odczyt archiwum — potrzebny pomiarom, nie potokowi.
+ *
+ * Potok pisze i nigdy nie czyta, więc do 2026-08 tego tu nie było. Pierwszym czytelnikiem
+ * jest `npm run measure-reuse`: pyta archiwum „ile z dzisiejszej treści widzieliśmy wczoraj",
+ * a odpowiedź leży wyłącznie w `raw/`, bo w repo trzymamy metryki, nie treść.
+ *
+ * Zwraca [] / null zamiast rzucać — dokładnie jak `put()`. Archiwum jest obserwowalnością,
+ * a nie produktem: brak konfiguracji albo odrzucony klucz ma dawać pusty raport z komunikatem,
+ * a nie stack trace.
+ */
+
+/** Jeden wpis listingu. `folder: true` = pseudokatalog (Supabase zwraca go z `id: null`). */
+export interface ArchiveEntry {
+  name: string;
+  folder: boolean;
+  bytes: number;
+}
+
+/**
+ * Listing JEDNEGO poziomu pod prefiksem (`raw/`, `raw/2026-08-06/`, …).
+ * Supabase tnie odpowiedź na 100 pozycji, więc stronicujemy do wyczerpania.
+ */
+export async function listArchive(prefix: string): Promise<ArchiveEntry[]> {
+  const c = cfg();
+  if (!c) return [];
+  const out: ArchiveEntry[] = [];
+  const limit = 100;
+  for (let offset = 0; ; offset += limit) {
+    let page: { name: string; id: string | null; metadata: { size?: number } | null }[];
+    try {
+      const res = await fetchUrl(
+        `${c.url}/storage/v1/object/list/${BUCKET}`,
+        {
+          method: "POST",
+          headers: { ...authHeaders(c.key), "Content-Type": "application/json" },
+          body: JSON.stringify({ prefix, limit, offset, sortBy: { column: "name", order: "asc" } }),
+        },
+        30_000,
+        `Supabase Storage list ${BUCKET}/${prefix}`,
+      );
+      if (!res.ok) {
+        console.warn(`archiwum: listing ${prefix} → HTTP ${res.status} ${(await res.text()).slice(0, 200)}`);
+        return out;
+      }
+      page = (await res.json()) as typeof page;
+    } catch (e) {
+      console.warn(`archiwum: listing ${prefix} → ${describeError(e)}`);
+      return out;
+    }
+    for (const it of page) out.push({ name: it.name, folder: it.id === null, bytes: it.metadata?.size ?? 0 });
+    if (page.length < limit) return out;
+  }
+}
+
+/** Treść jednego obiektu archiwum; null = brak, błąd albo wyłączone archiwum. */
+export async function getArchive(path: string): Promise<string | null> {
+  const c = cfg();
+  if (!c) return null;
+  try {
+    const res = await fetchUrl(
+      `${c.url}/storage/v1/object/${BUCKET}/${path}`,
+      { headers: authHeaders(c.key) },
+      30_000,
+      `Supabase Storage get ${BUCKET}/${path}`,
+    );
+    if (!res.ok) return null;
+    return await res.text();
+  } catch (e) {
+    console.warn(`archiwum: pobranie ${path} → ${describeError(e)}`);
+    return null;
+  }
+}
+
 const day = (): string => new Date().toISOString().slice(0, 10);
 
 /** Surowy tekst pobranej strony/PDF-a; ścieżka niesie hash, więc treść jest deduplikowana. */

@@ -11,7 +11,8 @@
  * decyzja produktowa, a nie składowania. Tutaj jest tylko mechanizm ich wykonania.
  */
 import {
-  AUDIT_PATH, COSTS_PATH, DISCOVER_RUNS_PATH, EVENTS_PATH, RUNS_PATH, SOURCES_PATH, STATE_PATH,
+  AUDIT_PATH, COSTS_PATH, DISCOVER_RUNS_PATH, EVENTS_PATH, REUSE_PATH, RUNS_PATH, SOURCES_PATH,
+  STATE_PATH,
 } from "../shared/paths.js";
 import type { EventsFile, PipelineState, SourcesFile } from "../types/index.js";
 
@@ -23,7 +24,7 @@ export { applyRetention } from "./json-file.js";
 
 /** Nazwy logiczne zbiorów danych. W bazie: nazwy tabel. */
 export type StoreName =
-  "sources" | "events" | "state" | "runs" | "audit" | "discover-runs" | "costs";
+  "sources" | "events" | "state" | "runs" | "audit" | "discover-runs" | "costs" | "reuse";
 
 const PATHS: Record<StoreName, string> = {
   sources: SOURCES_PATH,
@@ -33,6 +34,7 @@ const PATHS: Record<StoreName, string> = {
   audit: AUDIT_PATH,
   "discover-runs": DISCOVER_RUNS_PATH,
   costs: COSTS_PATH,
+  reuse: REUSE_PATH,
 };
 
 /** Fabryka dokumentu. Podmiana backendu = podmiana tej funkcji. */

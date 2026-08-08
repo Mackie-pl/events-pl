@@ -1,0 +1,254 @@
+@if (data.reuse.error()) {
+  <div class="error-box">
+    <tui-icon icon="@tui.triangle-alert" />
+    Nie udało się wczytać reuse.json
+    <button tuiButton size="s" appearance="secondary" (click)="data.reuse.reload()">Ponów</button>
+  </div>
+} @else if (data.reuse.isLoading() && !report()) {
+  <tui-loader size="xl" class="page-loader" />
+} @else if (!report(); as _) {
+  <header tuiTitle class="page-title">
+    <h1>Powtarzalność treści</h1>
+  </header>
+  <section class="empty">
+    <p>
+      Pomiaru jeszcze nie było. Powstaje na żądanie, nie w cronie — czyta zrzuty
+      <code>raw/</code> z prywatnego archiwum i liczy, ile z treści wysyłanej codziennie do modelu
+      widzieliśmy już poprzedniego dnia.
+    </p>
+    <p><code>npm run measure-reuse</code></p>
+  </section>
+} @else if (report(); as r) {
+  <header tuiTitle class="page-title">
+    <h1>Powtarzalność treści</h1>
+    <div tuiSubtitle>
+      {{ r.from }} … {{ r.to }} · {{ r.days }} dni · {{ r.sources.length }} zrzutów źródeł · pomiar
+      {{ dt(r.generated) }}
+    </div>
+  </header>
+
+  <!-- Cztery liczby, o które w tym w ogóle chodzi. „sufit" stoi przed „odzyskiem",
+       bo bez niego odzysk nie ma z czym się porównać. -->
+  <section class="cards">
+    <div class="card hero">
+      <span class="card-label">Sufit odzysku</span>
+      <span class="card-value big">{{ pct(r.totals.ceiling) }}</span>
+      <span class="card-sub">
+        tyle znaków stało już w poprzednim zrzucie — górna granica dla dowolnej segmentacji
+      </span>
+    </div>
+    <div class="card">
+      <span class="card-label">Odzyskane przez bloki</span>
+      <span class="card-value">{{ pct(r.totals.reuse) }}</span>
+      <span class="card-sub">
+        luka {{ pct(r.totals.ceiling - r.totals.reuse) }} to koszt naszego podziału
+      </span>
+    </div>
+    <div class="card">
+      <span class="card-label">Dni bez nowego bloku</span>
+      <span class="card-value">{{ r.totals.freeDays }} / {{ r.totals.pairs }}</span>
+      <span class="card-sub">
+        {{ pct(r.totals.freeDays / r.totals.pairs) }} źródło-dni, w których model nie byłby wołany
+      </span>
+    </div>
+    <div class="card">
+      <span class="card-label">Rachunek objęty pomiarem</span>
+      <span class="card-value">{{ usd(r.totals.freeUsd + r.totals.shrinkUsd) }}</span>
+      <span class="card-sub">
+        {{ usd(r.totals.freeUsd) }} pewne · ~{{ usd(r.totals.shrinkUsd) }} szacowane
+      </span>
+    </div>
+  </section>
+
+  <section class="filters">
+    <span class="filter-label">Sortuj</span>
+    @for (s of sorts; track s.key) {
+      <button
+        tuiButton
+        size="s"
+        [appearance]="sort() === s.key ? 'primary' : 'secondary'"
+        [title]="s.hint"
+        (click)="sort.set(s.key)"
+      >
+        {{ s.label }}
+      </button>
+    }
+    <span class="spacer"></span>
+    <button
+      tuiButton
+      size="s"
+      [appearance]="showFollowups() ? 'primary' : 'secondary'"
+      (click)="showFollowups.set(!showFollowups())"
+    >
+      <tui-icon icon="@tui.corner-down-right" />
+      followupy ({{ followupCount() }})
+    </button>
+    <span
+      tuiBadge
+      appearance="neutral"
+      [title]="
+        'granica co ~' +
+        r.segment.targetParas +
+        ' akapitów, sufit ' +
+        r.segment.maxChars +
+        ' znaków'
+      "
+    >
+      bloki: {{ r.segment.targetParas }} / {{ num(r.segment.maxChars) }}
+    </span>
+  </section>
+
+  <table tuiTable class="tbl">
+    <thead>
+      <tr>
+        <th tuiTh>źródło</th>
+        <th tuiTh class="right">dni</th>
+        <th tuiTh class="right">znaki</th>
+        <th tuiTh class="right">sufit</th>
+        <th tuiTh class="right">odzysk</th>
+        <th tuiTh class="right">luka</th>
+        <th tuiTh class="right">darmo</th>
+        <th tuiTh class="right">$ pewne</th>
+        <th tuiTh class="right">$ szac.</th>
+      </tr>
+    </thead>
+    <tbody tuiTbody>
+      @for (s of rows(); track s.id) {
+        <tr class="row" [class.open]="opened() === s.id" (click)="toggle(s.id)">
+          <td tuiTd>
+            <tui-icon [icon]="opened() === s.id ? '@tui.chevron-down' : '@tui.chevron-right'" />
+            <code>{{ s.id }}</code>
+          </td>
+          <td tuiTd class="right">{{ s.days }}</td>
+          <td tuiTd class="right">{{ num(s.chars) }}</td>
+          <td tuiTd class="right">{{ pct(s.ceiling) }}</td>
+          <td tuiTd class="right" [class.weak]="s.reuse < 0.5">{{ pct(s.reuse) }}</td>
+          <td tuiTd class="right" [class.alert]="gap(s) > 0.25">{{ pct(gap(s)) }}</td>
+          <td tuiTd class="right">{{ s.freeDays }}/{{ s.days - 1 }}</td>
+          <td tuiTd class="right money">{{ usd(s.freeUsd) }}</td>
+          <td tuiTd class="right money">{{ usd(s.shrinkUsd) }}</td>
+        </tr>
+        @if (opened() === s.id) {
+          <tr class="detail">
+            <td tuiTd colspan="9">
+              <table class="pairs">
+                <thead>
+                  <tr>
+                    <th>dzień</th>
+                    <th class="right">porównany z</th>
+                    <th class="right">znaki</th>
+                    <th class="right">bloki</th>
+                    <th class="right">nowe</th>
+                    <th class="right">nowe znaki</th>
+                    <th class="right">sufit</th>
+                    <th class="right">odzysk</th>
+                    <th class="right">koszt</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (p of s.pairs; track p.day) {
+                    <tr [class.free]="p.newBlocks === 0">
+                      <td>{{ p.day }}</td>
+                      <td class="right muted">{{ p.prev }}</td>
+                      <td class="right">{{ num(p.chars) }}</td>
+                      <td class="right">{{ p.blocks }}</td>
+                      <td class="right">{{ p.newBlocks }}</td>
+                      <td class="right">{{ num(p.newChars) }}</td>
+                      <td class="right">{{ pct(p.ceiling) }}</td>
+                      <td class="right">{{ pct(p.reuse) }}</td>
+                      <td class="right money">{{ p.usd === undefined ? '—' : usd(p.usd) }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+
+              <!-- Przykłady: cudza treść, więc nigdy z repo. Tylko przez most na localhoście. -->
+              <div class="samples">
+                @if (!s.samples) {
+                  <p class="muted">
+                    Każdy dzień tego źródła zamknął się bez nowego bloku — nie ma czego pokazać.
+                  </p>
+                } @else if (!bridge.archiveReadable()) {
+                  <p class="muted">
+                    Fragmenty leżą w prywatnym archiwum (<code>{{ s.samples }}</code
+                    >) i nie trafiają do repo — to cudza treść bez redakcji PII. Uruchom
+                    <code>npm run panel-server</code> z <code>SUPABASE_*</code> w <code>.env</code>,
+                    żeby je zobaczyć.
+                  </p>
+                } @else {
+                  <button
+                    tuiButton
+                    size="s"
+                    appearance="secondary"
+                    [disabled]="samplesLoading()"
+                    (click)="loadSamples(s.samples)"
+                  >
+                    <tui-icon icon="@tui.file-diff" />
+                    Pokaż, co poszłoby do modelu
+                  </button>
+                  @if (samplesLoading()) {
+                    <tui-loader size="s" />
+                  }
+                  @if (samplesError(); as err) {
+                    <p class="warn">{{ err }}</p>
+                  }
+                  @if (samples(); as sam) {
+                    @for (p of sam.pairs; track p.day) {
+                      <div class="sample-day">
+                        <h4>
+                          {{ p.day }}
+                          <span class="muted">
+                            · {{ p.newBlocks.length }} pokazanych
+                            @if (p.omitted) {
+                              , {{ p.omitted }} pominiętych
+                            }
+                          </span>
+                        </h4>
+                        @for (b of p.newBlocks; track b.hash) {
+                          <pre class="block">{{ b.text }}</pre>
+                          <span class="muted block-meta">
+                            {{ num(b.chars) }} znaków · {{ b.hash.slice(0, 12) }}
+                          </span>
+                        }
+                      </div>
+                    }
+                  }
+                }
+              </div>
+            </td>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+
+  <section class="legend">
+    <h2>Jak to czytać</h2>
+    <dl>
+      <dt>sufit</dt>
+      <dd>
+        Udział znaków, które stały już w poprzednim zrzucie. Górna granica dla
+        <em>dowolnego</em> podziału na bloki — żaden nie odzyska wiersza, którego wczoraj nie było.
+      </dd>
+      <dt>odzysk</dt>
+      <dd>Ile z tego faktycznie odzyskuje obecna segmentacja po akapitach.</dd>
+      <dt>luka</dt>
+      <dd>
+        Różnica obu. To jest koszt tego, że tniemy tekst tak, a nie idealnie — i lista kandydatów na
+        segmentację po DOM-ie.
+      </dd>
+      <dt>$ pewne</dt>
+      <dd>
+        Dni, w których żaden blok nie był nowy: wywołanie modelu w ogóle nie idzie, więc znika cały
+        koszt tego źródło-dnia. Liczba dokładna.
+      </dd>
+      <dt>$ szac.</dt>
+      <dd>
+        Dni częściowo zmienione, przeskalowane udziałem odzyskanych znaków.
+        <strong>Szacunek</strong>: zakłada, że wydarzenia rozkładają się po blokach równomiernie, i
+        pomija stały narzut promptu systemowego, którego nie da się odzyskać. Dni spoza retencji
+        <code>runs.json</code> liczą się do procentów, ale do kwot już nie.
+      </dd>
+    </dl>
+  </section>
+}

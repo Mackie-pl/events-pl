@@ -8,6 +8,7 @@ export type * from "./cost.js";
 export type * from "./discover-run.js";
 export type * from "./event.js";
 export type * from "./probe.js";
+export type * from "./reuse.js";
 export type * from "./run.js";
 export type * from "./source.js";
 export type * from "./state.js";

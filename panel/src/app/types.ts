@@ -10,6 +10,9 @@ export * from './types-audit';
 // Sonda na żądanie: dane spoza repo (lokalny most), ale opisane tymi samymi kształtami.
 export * from './types-probe';
 
+// Pomiar powtarzalności treści (reuse.json + przykłady z prywatnego archiwum).
+export * from './types-reuse';
+
 // Profil źródła z etapu 1: osiągalność, entrypointy, maszynowe wyjścia.
 // Tu tylko `import`, bez `export *` jak wyżej: te typy są osiągalne przez pola `Source`,
 // więc nikt nie importuje ich po nazwie, a ten plik siedzi dokładnie na progu 350 linii kodu.
