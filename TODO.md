@@ -177,7 +177,37 @@ z przodu — może się okazać, że te grupy zarabiają na siebie.
 
 ---
 
-## 7. Pułapki zapisane, żeby ich nie powtórzyć
+## 7. Kodowanie znaków: `swarzedz.pl` idzie do modelu jako mojibake
+
+Znalezione przy okazji pomiaru tożsamości kart (2026-08-08), nie szukane.
+
+`https://www.swarzedz.pl/` serwuje treść w kodowaniu jednobajtowym (ISO-8859-2 albo
+windows-1250), a `res.text()` w `adapters/page-fetch.ts` dekoduje **zawsze jako UTF-8**.
+Efekt widać wprost w blokach:
+
+```
+Strona korzysta z plików cookies w celu realizacji us�ug �wiadczonych przez nasz serwis.
+Mo�esz okre�li� warunki przechowywania lub dost�pu do plik�w cookies
+```
+
+Skala: 33 karty, źródło pobierane **codziennie**, więc model codziennie czyta popsute polskie
+znaki. Nie wiadomo, ile to kosztuje w jakości — tytuły z „ą/ę/ś/ż" trafiają do `events.json`
+w tej postaci albo zgadywane od nowa.
+
+Czego NIE wiadomo i co trzeba zmierzyć przed poprawką:
+
+- ile źródeł w rejestrze serwuje nie-UTF-8 (sprawdzić `Content-Type: charset=` oraz BOM/heurystykę
+  na pobranej treści — nagłówek bywa kłamliwy),
+- czy `res.arrayBuffer()` + `TextDecoder(charset)` wystarczy, czy potrzeba wykrywania z treści
+  dla serwerów bez `charset` w nagłówku.
+
+Uwaga na pułapkę: poprawka **zmieni hash treści** każdego takiego źródła, więc pierwszy przebieg
+po niej przeczyta te strony od nowa (cache bloków i cache strony chybią raz). To jednorazowe
+i spodziewane — nie mylić z regresem.
+
+---
+
+## 8. Pułapki zapisane, żeby ich nie powtórzyć
 
 Nie do zrobienia — do NIEzrobienia. Każda wyglądała na oczywiste ulepszenie.
 

@@ -26,6 +26,10 @@ export type AuditKind =
   | "llm"
   /** wydarzenie odrzucone przez potok (brak daty startu, niezgodność ze schematem, półkolonie) */
   | "event.dropped"
+  /** podział strony na bloki i rozliczenie cache'a: ile z cache, ile do modelu */
+  | "block"
+  /** wydarzenia odsiane jako minione — z cache'a bloków albo prosto od modelu */
+  | "event.past"
   /** model wskazał podstrony / PDF-y / plakaty do dociągnięcia */
   | "followup.proposed"
   /** wynik jednego followupa */

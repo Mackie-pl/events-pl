@@ -5,7 +5,6 @@
  * przebiegu?" dawało się odpowiedzieć tylko dla NAJNOWSZEGO dnia (filtrem po events.json)
  * i tylko dla rekordów, które przeżyły dedupe. Refy zamykają obie luki.
  */
-import type { DedupeDrop } from "../pipeline/dedupe.js";
 import { newStats, redactEvent } from "../pipeline/pii.js";
 import type { EventItem, EventRef, SourceRun } from "../types/index.js";
 
@@ -17,7 +16,12 @@ import type { EventItem, EventRef, SourceRun } from "../types/index.js";
  * lecą do runs.json, czyli do publicznego repo. Redagujemy je tutaj: redakcja jest
  * idempotentna, więc powtórka na rekordach już zredagowanych niczego nie psuje.
  */
-export function attachProduced(byRun: Map<SourceRun, EventItem[]>, dropped: DedupeDrop[]): void {
+export function attachProduced(
+  byRun: Map<SourceRun, EventItem[]>,
+  // minimalny kształt, nie DedupeDrop: raport pyta wyłącznie „kto wsiąkł w kogo", a wchodzą
+  // tu dwa różne rodzaje scalenia (dedupe i zwijanie serii), które POWODU nie opisują tak samo
+  dropped: readonly { loser: EventItem; winner: EventItem }[],
+): void {
   const mergedInto = new Map<EventItem, string>();
   for (const d of dropped) mergedInto.set(d.loser, d.winner.source_id ?? "?");
   // statystyki celowo wyrzucane: te trafienia dotyczą rekordów, które nie idą do publikacji,

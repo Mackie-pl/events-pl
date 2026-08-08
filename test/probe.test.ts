@@ -64,7 +64,22 @@ describe("forgetSource (--force)", () => {
   it("na nieznanym źródle i pustym stanie nie wybucha", () => {
     const empty: PipelineState = { hashes: {}, geo: {} };
     forgetSource(empty, "nie-ma-takiego");
-    assert.deepEqual(empty, { hashes: {}, geo: {} });
+    assert.deepEqual(empty, { hashes: {}, geo: {}, blocks: {} });
+  });
+
+  /**
+   * Cache bloków adresuje TREŚĆ, nie źródło, więc „bloki tego źródła" nie są z niego
+   * wyjmowalne bez ponownego podziału strony. `--force` musi jednak naprawdę wymuszać:
+   * bez czyszczenia całości hash strony by zniknął, bloki wróciłyby z cache i model nie
+   * zostałby wywołany ani razu. `state` w sondzie jest kopią, więc nic to nie kosztuje.
+   */
+  it("czyści cache bloków, inaczej --force nie wymuszałby wywołania modelu", () => {
+    const s: PipelineState = {
+      hashes: {}, geo: {},
+      blocks: { abc: { events: [], followups: [], at: "2026-08-01", seen: "2026-08-01" } },
+    };
+    forgetSource(s, "zamek");
+    assert.deepEqual(s.blocks, {});
   });
 });
 

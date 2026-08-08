@@ -24,6 +24,8 @@ import type {
 } from "../../types/index.js";
 import { fbGroupPostsToText, harvestEventUrls, isEventUrl } from "../facebook.js";
 
+import { dropPast } from "./block-cache.js";
+import { blockSource } from "./block-source.js";
 import { capabilitySource } from "./capability-source.js";
 import { entryUrl } from "./entry-url.js";
 import {
@@ -152,6 +154,26 @@ const followupEvents = (url: string, state: PipelineState): EventItem[] =>
   state.extractions?.[url]?.events ?? [];
 
 /**
+ * ODSIEW MINIONYCH — jedno przewężenie dla OBU ścieżek, maszynowej i modelowej.
+ *
+ * Każdy cache w tym potoku oddaje wydarzenia ocenione „dziś" sprzed wielu dni: blok czytany
+ * tydzień temu, feed odtworzony z niezmienionej treści, plakat spod tego samego adresu.
+ * Dlatego odsiew nie może stać przy ŹRÓDLE wydarzeń, tylko przy wyjściu z `processSource` —
+ * inaczej każda nowa ścieżka musiałaby pamiętać, żeby go powtórzyć, a jedna już zapomniała:
+ * `capabilitySource` wracał wcześniej prosto do `finalize`, z pominięciem filtra. W events.json
+ * dało to 62 wydarzenia minione JUŻ W DNIU PUBLIKACJI, z czego połowa z tej ścieżki.
+ */
+function keepFuture(events: EventItem[], run: SourceRun): EventItem[] {
+  const past = dropPast(events);
+  if (past.dropped) {
+    audit("event.past", `${past.dropped} wydarzeń już się odbyło — nie idą do scalania`,
+      { dropped: past.dropped, kept: past.kept.length });
+    run.droppedPast = past.dropped;
+  }
+  return past.kept;
+}
+
+/**
  * Domknięcie wydarzeń: przypisanie źródła i geokodowanie. Wspólne dla obu ścieżek —
  * maszynowej i modelowej — bo miejsce trzeba znaleźć tak samo niezależnie od tego,
  * czy termin przyszedł z `tribe`, czy z odczytania strony przez model.
@@ -213,13 +235,16 @@ export async function processSource(
   // dalej normalnie. Powód zejścia zostaje w śladzie jako `capability.fallback`.
   const viaCapability = await capabilitySource(src, state, run);
   if (viaCapability) {
-    await attachGeo(viaCapability, src, state, run);
-    run.status = viaCapability.length > 0 ? (run.changed === false ? "unchanged" : "ok") : "empty";
+    // przez ten sam odsiew, co ścieżka modelowa: `from-capability.ts` odrzuca minione przy
+    // MAPOWANIU, ale wynik odtworzony z cache'a był mapowany innego dnia i zdążył się zestarzeć
+    const events = keepFuture(viaCapability, run);
+    await attachGeo(events, src, state, run);
+    run.status = events.length > 0 ? (run.changed === false ? "unchanged" : "ok") : "empty";
     audit("done",
-      `status „${run.status}" — ${viaCapability.length} wydarzeń idzie do scalania `
+      `status „${run.status}" — ${events.length} wydarzeń idzie do scalania `
       + "(ścieżka maszynowa, zero wywołań modelu)",
-      { status: run.status, events: viaCapability.length, ms: Math.round(performance.now() - t0) });
-    return finalize(viaCapability);
+      { status: run.status, events: events.length, ms: Math.round(performance.now() - t0) });
+    return finalize(events);
   }
 
   const cache = (state.extractions ??= {});
@@ -300,18 +325,31 @@ export async function processSource(
       run.changed = true;
       audit("content", `${fetched.text.length} znaków, hash inny niż poprzednio — idzie do modelu`,
         { chars: fetched.text.length, hash: hash.slice(0, 12), was: cached?.hash.slice(0, 12) ?? null });
-      const result = await extractEvents(fetched.text, url);
-      pageEvents = [...(result.events ?? [])];
-      if (result.parse) {
-        // do raportu, nie tylko do śladu: `--yield` liczy jałowe źródła z runs.json i bez tej
-        // notatki „zepsuty odczyt" wygląda tam na „serwis nie ma wydarzeń"
-        run.note = result.parse === "truncated"
-          ? `odpowiedź modelu ucięta na limicie — odzyskano ${result.recovered ?? 0} wydarzeń`
-          : `nie dało się odczytać odpowiedzi modelu (${result.parse})`;
+
+      // ścieżka blokowa: do modelu idą wyłącznie bloki, których jeszcze nie widzieliśmy.
+      // `null` = odmówiła (brak struktury, przebudowa serwisu) i lecimy jak dawniej.
+      const viaBlocks = await blockSource(fetched, url, state, run);
+      let proposed: string[];
+      if (viaBlocks) {
+        pageEvents = viaBlocks.events;
+        proposed = viaBlocks.followups;
+        if (viaBlocks.note) run.note = viaBlocks.note;
+      } else {
+        const result = await extractEvents(fetched.text, url);
+        pageEvents = [...(result.events ?? [])];
+        if (result.parse) {
+          // do raportu, nie tylko do śladu: `--yield` liczy jałowe źródła z runs.json i bez tej
+          // notatki „zepsuty odczyt" wygląda tam na „serwis nie ma wydarzeń"
+          run.note = result.parse === "truncated"
+            ? `odpowiedź modelu ucięta na limicie — odzyskano ${result.recovered ?? 0} wydarzeń`
+            : `nie dało się odczytać odpowiedzi modelu (${result.parse})`;
+        }
+        proposed = (result.followups ?? []).map((f) => f.url);
       }
+      // cache po haszu CAŁEJ strony zostaje obok blokowego: gdy jutro strona wróci bajt
+      // w bajt taka sama, nie ma po co jej nawet dzielić
       cache[src.id] = { hash, events: pageEvents, at: new Date().toISOString(), ...v };
       state.hashes[src.id] = hash; // legacy, dla zgodności ze starym state.json
-      const proposed = (result.followups ?? []).map((f) => f.url);
       followupUrls = proposed.slice(0, MAX_FOLLOWUPS_PER_SOURCE);
       if (proposed.length) {
         // ucięcie ponad limit było dotąd niewidoczne: raport pokazywał tylko to, co pobrano
@@ -348,7 +386,7 @@ export async function processSource(
   // --- followupy: sprawdzane ZAWSZE, także gdy strona się nie zmieniła ---
   // plakat/PDF potrafi się zmienić pod tym samym URL-em przy nietkniętym tekście strony
   if (!run.changed && followupUrls.length) run.followupsRechecked = followupUrls.length;
-  const events: EventItem[] = [...pageEvents];
+  const collected: EventItem[] = [...pageEvents];
   for (const fuUrl of followupUrls.slice(0, MAX_FOLLOWUPS_PER_SOURCE)) {
     if (isEventUrl(fuUrl)) {
       // wydarzenia FB nie do pobrania HTTP-em — dołączają do zbiorczego rozwiązania przez Bright Data
@@ -357,8 +395,10 @@ export async function processSource(
     }
     const fr = await processFollowup(fuUrl, src, state, errors);
     run.followups.push(fr);
-    if (fr.outcome !== "error") events.push(...followupEvents(fuUrl, state));
+    if (fr.outcome !== "error") collected.push(...followupEvents(fuUrl, state));
   }
+
+  const events = keepFuture(collected, run);
 
   await attachGeo(events, src, state, run);
 

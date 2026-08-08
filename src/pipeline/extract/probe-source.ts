@@ -71,6 +71,12 @@ export function forgetSource(state: PipelineState, id: string): void {
   delete cache[id];
   for (const url of state.followupsBySource?.[id] ?? []) delete cache[url];
   delete state.hashes[id];
+  // Cache bloków adresuje TREŚĆ, nie źródło, więc nie da się z niego wyjąć „bloków tego
+  // źródła" bez ponownego podziału strony. Czyścimy go w całości — `state` jest kopią na tę
+  // jedną sondę i nigdzie nie wraca, a bez tego `--force` przestałby cokolwiek wymuszać:
+  // hash strony by zniknął, po czym wszystkie bloki wróciłyby z cache i model nie zostałby
+  // wywołany ani razu, wbrew temu, co obiecuje opis polecenia.
+  state.blocks = {};
 }
 
 /** Obrazy (plakat w base64) zamieniamy na opis: prompt ma być czytelny, nie ma być megabajtem. */

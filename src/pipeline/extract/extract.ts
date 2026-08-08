@@ -5,9 +5,9 @@ import { MODEL_EXTRACT, chat, imagePart, wasTruncated } from "../../adapters/ope
 import { audit } from "../../shared/audit.js";
 import { salvageArray } from "../../shared/json-salvage.js";
 import { fillMissing, toWireSchema } from "../../shared/json-schema.js";
-import { EventSchema, ExtractionSchema } from "../../types/event-schema.js";
+import { BatchExtractionSchema, EventSchema, ExtractionSchema } from "../../types/event-schema.js";
 import type { EventItem, ExtractionResult, Followup } from "../../types/index.js";
-import { POSTER_SYSTEM, extractionSystem } from "../prompts.js";
+import { POSTER_SYSTEM, batchExtractionSystem, extractionSystem } from "../prompts.js";
 import { expandRepeat } from "../series.js";
 
 const MAX_INPUT_CHARS = 40_000; // ~10k tokenów
@@ -90,18 +90,37 @@ function keepValid(events: unknown): EventItem[] {
  * Przy ucięciu ratujemy kompletne rekordy sprzed miejsca przerwania: wywołanie już kosztowało,
  * a wyrzucenie trzydziestu poprawnych wydarzeń razem z jednym niedokończonym jest czystą stratą.
  */
-export function parseModelJson(s: string, truncated = false): ExtractionResult {
+/**
+ * Odpowiedź modelu SUROWO, przed walidacją — potrzebna wywołaniu zbiorczemu, bo numer bloku
+ * trzeba zdjąć z wpisu, ZANIM ten trafi do `keepValid`. Schemat wydarzenia jest zamknięty
+ * (`additionalProperties: false`), więc wpis z dodatkowym polem `block` nie przechodzi
+ * walidacji — bez tego rozdzielenia paczka gubiłaby wszystkie wydarzenia co do jednego.
+ */
+function parseRaw(s: string, truncated: boolean): {
+  events: unknown[]; followups?: Followup[]; parse?: ExtractionResult["parse"];
+} {
   const m = s.match(/\{[\s\S]*\}/);
   if (!m) return { events: [], parse: "no-json" };
   try {
     const parsed = JSON.parse(m[0]) as { events?: unknown; followups?: Followup[] };
-    const events = keepValid(parsed.events);
+    const events = Array.isArray(parsed.events) ? (parsed.events as unknown[]) : [];
     return parsed.followups ? { events, followups: parsed.followups } : { events };
   } catch {
-    const events = keepValid(salvageArray(s, "events"));
     // followupy przepadają: siedzą za tablicą wydarzeń, więc ucięcie zabiera je zawsze
-    return { events, parse: truncated ? "truncated" : "bad-json", recovered: events.length };
+    const salvaged = salvageArray(s, "events");
+    return {
+      events: Array.isArray(salvaged) ? salvaged : [],
+      parse: truncated ? "truncated" : "bad-json",
+    };
   }
+}
+
+export function parseModelJson(s: string, truncated = false): ExtractionResult {
+  const raw = parseRaw(s, truncated);
+  const events = keepValid(raw.events);
+  if (raw.parse === "no-json") return { events: [], parse: "no-json" };
+  if (raw.parse) return { events, parse: raw.parse, recovered: events.length };
+  return raw.followups ? { events, followups: raw.followups } : { events };
 }
 
 export async function extractEvents(text: string, sourceUrl: string): Promise<ExtractionResult> {
@@ -132,6 +151,112 @@ export async function extractEvents(text: string, sourceUrl: string): Promise<Ex
   // decyzją potoku i dostaje własny krok śladu.
   result.events = expandRepeat(result.events);
   return result;
+}
+
+/** Wynik wywołania zbiorczego rozpisany z powrotem na bloki; klucz = indeks w paczce. */
+export interface BatchResult {
+  byBlock: Map<number, { events: EventItem[]; followups: string[] }>;
+  /**
+   * Indeksy, których NIE WOLNO zapisać do cache'a, bo odpowiedź urwała się na limicie
+   * i nie wiadomo, czy ich wynik jest kompletny. Puste przy zdrowej odpowiedzi.
+   */
+  unsafe: Set<number>;
+  parse?: ExtractionResult["parse"];
+}
+
+const RESPONSE_SCHEMA_BATCH = { name: "wydarzenia_blokowe", schema: toWireSchema(BatchExtractionSchema) };
+
+/** „BLOK 0:\n…" — nagłówek, z którego model przepisuje numer do pola `block`. */
+export const withHeaders = (texts: string[]): string =>
+  texts.map((t, i) => `BLOK ${i}:\n${t}`).join("\n\n");
+
+/**
+ * Ucięcie odpowiedzi to jedyny moment, w którym paczka jest groźniejsza od wywołań na blok.
+ *
+ * Przy uciętej odpowiedzi bloki z KOŃCA paczki albo nie zdążyły się pojawić, albo pojawiły
+ * się w połowie — a zapisanie ich jako „zero wydarzeń" zatrułoby cache na wiele dni:
+ * blok byłby uznany za przeczytany i nigdy nie wróciłby do modelu. Dlatego za pewny uznajemy
+ * wyłącznie blok o indeksie MNIEJSZYM niż największy widziany: skoro model przeszedł już do
+ * następnego, poprzedni ma komplet. Reszta zostaje nieznana i pójdzie jutro jeszcze raz.
+ */
+export function safeUpTo(indices: number[], truncated: boolean, size: number): Set<number> {
+  if (!truncated) return new Set();
+  const max = indices.length ? Math.max(...indices) : -1;
+  const unsafe = new Set<number>();
+  for (let i = Math.max(max, 0); i < size; i++) unsafe.add(i);
+  return unsafe;
+}
+
+/**
+ * Rozpisanie surowej odpowiedzi na bloki. Wydzielone z `extractBatch`, bo to tutaj mieszka
+ * cała logika przypisania — a przy modelu w środku nie dałoby się jej przetestować.
+ */
+export function mapBatch(
+  rawEvents: unknown[], rawFollowups: Followup[], count: number, truncated: boolean,
+): BatchResult & { kept: number; orphans: number } {
+  const byBlock = new Map<number, { events: EventItem[]; followups: string[] }>();
+  for (let i = 0; i < count; i++) byBlock.set(i, { events: [], followups: [] });
+
+  const seen: number[] = [];
+  /** Numer bloku z wpisu; `null` = model go nie podał albo podał bzdurę — wpis przepada. */
+  const slotOf = (raw: unknown): { events: EventItem[]; followups: string[] } | null => {
+    const n = (raw as { block?: unknown } | null)?.block;
+    if (typeof n !== "number" || !Number.isInteger(n) || n < 0 || n >= count) return null;
+    seen.push(n);
+    return byBlock.get(n) ?? null;
+  };
+
+  let kept = 0, orphans = 0;
+  for (const raw of rawEvents) {
+    const target = slotOf(raw);
+    if (!target) { orphans += 1; continue; }
+    // `block` MUSI zniknąć przed walidacją — schemat wydarzenia jest zamknięty
+    const { block: _drop, ...rest } = raw as Record<string, unknown>;
+    const valid = keepValid([rest]);
+    if (valid.length) { target.events.push(valid[0]!); kept += 1; }
+  }
+  for (const f of rawFollowups) {
+    const target = slotOf(f);
+    if (target && f.url && !target.followups.includes(f.url)) target.followups.push(f.url);
+  }
+  for (const entry of byBlock.values()) entry.events = expandRepeat(entry.events);
+
+  return { byBlock, unsafe: safeUpTo(seen, truncated, count), kept, orphans };
+}
+
+/**
+ * Jedno wywołanie na WIELE bloków. Zwraca wynik rozpisany po blokach — wpisy bez poprawnego
+ * numeru przepadają, bo cache bez przypisania jest gorszy niż jego brak.
+ */
+export async function extractBatch(texts: string[], sourceUrl: string): Promise<BatchResult> {
+  const user = withHeaders(texts);
+  const out = await chat({
+    model: MODEL_EXTRACT,
+    task: "extract",
+    system: batchExtractionSystem(new Date().toISOString().slice(0, 10)),
+    user: `ŹRÓDŁO: ${sourceUrl}\n\n${user.slice(0, MAX_INPUT_CHARS)}`,
+    maxTokens: MAX_TOKENS,
+    schema: RESPONSE_SCHEMA_BATCH,
+  });
+  const truncated = wasTruncated();
+  const parsed = parseRaw(out, truncated);
+  const { byBlock, unsafe, kept, orphans } =
+    mapBatch(parsed.events, parsed.followups ?? [], texts.length, truncated);
+
+  audit("llm", `paczka ${texts.length} bloków → ${kept} wydarzeń` +
+    (orphans ? `, ${orphans} bez poprawnego numeru bloku (odrzucone)` : "") +
+    (unsafe.size ? `, ${unsafe.size} bloków bez pewnego wyniku (odpowiedź ucięta)` : ""),
+  { model: MODEL_EXTRACT, task: "extract", blocks: texts.length, events: kept,
+    orphans, unsafe: unsafe.size, url: sourceUrl });
+  if (parsed.parse) {
+    audit("llm", parsed.parse === "truncated"
+      ? `odpowiedź ucięta na limicie ${MAX_TOKENS} tok. — odzyskano ${kept} wydarzeń`
+      : `nie dało się odczytać odpowiedzi modelu (${parsed.parse})`,
+    { task: "extract", url: sourceUrl, why: parsed.parse });
+  }
+
+  // rozwinięcie rytmu zrobił już mapBatch — drugi przebieg podwoiłby terminy serii
+  return { byBlock, unsafe, ...(parsed.parse ? { parse: parsed.parse } : {}) };
 }
 
 export async function extractPoster(

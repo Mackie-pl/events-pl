@@ -96,6 +96,18 @@ export interface SourceRun {
   cached?: number;
   /** wydarzenia odrzucone z braku daty startu (atrakcje stałe) — brak = żadnego nie odrzucono */
   droppedInvalid?: number;
+  /**
+   * Wydarzenia odsiane jako minione. Rośnie wraz z cache'em bloków: wpis oceniony „dziś"
+   * sprzed tygodnia oddaje terminy, które w międzyczasie minęły. Zero nie znaczy „nie było
+   * czego odsiewać" — znaczy „nic nie wygasło od ostatniego czytania".
+   */
+  droppedPast?: number;
+  /**
+   * Rozliczenie ścieżki blokowej: ile bloków miała strona, ile wróciło z cache, ile poszło
+   * do modelu. Brak = źródło szło starą drogą (jedno wywołanie na całość) albo w ogóle
+   * nie dotknęło modelu. `fresh: 0` przy `total > 0` to dzień w pełni darmowy.
+   */
+  blocks?: { total: number; cached: number; fresh: number };
   /** followupy sprawdzone mimo niezmienionej strony źródła */
   followupsRechecked?: number;
   /** ścieżki obiektów w prywatnym archiwum (raw/ + llm/); brak = archiwum wyłączone */

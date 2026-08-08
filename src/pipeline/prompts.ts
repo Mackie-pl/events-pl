@@ -11,7 +11,7 @@
  * przekrojowych skończyłoby się opisami pól, których model nie ma jak zastosować.
  */
 import { renderSchemaBlock } from "../shared/json-schema.js";
-import { EventSchema } from "../types/event-schema.js";
+import { BlockEventSchema, EventSchema } from "../types/event-schema.js";
 
 const EVENT_BLOCK = renderSchemaBlock(EventSchema);
 
@@ -114,14 +114,15 @@ Zwróć WYŁĄCZNIE JSON: {"url":"https://..."} albo {"url":null}, gdy żaden wy
 
 // ============ STAGE 2: ekstrakcja (codziennie, tani model) ============
 
-export const extractionSystem = (todayIso: string): string =>
-  `Wyciągasz wydarzenia lokalne z tekstu strony/PDF-a. Dziś jest ${todayIso}.
-Zwróć WYŁĄCZNIE poprawny JSON: {"events":[...],"followups":[...]}.
-
-Schemat wydarzenia:
-${EVENT_BLOCK}
-
-WYDARZENIA-KONTENERY: jeśli tekst zawiera zbiorczy program (repertuar, "Akcja Lato", festiwal wielodniowy)
+/**
+ * Reguły ekstrakcji — WSPÓLNE dla wywołania na jedną treść i na paczkę bloków.
+ *
+ * Stoją w osobnej stałej, bo prompt zbiorczy różni się tylko nagłówkiem i schematem;
+ * gdyby reguły były w obu przepisane, rozjechałyby się dokładnie tak, jak rozjechały się
+ * kiedyś trzy kopie bloku schematu. `test/prompts.test.ts` pilnuje, że wersja pojedyncza
+ * po tym wydzieleniu jest CO DO ZNAKU tym samym promptem, co przedtem.
+ */
+const EXTRACTION_RULES = `WYDARZENIA-KONTENERY: jeśli tekst zawiera zbiorczy program (repertuar, "Akcja Lato", festiwal wielodniowy)
 z konkretnymi terminami — rozbij na osobne wydarzenia i ustaw "container": nazwa kontenera.
 Jeśli program jest POD LINKIEM (PDF, podstrona, plakat JPG) — NIE zgaduj; dodaj URL do "followups":
 [{"url": str, "reason": "program PDF"|"szczegóły wydarzenia"|"plakat"}]. Maks 5 followupów, tylko z tej samej domeny lub oficjalnych.
@@ -134,6 +135,42 @@ a pusty string "" w polach czysto tekstowych (venue, town, registration, conditi
 BEZ DATY = NIE WYDARZENIE. Pomijaj atrakcje stałe i całoroczne (zoo, muzeum, plac zabaw,
 park linowy, basen, „czynne codziennie", oferta stała, cennik biletów) — od tego są mapy,
 nie ten serwis. Jeśli nie da się ustalić konkretnego "date_start", NIE dodawaj wpisu.`;
+
+export const extractionSystem = (todayIso: string): string =>
+  `Wyciągasz wydarzenia lokalne z tekstu strony/PDF-a. Dziś jest ${todayIso}.
+Zwróć WYŁĄCZNIE poprawny JSON: {"events":[...],"followups":[...]}.
+
+Schemat wydarzenia:
+${EVENT_BLOCK}
+
+${EXTRACTION_RULES}`;
+
+/**
+ * Prompt ZBIOROWY: kilka fragmentów tej samej strony w jednym wywołaniu.
+ *
+ * Powód jest arytmetyczny. Prompt systemowy waży ~900 tokenów, więc przy wywołaniu na blok
+ * pierwszy przebieg źródła (trzydzieści kilka nieznanych bloków) kosztuje kilkanaście razy
+ * więcej niż jedno wywołanie na całą stronę — pomiar na `estrada` dał 33 wywołania i $0.244
+ * zamiast ~$0.02. Paczka sprowadza zasiew z powrotem do jednego wywołania.
+ *
+ * Cena za to jest jedna: model MUSI podpisać każdy wpis numerem bloku. To jedyne, co pozwala
+ * rozpisać odpowiedź z powrotem na osobne wpisy cache'a — a bez tego przypisania znikająca
+ * karta nie miałaby jak zabrać ze sobą swoich wydarzeń.
+ */
+export const batchExtractionSystem = (todayIso: string): string =>
+  `Wyciągasz wydarzenia lokalne z FRAGMENTÓW jednej strony. Dziś jest ${todayIso}.
+Fragmenty są ponumerowane i rozdzielone wierszem „BLOK n:". Czytaj każdy osobno — to kawałki
+tej samej strony, ale osobne wpisy.
+Zwróć WYŁĄCZNIE poprawny JSON: {"events":[...],"followups":[...]}.
+
+KAŻDY wpis w "events" i w "followups" MUSI mieć pole "block" z numerem bloku, w którym stoi.
+Numer przepisz z nagłówka „BLOK n:" stojącego nad tą treścią. Nie zgaduj i nie przenoś wpisu
+do innego bloku — po tym numerze wynik wraca na swoje miejsce.
+
+Schemat wydarzenia:
+${renderSchemaBlock(BlockEventSchema)}
+
+${EXTRACTION_RULES}`;
 
 /**
  * Plakat leci do modelu BEZ promptu ekstrakcji (osobne wywołanie, osobny system), więc

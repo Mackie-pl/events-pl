@@ -15,6 +15,7 @@ import {
 import { withoutCamps } from "../pipeline/camps.js";
 import { dedupe } from "../pipeline/dedupe.js";
 import { harvestEventUrls, isEventUrl } from "../pipeline/facebook.js";
+import { pruneBlocks } from "../pipeline/extract/block-cache.js";
 import { resolveFbEvents } from "../pipeline/extract/fb-events.js";
 import { newSourceRun, processSource } from "../pipeline/extract/process-source.js";
 import { redactEvents, redactText } from "../pipeline/pii.js";
@@ -105,6 +106,9 @@ async function run(): Promise<void> {
   }
 
   beginAuditSource(RUN_SCOPE);
+  // po wszystkich źródłach, nie w trakcie: `seen` bloku ustawia się dopiero przy jego
+  // odwiedzeniu, więc przycinanie w środku pętli skasowałoby bloki źródeł jeszcze nietkniętych
+  pruneBlocks(state);
   // przed scalaniem, bo półkolonie potrafią przyjść z dwóch źródeł naraz i wtedy dedupe
   // wybierałby zwycięzcę spośród rekordów, z których żaden nie ma prawa się opublikować
   allEvents = withoutCamps(allEvents);
@@ -113,8 +117,9 @@ async function run(): Promise<void> {
   // przegrany trafia do śladu SWOJEGO źródła — tam go szuka ktoś, kto pyta „czemu to zniknęło?"
   for (const d of merged.dropped) {
     auditFor(d.loser.source_id ?? RUN_SCOPE, "dedupe.dropped",
-      `„${d.loser.title}" scalone do rekordu ze źródła „${d.winner.source_id ?? "?"}" (bogatszy opis)`,
-      { title: d.loser.title, date: d.loser.date_start, winner: d.winner.source_id ?? null });
+      `„${d.loser.title}" scalone do „${d.winner.title}" ze źródła „${d.winner.source_id ?? "?"}" ` +
+      `(${d.why === "klucz" ? "ten sam tytuł i data" : "tytuł zawarty w tamtym"})`,
+      { title: d.loser.title, date: d.loser.date_start, winner: d.winner.source_id ?? null, why: d.why });
   }
   audit("dedupe.dropped", `scalanie: ${merged.dropped.length} duplikatów, zostaje ${allEvents.length} wydarzeń`,
     { dropped: merged.dropped.length, kept: allEvents.length });
@@ -140,6 +145,10 @@ async function run(): Promise<void> {
   // state.json też jest w repo — cache ekstrakcji trzyma wydarzenia, więc redagujemy i jego.
   // Redakcja jest idempotentna, a część obiektów jest współdzielona z allEvents (to samo id w pamięci).
   for (const entry of Object.values(state.extractions ?? {})) redactEvents(entry.events);
+  // cache bloków tak samo: te same wydarzenia, tylko zaadresowane treścią zamiast źródłem.
+  // Pominięcie go byłoby wyciekiem kontaktów do publicznego repo tą samą drogą, którą
+  // `extractions` zamknięto wcześniej.
+  for (const entry of Object.values(state.blocks ?? {})) redactEvents(entry.events);
   for (const e of errors) e.err = redactText(e.err, pii);
   for (const sr of sourceRuns) {
     if (sr.err) sr.err = redactText(sr.err, pii);

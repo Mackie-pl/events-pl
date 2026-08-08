@@ -23,9 +23,42 @@ export interface CachedExtraction {
   lastModified?: string;
 }
 
+/**
+ * Wynik ekstrakcji JEDNEGO bloku treści. Klucz w `blocks`: sha256 tekstu bloku.
+ *
+ * Cache po CAŁEJ stronie oszczędza tylko wtedy, gdy nie zmienił się ani jeden znak — a pomiar
+ * na dwunastu dniach archiwum pokazał, że 86.9% treści stoi w miejscu, podczas gdy trafień było
+ * 15%. Klucz po bloku łapie tę różnicę: wynik strony to SUMA po blokach, które dziś na niej
+ * stoją, więc znikająca karta nie kosztuje nic (bloku nie ma w sumie), a dochodząca kosztuje
+ * dokładnie siebie.
+ *
+ * Wpis jest wspólny dla wszystkich źródeł — ten sam blok na dwóch stronach czyta się raz.
+ *
+ * Uwaga: state.json jest w publicznym repo, więc `events` są PO redakcji PII (daily.ts).
+ */
+export interface CachedBlock {
+  /** wydarzenia tak, jak zwrócił je model — BEZ odsiewu przeszłych (patrz niżej) */
+  events: EventItem[];
+  /** odnośniki wskazane przez model w tym bloku */
+  followups: string[];
+  /** kiedy blok trafił do modelu */
+  at: string;
+  /** ostatni dzień, w którym blok stał na stronie — po tym przycinamy cache */
+  seen: string;
+}
+
 export interface PipelineState {
   /** legacy: sam hash bez wyniku. Zastąpione przez `extractions`, zostaje dla starych plików. */
   hashes: Record<string, string>;
+  /**
+   * Cache ekstrakcji per BLOK treści (sha256 → wynik). Wspólny dla źródeł.
+   *
+   * Trzyma wydarzenia NIEODSIANE z przeszłych, i to jest świadome: odsiew przeszłych robimy
+   * przy odczycie, bo „wszystkie wydarzenia tego bloku już minęły" jest jedynym sygnałem,
+   * że blok trzeba przeczytać ponownie (ta sama treść w nowym roku znaczy nową datę).
+   * Gdyby cache trzymał już odsiane, ten sygnał byłby nie do odróżnienia od „blok bez wydarzeń".
+   */
+  blocks?: Record<string, CachedBlock>;
   /** cache geokodera per "venue|town" */
   geo: Record<string, { lat: number; lon: number } | null>;
   /** cache ekstrakcji per source.id / URL followupa */

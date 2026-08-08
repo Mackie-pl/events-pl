@@ -129,6 +129,36 @@ export const ExtractionSchema = closed({
   followups: Type.Array(FollowupSchema),
 });
 
+/**
+ * Wariant dla wywołania ZBIORCZEGO: kilka bloków w jednym zapytaniu, każdy wynik podpisany
+ * numerem bloku, z którego pochodzi.
+ *
+ * Numer jest tu jedyną rzeczą, która pozwala rozpisać jedną odpowiedź z powrotem na osobne
+ * wpisy cache'a. Bez niego zostaje wybór między wywołaniem na blok (drogo: ~900 tokenów
+ * promptu systemowego RAZY liczba bloków) a rezygnacją z przypisania (i wtedy usunięta karta
+ * nie ma jak zniknąć, bo nie wiadomo, które wydarzenia z niej były).
+ *
+ * Schemat POWSTAJE Z `EventSchema`, a nie obok niego. Druga ręcznie pisana kopia kształtu
+ * wydarzenia rozjechałaby się z pierwszą — dokładnie tak, jak rozjechały się kiedyś trzy
+ * kopie bloku schematu w promptach.
+ */
+const BLOCK_NOTE = "numer BLOKU, z którego pochodzi ten wpis — dokładnie tak, jak w nagłówku „BLOK n:”";
+
+export const BlockEventSchema = closed({
+  ...EventSchema.properties,
+  block: Type.Integer({ description: BLOCK_NOTE }),
+});
+
+export const BlockFollowupSchema = closed({
+  ...FollowupSchema.properties,
+  block: Type.Integer({ description: BLOCK_NOTE }),
+});
+
+export const BatchExtractionSchema = closed({
+  events: Type.Array(BlockEventSchema),
+  followups: Type.Array(BlockFollowupSchema),
+});
+
 export type ModelEvent = Static<typeof EventSchema>;
 export type AgeRange = Static<typeof AgeSchema>;
 export type Price = Static<typeof PriceSchema>;

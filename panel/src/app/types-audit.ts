@@ -17,6 +17,8 @@ export type AuditKind =
   | 'capability.fallback'
   | 'llm'
   | 'event.dropped'
+  | 'block'
+  | 'event.past'
   | 'followup.proposed'
   | 'followup'
   | 'fb.harvest'
