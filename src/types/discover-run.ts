@@ -56,6 +56,12 @@ export interface GeoLookup {
    * Rozstrzyga „mało gmin, bo region jest rzadki" kontra „mało, bo filtr za ostry".
    */
   considered?: number;
+  /**
+   * Ile żądań poszło do Overpass (oba zapytania razem). Więcej niż 2 znaczy, że instancja
+   * odbijała i ponawialiśmy — przebieg się udał, ale usługa jest niestabilna. Bez tej liczby
+   * ponowienie jest niewidoczne i „czasem wychodzi sześć gmin, czasem jedna" nie ma wyjaśnienia.
+   */
+  attempts?: number;
 }
 
 /**

@@ -7,6 +7,8 @@
  * Zapytanie po bboksie jest indeksowane i schodzi do ~9 s dla Poznania, a odległość i tak
  * musimy policzyć u siebie, żeby prostokąt przyciąć do promienia.
  */
+import { setTimeout as sleep } from "node:timers/promises";
+
 import { describeError } from "../shared/errors.js";
 import type { GeoLookup } from "../types/index.js";
 
@@ -39,6 +41,26 @@ const statusKind = (status: number): string =>
     : status < 500 ? "odrzucony request — błąd po NASZEJ stronie"
       : "awaria serwera Overpass";
 
+/**
+ * PONAWIANIE, bo 5xx z Overpassa jest przelotne — i kosztowało nas cały zakres discovery.
+ *
+ * 2026-08-08: cztery wywołania tego samego zapytania, dwa zwróciły 504, dwa 200 w ~1-3 s.
+ * Trafiliśmy na 504 akurat przy `discover --reset`, więc zadziałał fallback „samo miasto
+ * centralne" i rejestr odbudował się z JEDNEJ gminy zamiast sześciu, kasując pozostałe pięć.
+ * Ten plik już wcześniej pisał, że 5xx „przejdzie przy kolejnym przebiegu" — brakowało
+ * tylko tego, żeby kod z tej wiedzy skorzystał sam.
+ *
+ * Lustra sprawdzone i ODRZUCONE tego samego dnia: overpass.kumi.systems i
+ * overpass.private.coffee milczą do timeoutu 60 s, overpass.osm.jp nie rozwiązuje się w ogóle.
+ * Z tej sieci odpowiada wyłącznie instancja główna, więc lista zapasowych adresów byłaby
+ * listą adresów, które nie działają. `OVERPASS_URL` zostaje na wypadek własnej instancji.
+ *
+ * 4xx NIE jest ponawiane: to błąd naszego zapytania albo nagłówków i powtórka go nie naprawi.
+ */
+const RETRY_DELAYS_MS = [2_000, 5_000];
+
+const worthRetrying = (status: number): boolean => status === 429 || status >= 500;
+
 const KM_PER_DEG_LAT = 110.574;
 const kmPerDegLon = (lat: number): number => 111.320 * Math.cos((lat * Math.PI) / 180);
 
@@ -50,19 +72,43 @@ interface OverpassElement {
   center?: { lat: number; lon: number };
 }
 
-/** Jedno zapytanie do Overpass wraz z rozpakowaniem `elements`. Rzuca z gotowym komunikatem. */
-async function overpass(q: string, onStatus: (s: number) => void): Promise<OverpassElement[]> {
-  const res = await fetchUrl(OVERPASS_URL, {
-    method: "POST",
-    headers: OVERPASS_HEADERS,
-    body: new URLSearchParams({ data: q }),
-  }, 90_000);
-  if (!res.ok) {
-    onStatus(res.status);
-    throw new Error(`Overpass HTTP ${res.status} (${statusKind(res.status)})`);
+/**
+ * Jedno zapytanie do Overpass wraz z rozpakowaniem `elements`, z ponawianiem przy błędach
+ * przelotnych. Rzuca z gotowym komunikatem, gdy skończą się próby albo gdy błąd jest nasz.
+ */
+async function overpass(
+  q: string, onStatus: (s: number) => void, onAttempt: () => void,
+): Promise<OverpassElement[]> {
+  let last: Error = new Error("Overpass: brak prób");
+  for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt++) {
+    onAttempt();
+    let res: Response | null = null;
+    try {
+      res = await fetchUrl(OVERPASS_URL, {
+        method: "POST",
+        headers: OVERPASS_HEADERS,
+        body: new URLSearchParams({ data: q }),
+      }, 90_000);
+    } catch (e) {
+      // sieć/timeout — nie znamy statusu, ale to dokładnie ten rodzaj awarii, który mija
+      last = e instanceof Error ? e : new Error(String(e));
+    }
+    if (res) {
+      if (res.ok) {
+        const json = (await res.json()) as { elements?: OverpassElement[] };
+        return json.elements ?? [];
+      }
+      onStatus(res.status);
+      last = new Error(`Overpass HTTP ${res.status} (${statusKind(res.status)})`);
+      if (!worthRetrying(res.status)) throw last;
+    }
+    const wait = RETRY_DELAYS_MS[attempt];
+    if (wait !== undefined) {
+      console.warn(`  Overpass: ${last.message} — ponawiam za ${wait / 1000}s`);
+      await sleep(wait);
+    }
   }
-  const json = (await res.json()) as { elements?: OverpassElement[] };
-  return json.elements ?? [];
+  throw last;
 }
 
 /**
@@ -115,12 +161,13 @@ export async function townsInRadius(centerTown: string, radiusKm: number): Promi
   const geo: GeoLookup = { query, towns: [], ms: 0 };
   const t0 = performance.now();
   const onStatus = (s: number): void => { geo.httpStatus = s; };
+  const onAttempt = (): void => { geo.attempts = (geo.attempts ?? 0) + 1; };
   try {
     const center = pickCenter(await overpass(
       `[out:json][timeout:30];
        relation["name"="${centerTown}"]["boundary"="administrative"]["admin_level"~"6|7|8"];
        out ids bb;`,
-      onStatus,
+      onStatus, onAttempt,
     ));
     if (!center) throw new Error(`OSM nie zna granic administracyjnych dla "${centerTown}"`);
 
@@ -128,7 +175,7 @@ export async function townsInRadius(centerTown: string, radiusKm: number): Promi
       `[out:json][timeout:60];
        relation["boundary"="administrative"]["admin_level"="7"](${paddedBox(center, radiusKm)});
        out tags center;`,
-      onStatus,
+      onStatus, onAttempt,
     );
     geo.considered = candidates.length;
 
