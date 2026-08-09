@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-08T05:05:22.674Z",
+ "updated": "2026-08-09T05:10:53.072Z",
  "rates": {
   "bdPerRecord": 0.0015,
   "searchPerQuery": 0.001,
@@ -1348,6 +1348,79 @@
    "usd": 0,
    "estimated": true,
    "units": 2.534,
+   "unit": "MB"
+  },
+  {
+   "day": "2026-08-09",
+   "at": "2026-08-09T05:10:53.046Z",
+   "stage": "daily",
+   "run": "2026-08-09T04:58:56.137Z",
+   "category": "llm-extract",
+   "usd": 0.557268,
+   "estimated": false,
+   "units": 28,
+   "unit": "calls",
+   "tokensIn": 217538,
+   "tokensOut": 67946,
+   "top": [
+    {
+     "id": "dopiewo-city",
+     "usd": 0.091594,
+     "units": 3
+    },
+    {
+     "id": "estrada",
+     "usd": 0.078062,
+     "units": 2
+    },
+    {
+     "id": "ck-zamek",
+     "usd": 0.077057,
+     "units": 1
+    },
+    {
+     "id": "poznan-kultura",
+     "usd": 0.064363,
+     "units": 2
+    },
+    {
+     "id": "czerwonak-city",
+     "usd": 0.060188,
+     "units": 5
+    }
+   ]
+  },
+  {
+   "day": "2026-08-09",
+   "at": "2026-08-09T05:10:53.046Z",
+   "stage": "daily",
+   "run": "2026-08-09T04:58:56.137Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 126,
+   "unit": "fetches"
+  },
+  {
+   "day": "2026-08-09",
+   "at": "2026-08-09T05:10:53.046Z",
+   "stage": "daily",
+   "run": "2026-08-09T04:58:56.137Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 29,
+   "unit": "lookups"
+  },
+  {
+   "day": "2026-08-09",
+   "at": "2026-08-09T05:10:53.046Z",
+   "stage": "daily",
+   "run": "2026-08-09T04:58:56.137Z",
+   "category": "storage",
+   "usd": 0,
+   "estimated": true,
+   "units": 2.311,
    "unit": "MB"
   }
  ]
