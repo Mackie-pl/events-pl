@@ -47,10 +47,10 @@
      "chars": 103802
     }
    },
-   "lastSeenRun": "2026-08-08T18:46:38.042Z",
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
    "missedRuns": 0,
    "reach": "ok",
-   "checked": "2026-08-08",
+   "checked": "2026-08-09",
    "entrypoints": [
     {
      "url": "https://www.oklubon.pl/wydarzenia",
@@ -67,7 +67,7 @@
      "url": "https://www.oklubon.pl/feed",
      "itemsSeen": 10,
      "datesParsed": 0,
-     "checked": "2026-08-08"
+     "checked": "2026-08-09"
     }
    ]
   },
@@ -98,7 +98,7 @@
      "llm/2026-08-08/2026-08-08T18-46-38-042Z/discover-lubon/0001-anthropic_claude-sonnet-4.6.json"
     ]
    },
-   "lastSeenRun": "2026-08-08T18:46:38.042Z",
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
    "missedRuns": 0
   },
   {
@@ -137,10 +137,10 @@
      "chars": 89437
     }
    },
-   "lastSeenRun": "2026-08-08T18:46:38.042Z",
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
    "missedRuns": 0,
    "reach": "ok",
-   "checked": "2026-08-08",
+   "checked": "2026-08-09",
    "entrypoints": [
     {
      "url": "https://lubon.pl/kalendarium/1/5",
@@ -148,7 +148,8 @@
      "confidence": 0.9,
      "via": "llm",
      "detailPattern": "/artykuly/{id}/{slug}",
-     "detailCount": 56
+     "detailCount": 56,
+     "barrenRuns": 1
     }
    ],
    "capabilities": [
@@ -156,15 +157,15 @@
      "kind": "rss",
      "url": "https://lubon.pl/atom",
      "itemsSeen": 100,
-     "datesParsed": 19,
-     "checked": "2026-08-08"
+     "datesParsed": 18,
+     "checked": "2026-08-09"
     },
     {
      "kind": "rss",
      "url": "https://lubon.pl/rss",
      "itemsSeen": 100,
-     "datesParsed": 19,
-     "checked": "2026-08-08"
+     "datesParsed": 18,
+     "checked": "2026-08-09"
     }
    ]
   },
@@ -205,9 +206,9 @@
     }
    },
    "lastSeenRun": "2026-08-08T18:46:38.042Z",
-   "missedRuns": 0,
+   "missedRuns": 1,
    "reach": "ok",
-   "checked": "2026-08-08",
+   "checked": "2026-08-09",
    "entrypoints": [
     {
      "url": "https://lubon.pl/artykuly/350/wydarzenia",
@@ -215,7 +216,8 @@
      "confidence": 0.9,
      "via": "llm",
      "detailPattern": "/artykuly/{id}/{slug}",
-     "detailCount": 63
+     "detailCount": 63,
+     "barrenRuns": 1
     }
    ],
    "capabilities": [
@@ -223,15 +225,15 @@
      "kind": "rss",
      "url": "https://lubon.pl/atom",
      "itemsSeen": 100,
-     "datesParsed": 19,
-     "checked": "2026-08-08"
+     "datesParsed": 18,
+     "checked": "2026-08-09"
     },
     {
      "kind": "rss",
      "url": "https://lubon.pl/rss",
      "itemsSeen": 100,
-     "datesParsed": 19,
-     "checked": "2026-08-08"
+     "datesParsed": 18,
+     "checked": "2026-08-09"
     }
    ]
   },
@@ -262,7 +264,7 @@
      "llm/2026-08-08/2026-08-08T18-46-38-042Z/discover-lubon/0001-anthropic_claude-sonnet-4.6.json"
     ]
    },
-   "lastSeenRun": "2026-08-08T18:46:38.042Z",
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
    "missedRuns": 0
   },
   {
@@ -301,10 +303,10 @@
      "chars": 68200
     }
    },
-   "lastSeenRun": "2026-08-08T18:46:38.042Z",
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
    "missedRuns": 0,
    "reach": "ok",
-   "checked": "2026-08-08",
+   "checked": "2026-08-09",
    "entrypoints": [
     {
      "url": "https://biblub.com/category/aktualnosci/page/{page}",
@@ -313,7 +315,8 @@
      "via": "llm",
      "detailPattern": "/aktualnosci/{slug}",
      "detailCount": 6,
-     "paginated": true
+     "paginated": true,
+     "barrenRuns": 1
     }
    ],
    "capabilities": [
@@ -322,7 +325,7 @@
      "url": "https://biblub.com/feed",
      "itemsSeen": 10,
      "datesParsed": 1,
-     "checked": "2026-08-08"
+     "checked": "2026-08-09"
     }
    ]
   },
@@ -353,7 +356,7 @@
      "llm/2026-08-08/2026-08-08T18-46-38-042Z/discover-lubon/0001-anthropic_claude-sonnet-4.6.json"
     ]
    },
-   "lastSeenRun": "2026-08-08T18:46:38.042Z",
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
    "missedRuns": 0
   },
   {
@@ -383,7 +386,7 @@
      "llm/2026-08-08/2026-08-08T18-46-38-042Z/discover-lubon/0001-anthropic_claude-sonnet-4.6.json"
     ]
    },
-   "lastSeenRun": "2026-08-08T18:46:38.042Z",
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
    "missedRuns": 0
   },
   {
@@ -424,9 +427,9 @@
     }
    },
    "lastSeenRun": "2026-08-08T18:46:38.042Z",
-   "missedRuns": 0,
+   "missedRuns": 1,
    "reach": "ok",
-   "checked": "2026-08-08",
+   "checked": "2026-08-09",
    "entrypoints": [
     {
      "url": "https://www.gazeta-lubon.pl/2026/losir-kalendarium/",
@@ -443,14 +446,14 @@
      "url": "https://www.gazeta-lubon.pl/feed/",
      "itemsSeen": 15,
      "datesParsed": 2,
-     "checked": "2026-08-08"
+     "checked": "2026-08-09"
     },
     {
      "kind": "rss",
      "url": "https://www.gazeta-lubon.pl/comments/feed/",
      "itemsSeen": 15,
      "datesParsed": 0,
-     "checked": "2026-08-08"
+     "checked": "2026-08-09"
     }
    ]
   },
@@ -481,7 +484,7 @@
      "llm/2026-08-08/2026-08-08T18-46-38-042Z/discover-lubon/0001-anthropic_claude-sonnet-4.6.json"
     ]
    },
-   "lastSeenRun": "2026-08-08T18:46:38.042Z",
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
    "missedRuns": 0
   },
   {
@@ -511,7 +514,7 @@
      "llm/2026-08-08/2026-08-08T18-46-38-042Z/discover-lubon/0001-anthropic_claude-sonnet-4.6.json"
     ]
    },
-   "lastSeenRun": "2026-08-08T18:46:38.042Z",
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
    "missedRuns": 0
   },
   {
@@ -571,7 +574,3008 @@
      "llm/2026-08-08/2026-08-08T18-46-38-042Z/discover-lubon/0001-anthropic_claude-sonnet-4.6.json"
     ]
    },
-   "lastSeenRun": "2026-08-08T18:46:38.042Z",
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "dopiewo-pl-wydarzenia",
+   "name": "Gmina Dopiewo - portal urzędowy",
+   "type": "city_portal",
+   "url": "https://dopiewo.pl/wydarzenia",
+   "town": "Dopiewo",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.95,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Dopiewo",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Dopiewo dom kultury wydarzenia",
+    "hit": {
+     "title": "Wydarzenia",
+     "url": "https://dopiewo.pl/wydarzenia",
+     "desc": "Na Owocowej Plaży w Zborowie w godz. 12:00-15:00 zapraszamy na animacje dla dzieci, turniej, zabawy, różne atrakcje i dmuchańce. Data wydarzenia: 2026-08 ..."
+    },
+    "confidence": 0.95,
+    "why": "Strona gminy zawiera dedykowaną sekcję wydarzeń z datami, w tym imprezy sportowe, kulturalne i rekreacyjne na lato 2026.",
+    "archive": [
+     "raw/2026-08-09/discover-dopiewo/060e0066f53fe2ac15902f340e3f4c1b361908d04dbad676bed2e675f890d7ba.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-dopiewo/0001-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:23:13.975Z",
+     "url": "https://dopiewo.pl/wydarzenia",
+     "ok": true,
+     "ms": 433,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 69572
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://dopiewo.pl/wydarzenia?page={page}",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/wydarzenia/{date}/{slug}",
+     "detailCount": 6,
+     "paginated": true
+    }
+   ]
+  },
+  {
+   "id": "bibldop-wydarzenia",
+   "name": "Gminna Biblioteka Publiczna i Centrum Kultury w Dopiewie",
+   "type": "culture_center",
+   "url": "https://www.bibldop.pl/wydarzenia/",
+   "town": "Dopiewo",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.97,
+   "notes": "Instytucja łączy bibliotekę i centrum kultury, obsługuje też filię w Skórzewie.",
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Dopiewo",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Dopiewo dom kultury wydarzenia",
+    "hit": {
+     "title": "Wydarzenia z 15 kwietnia 2024",
+     "url": "https://www.bibldop.pl/wydarzenia/",
+     "desc": "sierpień 2026 · Konkurs rodzinny „Rodzina jak z książki” · Warsztaty rzeźbiarskie dla dzieci “Od ekranu do rzeźby” · Spektakl teatralny dla dzieci „Serce i Rozum”."
+    },
+    "confidence": 0.97,
+    "why": "Strona instytucji posiada kalendarz wydarzeń z datami spektakli, warsztatów i koncertów na kolejne miesiące 2026.",
+    "archive": [
+     "raw/2026-08-09/discover-dopiewo/060e0066f53fe2ac15902f340e3f4c1b361908d04dbad676bed2e675f890d7ba.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-dopiewo/0001-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:23:18.666Z",
+     "url": "https://www.bibldop.pl/wydarzenia/",
+     "ok": true,
+     "ms": 291,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 221028
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://www.bibldop.pl/wydarzenia/miesiac/",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/wydarzenia/{date}",
+     "detailCount": 31
+    }
+   ],
+   "capabilities": [
+    {
+     "kind": "rss",
+     "url": "https://www.bibldop.pl/feed/",
+     "itemsSeen": 9,
+     "datesParsed": 1,
+     "checked": "2026-08-09"
+    },
+    {
+     "kind": "rss",
+     "url": "https://www.bibldop.pl/wydarzenia/feed/",
+     "itemsSeen": 9,
+     "datesParsed": 0,
+     "checked": "2026-08-09"
+    },
+    {
+     "kind": "wp-rest",
+     "url": "https://www.bibldop.pl/wp-json/wp/v2/tribe_venue?per_page=5",
+     "itemsSeen": 5,
+     "datesParsed": 0,
+     "checked": "2026-08-09"
+    },
+    {
+     "kind": "tribe",
+     "url": "https://www.bibldop.pl/wp-json/tribe/events/v1/events",
+     "itemsSeen": 9,
+     "datesParsed": 9,
+     "checked": "2026-08-09"
+    },
+    {
+     "kind": "ical",
+     "url": "https://www.bibldop.pl/wydarzenia/miesiac/?ical=1",
+     "itemsSeen": 8,
+     "datesParsed": 14,
+     "checked": "2026-08-09"
+    },
+    {
+     "kind": "jsonld",
+     "url": "https://www.bibldop.pl/wydarzenia/miesiac/",
+     "itemsSeen": 12,
+     "datesParsed": 12,
+     "checked": "2026-08-09"
+    }
+   ]
+  },
+  {
+   "id": "bibldop-fb",
+   "name": "Gminna Biblioteka Publiczna i Centrum Kultury w Dopiewie - FB",
+   "type": "fb_page",
+   "url": "https://www.facebook.com/biblioteka.dopiewo",
+   "town": "Dopiewo",
+   "fetch": "fb",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.9,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Dopiewo",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com Dopiewo wydarzenia",
+    "hit": {
+     "title": "Gminna Biblioteka Publiczna i Centrum Kultury w Dopiewie | Dopiewo",
+     "url": "https://www.facebook.com/biblioteka.dopiewo/",
+     "desc": "\"Letnia jazda z kulturą\" to nasza wakacyjna propozycja spektakli teatralnych, warsztatów i koncertów dla dzieci, młodzieży i dorosłych☀️ W to lato spotkać nas ..."
+    },
+    "confidence": 0.9,
+    "why": "Fanpage regularnie publikuje zapowiedzi spektakli, warsztatów i koncertów z datami i godzinami.",
+    "archive": [
+     "raw/2026-08-09/discover-dopiewo/060e0066f53fe2ac15902f340e3f4c1b361908d04dbad676bed2e675f890d7ba.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-dopiewo/0001-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "gosir-dopiewo-kalendarz",
+   "name": "GOSiR Dopiewo - Kalendarz wydarzeń",
+   "type": "sports",
+   "url": "https://gosir.dopiewo.pl/kalendarz",
+   "town": "Dopiewo",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.95,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Dopiewo",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Dopiewo OSiR wydarzenia",
+    "hit": {
+     "title": "Kalendarz wydarzeń - GOSiR Dopiewo",
+     "url": "https://gosir.dopiewo.pl/kalendarz",
+     "desc": "Kalendarz wydarzeń - Imprezy i inne ważne wydarzenia planowane przez GOSiR Dopiewo."
+    },
+    "confidence": 0.95,
+    "why": "Dedykowany kalendarz imprez GOSiR zawiera planowane wydarzenia sportowe i rekreacyjne z datami.",
+    "archive": [
+     "raw/2026-08-09/discover-dopiewo/060e0066f53fe2ac15902f340e3f4c1b361908d04dbad676bed2e675f890d7ba.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-dopiewo/0001-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:23:25.807Z",
+     "url": "https://gosir.dopiewo.pl/kalendarz",
+     "ok": true,
+     "ms": 430,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 38633
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://gosir.dopiewo.pl/kalendarz",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/kategorie/{slug}",
+     "detailCount": 11
+    }
+   ],
+   "capabilities": [
+    {
+     "kind": "rss",
+     "url": "https://gosir.dopiewo.pl/rss.xml",
+     "itemsSeen": 2,
+     "datesParsed": 1,
+     "checked": "2026-08-09"
+    },
+    {
+     "kind": "rss",
+     "url": "https://gosir.dopiewo.pl/rss/wydarzenia_pl.xml",
+     "itemsSeen": 10,
+     "datesParsed": 2,
+     "checked": "2026-08-09"
+    },
+    {
+     "kind": "rss",
+     "url": "https://gosir.dopiewo.pl/rss/aktualnosci_pl.xml",
+     "itemsSeen": 10,
+     "datesParsed": 2,
+     "checked": "2026-08-09"
+    }
+   ]
+  },
+  {
+   "id": "gosir-dopiewo-fb",
+   "name": "GOSiR Dopiewo - Facebook",
+   "type": "fb_page",
+   "url": "https://www.facebook.com/100063499753266",
+   "town": "Dopiewo",
+   "fetch": "fb",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.82,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Dopiewo",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Dopiewo OSiR wydarzenia",
+    "hit": {
+     "title": "GOSiR Dopiewo; Gminne Ośrodki Sportu i Rekreacji",
+     "url": "https://www.facebook.com/100063499753266/?locale=en_GB",
+     "desc": "Kolejne wydarzenie z serii AKTYWNY ORLIK W GMINIE DOPIEWO już 22 sierpnia Wydarzenie współfinansowane ze środków Ministerstwa Sportu i Turystyki."
+    },
+    "confidence": 0.82,
+    "why": "Fanpage GOSiR publikuje zapowiedzi turniejów i wydarzeń sportowych z datami, np. Aktywny Orlik w Gminie Dopiewo.",
+    "archive": [
+     "raw/2026-08-09/discover-dopiewo/060e0066f53fe2ac15902f340e3f4c1b361908d04dbad676bed2e675f890d7ba.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-dopiewo/0001-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "cusdopiewo-oferta",
+   "name": "Centrum Usług Społecznych Dopiewo",
+   "type": "culture_center",
+   "url": "https://cusdopiewo.pl/oferta/rodzina/dni-rodziny/",
+   "town": "Dopiewo",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.8,
+   "notes": "Warto sprawdzić też główną domenę cusdopiewo.pl pod kątem szerszego kalendarza.",
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Dopiewo",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Dopiewo dom kultury wydarzenia",
+    "hit": {
+     "title": "Dopiewskie Dni Rodziny",
+     "url": "https://cusdopiewo.pl/oferta/rodzina/dni-rodziny/",
+     "desc": "W terminie do 23 maja do 31 maja odbędzie się druga edycja Dopiewskich Dni Rodziny. Przez ponad tydzień, na terenie Gminy, odbędą się wydarzenia skierowane ..."
+    },
+    "confidence": 0.8,
+    "why": "Strona CUS publikuje terminy cyklicznych wydarzeń gminnych takich jak Dopiewskie Dni Rodziny i Dni Seniora z datami.",
+    "archive": [
+     "raw/2026-08-09/discover-dopiewo/060e0066f53fe2ac15902f340e3f4c1b361908d04dbad676bed2e675f890d7ba.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-dopiewo/0001-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:23:29.724Z",
+     "url": "https://cusdopiewo.pl/oferta/rodzina/dni-rodziny/",
+     "ok": true,
+     "ms": 502,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 120101
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://cusdopiewo.pl/aktualnosci/page/{page}",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/{slug}",
+     "detailCount": 9,
+     "paginated": true
+    }
+   ],
+   "capabilities": [
+    {
+     "kind": "rss",
+     "url": "https://cusdopiewo.pl/feed/",
+     "itemsSeen": 10,
+     "datesParsed": 2,
+     "checked": "2026-08-09"
+    }
+   ]
+  },
+  {
+   "id": "dopiewo-aktywnie-kulturalnie-fb",
+   "name": "Gmina Dopiewo - AKTYWNIE I KULTURALNIE",
+   "type": "fb_group",
+   "url": "https://www.facebook.com/groups/4281766641940107",
+   "town": "Dopiewo",
+   "fetch": "fb_group",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.85,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Dopiewo",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Dopiewo co robić z dzieckiem",
+    "hit": {
+     "title": "Gmina Dopiewo - AKTYWNIE I KULTURALNIE",
+     "url": "https://www.facebook.com/groups/4281766641940107/",
+     "desc": "Szukasz atrakcji, które wywołają uśmiech u każdego dziecka? Nasze dmuchane zjeżdżalnie i piana party tworzą klimat pełen radości i beztroskiej zabawy."
+    },
+    "confidence": 0.85,
+    "why": "Otwarta grupa założona specjalnie dla wydarzeń kulturalnych i sportowo-rekreacyjnych w gminie Dopiewo.",
+    "archive": [
+     "raw/2026-08-09/discover-dopiewo/060e0066f53fe2ac15902f340e3f4c1b361908d04dbad676bed2e675f890d7ba.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-dopiewo/0001-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "dopiewo-mieszkancy-fb",
+   "name": "Gmina Dopiewo - mieszkańcy i sąsiedzi",
+   "type": "fb_group",
+   "url": "https://www.facebook.com/groups/GminaDopiewoMieszkancy",
+   "town": "Dopiewo",
+   "fetch": "fb_group",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.75,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Dopiewo",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com/groups Dopiewo",
+    "hit": {
+     "title": "Gmina Dopiewo - mieszkańcy i sąsiedzi - Facebook",
+     "url": "https://www.facebook.com/groups/GminaDopiewoMieszkancy/",
+     "desc": "Gmina Dopiewo – mieszkańcy i sąsiedzi REGULAMIN GRUPY Grupa została założona do informowania o wydarzeniach związanych z Gminą Dopiewo."
+    },
+    "confidence": 0.75,
+    "why": "Regulamin grupy wskazuje na wymianę informacji kulturalnych, sportowych i rozrywkowych, a posty zawierają zaproszenia na lokalne wydarzenia.",
+    "archive": [
+     "raw/2026-08-09/discover-dopiewo/060e0066f53fe2ac15902f340e3f4c1b361908d04dbad676bed2e675f890d7ba.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-dopiewo/0001-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "dopiewo-tablica-ogloszen-fb",
+   "name": "Gmina Dopiewo - tablica ogłoszeń",
+   "type": "fb_group",
+   "url": "https://www.facebook.com/groups/1020981825093965",
+   "town": "Dopiewo",
+   "fetch": "fb_group",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.72,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Dopiewo",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com/groups Dopiewo",
+    "hit": {
+     "title": "Gmina Dopiewo - tablica ogłoszeń - Facebook",
+     "url": "https://www.facebook.com/groups/1020981825093965/",
+     "desc": "Grupa służąca dodawaniu ogłoszeń dla mieszkańców Gminy Dopiewo."
+    },
+    "confidence": 0.72,
+    "why": "Opis grupy wprost wymienia szukanie zajęć dodatkowych i wydarzeń, a posty zawierają zaproszenia na Dni Seniora z datami.",
+    "archive": [
+     "raw/2026-08-09/discover-dopiewo/060e0066f53fe2ac15902f340e3f4c1b361908d04dbad676bed2e675f890d7ba.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-dopiewo/0001-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "dabrowa-dopiewo-fb",
+   "name": "Dąbrowa gmina Dopiewo",
+   "type": "fb_group",
+   "url": "https://www.facebook.com/groups/209813476213537",
+   "town": "Dopiewo",
+   "fetch": "fb_group",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.65,
+   "notes": "Sołectwo Dąbrowa w gminie Dopiewo.",
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Dopiewo",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com Dopiewo wydarzenia",
+    "hit": {
+     "title": "Dąbrowa gmina Dopiewo | Facebook",
+     "url": "https://www.facebook.com/groups/209813476213537/",
+     "desc": "Grupa jest miejscem do szybkiego kontaktowania się mieszkańców Dąbrowy lub omawiania, prezentowania wydarzeń z nią związaną. W grupie odnosimy się do siebie z ..."
+    },
+    "confidence": 0.65,
+    "why": "Opis grupy wskazuje na prezentowanie wydarzeń związanych z Dąbrową w gminie Dopiewo.",
+    "archive": [
+     "raw/2026-08-09/discover-dopiewo/060e0066f53fe2ac15902f340e3f4c1b361908d04dbad676bed2e675f890d7ba.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-dopiewo/0001-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "gok-komorniki-kalendarz",
+   "name": "GOK Komorniki - Kalendarz Wydarzeń",
+   "type": "culture_center",
+   "url": "https://www.gokkomorniki.pl/kalendarz-wydarzen/",
+   "town": "Komorniki",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.98,
+   "notes": "Główne źródło wydarzeń kulturalnych gminy; zawiera też harmonogram zajęć stałych.",
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Komorniki",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Komorniki dom kultury wydarzenia",
+    "hit": {
+     "title": "Kalendarz Wydarzeń i Harmonogram Zajęć",
+     "url": "https://www.gokkomorniki.pl/kalendarz-wydarzen/",
+     "desc": "Oficjalny serwis internetowy Gminny Ośrodek Kultury w Komornikach - aktualne wydarzenia, wiadomości, informacje praktyczne i wiele innych."
+    },
+    "confidence": 0.98,
+    "why": "Strona kalendarza wydarzeń i harmonogramu zajęć oficjalnego serwisu Gminnego Ośrodka Kultury w Komornikach z konkretnymi datami imprez.",
+    "archive": [
+     "raw/2026-08-09/discover-komorniki/f43babb484dd0a573213fe4a49edacd93de5490e7781a206a7b9a008dae6db8f.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-komorniki/0002-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:23:34.982Z",
+     "url": "https://www.gokkomorniki.pl/kalendarz-wydarzen/",
+     "ok": true,
+     "ms": 453,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 157507
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://www.gokkomorniki.pl/kalendarz-wydarzen/",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/{slug}.html",
+     "detailCount": 100
+    }
+   ],
+   "capabilities": [
+    {
+     "kind": "rss",
+     "url": "https://www.gokkomorniki.pl/rss/aktualnosci_pl.xml",
+     "itemsSeen": 376,
+     "datesParsed": 90,
+     "checked": "2026-08-09"
+    }
+   ]
+  },
+  {
+   "id": "komorniki-pl-kalendarz",
+   "name": "Gmina Komorniki - Kalendarz wydarzeń",
+   "type": "city_portal",
+   "url": "https://www.komorniki.pl/kalendarz-wydarzen/",
+   "town": "Komorniki",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.97,
+   "notes": "Portal urzędu gminy agreguje wydarzenia GOK, GOSiR i biblioteki.",
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Komorniki",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Komorniki dom kultury wydarzenia",
+    "hit": {
+     "title": "Kalendarz wydarzeń",
+     "url": "https://www.komorniki.pl/kalendarz-wydarzen/",
+     "desc": "Zapraszamy na pełen wzruszeń Wieczór poezji przy ognisku. 13.08.2026 | 17:00. Wstęp wolny. Dom Kultury \"Nad Wirynką\" w Łęczycy ul. Poznańska 14, 62-052 ..."
+    },
+    "confidence": 0.97,
+    "why": "Oficjalny portal gminy Komorniki prowadzi własny kalendarz wydarzeń z datami i opisami imprez gminnych.",
+    "archive": [
+     "raw/2026-08-09/discover-komorniki/f43babb484dd0a573213fe4a49edacd93de5490e7781a206a7b9a008dae6db8f.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-komorniki/0002-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:23:40.849Z",
+     "url": "https://www.komorniki.pl/kalendarz-wydarzen/",
+     "ok": true,
+     "ms": 466,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 184638
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://www.komorniki.pl/kalendarz-wydarzen/",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/{slug}.html",
+     "detailCount": 66
+    }
+   ],
+   "capabilities": [
+    {
+     "kind": "rss",
+     "url": "https://www.komorniki.pl/rss/aktualnosci_pl.xml",
+     "itemsSeen": 1000,
+     "datesParsed": 286,
+     "checked": "2026-08-09"
+    }
+   ]
+  },
+  {
+   "id": "gosir-komorniki-wydarzenia",
+   "name": "GOSiR Komorniki - Aktualności i wydarzenia",
+   "type": "sports",
+   "url": "https://gosirkomorniki.pl/aktualnosci/wydarzenia/",
+   "town": "Komorniki",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.92,
+   "notes": "Obejmuje spływy, lato na plaży, akademie sportowe i inne imprezy GOSiR.",
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Komorniki",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Komorniki OSiR wydarzenia",
+    "hit": {
+     "title": "Aktualności - Wydarzenia",
+     "url": "https://gosirkomorniki.pl/aktualnosci/wydarzenia/",
+     "desc": "Oficjalny serwis internetowy Gminnego Ośrodka Sportu i Rekreacji w Komornikach - aktualne wydarzenia, wiadomości, informacje praktyczne i wiele innych."
+    },
+    "confidence": 0.92,
+    "why": "Podstrona wydarzeń oficjalnego serwisu Gminnego Ośrodka Sportu i Rekreacji w Komornikach publikuje imprezy sportowo-rekreacyjne z datami.",
+    "archive": [
+     "raw/2026-08-09/discover-komorniki/f43babb484dd0a573213fe4a49edacd93de5490e7781a206a7b9a008dae6db8f.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-komorniki/0002-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:23:47.653Z",
+     "url": "https://gosirkomorniki.pl/aktualnosci/wydarzenia/",
+     "ok": true,
+     "ms": 448,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 97728
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://gosirkomorniki.pl/aktualnosci/wydarzenia/",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/aktualnosci/wydarzenia/{slug}.html",
+     "detailCount": 9
+    }
+   ],
+   "capabilities": [
+    {
+     "kind": "rss",
+     "url": "https://gosirkomorniki.pl/rss/aktualnosci_pl.xml",
+     "itemsSeen": 104,
+     "datesParsed": 36,
+     "checked": "2026-08-09"
+    }
+   ]
+  },
+  {
+   "id": "biblioteka-komorniki-kalendarz",
+   "name": "Biblioteka Publiczna Gminy Komorniki - Kalendarz Wydarzeń",
+   "type": "library",
+   "url": "https://www.biblioteka-komorniki.pl/kalendarz-wydarzen/",
+   "town": "Komorniki",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.93,
+   "notes": "Biblioteka posiada filię w Plewiskach; kalendarz obejmuje obie lokalizacje.",
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Komorniki",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Komorniki kalendarz wydarzeń urząd",
+    "hit": {
+     "title": "Kalendarz Wydarzeń - BP Komorniki",
+     "url": "https://www.biblioteka-komorniki.pl/kalendarz-wydarzen/",
+     "desc": "Oficjalny serwis internetowy Biblioteki Publicznej Gminy Komorniki - aktualne wydarzenia, wiadomości, informacje praktyczne i wiele innych ... Kalendarz Wydarzeń."
+    },
+    "confidence": 0.93,
+    "why": "Dedykowana podstrona kalendarza wydarzeń biblioteki gminnej z warsztatami, spotkaniami autorskimi i innymi zajęciami z datami.",
+    "archive": [
+     "raw/2026-08-09/discover-komorniki/f43babb484dd0a573213fe4a49edacd93de5490e7781a206a7b9a008dae6db8f.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-komorniki/0002-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:23:54.536Z",
+     "url": "https://www.biblioteka-komorniki.pl/kalendarz-wydarzen/",
+     "ok": true,
+     "ms": 412,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 98339
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://www.biblioteka-komorniki.pl/kalendarz-wydarzen/",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/{slug}.html",
+     "detailCount": 11
+    }
+   ],
+   "capabilities": [
+    {
+     "kind": "rss",
+     "url": "https://www.biblioteka-komorniki.pl/rss/aktualnosci_pl.xml",
+     "itemsSeen": 176,
+     "datesParsed": 38,
+     "checked": "2026-08-09"
+    }
+   ]
+  },
+  {
+   "id": "fb-gok-komorniki",
+   "name": "Gminny Ośrodek Kultury w Komornikach",
+   "type": "fb_page",
+   "url": "https://www.facebook.com/gokkomorniki/",
+   "town": "Komorniki",
+   "fetch": "fb",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.95,
+   "notes": "Aktywna strona z zapowiedziami koncertów, spektakli i imprez plenerowych.",
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Komorniki",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Komorniki dom kultury wydarzenia",
+    "hit": {
+     "title": "Gminny Ośrodek Kultury w Komornikach | Komorniki",
+     "url": "https://www.facebook.com/gokkomorniki/?locale=pl_PL",
+     "desc": "Będzie kino, będzie cyrk! Dwa wydarzenia kulturalne odbędą się w najbliższą niedzielę 9 sierpnia w Komornikach. ... Na oba wydarzenia serdecznie zapraszamy ..."
+    },
+    "confidence": 0.95,
+    "why": "Fanpage GOK regularnie zapowiada konkretne wydarzenia kulturalne z datami i godzinami.",
+    "archive": [
+     "raw/2026-08-09/discover-komorniki/f43babb484dd0a573213fe4a49edacd93de5490e7781a206a7b9a008dae6db8f.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-komorniki/0002-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "fb-gmina-komorniki",
+   "name": "Gmina Komorniki",
+   "type": "fb_page",
+   "url": "https://www.facebook.com/ugkomorniki/",
+   "town": "Komorniki",
+   "fetch": "fb",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.92,
+   "notes": "Posty zawierają szczegółowe programy Dni Gminy, Święta Plonów i innych wydarzeń.",
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Komorniki",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Komorniki kalendarz wydarzeń urząd",
+    "hit": {
+     "title": "Gmina Komorniki",
+     "url": "https://www.facebook.com/ugkomorniki/?locale=pl_PL",
+     "desc": "O godzinie 18:00 zapraszamy również na widowiskowy Cyrk Pana Wąsika w Parku Strażaka w Komornikach. Do zobaczenia podczas weekendowych wydarzeń!"
+    },
+    "confidence": 0.92,
+    "why": "Oficjalny fanpage urzędu gminy publikuje zaproszenia na gminne imprezy z datami i programem.",
+    "archive": [
+     "raw/2026-08-09/discover-komorniki/f43babb484dd0a573213fe4a49edacd93de5490e7781a206a7b9a008dae6db8f.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-komorniki/0002-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "fb-gosir-komorniki",
+   "name": "GOSiR Komorniki",
+   "type": "fb_page",
+   "url": "https://www.facebook.com/gosirkomorniki/",
+   "town": "Komorniki",
+   "fetch": "fb",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.88,
+   "notes": "Obejmuje m.in. akcje letnie na plaży w Chomęcicach i zawody sportowe.",
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Komorniki",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Komorniki OSiR wydarzenia",
+    "hit": {
+     "title": "GOSiR Komorniki (@gosirkomorniki) - Mentions",
+     "url": "https://www.facebook.com/gosirkomorniki/mentions/",
+     "desc": "PROGRAM UROCZYSTOŚCI: 11:00 – Uroczysty przejazd wozami strażackimi ulicami Gminy Komorniki. Trasa rozpocznie się w Łęczycy – zachęcamy do pozdrawiania ..."
+    },
+    "confidence": 0.88,
+    "why": "Fanpage GOSiR zapowiada imprezy sportowe i rekreacyjne organizowane na obiektach gminy z konkretnymi datami.",
+    "archive": [
+     "raw/2026-08-09/discover-komorniki/f43babb484dd0a573213fe4a49edacd93de5490e7781a206a7b9a008dae6db8f.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-komorniki/0002-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "fb-biblioteka-komorniki",
+   "name": "Biblioteka Publiczna Gminy Komorniki",
+   "type": "fb_page",
+   "url": "https://www.facebook.com/BibliotekaKomorniki/",
+   "town": "Komorniki",
+   "fetch": "fb",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.87,
+   "notes": "Uzupełnienie kalendarza na stronie www biblioteki.",
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Komorniki",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Komorniki biblioteka wydarzenia dla dzieci",
+    "hit": {
+     "title": "Biblioteka Publiczna Gminy Komorniki",
+     "url": "https://www.facebook.com/BibliotekaKomorniki/",
+     "desc": "Podczas tegorocznych wakacji nasza biblioteka zamieniła się w kolorowe centrum kreatywnej zabawy dla najmłodszych! Największym hitem okazały się zajęcia na ..."
+    },
+    "confidence": 0.87,
+    "why": "Fanpage biblioteki zaprasza na spotkania autorskie i warsztaty z podanymi datami i godzinami.",
+    "archive": [
+     "raw/2026-08-09/discover-komorniki/f43babb484dd0a573213fe4a49edacd93de5490e7781a206a7b9a008dae6db8f.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-komorniki/0002-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "fb-group-kultura-komorniki",
+   "name": "Kultura w gminie Komorniki",
+   "type": "fb_group",
+   "url": "https://www.facebook.com/groups/kulturakomorniki",
+   "town": "Komorniki",
+   "fetch": "fb_group",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.9,
+   "notes": "Publiczna grupa tematyczna dedykowana kulturze lokalnej - wysokiej jakości źródło.",
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Komorniki",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com Komorniki wydarzenia",
+    "hit": {
+     "title": "Kultura w gminie Komorniki - Facebook",
+     "url": "https://www.facebook.com/groups/kulturakomorniki/",
+     "desc": "Zapraszamy na koncert niepowtarzalnej Tianyao Lyu, 10 kwietnia, godz. 19.00 - Centrum Tradycji i Kultury w Komornikach. Gminny Ośrodek Kultury w Komornikach."
+    },
+    "confidence": 0.9,
+    "why": "Otwarta grupa założona specjalnie do zbierania informacji o wydarzeniach kulturalnych w gminie Komorniki; GOK sam tam publikuje zaproszenia.",
+    "archive": [
+     "raw/2026-08-09/discover-komorniki/f43babb484dd0a573213fe4a49edacd93de5490e7781a206a7b9a008dae6db8f.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-komorniki/0002-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "fb-group-mieszkancy-gminy-komorniki",
+   "name": "Mieszkańcy Gminy KOMORNIKI",
+   "type": "fb_group",
+   "url": "https://www.facebook.com/groups/400360234032181",
+   "town": "Komorniki",
+   "fetch": "fb_group",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.72,
+   "notes": "Grupa ogólna - zdarzają się posty o wydarzeniach, ale nie jest to jej główny cel.",
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Komorniki",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Komorniki grupa facebook wydarzenia lokalne",
+    "hit": {
+     "title": "Mieszkańcy Gminy KOMORNIKI",
+     "url": "https://www.facebook.com/groups/400360234032181/",
+     "desc": "MIESZKAŃCY GMINY KOMORNIKI - to grupa sąsiedzka dla pełnoletnich mieszkańców naszej gminy oraz okolic. Powstała w celu wymiany informacji, bliższego..."
+    },
+    "confidence": 0.72,
+    "why": "Publiczna grupa sąsiedzka dla mieszkańców gminy Komorniki służąca wymianie informacji lokalnych, w tym ogłoszeń o wydarzeniach.",
+    "archive": [
+     "raw/2026-08-09/discover-komorniki/f43babb484dd0a573213fe4a49edacd93de5490e7781a206a7b9a008dae6db8f.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-komorniki/0002-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "fb-group-komorniki-ogloszenia",
+   "name": "Gmina Komorniki - grupa ogłoszeniowa",
+   "type": "fb_group",
+   "url": "https://www.facebook.com/groups/komornikigrupaogloszeniowa",
+   "town": "Komorniki",
+   "fetch": "fb_group",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.68,
+   "notes": "Grupa mieszana (ogłoszenia + wydarzenia); warto monitorować jako uzupełnienie.",
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Komorniki",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Komorniki grupa facebook wydarzenia lokalne",
+    "hit": {
+     "title": "Gmina Komorniki",
+     "url": "https://www.facebook.com/groups/komornikigrupaogloszeniowa/",
+     "desc": "Grupa dla mieszkańców gminy Komorniki do wymiany informacji tych ważnych i mniej ważnych. Ogłoszenia lokalne z całej gminy Komorniki (Komorniki, Plewiska, ..."
+    },
+    "confidence": 0.68,
+    "why": "Publiczna grupa ogłoszeniowa dla mieszkańców całej gminy Komorniki z ogłoszeniami lokalnymi, w tym o wydarzeniach.",
+    "archive": [
+     "raw/2026-08-09/discover-komorniki/f43babb484dd0a573213fe4a49edacd93de5490e7781a206a7b9a008dae6db8f.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-komorniki/0002-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "lubon-pl-wydarzenia",
+   "name": "Urząd Miasta Luboń - Aktualności wydarzeń",
+   "type": "city_portal",
+   "url": "https://lubon.pl/artykuly/350/wydarzenia",
+   "town": "Luboń",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.92,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Luboń",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Luboń kalendarz wydarzeń urząd",
+    "hit": {
+     "title": "Wydarzenia - Urząd Miasta Luboń portal informacyjny",
+     "url": "https://lubon.pl/artykuly/350/wydarzenia",
+     "desc": "Kalendarz imprez miejskich w 2026 roku · Stacja Luboń · Oferta partnerska · Relacje z wydarzeń miejskich · Wydarzenia pod honorowym patronatem Burmistrz Miasta ..."
+    },
+    "confidence": 0.92,
+    "why": "Sekcja wydarzeń portalu urzędu zawiera opisy imprez miejskich i kalendarz na 2026 rok.",
+    "archive": [
+     "raw/2026-08-09/discover-lubon/eba857056b39e53ee837e83ebdb3e6fcfe4f25f32a262952085340f1514dcb06.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-lubon/0003-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:24:01.409Z",
+     "url": "https://lubon.pl/artykuly/350/wydarzenia",
+     "ok": true,
+     "ms": 229,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 117218
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://lubon.pl/artykuly/350/wydarzenia",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/artykuly/{id}/{slug}",
+     "detailCount": 63
+    }
+   ],
+   "capabilities": [
+    {
+     "kind": "rss",
+     "url": "https://lubon.pl/atom",
+     "itemsSeen": 100,
+     "datesParsed": 18,
+     "checked": "2026-08-09"
+    },
+    {
+     "kind": "rss",
+     "url": "https://lubon.pl/rss",
+     "itemsSeen": 100,
+     "datesParsed": 18,
+     "checked": "2026-08-09"
+    }
+   ]
+  },
+  {
+   "id": "lubon-pl-kalendarz-2026-2",
+   "name": "Urząd Miasta Luboń - Kalendarz wydarzeń miejskich 2026",
+   "type": "city_portal",
+   "url": "https://lubon.pl/artykul/352/4766/kalendarz-wydarzen-miejskich-w-2026-roku",
+   "town": "Luboń",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.95,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Luboń",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "wydarzenia Luboń",
+    "hit": {
+     "title": "Kalendarz imprez miejskich w 2026 roku - Urząd Miasta Luboń",
+     "url": "https://lubon.pl/artykul/352/4766/kalendarz-wydarzen-miejskich-w-2025-roku",
+     "desc": "KALENDARZ WYDARZEŃ MIEJSKICH W 2026 ROKU ; 27 kwietnia. Spektakl familijny. Biblioteka Miejska w Luboniu. ul. Żabikowska 42 ; 28 kwietnia. Kino Kamera. Biblioteka ..."
+    },
+    "confidence": 0.95,
+    "why": "Strona zawiera pełny kalendarz wydarzeń miejskich w 2026 roku z datami i miejscami imprez.",
+    "archive": [
+     "raw/2026-08-09/discover-lubon/eba857056b39e53ee837e83ebdb3e6fcfe4f25f32a262952085340f1514dcb06.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-lubon/0003-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:24:06.184Z",
+     "url": "https://lubon.pl/artykul/352/4766/kalendarz-wydarzen-miejskich-w-2025-roku",
+     "ok": true,
+     "ms": 236,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "finalUrl": "https://lubon.pl/artykul/352/4766/kalendarz-wydarzen-miejskich-w-2026-roku",
+     "chars": 165875
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "previous_urls": [
+    "https://lubon.pl/artykul/352/4766/kalendarz-wydarzen-miejskich-w-2025-roku"
+   ],
+   "reach": "redirected",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://lubon.pl/artykul/352/4766/kalendarz-wydarzen-miejskich-w-2026-roku",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/artykuly/{id}/{slug}",
+     "detailCount": 63
+    }
+   ],
+   "capabilities": [
+    {
+     "kind": "rss",
+     "url": "https://lubon.pl/atom",
+     "itemsSeen": 100,
+     "datesParsed": 18,
+     "checked": "2026-08-09"
+    },
+    {
+     "kind": "rss",
+     "url": "https://lubon.pl/rss",
+     "itemsSeen": 100,
+     "datesParsed": 18,
+     "checked": "2026-08-09"
+    }
+   ]
+  },
+  {
+   "id": "nasz-lubon-fb",
+   "name": "Nasz Luboń - Facebook",
+   "type": "fb_page",
+   "url": "https://www.facebook.com/NaszLubon",
+   "town": "Luboń",
+   "fetch": "fb",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.78,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Luboń",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com Luboń wydarzenia",
+    "hit": {
+     "title": "Nasz Luboń (@NaszLubon) - Facebook",
+     "url": "https://www.facebook.com/NaszLubon/",
+     "desc": "Ogólnopolskie ćwiczenia „ALARM 2026” w Luboniu. We wtorek, 2️⃣1️⃣ lipca w 7.00-19.00 (termin zapasowy - 22 lipca) w Luboniu zostaną przeprowadzone ..."
+    },
+    "confidence": 0.78,
+    "why": "Fanpage lokalny publikuje informacje o wydarzeniach i ćwiczeniach miejskich z datami.",
+    "archive": [
+     "raw/2026-08-09/discover-lubon/eba857056b39e53ee837e83ebdb3e6fcfe4f25f32a262952085340f1514dcb06.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-lubon/0003-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "mok-mosina",
+   "name": "Mosinski Osrodek Kultury – MOK Mosina",
+   "type": "culture_center",
+   "url": "https://www.kultura.gmina.pl/",
+   "town": "Mosina",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.97,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Mosina",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Mosina dom kultury wydarzenia",
+    "hit": {
+     "title": "Mosiński Ośrodek Kultury – MOK Mosina",
+     "url": "https://www.kultura.gmina.pl/",
+     "desc": "Dom Kultury + · RODO · Zadania realizowane z budżetu państwa lub z państwowych ... Dworcowa 4, 62-050 Mosina. [e-mail w źródle]. tel. 618-132-909 kom. 669 ..."
+    },
+    "confidence": 0.97,
+    "why": "Strona główna MOK publikuje aktualności z konkretnymi wydarzeniami kulturalnymi, koncertami i zajęciami z datami.",
+    "archive": [
+     "raw/2026-08-09/discover-mosina/e25c8c39c43f58b182ceff2a3714e8389f1b5d6a751b92c5a27b057e96585052.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-mosina/0004-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:24:10.732Z",
+     "url": "https://www.kultura.gmina.pl/",
+     "ok": true,
+     "ms": 1064,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 167598
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://www.kultura.gmina.pl/category/aktualnosci/page/{page}",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/{slug}",
+     "detailCount": 22,
+     "paginated": true
+    }
+   ],
+   "capabilities": [
+    {
+     "kind": "rss",
+     "url": "https://www.kultura.gmina.pl/feed/",
+     "itemsSeen": 10,
+     "datesParsed": 3,
+     "checked": "2026-08-09"
+    }
+   ]
+  },
+  {
+   "id": "mosina-pl-wydarzenia",
+   "name": "Urzad Miejski w Mosinie – Kalendarz wydarzen",
+   "type": "city_portal",
+   "url": "https://www.mosina.pl/wydarzenia",
+   "town": "Mosina",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.95,
+   "notes": "Dostepne tez pod /aktualnosci/kalendarium-wydarzen-2026",
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Mosina",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Mosina kalendarz wydarzeń urząd",
+    "hit": {
+     "title": "Urząd Miejski w Mosinie :: Kalendarz wydarzeń",
+     "url": "https://www.mosina.pl/wydarzenia",
+     "desc": "Kalendarz wydarzeń · 15 sierpnia - Święto Wojska Polskiego · 14 sierpnia Urząd będzie nieczynny. W piątek 14 sierpnia 2026 r. Urząd Miejski w Mosinie będzie ..."
+    },
+    "confidence": 0.95,
+    "why": "Oficjalny kalendarz wydarzen gminy Mosina z datowanymi imprezami gminnymi i lokalnymi.",
+    "archive": [
+     "raw/2026-08-09/discover-mosina/e25c8c39c43f58b182ceff2a3714e8389f1b5d6a751b92c5a27b057e96585052.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-mosina/0004-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:24:24.674Z",
+     "url": "https://www.mosina.pl/wydarzenia",
+     "ok": true,
+     "ms": 1088,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 405711
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://www.mosina.pl/wydarzenia?page={page}",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/wydarzenia/{slug}",
+     "detailCount": 9,
+     "paginated": true
+    }
+   ]
+  },
+  {
+   "id": "biblioteka-mosina",
+   "name": "Mosinska Biblioteka Publiczna",
+   "type": "library",
+   "url": "https://www.bibliotekamosina.pl/",
+   "town": "Mosina",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.92,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Mosina",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Mosina biblioteka wydarzenia dla dzieci",
+    "hit": {
+     "title": "Mosińska Biblioteka Publiczna: Strona główna",
+     "url": "https://www.bibliotekamosina.pl/",
+     "desc": "Spektakl \"Klaudek i Klaudynka\" w bibliotece! Recenzje. Zaczytani młodociani · Cyklicznie o cyklach · Patrz, co czytasz · Nie bój się komiksu ..."
+    },
+    "confidence": 0.92,
+    "why": "Strona biblioteki publikuje aktualnosci o spektaklach, warsztatach i akcjach letnich z datami.",
+    "archive": [
+     "raw/2026-08-09/discover-mosina/e25c8c39c43f58b182ceff2a3714e8389f1b5d6a751b92c5a27b057e96585052.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-mosina/0004-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:24:45.752Z",
+     "url": "https://www.bibliotekamosina.pl/",
+     "ok": true,
+     "ms": 1056,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 130416
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09"
+  },
+  {
+   "id": "osir-mosina-kalendarz",
+   "name": "Osrodek Sportu i Rekreacji w Mosinie – Kalendarz",
+   "type": "sports",
+   "url": "https://osirmosina.pl/index.php/kalendarz/",
+   "town": "Mosina",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.93,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Mosina",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Mosina OSiR wydarzenia",
+    "hit": {
+     "title": "KALENDARZ – Ośrodek Sportu i Rekreacji w Mosinie",
+     "url": "https://osirmosina.pl/index.php/kalendarz/",
+     "desc": "KALENDARZ ; 3. 4. Wakacyjne wyjazdy · Wakacyjne wyjazdy. 08:00 -18:00. 2026-08-04. OSiR w Mosinie. lista wakacyjnych wyjazdów dla dzieci i młodzieży. w programie ..."
+    },
+    "confidence": 0.93,
+    "why": "Dedykowana podstrona kalendarza OSiR zawiera datowane wydarzenia sportowe i rekreacyjne.",
+    "archive": [
+     "raw/2026-08-09/discover-mosina/e25c8c39c43f58b182ceff2a3714e8389f1b5d6a751b92c5a27b057e96585052.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-mosina/0004-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:25:53.468Z",
+     "url": "https://osirmosina.pl/index.php/kalendarz/",
+     "ok": true,
+     "ms": 425,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 140753
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://osirmosina.pl/index.php/kalendarz/",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/index.php/{slug}",
+     "detailCount": 29
+    }
+   ],
+   "capabilities": [
+    {
+     "kind": "rss",
+     "url": "https://osirmosina.pl/index.php/feed/",
+     "itemsSeen": 10,
+     "datesParsed": 1,
+     "checked": "2026-08-09"
+    },
+    {
+     "kind": "jsonld",
+     "url": "https://osirmosina.pl/index.php/kalendarz/",
+     "itemsSeen": 11,
+     "datesParsed": 11,
+     "checked": "2026-08-09"
+    }
+   ]
+  },
+  {
+   "id": "fb-mok-mosina",
+   "name": "Mosinski Osrodek Kultury – fanpage FB",
+   "type": "fb_page",
+   "url": "https://www.facebook.com/mosinskiosrodekkultury/",
+   "town": "Mosina",
+   "fetch": "fb",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.93,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Mosina",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Mosina dom kultury wydarzenia",
+    "hit": {
+     "title": "Mosiński Ośrodek Kultury | Mosina",
+     "url": "https://www.facebook.com/mosinskiosrodekkultury/?locale=pl_PL",
+     "desc": "Na scenie zobaczymy też występy Zespołu Muzyki Dawnej Huskarl - dzięki partnerskiej współpracy Galerii Sztuki w Mosinie oraz zespół Siły Specjalne. Jak widać ..."
+    },
+    "confidence": 0.93,
+    "why": "Fanpage MOK regularnie zapowiada koncerty i wydarzenia kulturalne z datami i szczegolami.",
+    "archive": [
+     "raw/2026-08-09/discover-mosina/e25c8c39c43f58b182ceff2a3714e8389f1b5d6a751b92c5a27b057e96585052.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-mosina/0004-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "fb-gmina-mosina",
+   "name": "Gmina Mosina – fanpage FB",
+   "type": "fb_page",
+   "url": "https://www.facebook.com/gminamosina/",
+   "town": "Mosina",
+   "fetch": "fb",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.9,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Mosina",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Mosina dom kultury wydarzenia",
+    "hit": {
+     "title": "🎭Dni Mosiny – wydarzenia estradowe i kulturalne! 🎶 Na ...",
+     "url": "https://www.facebook.com/gminamosina/posts/dni-mosiny-wydarzenia-estradowe-i-kulturalne-na-scenie-pojawi%C4%85-si%C4%99-wyj%C4%85tkowi-art/1429918919182780/",
+     "desc": "Dni Mosiny – wydarzenia estradowe i kulturalne! Na scenie pojawią się wyjątkowi artyści, muzyka na żywo, pokazy i mnóstwo występów ..."
+    },
+    "confidence": 0.9,
+    "why": "Oficjalny fanpage gminy publikuje zapowiedzi Dni Mosiny i innych imprez gminnych z datami.",
+    "archive": [
+     "raw/2026-08-09/discover-mosina/e25c8c39c43f58b182ceff2a3714e8389f1b5d6a751b92c5a27b057e96585052.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-mosina/0004-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "fb-biblioteka-mosina",
+   "name": "Mosinska Biblioteka Publiczna – fanpage FB",
+   "type": "fb_page",
+   "url": "https://www.facebook.com/bibliotekamosina/",
+   "town": "Mosina",
+   "fetch": "fb",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.88,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Mosina",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Mosina biblioteka wydarzenia dla dzieci",
+    "hit": {
+     "title": "Mosińska Biblioteka Publiczna | Mosina gmina",
+     "url": "https://www.facebook.com/bibliotekamosina/?locale=pl_PL",
+     "desc": "W lipcu i sierpniu czekają na Was m.in.: Moliki w Ptasim Parku – literackie spotkania dla najmłodszych, Twórcze warsztaty plastyczne i sensoryczne, ..."
+    },
+    "confidence": 0.88,
+    "why": "Fanpage biblioteki zapowiada akcje letnie, spektakle i warsztaty dla dzieci z konkretnymi terminami.",
+    "archive": [
+     "raw/2026-08-09/discover-mosina/e25c8c39c43f58b182ceff2a3714e8389f1b5d6a751b92c5a27b057e96585052.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-mosina/0004-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "fb-osir-mosina",
+   "name": "Osrodek Sportu i Rekreacji w Mosinie – fanpage FB",
+   "type": "fb_page",
+   "url": "https://www.facebook.com/OSiRMosina/",
+   "town": "Mosina",
+   "fetch": "fb",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.85,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Mosina",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Mosina OSiR wydarzenia",
+    "hit": {
+     "title": "Ośrodek Sportu i Rekreacji w Mosinie | Mosina",
+     "url": "https://www.facebook.com/OSiRMosina/?locale=pl_PL",
+     "desc": "❤️ Z ogromną radością ogłaszamy, że 17 października 2026 roku w hali OSiR Mosina (ul. Krasickiego 16) odbędzie się Charytatywny Turniej Siatkówki ..."
+    },
+    "confidence": 0.85,
+    "why": "Fanpage OSiR ogłasza turnieje i imprezy sportowe z datami, np. Charytatywny Turniej Siatkowki.",
+    "archive": [
+     "raw/2026-08-09/discover-mosina/e25c8c39c43f58b182ceff2a3714e8389f1b5d6a751b92c5a27b057e96585052.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-mosina/0004-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "fb-group-gmina-mosina-aktualnosci",
+   "name": "Gmina Mosina – aktualnosci, dyskusje",
+   "type": "fb_group",
+   "url": "https://www.facebook.com/groups/125289747488429",
+   "town": "Mosina",
+   "fetch": "fb_group",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.82,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Mosina",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com Mosina wydarzenia",
+    "hit": {
+     "title": "Gmina Mosina - aktualności, dyskusje - Facebook",
+     "url": "https://www.facebook.com/groups/125289747488429/",
+     "desc": "Grupa dla mieszkańców, turystów oraz innych zainteresowanych tym, co się dzieje w naszej okolicy. Komentujemy aktualności i wydarzenia z okolicy."
+    },
+    "confidence": 0.82,
+    "why": "Publiczna otwarta grupa mieszkancow i turystow komentujaca aktualnosci i wydarzenia z okolicy Mosiny.",
+    "archive": [
+     "raw/2026-08-09/discover-mosina/e25c8c39c43f58b182ceff2a3714e8389f1b5d6a751b92c5a27b057e96585052.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-mosina/0004-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "fb-group-co-sie-dzieje-mosina",
+   "name": "Co sie dzieje? Mosina i okolice",
+   "type": "fb_group",
+   "url": "https://www.facebook.com/groups/537777706390203",
+   "town": "Mosina",
+   "fetch": "fb_group",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.72,
+   "notes": "Weryfikowac czy posty sa faktycznie o wydarzeniach – w wynikach widac tez reklamy uslug.",
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Mosina",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com/groups Mosina",
+    "hit": {
+     "title": "Co się dzieje? Mosina i okolice - Facebook",
+     "url": "https://www.facebook.com/groups/537777706390203/",
+     "desc": "W ofercie mamy klasyczne moskitiery otwierane, eleganckie plisowane oraz systemy przesuwne na duże tarasy a także Moskitiery na wymiar, Rolety dzień i noc, ..."
+    },
+    "confidence": 0.72,
+    "why": "Otwarta grupa lokalna zachecajaca do dodawania ogloszen i informacji o tym co sie dzieje w Mosinie i gminie.",
+    "archive": [
+     "raw/2026-08-09/discover-mosina/e25c8c39c43f58b182ceff2a3714e8389f1b5d6a751b92c5a27b057e96585052.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-mosina/0004-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "poznan-co-gdzie-kiedy",
+   "name": "Poznań Co Gdzie Kiedy – portal miejski",
+   "type": "city_portal",
+   "url": "https://www.poznan.pl/mim/events/",
+   "town": "Poznań",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.97,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Poznań",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Poznań kalendarz wydarzeń urząd",
+    "hit": {
+     "title": "Co? Gdzie? Kiedy?",
+     "url": "https://www.poznan.pl/mim/events/",
+     "desc": "Baner promujący wydarzenie. Nazwa wydarzenia. 11.08.2026. 16:00. Różne oblicza akordeonu."
+    },
+    "confidence": 0.97,
+    "why": "Oficjalny kalendarz wydarzeń miasta Poznania z datami i kategoriami imprez.",
+    "archive": [
+     "raw/2026-08-09/discover-poznan/8f1e005288a409e6e40d80b2969c2ae72440de3ad42eca5d3a189c97d26710bf.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-poznan/0005-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:25:58.631Z",
+     "url": "https://www.poznan.pl/mim/events/",
+     "ok": true,
+     "ms": 321,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 165983
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://www.poznan.pl/mim/events/seances/",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/mim/events/seances/{slug}.html",
+     "detailCount": 38
+    }
+   ]
+  },
+  {
+   "id": "kultura-poznan",
+   "name": "Kalendarium Kulturalne kultura.poznan.pl",
+   "type": "city_portal",
+   "url": "https://kultura.poznan.pl/mim/kultura/events/",
+   "town": "Poznań",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.97,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Poznań",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Poznań OSiR wydarzenia",
+    "hit": {
+     "title": "Kalendarium | Kultura",
+     "url": "https://kultura.poznan.pl/mim/kultura/events/",
+     "desc": "Poznań.pl ➤ Najważniejsze informacje i aktualności o wydarzeniach kulturalnych w Poznaniu ✔️ Bądź na bieżąco z ofertą kulturalną Poznania ✔️ Sprawdź!"
+    },
+    "confidence": 0.97,
+    "why": "Dedykowany portal kulturalny miasta z pełnym kalendarium wydarzeń kulturalnych.",
+    "archive": [
+     "raw/2026-08-09/discover-poznan/8f1e005288a409e6e40d80b2969c2ae72440de3ad42eca5d3a189c97d26710bf.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-poznan/0005-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:26:03.763Z",
+     "url": "https://kultura.poznan.pl/mim/kultura/events/",
+     "ok": true,
+     "ms": 457,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 88863
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://kultura.poznan.pl/mim/kultura/seances/",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/mim/kultura/seances/{slug}.html",
+     "detailCount": 48
+    }
+   ]
+  },
+  {
+   "id": "ck-zamek",
+   "name": "Centrum Kultury Zamek w Poznaniu",
+   "type": "culture_center",
+   "url": "https://ckzamek.pl/",
+   "town": "Poznań",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.95,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Poznań",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Poznań dom kultury wydarzenia",
+    "hit": {
+     "title": "Centrum Kultury Zamek w Poznaniu",
+     "url": "https://ckzamek.pl/",
+     "desc": "OGŁASZAMY! · Kino bez barier. Przegląd w drodze 2026 · POZNAJ PROJEKTY! Dwulatka. · IMIENINY ULICY 2026. Kiermasz świętomarciński ... · I pula karnetów na Festiwal ..."
+    },
+    "confidence": 0.95,
+    "why": "Strona główna CK Zamek zawiera aktualny repertuar z festiwalami, kiermaszami i innymi wydarzeniami z datami.",
+    "archive": [
+     "raw/2026-08-09/discover-poznan/8f1e005288a409e6e40d80b2969c2ae72440de3ad42eca5d3a189c97d26710bf.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-poznan/0005-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:26:08.699Z",
+     "url": "https://ckzamek.pl/",
+     "ok": true,
+     "ms": 522,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 144057
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://ckzamek.pl/",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/podstrony/{slug}",
+     "detailCount": 64
+    }
+   ]
+  },
+  {
+   "id": "ck-zamek-fb",
+   "name": "Centrum Kultury ZAMEK w Poznaniu – Facebook",
+   "type": "fb_page",
+   "url": "https://www.facebook.com/ckzamek/",
+   "town": "Poznań",
+   "fetch": "fb",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.9,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Poznań",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Poznań ośrodek kultury",
+    "hit": {
+     "title": "Centrum Kultury ZAMEK w Poznaniu | Poznan",
+     "url": "https://www.facebook.com/ckzamek/?locale=pl_PL",
+     "desc": "Centrum Kultury ZAMEK w Poznaniu, Poznań. 64 214 osób lubi to · 967 osób mówi o tym · 47 228 użytkowników tu było. W CK ZAMEK przenikają się i wzajemnie..."
+    },
+    "confidence": 0.9,
+    "why": "Oficjalny fanpage CK Zamek z ponad 64 tys. obserwujących regularnie publikuje zapowiedzi wydarzeń.",
+    "archive": [
+     "raw/2026-08-09/discover-poznan/8f1e005288a409e6e40d80b2969c2ae72440de3ad42eca5d3a189c97d26710bf.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-poznan/0005-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "dk-stokrotka",
+   "name": "Dom Kultury Stokrotka w Poznaniu",
+   "type": "culture_center",
+   "url": "https://www.dkstokrotka.pl/",
+   "town": "Poznań",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.93,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Poznań",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Poznań dom kultury wydarzenia",
+    "hit": {
+     "title": "Strona główna - Dom Kultury Stokrotka w Poznaniu",
+     "url": "https://www.dkstokrotka.pl/",
+     "desc": "Propozycje na sierpień 2026 DK Stokrotka · Rodzinna Podróż pod Parą · VIVA Seniorzy · Spotkanie autorskie z reżyserem Przemysławem Basińskim · Lato z Kulturą 2026."
+    },
+    "confidence": 0.93,
+    "why": "Strona DK Stokrotka prezentuje propozycje na kolejne miesiące z konkretnymi tytułami wydarzeń i datami.",
+    "archive": [
+     "raw/2026-08-09/discover-poznan/8f1e005288a409e6e40d80b2969c2ae72440de3ad42eca5d3a189c97d26710bf.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-poznan/0005-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:26:14.209Z",
+     "url": "https://www.dkstokrotka.pl/",
+     "ok": true,
+     "ms": 382,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 70658
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://www.dkstokrotka.pl/",
+     "kind": "listing",
+     "confidence": 0.6,
+     "via": "heuristic",
+     "detailPattern": "/{slug}",
+     "detailCount": 16,
+     "unendorsed": true
+    }
+   ]
+  },
+  {
+   "id": "jck-poznan",
+   "name": "Jeżyckie Centrum Kultury",
+   "type": "culture_center",
+   "url": "https://jck-poznan.pl/",
+   "town": "Poznań",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.9,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Poznań",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Poznań ośrodek kultury",
+    "hit": {
+     "title": "Jeżyckie Centrum Kultury, Akademia Senioralna, Pod Balkonem",
+     "url": "https://jck-poznan.pl/",
+     "desc": "Jeżyckie Centrum Kultury to miejsce, w którym można poznać wyjątkowe elementy sztuki, kultury, rozrywki. Zajmujemy się także organizacją wystaw, ..."
+    },
+    "confidence": 0.9,
+    "why": "Strona JCK zawiera informacje o wystawach, warsztatach i wydarzeniach kulturalnych w dzielnicy Jeżyce.",
+    "archive": [
+     "raw/2026-08-09/discover-poznan/8f1e005288a409e6e40d80b2969c2ae72440de3ad42eca5d3a189c97d26710bf.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-poznan/0005-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:26:24.655Z",
+     "url": "https://jck-poznan.pl/",
+     "ok": true,
+     "ms": 1694,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 356925
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://jck-poznan.pl/wydarzenia/",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/{id}/{id}/{id}",
+     "detailCount": 12
+    }
+   ],
+   "capabilities": [
+    {
+     "kind": "rss",
+     "url": "https://jck-poznan.pl/feed/",
+     "itemsSeen": 10,
+     "datesParsed": 0,
+     "checked": "2026-08-09"
+    }
+   ]
+  },
+  {
+   "id": "mdk1-poznan",
+   "name": "Młodzieżowy Dom Kultury nr 1 w Poznaniu",
+   "type": "culture_center",
+   "url": "https://mdk1.poznan.pl/",
+   "town": "Poznań",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.85,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Poznań",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Poznań dom kultury wydarzenia",
+    "hit": {
+     "title": "Aktualności MDK1 2025/2026",
+     "url": "https://mdk1.poznan.pl/",
+     "desc": "Zapraszamy do Młodzieżowego Domu Kultury nr 1 w Poznaniu. Młodzieżowy Dom Kultury nr 1. kluby malucha, edukacja, muzyka, plastyka, taniec, teatr, sport ..."
+    },
+    "confidence": 0.85,
+    "why": "Strona MDK1 publikuje aktualności i ofertę zajęć z terminami dla dzieci i młodzieży.",
+    "archive": [
+     "raw/2026-08-09/discover-poznan/8f1e005288a409e6e40d80b2969c2ae72440de3ad42eca5d3a189c97d26710bf.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-poznan/0005-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:26:41.818Z",
+     "url": "https://mdk1.poznan.pl/",
+     "ok": true,
+     "ms": 608,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 110905
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://mdk1.poznan.pl/wydarzenia.html",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/wydarzenia/{slug}.html",
+     "detailCount": 7
+    }
+   ]
+  },
+  {
+   "id": "mdk2-poznan",
+   "name": "Młodzieżowy Dom Kultury nr 2 w Poznaniu",
+   "type": "culture_center",
+   "url": "https://mdk2.poznan.pl/",
+   "town": "Poznań",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.85,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Poznań",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Poznań dom kultury wydarzenia",
+    "hit": {
+     "title": "Aktualności MDK2",
+     "url": "https://mdk2.poznan.pl/",
+     "desc": "Młodzieżowy Dom Kultury nr 2 w roku szkolnym 2026/2027 planuje dołączyć do międzynarodowego programu Odysei Umysłu. Jest to konkurs, w którym dziecięce drużyny ..."
+    },
+    "confidence": 0.85,
+    "why": "Strona MDK2 publikuje aktualności i ofertę zajęć z terminami dla dzieci i młodzieży.",
+    "archive": [
+     "raw/2026-08-09/discover-poznan/8f1e005288a409e6e40d80b2969c2ae72440de3ad42eca5d3a189c97d26710bf.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-poznan/0005-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:26:48.469Z",
+     "url": "https://mdk2.poznan.pl/",
+     "ok": true,
+     "ms": 815,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 117561
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://mdk2.poznan.pl/aktualnosci.html",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/aktualnosci/{slug}.html",
+     "detailCount": 5
+    }
+   ]
+  },
+  {
+   "id": "dk-orle-gniazdo-fb",
+   "name": "Dom Kultury Orle Gniazdo – Facebook",
+   "type": "fb_page",
+   "url": "https://www.facebook.com/OrleGniazdo/",
+   "town": "Poznań",
+   "fetch": "fb",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.88,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Poznań",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Poznań dom kultury wydarzenia",
+    "hit": {
+     "title": "Dom Kultury \"Orle Gniazdo\" | Poznan",
+     "url": "https://www.facebook.com/OrleGniazdo/?locale=pl_PL",
+     "desc": "Przed nami kolejne wydarzenie w ramach KultuRataje | Kultura na Fyrtlach 2026 ! Załóż słuchawki, wybierz swój ulubiony kanał muzyczny i daj się porwać ..."
+    },
+    "confidence": 0.88,
+    "why": "Fanpage DK Orle Gniazdo regularnie zapowiada wydarzenia w ramach cyklu KultuRataje z datami.",
+    "archive": [
+     "raw/2026-08-09/discover-poznan/8f1e005288a409e6e40d80b2969c2ae72440de3ad42eca5d3a189c97d26710bf.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-poznan/0005-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "posir-poznan",
+   "name": "Poznańskie Ośrodki Sportu i Rekreacji",
+   "type": "sports",
+   "url": "https://posir.poznan.pl/wydarzenia",
+   "town": "Poznań",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.93,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Poznań",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Poznań OSiR wydarzenia",
+    "hit": {
+     "title": "Wydarzenia",
+     "url": "https://posir.poznan.pl/wydarzenia",
+     "desc": "niedziela, 13 cały dzień. POZNAŃ TRACK DAY 2026. Golęcin Stadion lekkoatletyczny ; 19.09 – 20.09. Mistrzostwa Województwa Wielkopolskiego w kajakarstwie. Malta"
+    },
+    "confidence": 0.93,
+    "why": "Dedykowana podstrona wydarzeń POSiR zawiera kalendarium imprez sportowych z datami i miejscami.",
+    "archive": [
+     "raw/2026-08-09/discover-poznan/8f1e005288a409e6e40d80b2969c2ae72440de3ad42eca5d3a189c97d26710bf.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-poznan/0005-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:26:54.564Z",
+     "url": "https://posir.poznan.pl/wydarzenia",
+     "ok": true,
+     "ms": 1129,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 79870
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://posir.poznan.pl/wydarzenia",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/wydarzenia/{slug}",
+     "detailCount": 43
+    }
+   ],
+   "capabilities": [
+    {
+     "kind": "rss",
+     "url": "https://posir.poznan.pl/wydarzenia?format=feed&amp;type=rss",
+     "itemsSeen": 43,
+     "datesParsed": 2,
+     "checked": "2026-08-09"
+    },
+    {
+     "kind": "rss",
+     "url": "https://posir.poznan.pl/wydarzenia?format=feed&amp;type=atom",
+     "itemsSeen": 43,
+     "datesParsed": 2,
+     "checked": "2026-08-09"
+    }
+   ]
+  },
+  {
+   "id": "posir-poznan-fb",
+   "name": "Poznańskie Ośrodki Sportu i Rekreacji – Facebook",
+   "type": "fb_page",
+   "url": "https://www.facebook.com/posir.poznan/",
+   "town": "Poznań",
+   "fetch": "fb",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.87,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Poznań",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Poznań OSiR wydarzenia",
+    "hit": {
+     "title": "Poznańskie Ośrodki Sportu i Rekreacji | Poznan",
+     "url": "https://www.facebook.com/posir.poznan/?locale=pl_PL",
+     "desc": "Rozpoczęliśmy pierwszy dzień zmagań w turnieju POSiR Open Lato 2026 Dziś o zwycięstwo walczą pary mikstowe oraz deble męskie w padla. Trzymamy kciuki za ..."
+    },
+    "confidence": 0.87,
+    "why": "Fanpage POSiR regularnie ogłasza turnieje i imprezy sportowe z datami.",
+    "archive": [
+     "raw/2026-08-09/discover-poznan/8f1e005288a409e6e40d80b2969c2ae72440de3ad42eca5d3a189c97d26710bf.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-poznan/0005-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "biblioteka-raczynskch",
+   "name": "Biblioteka Raczyńskich w Poznaniu",
+   "type": "library",
+   "url": "https://bracz.edu.pl/aktualnosci-kulturalne/",
+   "town": "Poznań",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.9,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Poznań",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Poznań biblioteka wydarzenia dla dzieci",
+    "hit": {
+     "title": "Aktualności",
+     "url": "https://bracz.edu.pl/aktualnosci-kulturalne/",
+     "desc": "Serdecznie zapraszamy dzieci i młodzież do udziału w wyjątkowych, wakacyjnych warsztatach literacko-artystycznych organizowanych w naszej bibliotece. Tegoroczne ..."
+    },
+    "confidence": 0.9,
+    "why": "Strona biblioteki publikuje aktualności kulturalne z warsztatami i wydarzeniami dla dzieci i dorosłych z datami.",
+    "archive": [
+     "raw/2026-08-09/discover-poznan/8f1e005288a409e6e40d80b2969c2ae72440de3ad42eca5d3a189c97d26710bf.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-poznan/0005-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:27:05.158Z",
+     "url": "https://bracz.edu.pl/aktualnosci-kulturalne/",
+     "ok": true,
+     "ms": 2688,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 152235
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://bracz.edu.pl/aktualnosci-kulturalne/page/{page}",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/event/{slug}",
+     "detailCount": 12,
+     "paginated": true
+    }
+   ],
+   "capabilities": [
+    {
+     "kind": "rss",
+     "url": "https://bracz.edu.pl/feed/",
+     "itemsSeen": 11,
+     "datesParsed": 2,
+     "checked": "2026-08-09"
+    },
+    {
+     "kind": "rss",
+     "url": "https://bracz.edu.pl/comments/feed/",
+     "itemsSeen": 1,
+     "datesParsed": 0,
+     "checked": "2026-08-09"
+    },
+    {
+     "kind": "wp-rest",
+     "url": "https://bracz.edu.pl/wp-json/wp/v2/tribe_venue?per_page=5",
+     "itemsSeen": 5,
+     "datesParsed": 0,
+     "checked": "2026-08-09"
+    },
+    {
+     "kind": "tribe",
+     "url": "https://bracz.edu.pl/wp-json/tribe/events/v1/events",
+     "itemsSeen": 11,
+     "datesParsed": 11,
+     "checked": "2026-08-09"
+    },
+    {
+     "kind": "ical",
+     "url": "https://bracz.edu.pl/aktualnosci-kulturalne/page/%7Bpage%7D?ical=1",
+     "itemsSeen": 17,
+     "datesParsed": 19,
+     "checked": "2026-08-09"
+    }
+   ]
+  },
+  {
+   "id": "biblioteka-wielkopolska",
+   "name": "Biblioteka Wielkopolska – Wydarzenia",
+   "type": "library",
+   "url": "https://bw.poznan.pl/biblioteka/wydarzenia/",
+   "town": "Poznań",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.9,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Poznań",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Poznań biblioteka wydarzenia dla dzieci",
+    "hit": {
+     "title": "Wydarzenia • Biblioteka Wielkopolska im. Stanisława ...",
+     "url": "https://bw.poznan.pl/biblioteka/wydarzenia/",
+     "desc": "Zapraszamy dzieci w wieku 1–5 lat wraz z opiekunami na wyjątkowe zajęcia ... 60-819 Poznań T: +48 61 66 40 850 / Sekretariat. więcej. Wypożyczalnia oraz ..."
+    },
+    "confidence": 0.9,
+    "why": "Dedykowana podstrona wydarzeń biblioteki zawiera warsztaty i zajęcia z datami i godzinami.",
+    "archive": [
+     "raw/2026-08-09/discover-poznan/8f1e005288a409e6e40d80b2969c2ae72440de3ad42eca5d3a189c97d26710bf.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-poznan/0005-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:27:31.912Z",
+     "url": "https://bw.poznan.pl/biblioteka/wydarzenia/",
+     "ok": true,
+     "ms": 262,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 306810
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://bw.poznan.pl/biblioteka/wydarzenia/",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/biblioteka/aktualnosci/{slug}",
+     "detailCount": 9
+    }
+   ],
+   "capabilities": [
+    {
+     "kind": "rss",
+     "url": "https://bw.poznan.pl/feed",
+     "itemsSeen": 3,
+     "datesParsed": 0,
+     "checked": "2026-08-09"
+    },
+    {
+     "kind": "rss",
+     "url": "https://bw.poznan.pl/rss.xml",
+     "itemsSeen": 50,
+     "datesParsed": 0,
+     "checked": "2026-08-09"
+    }
+   ]
+  },
+  {
+   "id": "wbp-poznan",
+   "name": "Wojewódzka Biblioteka Publiczna w Poznaniu",
+   "type": "library",
+   "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/",
+   "town": "Poznań",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.88,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Poznań",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Poznań biblioteka wydarzenia dla dzieci",
+    "hit": {
+     "title": "Świat dla dociekliwych – literatura dla dzieci – szkolenie ...",
+     "url": "https://wbp.poznan.pl/biblioteka/wydarzenia-2/swiat-dla-dociekliwych-literatura-dla-dzieci-szkolenie-dla-bibliotekarek-i-bibliotekarzy/",
+     "desc": "Spotkanie dla bibliotekarek, bibliotekarzy pracujących z dziećmi i młodzieżą z bibliotek województwa wielkopolskiego, rodziców dzieci 5+."
+    },
+    "confidence": 0.88,
+    "why": "Strona WBP zawiera podstronę wydarzeń z szkoleniami i spotkaniami z datami.",
+    "archive": [
+     "raw/2026-08-09/discover-poznan/8f1e005288a409e6e40d80b2969c2ae72440de3ad42eca5d3a189c97d26710bf.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-poznan/0005-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:27:38.007Z",
+     "url": "https://wbp.poznan.pl/biblioteka/wydarzenia-2/",
+     "ok": true,
+     "ms": 467,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "finalUrl": "https://bw.poznan.pl/biblioteka/wydarzenia-2/",
+     "chars": 294261
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "previous_urls": [
+    "https://wbp.poznan.pl/biblioteka/wydarzenia-2/"
+   ],
+   "reach": "redirected",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/biblioteka/{slug}/{slug}",
+     "detailCount": 15
+    }
+   ],
+   "capabilities": [
+    {
+     "kind": "rss",
+     "url": "https://bw.poznan.pl/feed",
+     "itemsSeen": 3,
+     "datesParsed": 0,
+     "checked": "2026-08-09"
+    },
+    {
+     "kind": "rss",
+     "url": "https://bw.poznan.pl/rss.xml",
+     "itemsSeen": 50,
+     "datesParsed": 0,
+     "checked": "2026-08-09"
+    }
+   ]
+  },
+  {
+   "id": "cik-poznan-fb",
+   "name": "Centrum Informacji Kulturalnej Poznań – Facebook",
+   "type": "fb_page",
+   "url": "https://www.facebook.com/cikpoznan/",
+   "town": "Poznań",
+   "fetch": "fb",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.9,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Poznań",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com Poznań wydarzenia",
+    "hit": {
+     "title": "Centrum Informacji Kulturalnej Poznań | Poznan - Facebook",
+     "url": "https://www.facebook.com/cikpoznan/?locale=pl_PL",
+     "desc": "W sierpniu w Poznaniu czekają nas m.in. Bittersweet Music Festival, Rockowizna Festiwal, #NaFalach oraz Old Jazz Festiwal. Zapowiadamy warsztaty Dancing ..."
+    },
+    "confidence": 0.9,
+    "why": "Fanpage CIK agreguje i zapowiada festiwale oraz warsztaty kulturalne w Poznaniu z datami.",
+    "archive": [
+     "raw/2026-08-09/discover-poznan/8f1e005288a409e6e40d80b2969c2ae72440de3ad42eca5d3a189c97d26710bf.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-poznan/0005-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "fb-group-wydarzenia-w-poznaniu-1",
+   "name": "WYDARZENIA W POZNANIU – grupa Facebook",
+   "type": "fb_group",
+   "url": "https://www.facebook.com/groups/241900542530749",
+   "town": "Poznań",
+   "fetch": "fb_group",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.88,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Poznań",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com Poznań wydarzenia",
+    "hit": {
+     "title": "WYDARZENIA W POZNANIU - Facebook",
+     "url": "https://www.facebook.com/groups/241900542530749/",
+     "desc": "WARSZTAT Wybrzmij, odkryj swój głos — warsztaty śpiewu i wspólnego muzykowania Kiedy: Czwartek, 13 sierpnia 17.30-19.00 Gdzie: Centrum Praw Kobiet Oddział w ..."
+    },
+    "confidence": 0.88,
+    "why": "Otwarta grupa z warsztatami i wydarzeniami wrzucanymi przez mieszkańców z konkretnymi datami i miejscami.",
+    "archive": [
+     "raw/2026-08-09/discover-poznan/8f1e005288a409e6e40d80b2969c2ae72440de3ad42eca5d3a189c97d26710bf.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-poznan/0005-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "fb-group-poznan-wydarzenia",
+   "name": "POZNAŃ WYDARZENIA – grupa Facebook",
+   "type": "fb_group",
+   "url": "https://www.facebook.com/groups/pozwyd",
+   "town": "Poznań",
+   "fetch": "fb_group",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.87,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Poznań",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com Poznań wydarzenia",
+    "hit": {
+     "title": "POZNAŃ WYDARZENIA - Facebook",
+     "url": "https://www.facebook.com/groups/pozwyd/",
+     "desc": "Już wczoraj rozpoczęliśmy zapisy na drugą turę zwiedzania podziemi Fary Poznańskiej, o godzinie 16. Ostatnia możliwa godzina z zwiedzaniem z przewodnikiem PTTK."
+    },
+    "confidence": 0.87,
+    "why": "Otwarta grupa z ogłoszeniami o zwiedzaniu, warsztatach i imprezach w Poznaniu z datami.",
+    "archive": [
+     "raw/2026-08-09/discover-poznan/8f1e005288a409e6e40d80b2969c2ae72440de3ad42eca5d3a189c97d26710bf.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-poznan/0005-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "fb-group-wydarzenia-poznan-2",
+   "name": "Wydarzenia w Poznaniu – grupa Facebook",
+   "type": "fb_group",
+   "url": "https://www.facebook.com/groups/397203407069688",
+   "town": "Poznań",
+   "fetch": "fb_group",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.87,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Poznań",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com Poznań wydarzenia",
+    "hit": {
+     "title": "Wydarzenia w Poznaniu | Facebook",
+     "url": "https://www.facebook.com/groups/397203407069688/",
+     "desc": "Dzień z Podziemnym Poznaniem, 15 sieprnia Godz. 10 - 28 dywizjon rakietowy Trzcielin https://www.facebook.com/share/1CbC8DuofK/ Godz."
+    },
+    "confidence": 0.87,
+    "why": "Otwarta grupa z bezpłatnymi koncertami i wydarzeniami miejskimi ogłaszanymi przez mieszkańców z datami.",
+    "archive": [
+     "raw/2026-08-09/discover-poznan/8f1e005288a409e6e40d80b2969c2ae72440de3ad42eca5d3a189c97d26710bf.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-poznan/0005-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "fb-group-imprezy-poznan",
+   "name": "IMPREZY POZNAŃ – grupa Facebook",
+   "type": "fb_group",
+   "url": "https://www.facebook.com/groups/imprezypoznan",
+   "town": "Poznań",
+   "fetch": "fb_group",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.85,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Poznań",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com Poznań wydarzenia",
+    "hit": {
+     "title": "IMPREZY POZNAŃ - Facebook",
+     "url": "https://www.facebook.com/groups/imprezypoznan/",
+     "desc": "Na tej grupie znajdziecie informacje o wszystkich imprezach i eventach w Poznaniu. Bardzo prosimy, aby każdy, kto prosi o dołączenie, dodał również kilka..."
+    },
+    "confidence": 0.85,
+    "why": "Otwarta grupa poświęcona imprezom i eventom w Poznaniu z regularnymi ogłoszeniami z datami.",
+    "archive": [
+     "raw/2026-08-09/discover-poznan/8f1e005288a409e6e40d80b2969c2ae72440de3ad42eca5d3a189c97d26710bf.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-poznan/0005-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "fb-group-allin-poznan",
+   "name": "All in Poznań – wydarzenia – grupa Facebook",
+   "type": "fb_group",
+   "url": "https://www.facebook.com/groups/186299334869330",
+   "town": "Poznań",
+   "fetch": "fb_group",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.85,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Poznań",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com Poznań wydarzenia",
+    "hit": {
+     "title": "All in Poznań - wydarzenia - Facebook",
+     "url": "https://www.facebook.com/groups/186299334869330/",
+     "desc": "Poznań, zapraszamy na THE GAME – Dance Show. 25 października pokażemy spektakl w Poznaniu — dwa pokazy jednego dnia. To taneczne widowisko o wejściu do gry, ..."
+    },
+    "confidence": 0.85,
+    "why": "Otwarta grupa z ogłoszeniami o spektaklach tanecznych i wydarzeniach kulturalnych z datami i miejscami.",
+    "archive": [
+     "raw/2026-08-09/discover-poznan/8f1e005288a409e6e40d80b2969c2ae72440de3ad42eca5d3a189c97d26710bf.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-poznan/0005-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "fb-group-wydarzenia-poznan-3",
+   "name": "Wydarzenia imprezy koncerty rozrywka w Poznaniu – grupa Facebook",
+   "type": "fb_group",
+   "url": "https://www.facebook.com/groups/196361441244106",
+   "town": "Poznań",
+   "fetch": "fb_group",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.85,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Poznań",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com Poznań wydarzenia",
+    "hit": {
+     "title": "POZNAŃ - Wydarzenia, imprezy, koncerty, rozrywka w Poznaniu",
+     "url": "https://www.facebook.com/groups/196361441244106/",
+     "desc": "Dzień 1 🎙️ Stand-up Koncerty Dzień 2 Rap Battle Bitwa Freestyle Warto Poznań 🎟️ Wstęp całkowicie bezpłatny! Zapowiada się świetna ..."
+    },
+    "confidence": 0.85,
+    "why": "Otwarta grupa z ogłoszeniami o koncertach i imprezach plenerowych z datami i linkami do wydarzeń.",
+    "archive": [
+     "raw/2026-08-09/discover-poznan/8f1e005288a409e6e40d80b2969c2ae72440de3ad42eca5d3a189c97d26710bf.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-poznan/0005-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "fb-group-baba-cool",
+   "name": "Baba Cool Poznań – wydarzenia dla dzieci i rodziców – grupa Facebook",
+   "type": "fb_group",
+   "url": "https://www.facebook.com/groups/babacoolpoznan",
+   "town": "Poznań",
+   "fetch": "fb_group",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.87,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Poznań",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com Poznań wydarzenia",
+    "hit": {
+     "title": "Baba Cool Poznań - wydarzenia dla dzieci i rodziców - Facebook",
+     "url": "https://www.facebook.com/groups/babacoolpoznan/",
+     "desc": "10:00 Zakiś warzywa! BEZPŁATNE warsztaty dla dzieci 6–12 lat z kiszenia warzyw. Razem odkryjemy tajniki fermentacji i przygotujemy własne domowe kiszonki z ..."
+    },
+    "confidence": 0.87,
+    "why": "Otwarta grupa z bezpłatnymi warsztatami dla dzieci z konkretnymi datami i miejscami.",
+    "archive": [
+     "raw/2026-08-09/discover-poznan/8f1e005288a409e6e40d80b2969c2ae72440de3ad42eca5d3a189c97d26710bf.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-poznan/0005-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "fb-group-wydarzenia-poznan-4",
+   "name": "Wydarzenia w Poznaniu – grupa Facebook (wydarzeniawPoznaniu)",
+   "type": "fb_group",
+   "url": "https://www.facebook.com/groups/wydarzeniawPoznaniu",
+   "town": "Poznań",
+   "fetch": "fb_group",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.83,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Poznań",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Poznań grupa facebook wydarzenia lokalne",
+    "hit": {
+     "title": "Wydarzenia w Poznaniu",
+     "url": "https://www.facebook.com/groups/wydarzeniawPoznaniu/",
+     "desc": "**8 sierpnia – Sobotnie Roztańczenie** **Salsa On 1 / On 2** **Start:** 21:30 🎟️ **Wstęp:** 30 zł **Lokalizacja:** **Poco Loco** **ul."
+    },
+    "confidence": 0.83,
+    "why": "Otwarta grupa z ogłoszeniami o imprezach tanecznych i wydarzeniach z datami i adresami.",
+    "archive": [
+     "raw/2026-08-09/discover-poznan/8f1e005288a409e6e40d80b2969c2ae72440de3ad42eca5d3a189c97d26710bf.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-poznan/0005-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "epoznan-kultura",
+   "name": "epoznan.pl – Kalendarium kulturalne",
+   "type": "city_portal",
+   "url": "https://epoznan.pl/culture",
+   "town": "Poznań",
+   "fetch": "plain",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.85,
+   "notes": "Niezależny portal lokalny, nie miejski. | martwy URL (2026-08-09): Kandydat to strona kategorii kulturalnej (newsy o kulturze), nie kalendarium z listą nadchodzących wydarzeń z datami.",
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Poznań",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Poznań kalendarz wydarzeń urząd",
+    "hit": {
+     "title": "Kalendarium kulturalne - epoznan.pl",
+     "url": "https://epoznan.pl/culture",
+     "desc": "Śpiewające Brzdące – Lisek i Przyjaciele · Sobota, 12 Września ; Antimatter + Sleeping Pulse - Poznań, 2Progi · Środa, 9 Września, 19:00 ; PANI DOUBTFIRE · Sobota, ..."
+    },
+    "confidence": 0.85,
+    "why": "Lokalny portal epoznan.pl prowadzi kalendarium kulturalne z konkretnymi datami koncertów i spektakli.",
+    "archive": [
+     "raw/2026-08-09/discover-poznan/8f1e005288a409e6e40d80b2969c2ae72440de3ad42eca5d3a189c97d26710bf.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-poznan/0005-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:27:42.859Z",
+     "url": "https://epoznan.pl/culture",
+     "ok": true,
+     "ms": 197,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 909271
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "dead": true
+  },
+  {
+   "id": "okpoznan-wydarzenia",
+   "name": "OK Poznań – Wydarzenia",
+   "type": "city_portal",
+   "url": "https://okpoznan.pl/wydarzenia",
+   "town": "Poznań",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.88,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Poznań",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Poznań kalendarz wydarzeń urząd",
+    "hit": {
+     "title": "Wydarzenia - Program usług dla mieszkańców Poznania ...",
+     "url": "https://okpoznan.pl/wydarzenia",
+     "desc": "Urząd Miasta Poznania | Wydarzenia. Poznańskie Ośrodki Sportu i Rekreacji. Międzynarodowe Targi Poznańskie. Wielkopolskie Muzeum Niepodległości. Hunters PSŻ ..."
+    },
+    "confidence": 0.88,
+    "why": "Portal okpoznan.pl agreguje wydarzenia miejskich instytucji Poznania z datami i opisami.",
+    "archive": [
+     "raw/2026-08-09/discover-poznan/8f1e005288a409e6e40d80b2969c2ae72440de3ad42eca5d3a189c97d26710bf.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-poznan/0005-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:27:45.646Z",
+     "url": "https://okpoznan.pl/wydarzenia",
+     "ok": true,
+     "ms": 1389,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 198867
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://okpoznan.pl/wydarzenia",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/{slug}/{slug}",
+     "detailCount": 16
+    }
+   ]
+  },
+  {
+   "id": "puszczykowo-pl-wydarzenia",
+   "name": "Miasto Puszczykowo – Wydarzenia",
+   "type": "city_portal",
+   "url": "https://puszczykowo.pl/wydarzenia",
+   "town": "Puszczykowo",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.97,
+   "notes": "Dodatkowa podstrona kulturalna: puszczykowo.pl/strefa-miejska/kultura/wydarzenia-kulturalne",
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Puszczykowo",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "wydarzenia Puszczykowo",
+    "hit": {
+     "title": "Wydarzenia :: Puszczykowo",
+     "url": "https://puszczykowo.pl/wydarzenia",
+     "desc": "Wydarzenia · Tai Chi – zajęcia dla początkujących i zaawansowanych · Koncert mis i gongów w Willi Mimoza · PUFA Sofa Sessions – Hubert Szczęsny · Elvis (2022 – ..."
+    },
+    "confidence": 0.97,
+    "why": "Oficjalny portal miasta zawiera dedykowaną podstronę z listą nadchodzących wydarzeń z datami i godzinami.",
+    "archive": [
+     "raw/2026-08-09/discover-puszczykowo/3d4ee21c219ab040a17be7e50e1b874375cdffc23a661ab6c304fae21624a869.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-puszczykowo/0006-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:27:58.010Z",
+     "url": "https://puszczykowo.pl/wydarzenia",
+     "ok": true,
+     "ms": 1314,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 20405
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://puszczykowo.pl/wydarzenia",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/wydarzenia/{slug}",
+     "detailCount": 6
+    }
+   ]
+  },
+  {
+   "id": "puszczykowo-pl-kultura-wydarzenia",
+   "name": "Miasto Puszczykowo – Wydarzenia kulturalne",
+   "type": "city_portal",
+   "url": "https://puszczykowo.pl/strefa-miejska/kultura/wydarzenia-kulturalne",
+   "town": "Puszczykowo",
+   "fetch": "plain",
+   "verified": true,
+   "discovered": "auto",
+   "confidence": 0.95,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Puszczykowo",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Puszczykowo kalendarz wydarzeń urząd",
+    "hit": {
+     "title": "Wydarzenia kulturalne",
+     "url": "https://puszczykowo.pl/strefa-miejska/kultura/wydarzenia-kulturalne",
+     "desc": "Wydarzenia kulturalne · W Dworze Skrzynki koncert Bartasa Szymoniaka - Wojownik z Miłości · Otwarte Spotkanie Nalewkowe w Wielkopolskiej Izbie Rzemieślniczej w ..."
+    },
+    "confidence": 0.95,
+    "why": "Podstrona kalendarza imprez kulturalnych na oficjalnym portalu miasta z konkretnymi datami koncertów i spektakli.",
+    "archive": [
+     "raw/2026-08-09/discover-puszczykowo/3d4ee21c219ab040a17be7e50e1b874375cdffc23a661ab6c304fae21624a869.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-puszczykowo/0006-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:28:12.917Z",
+     "url": "https://puszczykowo.pl/strefa-miejska/kultura/wydarzenia-kulturalne",
+     "ok": true,
+     "ms": 1238,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 22858
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "entrypoints": [
+    {
+     "url": "https://puszczykowo.pl/strefa-miejska/kultura/wydarzenia-kulturalne",
+     "kind": "listing",
+     "confidence": 0.9,
+     "via": "llm",
+     "detailPattern": "/wydarzenia/{slug}",
+     "detailCount": 9
+    }
+   ]
+  },
+  {
+   "id": "willa-mimoza-fb",
+   "name": "Willa Mimoza Puszczykowo",
+   "type": "fb_page",
+   "url": "https://www.facebook.com/WillaMimozaPuszczykowo",
+   "town": "Puszczykowo",
+   "fetch": "fb",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.92,
+   "notes": "Willa zarządzana przez Bibliotekę Miejską CAK",
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Puszczykowo",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com Puszczykowo wydarzenia",
+    "hit": {
+     "title": "Willa Mimoza Puszczykowo - Facebook",
+     "url": "https://www.facebook.com/WillaMimozaPuszczykowo/",
+     "desc": "Plener „Za oknami Skrzynek 2026. Dusze kwiatów” realizowany będzie w dniach 20 lipca–2 sierpnia 2026 r. Udział w wydarzeniu jest bezpłatny, jednak liczba miejsc ..."
+    },
+    "confidence": 0.92,
+    "why": "Fanpage centrum animacji kultury publikuje nadchodzące wydarzenia z datami, w tym plenery i pikniki.",
+    "archive": [
+     "raw/2026-08-09/discover-puszczykowo/3d4ee21c219ab040a17be7e50e1b874375cdffc23a661ab6c304fae21624a869.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-puszczykowo/0006-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "biblioteka-puszczykowo-fb",
+   "name": "Biblioteka Miejska Centrum Animacji Kultury w Puszczykowie",
+   "type": "fb_page",
+   "url": "https://www.facebook.com/BibliotekaPuszczykowo",
+   "town": "Puszczykowo",
+   "fetch": "fb",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.92,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Puszczykowo",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Puszczykowo dom kultury wydarzenia",
+    "hit": {
+     "title": "Biblioteka Miejska Centrum Animacji Kultury w Puszczykowie",
+     "url": "https://www.facebook.com/BibliotekaPuszczykowo/?locale=pl_PL",
+     "desc": "Zapraszamy na sierpniowe zajęcia czytelniczo - plastyczne dla młodszych dzieci i ich opiekunów: ‍♀️ ‍♀️⛵️🏝️ CZUŁE CZYTANKI - PODWODNE ..."
+    },
+    "confidence": 0.92,
+    "why": "Fanpage biblioteki regularnie zaprasza na warsztaty i zajęcia z konkretnymi terminami i godzinami.",
+    "archive": [
+     "raw/2026-08-09/discover-puszczykowo/3d4ee21c219ab040a17be7e50e1b874375cdffc23a661ab6c304fae21624a869.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-puszczykowo/0006-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "biblioteka-puszczykowo-sowa",
+   "name": "Biblioteka Miejska im. Małgorzaty Musierowicz CAK – katalog",
+   "type": "library",
+   "url": "https://www.puszczykowo-mbp.sowa.pl/",
+   "town": "Puszczykowo",
+   "fetch": "plain",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.55,
+   "notes": "Sprawdzić czy istnieje zakładka z aktualnościami lub kalendarzem wydarzeń | martwy URL (2026-08-09): Kandydat to katalog zbiorów bibliotecznych (wyszukiwarka książek), a nie strona z listą wydarzeń i imprez.",
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Puszczykowo",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Puszczykowo biblioteka wydarzenia dla dzieci",
+    "hit": {
+     "title": "Biblioteka Miejska im. Małgorzaty Musierowicz Centrum ...",
+     "url": "https://www.puszczykowo-mbp.sowa.pl/",
+     "desc": "Biblioteka Miejska im. Małgorzaty Musierowicz Centrum Animacji Kultury w Puszczykowie · Zapomnij o wszystkim · Obiecał mi niebo · Śnieg przykryje · Peeling złudzeń."
+    },
+    "confidence": 0.55,
+    "why": "Strona biblioteki może zawierać aktualności o wydarzeniach, choć wynik wyszukiwania pokazuje głównie katalog zbiorów.",
+    "archive": [
+     "raw/2026-08-09/discover-puszczykowo/3d4ee21c219ab040a17be7e50e1b874375cdffc23a661ab6c304fae21624a869.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-puszczykowo/0006-anthropic_claude-sonnet-4.6.json"
+    ],
+    "firstFetch": {
+     "at": "2026-08-09T11:28:28.156Z",
+     "url": "https://www.puszczykowo-mbp.sowa.pl/",
+     "ok": true,
+     "ms": 566,
+     "httpStatus": 200,
+     "contentType": "text/html",
+     "chars": 143278
+    }
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0,
+   "reach": "ok",
+   "checked": "2026-08-09",
+   "dead": true
+  },
+  {
+   "id": "hala-puszczykowo-fb",
+   "name": "Hala widowiskowo-sportowa w Puszczykowie",
+   "type": "fb_page",
+   "url": "https://www.facebook.com/HalaPuszczykowo",
+   "town": "Puszczykowo",
+   "fetch": "fb",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.85,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Puszczykowo",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com Puszczykowo wydarzenia",
+    "hit": {
+     "title": "Hala widowiskowo - sportowa w Puszczykowie | Puszczykowo",
+     "url": "https://www.facebook.com/HalaPuszczykowo/",
+     "desc": "Rozpoczynamy sezon wakacyjnych ćwiczeń na świeżym powietrzu! Gorąco zapraszam na zajęcia w lipcu i sierpniu: PONIEDZIAŁKI 18:00 Smukła sylwetka 19:00 Zdrowy ..."
+    },
+    "confidence": 0.85,
+    "why": "Fanpage hali publikuje harmonogram zajęć sportowych z dniami tygodnia i godzinami na sezon wakacyjny.",
+    "archive": [
+     "raw/2026-08-09/discover-puszczykowo/3d4ee21c219ab040a17be7e50e1b874375cdffc23a661ab6c304fae21624a869.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-puszczykowo/0006-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "puszczykowo-na-sportowo-fb",
+   "name": "Puszczykowo na Sportowo",
+   "type": "fb_page",
+   "url": "https://www.facebook.com/PuszczykowonaSportowo",
+   "town": "Puszczykowo",
+   "fetch": "fb",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.82,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Puszczykowo",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Puszczykowo OSiR wydarzenia",
+    "hit": {
+     "title": "Puszczykowo na Sportowo",
+     "url": "https://www.facebook.com/PuszczykowonaSportowo/?locale=pl_PL",
+     "desc": "W najbliższą niedzielę po raz pierwszy w oficjalnym spotkaniu zmierzą się Future BFK Puszczykowo i KP Las Puszczykowo. Zapowiadają się duże sportowe emocje i ..."
+    },
+    "confidence": 0.82,
+    "why": "Fanpage poświęcony wydarzeniom sportowo-rekreacyjnym w mieście, publikuje zapowiedzi nadchodzących imprez.",
+    "archive": [
+     "raw/2026-08-09/discover-puszczykowo/3d4ee21c219ab040a17be7e50e1b874375cdffc23a661ab6c304fae21624a869.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-puszczykowo/0006-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "miasto-puszczykowo-fb",
+   "name": "Miasto Puszczykowo",
+   "type": "fb_page",
+   "url": "https://www.facebook.com/miastopuszczykowo",
+   "town": "Puszczykowo",
+   "fetch": "fb",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.9,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Puszczykowo",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "Puszczykowo kalendarz wydarzeń urząd",
+    "hit": {
+     "title": "Miasto Puszczykowo",
+     "url": "https://www.facebook.com/miastopuszczykowo/?locale=pl_PL",
+     "desc": "W lipcu do harmonogramu dołączyły również zajęcia Tai Chi, dlatego zachęcamy do śledzenia aktualnego kalendarza i kontaktu z prowadzącymi w sprawie zapisów."
+    },
+    "confidence": 0.9,
+    "why": "Oficjalny fanpage miasta informuje o festiwalach i wydarzeniach kulturalnych z datami, np. Festiwal ORINOKO NAD WARTĄ.",
+    "archive": [
+     "raw/2026-08-09/discover-puszczykowo/3d4ee21c219ab040a17be7e50e1b874375cdffc23a661ab6c304fae21624a869.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-puszczykowo/0006-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "grupa-puszczykowo-fb",
+   "name": "Puszczykowo – grupa mieszkańców",
+   "type": "fb_group",
+   "url": "https://www.facebook.com/groups/GrupaPuszczykowo",
+   "town": "Puszczykowo",
+   "fetch": "fb_group",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.82,
+   "notes": "Grupa deklaruje się jako otwarta; nie publikuje reklam",
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Puszczykowo",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com Puszczykowo wydarzenia",
+    "hit": {
+     "title": "Puszczykowo | Facebook",
+     "url": "https://www.facebook.com/groups/GrupaPuszczykowo/",
+     "desc": "Fundacja Key 4 Tomorrow i Muzeum Arkadego Fiedlera serdecznie zapraszają na tegoroczną edycję Festiwal Podróżniczy ORINOKO NAD WARTĄ! W programie: spotkania ..."
+    },
+    "confidence": 0.82,
+    "why": "Otwarta grupa mieszkańców i sympatyków miasta, w której pojawiają się zaproszenia na lokalne wydarzenia i festiwale.",
+    "archive": [
+     "raw/2026-08-09/discover-puszczykowo/3d4ee21c219ab040a17be7e50e1b874375cdffc23a661ab6c304fae21624a869.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-puszczykowo/0006-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "kocham-puszczykowo-fb",
+   "name": "KochamPuszczykowo",
+   "type": "fb_group",
+   "url": "https://www.facebook.com/groups/kochampuszczykowo",
+   "town": "Puszczykowo",
+   "fetch": "fb_group",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.78,
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Puszczykowo",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com Puszczykowo wydarzenia",
+    "hit": {
+     "title": "KochamPuszczykowo - Facebook",
+     "url": "https://www.facebook.com/groups/kochampuszczykowo/",
+     "desc": "Zapraszam na koncert w Puszczykowie. Wstęp wolny, a muzyka spokojna i kojąca. Obowiązują zapisy ze względu na ograniczoną ilość miejsc. Wpadnijcie spędzić miło ..."
+    },
+    "confidence": 0.78,
+    "why": "Otwarta grupa lokalna, w której mieszkańcy zamieszczają zaproszenia na koncerty i inne wydarzenia z datami.",
+    "archive": [
+     "raw/2026-08-09/discover-puszczykowo/3d4ee21c219ab040a17be7e50e1b874375cdffc23a661ab6c304fae21624a869.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-puszczykowo/0006-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
+   "missedRuns": 0
+  },
+  {
+   "id": "puszczykowo-ogloszenia-fb",
+   "name": "Puszczykowo – ogłoszenia, sprawy codzienne",
+   "type": "fb_group",
+   "url": "https://www.facebook.com/groups/659035854121213",
+   "town": "Puszczykowo",
+   "fetch": "fb_group",
+   "verified": false,
+   "discovered": "auto",
+   "confidence": 0.7,
+   "notes": "Opis grupy mówi prywatna, ale treści są widoczne publicznie – zweryfikować dostępność",
+   "provenance": {
+    "run": "2026-08-09T11:18:52.463Z",
+    "town": "Puszczykowo",
+    "model": "anthropic/claude-sonnet-4.6",
+    "query": "site:facebook.com Puszczykowo wydarzenia",
+    "hit": {
+     "title": "Puszczykowo /ogłoszenia, sprawy codzienne - Facebook",
+     "url": "https://www.facebook.com/groups/659035854121213/",
+     "desc": "Wydarzenie odbędzie się niezależnie od pogody (również w deszczu – wyjątek burze). Obserwacja Perseidów jest dodatkiem do wyprawy, nie jej celem sama w sobie."
+    },
+    "confidence": 0.7,
+    "why": "Otwarta grupa lokalna, w której pojawiają się ogłoszenia o wydarzeniach takich jak obserwacja Perseidów z datami.",
+    "archive": [
+     "raw/2026-08-09/discover-puszczykowo/3d4ee21c219ab040a17be7e50e1b874375cdffc23a661ab6c304fae21624a869.json",
+     "llm/2026-08-09/2026-08-09T11-18-52-463Z/discover-puszczykowo/0006-anthropic_claude-sonnet-4.6.json"
+    ]
+   },
+   "lastSeenRun": "2026-08-09T11:18:52.463Z",
    "missedRuns": 0
   }
  ],
