@@ -473,5 +473,5178 @@
     ]
    }
   ]
+ },
+ {
+  "run": "2026-08-09T18:14:16.458Z",
+  "day": "2026-08-09",
+  "sources": [
+   {
+    "id": "ok-lubon-www",
+    "steps": [
+     {
+      "ms": 357,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://www.oklubon.pl/wydarzenia",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 544,
+      "step": "content",
+      "note": "7440 znaków, ten sam hash co poprzednio — bez wywołania modelu",
+      "detail": {
+       "chars": 7440,
+       "hash": "2723b1856d06"
+      }
+     },
+     {
+      "ms": 544,
+      "step": "cache.hit",
+      "note": "4 wydarzeń z cache (ekstrakcja z 2026-08-08)",
+      "detail": {
+       "events": 4,
+       "since": "2026-08-08T18:49:13.087Z"
+      }
+     },
+     {
+      "ms": 545,
+      "step": "event.past",
+      "note": "1 wydarzeń już się odbyło — nie idą do scalania",
+      "detail": {
+       "dropped": 1,
+       "kept": 3
+      }
+     },
+     {
+      "ms": 545,
+      "step": "geo",
+      "note": "„Ośrodek Kultury\" → [tel. w źródle], 17.294874",
+      "detail": {
+       "venue": "Ośrodek Kultury",
+       "town": "",
+       "hit": true
+      }
+     },
+     {
+      "ms": 545,
+      "step": "done",
+      "note": "status „unchanged\" — 3 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "unchanged",
+       "events": 3,
+       "ms": 529
+      }
+     }
+    ]
+   },
+   {
+    "id": "ok-lubon-fb",
+    "steps": [
+     {
+      "ms": 545,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "lubon-pl-kalendarium",
+    "steps": [
+     {
+      "ms": 728,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://lubon.pl/kalendarium/5/1/5",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 963,
+      "step": "content",
+      "note": "997 znaków, ten sam hash co poprzednio — bez wywołania modelu",
+      "detail": {
+       "chars": 997,
+       "hash": "8e651e0d3e60"
+      }
+     },
+     {
+      "ms": 963,
+      "step": "cache.hit",
+      "note": "0 wydarzeń z cache (ekstrakcja z 2026-08-08)",
+      "detail": {
+       "events": 0,
+       "since": "2026-08-08T18:49:16.739Z"
+      }
+     },
+     {
+      "ms": 963,
+      "step": "followup.proposed",
+      "note": "wejście z etapu 1 (listing, ×56 odnośników) dołącza do followupów",
+      "detail": {
+       "url": "https://lubon.pl/kalendarium/1/5",
+       "via": "llm",
+       "confidence": 0.9
+      }
+     },
+     {
+      "ms": 1246,
+      "step": "followup",
+      "note": "ten sam hash treści — 0 wydarzeń z cache, bez modelu",
+      "detail": {
+       "url": "https://lubon.pl/kalendarium/1/5"
+      }
+     },
+     {
+      "ms": 1246,
+      "step": "done",
+      "note": "status „empty\" — 0 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "empty",
+       "events": 0,
+       "ms": 701
+      }
+     }
+    ]
+   },
+   {
+    "id": "lubon-pl-kalendarz-2026",
+    "steps": [
+     {
+      "ms": 1388,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://lubon.pl/news/content/4766",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 1547,
+      "step": "content",
+      "note": "11110 znaków, ten sam hash co poprzednio — bez wywołania modelu",
+      "detail": {
+       "chars": 11110,
+       "hash": "b082bca9ce33"
+      }
+     },
+     {
+      "ms": 1547,
+      "step": "cache.hit",
+      "note": "42 wydarzeń z cache (ekstrakcja z 2026-08-08)",
+      "detail": {
+       "events": 42,
+       "since": "2026-08-08T18:49:17.416Z"
+      }
+     },
+     {
+      "ms": 1547,
+      "step": "followup.proposed",
+      "note": "wejście z etapu 1 (listing, ×63 odnośników) dołącza do followupów",
+      "detail": {
+       "url": "https://lubon.pl/artykuly/350/wydarzenia",
+       "via": "llm",
+       "confidence": 0.9
+      }
+     },
+     {
+      "ms": 1909,
+      "step": "followup",
+      "note": "ten sam hash treści — 0 wydarzeń z cache, bez modelu",
+      "detail": {
+       "url": "https://lubon.pl/artykuly/350/wydarzenia"
+      }
+     },
+     {
+      "ms": 1909,
+      "step": "event.past",
+      "note": "42 wydarzeń już się odbyło — nie idą do scalania",
+      "detail": {
+       "dropped": 42,
+       "kept": 0
+      }
+     },
+     {
+      "ms": 1909,
+      "step": "done",
+      "note": "status „empty\" — 0 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "empty",
+       "events": 0,
+       "ms": 663
+      }
+     }
+    ]
+   },
+   {
+    "id": "miasto-lubon-fb",
+    "steps": [
+     {
+      "ms": 1909,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "biblioteka-lubon-www",
+    "steps": [
+     {
+      "ms": 2664,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://biblub.com/",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 2805,
+      "step": "content",
+      "note": "4613 znaków, ten sam hash co poprzednio — bez wywołania modelu",
+      "detail": {
+       "chars": 4613,
+       "hash": "a2c0e428ab78"
+      }
+     },
+     {
+      "ms": 2805,
+      "step": "cache.hit",
+      "note": "0 wydarzeń z cache (ekstrakcja z 2026-08-08)",
+      "detail": {
+       "events": 0,
+       "since": "2026-08-08T18:49:21.296Z"
+      }
+     },
+     {
+      "ms": 2805,
+      "step": "followup.proposed",
+      "note": "wejście z etapu 1 (listing, ×6 odnośników) dołącza do followupów",
+      "detail": {
+       "url": "https://biblub.com/category/aktualnosci/page/1",
+       "via": "llm",
+       "confidence": 0.9
+      }
+     },
+     {
+      "ms": 4303,
+      "step": "followup",
+      "note": "ten sam hash treści — 0 wydarzeń z cache, bez modelu",
+      "detail": {
+       "url": "https://biblub.com/category/aktualnosci/page/1"
+      }
+     },
+     {
+      "ms": 4303,
+      "step": "done",
+      "note": "status „empty\" — 0 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "empty",
+       "events": 0,
+       "ms": 2394
+      }
+     }
+    ]
+   },
+   {
+    "id": "biblioteka-lubon-fb",
+    "steps": [
+     {
+      "ms": 4304,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "losir-lubon-fb",
+    "steps": [
+     {
+      "ms": 4304,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "gazeta-lubon-kalendarium",
+    "steps": [
+     {
+      "ms": 4427,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 304",
+      "detail": {
+       "url": "https://www.gazeta-lubon.pl/2026/losir-kalendarium/",
+       "strategy": "plain",
+       "httpStatus": 304
+      }
+     },
+     {
+      "ms": 4427,
+      "step": "content",
+      "note": "HTTP 304 — serwer potwierdził brak zmian, treści w ogóle nie pobieraliśmy"
+     },
+     {
+      "ms": 4427,
+      "step": "cache.hit",
+      "note": "2 wydarzeń z cache (ekstrakcja z 2026-08-08)",
+      "detail": {
+       "events": 2,
+       "since": "2026-08-08T18:49:22.985Z"
+      }
+     },
+     {
+      "ms": 4427,
+      "step": "event.past",
+      "note": "2 wydarzeń już się odbyło — nie idą do scalania",
+      "detail": {
+       "dropped": 2,
+       "kept": 0
+      }
+     },
+     {
+      "ms": 4427,
+      "step": "done",
+      "note": "status „empty\" — 0 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "empty",
+       "events": 0,
+       "ms": 123
+      }
+     }
+    ]
+   },
+   {
+    "id": "wydarzenia-w-luboniu-fb-group",
+    "steps": [
+     {
+      "ms": 4427,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "lubon-fb-group",
+    "steps": [
+     {
+      "ms": 4427,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "mieszkancy-lubonia-fb-group",
+    "steps": [
+     {
+      "ms": 4427,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "plaza-miejska-lubon-fb",
+    "steps": [
+     {
+      "ms": 4427,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "dopiewo-pl-wydarzenia",
+    "steps": [
+     {
+      "ms": 4917,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://dopiewo.pl/wydarzenia",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 5072,
+      "step": "content",
+      "note": "7663 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 7663,
+       "hash": "ba9a6ce9b4f7",
+       "was": null
+      }
+     },
+     {
+      "ms": 5099,
+      "step": "block",
+      "note": "podział: DOM, 9 kart → 12 bloków, 0 z cache, 12 do modelu",
+      "detail": {
+       "blocks": 12,
+       "cached": 0,
+       "fresh": 12,
+       "how": "DOM, 9 kart"
+      }
+     },
+     {
+      "ms": 13781,
+      "step": "series",
+      "note": "„BEZPŁATNE WSPARCIE DLA CUDZOZIEMCÓW\" — rytm „pn\" rozwinięty na 8 terminów do 2026-09-28",
+      "detail": {
+       "title": "BEZPŁATNE WSPARCIE DLA CUDZOZIEMCÓW",
+       "repeat": "pn",
+       "occurrences": 8
+      }
+     },
+     {
+      "ms": 13781,
+      "step": "llm",
+      "note": "paczka 12 bloków → 6 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 12,
+       "events": 6,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://dopiewo.pl/wydarzenia"
+      }
+     },
+     {
+      "ms": 13782,
+      "step": "followup.proposed",
+      "note": "wejście z etapu 1 (listing, ×6 odnośników) dołącza do followupów",
+      "detail": {
+       "url": "https://dopiewo.pl/wydarzenia?page=1",
+       "via": "llm",
+       "confidence": 0.9
+      }
+     },
+     {
+      "ms": 22250,
+      "step": "llm",
+      "note": "ekstrakcja z 7826 znaków → 6 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 7826,
+       "events": 6,
+       "url": "https://dopiewo.pl/wydarzenia?page=1"
+      }
+     },
+     {
+      "ms": 22250,
+      "step": "series",
+      "note": "„KOD RUCH\" — rytm „cz\" bez date_end, nie ma czego rozwijać",
+      "detail": {
+       "title": "KOD RUCH",
+       "repeat": "cz",
+       "date_start": "2026-08-13",
+       "date_end": null
+      }
+     },
+     {
+      "ms": 22250,
+      "step": "series",
+      "note": "„POLSKI NA LUZIE - KLUB ROZMOWY PO POLSKU\" — rytm „cz\" bez date_end, nie ma czego rozwijać",
+      "detail": {
+       "title": "POLSKI NA LUZIE - KLUB ROZMOWY PO POLSKU",
+       "repeat": "cz",
+       "date_start": "2026-08-13",
+       "date_end": null
+      }
+     },
+     {
+      "ms": 22250,
+      "step": "followup",
+      "note": "podstrona → 6 wydarzeń",
+      "detail": {
+       "url": "https://dopiewo.pl/wydarzenia?page=1"
+      }
+     },
+     {
+      "ms": 22250,
+      "step": "geo",
+      "note": "„Owocowa Plaża w Zborowie\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Owocowa Plaża w Zborowie",
+       "town": "Zborów",
+       "hit": false
+      }
+     },
+     {
+      "ms": 22250,
+      "step": "geo",
+      "note": "„Dworzec w Palędziu\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Dworzec w Palędziu",
+       "town": "Palędź",
+       "hit": false
+      }
+     },
+     {
+      "ms": 23429,
+      "step": "geo",
+      "note": "„Filia biblioteczna w Skórzewie, ul. Kozierowskiego 1\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Filia biblioteczna w Skórzewie, ul. Kozierowskiego 1",
+       "town": "Skórzewo",
+       "hit": false
+      }
+     },
+     {
+      "ms": 24568,
+      "step": "geo",
+      "note": "„Przedszkole Leśne Duszki, ul. Długa 57\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Przedszkole Leśne Duszki, ul. Długa 57",
+       "town": "Dopiewo",
+       "hit": false
+      }
+     },
+     {
+      "ms": 25710,
+      "step": "geo",
+      "note": "„Owocowa Plaża, Zborów\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Owocowa Plaża, Zborów",
+       "town": "Dopiewo",
+       "hit": false
+      }
+     },
+     {
+      "ms": 25710,
+      "step": "done",
+      "note": "status „ok\" — 19 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "ok",
+       "events": 19,
+       "ms": 21283
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„SPEKTAKL TEATRALNY DLA DZIECI „SERCE I ROZUM\" scalone do „Spektakl teatralny dla dzieci „Serce i Rozum”\" ze źródła „bibldop-wydarzenia\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "SPEKTAKL TEATRALNY DLA DZIECI „SERCE I ROZUM",
+       "date": "2026-08-13",
+       "winner": "bibldop-wydarzenia",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„OWOCOWE PSOTY\" scalone do „Owocowe Psoty - animacje dla dzieci\" ze źródła „gosir-dopiewo-kalendarz\" (tytuł zawarty w tamtym)",
+      "detail": {
+       "title": "OWOCOWE PSOTY",
+       "date": "2026-08-09",
+       "winner": "gosir-dopiewo-kalendarz",
+       "why": "zawieranie"
+      }
+     },
+     {
+      "ms": 645869,
+      "step": "series",
+      "note": "„BEZPŁATNE WSPARCIE DLA CUDZOZIEMCÓW\" — 8 rekordów różniących się wyłącznie datą zwinięte w jedną serię (8 terminów do 2026-09-28)",
+      "detail": {
+       "title": "BEZPŁATNE WSPARCIE DLA CUDZOZIEMCÓW",
+       "folded": 8,
+       "occurrences": 8
+      }
+     }
+    ]
+   },
+   {
+    "id": "bibldop-wydarzenia",
+    "steps": [
+     {
+      "ms": 25710,
+      "step": "capability",
+      "note": "źródło oddaje „tribe\" — bierzemy gotowe rekordy zamiast skrobać HTML",
+      "detail": {
+       "kind": "tribe",
+       "url": "https://www.bibldop.pl/wp-json/tribe/events/v1/events",
+       "itemsSeen": 9,
+       "checked": "2026-08-09"
+      }
+     },
+     {
+      "ms": 26252,
+      "step": "fetch",
+      "note": "wyjście maszynowe „tribe\" — HTTP 200",
+      "detail": {
+       "url": "https://www.bibldop.pl/wp-json/tribe/events/v1/events",
+       "strategy": "tribe",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 26576,
+      "step": "content",
+      "note": "133680 znaków, hash inny niż poprzednio — mapujemy rekordy",
+      "detail": {
+       "chars": 133680,
+       "hash": "94dca3530119",
+       "was": null
+      }
+     },
+     {
+      "ms": 26578,
+      "step": "capability.parsed",
+      "note": "9 rekordów → 9 wydarzeń, bez wywołania modelu",
+      "detail": {
+       "kind": "tribe",
+       "seen": 9,
+       "events": 9,
+       "past": 0,
+       "noDate": 0,
+       "noTitle": 0
+      }
+     },
+     {
+      "ms": 26578,
+      "step": "geo",
+      "note": "„Filia biblioteczna w Skórzewie, ul. Kozierowskiego 1\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Filia biblioteczna w Skórzewie, ul. Kozierowskiego 1",
+       "town": "Skórzewo",
+       "hit": false
+      }
+     },
+     {
+      "ms": 27712,
+      "step": "geo",
+      "note": "„Przedszkole Leśne Duszki, Długa 57\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Przedszkole Leśne Duszki, Długa 57",
+       "town": "Zakrzewo",
+       "hit": false
+      }
+     },
+     {
+      "ms": 28849,
+      "step": "geo",
+      "note": "„Nad stawem w Więckowicach, ul. Gromadzka\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Nad stawem w Więckowicach, ul. Gromadzka",
+       "town": "Więckowice",
+       "hit": false
+      }
+     },
+     {
+      "ms": 29994,
+      "step": "geo",
+      "note": "„Strefa Chillout przed biblioteką w Dopiewie, ul. Konarzewska 12\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Strefa Chillout przed biblioteką w Dopiewie, ul. Konarzewska 12",
+       "town": "Dopiewo",
+       "hit": false
+      }
+     },
+     {
+      "ms": 31134,
+      "step": "geo",
+      "note": "„Świetlica wiejska w Palędziu, ul. Leśna 17\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Świetlica wiejska w Palędziu, ul. Leśna 17",
+       "town": "Palędzie",
+       "hit": false
+      }
+     },
+     {
+      "ms": 32275,
+      "step": "geo",
+      "note": "„Sala widowiskowa w Konarzewie, Poznańska 19\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Sala widowiskowa w Konarzewie, Poznańska 19",
+       "town": "Konarzewo",
+       "hit": false
+      }
+     },
+     {
+      "ms": 33417,
+      "step": "geo",
+      "note": "„Świetlica Wiejska w Dąbrowie, ul. Tęczowa 8\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Świetlica Wiejska w Dąbrowie, ul. Tęczowa 8",
+       "town": "Dąbrowa",
+       "hit": false
+      }
+     },
+     {
+      "ms": 34552,
+      "step": "geo",
+      "note": "„Filia biblioteczna w Konarzewie, ul. Poznańska 19a\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Filia biblioteczna w Konarzewie, ul. Poznańska 19a",
+       "town": "Konarzewo",
+       "hit": false
+      }
+     },
+     {
+      "ms": 34552,
+      "step": "done",
+      "note": "status „ok\" — 9 wydarzeń idzie do scalania (ścieżka maszynowa, zero wywołań modelu)",
+      "detail": {
+       "status": "ok",
+       "events": 9,
+       "ms": 8842
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„Warsztaty rzeźbiarskie dla dzieci “Od ekranu do rzeźby”\" scalone do „WARSZTATY RZEŹBIARSKIE DLA DZIECI „OD EKRANU DO RZEŹBY\" ze źródła „dopiewo-pl-wydarzenia\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "Warsztaty rzeźbiarskie dla dzieci “Od ekranu do rzeźby”",
+       "date": "2026-08-11",
+       "winner": "dopiewo-pl-wydarzenia",
+       "why": "klucz"
+      }
+     }
+    ]
+   },
+   {
+    "id": "bibldop-fb",
+    "steps": [
+     {
+      "ms": 34552,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "gosir-dopiewo-kalendarz",
+    "steps": [
+     {
+      "ms": 34864,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://gosir.dopiewo.pl/kalendarz",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 35107,
+      "step": "content",
+      "note": "4875 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 4875,
+       "hash": "42898a38141d",
+       "was": null
+      }
+     },
+     {
+      "ms": 35131,
+      "step": "block",
+      "note": "podział: DOM, 3 kart → 6 bloków, 0 z cache, 6 do modelu",
+      "detail": {
+       "blocks": 6,
+       "cached": 0,
+       "fresh": 6,
+       "how": "DOM, 3 kart"
+      }
+     },
+     {
+      "ms": 60364,
+      "step": "llm",
+      "note": "paczka 6 bloków → 0 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 6,
+       "events": 0,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://gosir.dopiewo.pl/kalendarz"
+      }
+     },
+     {
+      "ms": 60364,
+      "step": "followup.proposed",
+      "note": "model wskazał 3 odnośników do dociągnięcia",
+      "detail": {
+       "proposed": 3,
+       "taken": 3
+      }
+     },
+     {
+      "ms": 66734,
+      "step": "llm",
+      "note": "ekstrakcja z 8379 znaków → 1 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 8379,
+       "events": 1,
+       "url": "https://gosir.dopiewo.pl/aktualnosci/sportowo-kulturalne-polkolonie-letnie-z-gosir-w-dopiewie"
+      }
+     },
+     {
+      "ms": 66734,
+      "step": "followup",
+      "note": "podstrona → 1 wydarzeń",
+      "detail": {
+       "url": "https://gosir.dopiewo.pl/aktualnosci/sportowo-kulturalne-polkolonie-letnie-z-gosir-w-dopiewie"
+      }
+     },
+     {
+      "ms": 72646,
+      "step": "llm",
+      "note": "ekstrakcja z 9158 znaków → 1 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 9158,
+       "events": 1,
+       "url": "https://gosir.dopiewo.pl/aktualnosci/siatkarski-aktywny-orlik-w-gminie-dopiewo-22-sierpnia"
+      }
+     },
+     {
+      "ms": 72646,
+      "step": "followup",
+      "note": "podstrona → 1 wydarzeń",
+      "detail": {
+       "url": "https://gosir.dopiewo.pl/aktualnosci/siatkarski-aktywny-orlik-w-gminie-dopiewo-22-sierpnia"
+      }
+     },
+     {
+      "ms": 78594,
+      "step": "llm",
+      "note": "ekstrakcja z 12507 znaków → 3 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 12507,
+       "events": 3,
+       "url": "https://gosir.dopiewo.pl/aktualnosci/sloneczne-zborowo-na-sportowo"
+      }
+     },
+     {
+      "ms": 78594,
+      "step": "series",
+      "note": "„Joga na trawie\" — rytm „nd\" rozwinięty na 4 terminów do 2026-08-30",
+      "detail": {
+       "title": "Joga na trawie",
+       "repeat": "nd",
+       "occurrences": 4
+      }
+     },
+     {
+      "ms": 78595,
+      "step": "series",
+      "note": "„Owocowe Psoty - animacje dla dzieci\" — rytm „nd\" rozwinięty na 4 terminów do 2026-08-30",
+      "detail": {
+       "title": "Owocowe Psoty - animacje dla dzieci",
+       "repeat": "nd",
+       "occurrences": 4
+      }
+     },
+     {
+      "ms": 78595,
+      "step": "followup",
+      "note": "podstrona → 9 wydarzeń",
+      "detail": {
+       "url": "https://gosir.dopiewo.pl/aktualnosci/sloneczne-zborowo-na-sportowo"
+      }
+     },
+     {
+      "ms": 79794,
+      "step": "geo",
+      "note": "„Gminny Ośrodek Sportu i Rekreacji Dopiewo, ul. Polna 1a\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Gminny Ośrodek Sportu i Rekreacji Dopiewo, ul. Polna 1a",
+       "town": "Dopiewo",
+       "hit": false
+      }
+     },
+     {
+      "ms": 80933,
+      "step": "geo",
+      "note": "„Orlik 2012 w Dopiewie, ul. Polna 1a\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Orlik 2012 w Dopiewie, ul. Polna 1a",
+       "town": "Dopiewo",
+       "hit": false
+      }
+     },
+     {
+      "ms": 80933,
+      "step": "geo",
+      "note": "„Owocowa Plaża w Zborowie\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Owocowa Plaża w Zborowie",
+       "town": "Zborów",
+       "hit": false
+      }
+     },
+     {
+      "ms": 80933,
+      "step": "done",
+      "note": "status „ok\" — 11 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "ok",
+       "events": 11,
+       "ms": 46381
+      }
+     },
+     {
+      "ms": 645845,
+      "step": "event.dropped",
+      "note": "„Sportowo-kulturalne półkolonie letnie z GOSiR w Dopiewie\" — półkolonie to turnus z zapisami, nie wydarzenie do przyjścia",
+      "detail": {
+       "title": "Sportowo-kulturalne półkolonie letnie z GOSiR w Dopiewie",
+       "date": "2026-08-24",
+       "why": "półkolonie"
+      }
+     },
+     {
+      "ms": 645869,
+      "step": "series",
+      "note": "„Owocowe Psoty - animacje dla dzieci\" — 4 rekordów różniących się wyłącznie datą zwinięte w jedną serię (4 terminów do 2026-08-30)",
+      "detail": {
+       "title": "Owocowe Psoty - animacje dla dzieci",
+       "folded": 4,
+       "occurrences": 4
+      }
+     },
+     {
+      "ms": 645869,
+      "step": "series",
+      "note": "„Joga na trawie\" — 4 rekordów różniących się wyłącznie datą zwinięte w jedną serię (4 terminów do 2026-08-30)",
+      "detail": {
+       "title": "Joga na trawie",
+       "folded": 4,
+       "occurrences": 4
+      }
+     }
+    ]
+   },
+   {
+    "id": "gosir-dopiewo-fb",
+    "steps": [
+     {
+      "ms": 80933,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "cusdopiewo-oferta",
+    "steps": [
+     {
+      "ms": 81353,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://cusdopiewo.pl/oferta/rodzina/dni-rodziny/",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 81498,
+      "step": "content",
+      "note": "5503 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 5503,
+       "hash": "16178a5239d3",
+       "was": null
+      }
+     },
+     {
+      "ms": 81524,
+      "step": "block",
+      "note": "podział: DOM, 6 kart → 10 bloków, 0 z cache, 10 do modelu",
+      "detail": {
+       "blocks": 10,
+       "cached": 0,
+       "fresh": 10,
+       "how": "DOM, 6 kart"
+      }
+     },
+     {
+      "ms": 103341,
+      "step": "llm",
+      "note": "paczka 10 bloków → 9 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 10,
+       "events": 9,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://cusdopiewo.pl/oferta/rodzina/dni-rodziny/"
+      }
+     },
+     {
+      "ms": 103341,
+      "step": "followup.proposed",
+      "note": "model wskazał 1 odnośników do dociągnięcia",
+      "detail": {
+       "proposed": 1,
+       "taken": 1
+      }
+     },
+     {
+      "ms": 103341,
+      "step": "followup.proposed",
+      "note": "wejście z etapu 1 (listing, ×9 odnośników) dołącza do followupów",
+      "detail": {
+       "url": "https://cusdopiewo.pl/aktualnosci/page/1",
+       "via": "llm",
+       "confidence": 0.9
+      }
+     },
+     {
+      "ms": 119087,
+      "step": "llm",
+      "note": "ekstrakcja z 3429 znaków → 0 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 3429,
+       "events": 0,
+       "url": "https://cusdopiewo.pl/aktualnosci/page/1"
+      }
+     },
+     {
+      "ms": 119087,
+      "step": "followup",
+      "note": "podstrona → 0 wydarzeń",
+      "detail": {
+       "url": "https://cusdopiewo.pl/aktualnosci/page/1"
+      }
+     },
+     {
+      "ms": 131005,
+      "step": "llm",
+      "note": "ekstrakcja z 6176 znaków → 9 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 6176,
+       "events": 9,
+       "url": "https://dopiewo.pl/aktualnosci/2026-04-23/dopiewskie-dni-rodziny-2026"
+      }
+     },
+     {
+      "ms": 131005,
+      "step": "followup",
+      "note": "podstrona → 9 wydarzeń",
+      "detail": {
+       "url": "https://dopiewo.pl/aktualnosci/2026-04-23/dopiewskie-dni-rodziny-2026"
+      }
+     },
+     {
+      "ms": 131005,
+      "step": "event.past",
+      "note": "18 wydarzeń już się odbyło — nie idą do scalania",
+      "detail": {
+       "dropped": 18,
+       "kept": 0
+      }
+     },
+     {
+      "ms": 131005,
+      "step": "done",
+      "note": "status „empty\" — 0 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "empty",
+       "events": 0,
+       "ms": 50072
+      }
+     }
+    ]
+   },
+   {
+    "id": "dopiewo-aktywnie-kulturalnie-fb",
+    "steps": [
+     {
+      "ms": 131005,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "dopiewo-mieszkancy-fb",
+    "steps": [
+     {
+      "ms": 131005,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "dopiewo-tablica-ogloszen-fb",
+    "steps": [
+     {
+      "ms": 131005,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "dabrowa-dopiewo-fb",
+    "steps": [
+     {
+      "ms": 131005,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "gok-komorniki-kalendarz",
+    "steps": [
+     {
+      "ms": 131408,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://www.gokkomorniki.pl/kalendarz-wydarzen/",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 131553,
+      "step": "content",
+      "note": "5326 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 5326,
+       "hash": "6e884fa9dffe",
+       "was": null
+      }
+     },
+     {
+      "ms": 131589,
+      "step": "block",
+      "note": "podział: DOM, 48 kart → 53 bloków, 0 z cache, 53 do modelu",
+      "detail": {
+       "blocks": 53,
+       "cached": 0,
+       "fresh": 53,
+       "how": "DOM, 48 kart"
+      }
+     },
+     {
+      "ms": 143167,
+      "step": "llm",
+      "note": "paczka 53 bloków → 12 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 53,
+       "events": 12,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://www.gokkomorniki.pl/kalendarz-wydarzen/"
+      }
+     },
+     {
+      "ms": 143167,
+      "step": "event.past",
+      "note": "3 wydarzeń już się odbyło — nie idą do scalania",
+      "detail": {
+       "dropped": 3,
+       "kept": 9
+      }
+     },
+     {
+      "ms": 143167,
+      "step": "geo",
+      "note": "„Dom Kultury \"Nad Wirynką\" w Łęczycy\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Dom Kultury \"Nad Wirynką\" w Łęczycy",
+       "town": "Łęczyca",
+       "hit": false
+      }
+     },
+     {
+      "ms": 143167,
+      "step": "geo",
+      "note": "„Dom Kultury \"Dworek\"\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Dom Kultury \"Dworek\"",
+       "town": "Głuchów",
+       "hit": false
+      }
+     },
+     {
+      "ms": 143167,
+      "step": "geo",
+      "note": "„Wiry\" → 52.3013658, 16.829074",
+      "detail": {
+       "venue": "Wiry",
+       "town": "Wiry",
+       "hit": true
+      }
+     },
+     {
+      "ms": 143167,
+      "step": "geo",
+      "note": "„Centrum Tradycji i Kultury w Komornikach\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Centrum Tradycji i Kultury w Komornikach",
+       "town": "Komorniki",
+       "hit": false
+      }
+     },
+     {
+      "ms": 143167,
+      "step": "geo",
+      "note": "„Dom Kultury Wiry\" → 52.3168381, 16.8578949",
+      "detail": {
+       "venue": "Dom Kultury Wiry",
+       "town": "Wiry",
+       "hit": true
+      }
+     },
+     {
+      "ms": 143167,
+      "step": "geo",
+      "note": "„Dom Kultury \"Klub\" w Rosnówku\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Dom Kultury \"Klub\" w Rosnówku",
+       "town": "Rosnówko",
+       "hit": false
+      }
+     },
+     {
+      "ms": 143167,
+      "step": "done",
+      "note": "status „ok\" — 9 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "ok",
+       "events": 9,
+       "ms": 12162
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„Dixie Company & Patrycja Kubale\" scalone do „Komorniki Jazz Club No. 7 – Dixie Company & Patrycja Kubale\" ze źródła „komorniki-pl-kalendarz\" (tytuł zawarty w tamtym)",
+      "detail": {
+       "title": "Dixie Company & Patrycja Kubale",
+       "date": "2026-08-22",
+       "winner": "komorniki-pl-kalendarz",
+       "why": "zawieranie"
+      }
+     }
+    ]
+   },
+   {
+    "id": "komorniki-pl-kalendarz",
+    "steps": [
+     {
+      "ms": 143585,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://www.komorniki.pl/kalendarz-wydarzen/",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 143729,
+      "step": "content",
+      "note": "14371 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 14371,
+       "hash": "6ab2491d5c2e",
+       "was": null
+      }
+     },
+     {
+      "ms": 143750,
+      "step": "block",
+      "note": "podział: DOM, 50 kart → 55 bloków, 32 z cache, 23 do modelu",
+      "detail": {
+       "blocks": 55,
+       "cached": 32,
+       "fresh": 23,
+       "how": "DOM, 50 kart"
+      }
+     },
+     {
+      "ms": 158901,
+      "step": "llm",
+      "note": "paczka 23 bloków → 12 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 23,
+       "events": 12,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://www.komorniki.pl/kalendarz-wydarzen/"
+      }
+     },
+     {
+      "ms": 158901,
+      "step": "followup.proposed",
+      "note": "model wskazał 1 odnośników do dociągnięcia",
+      "detail": {
+       "proposed": 1,
+       "taken": 1
+      }
+     },
+     {
+      "ms": 162693,
+      "step": "llm",
+      "note": "ekstrakcja z 5030 znaków → 1 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 5030,
+       "events": 1,
+       "url": "https://www.gokkomorniki.pl/kalendarz-wydarzen/2026/08/28/858-kurs-tanca-towarzyskiego-wiry.html"
+      }
+     },
+     {
+      "ms": 162694,
+      "step": "followup",
+      "note": "podstrona → 1 wydarzeń",
+      "detail": {
+       "url": "https://www.gokkomorniki.pl/kalendarz-wydarzen/2026/08/28/858-kurs-tanca-towarzyskiego-wiry.html"
+      }
+     },
+     {
+      "ms": 162694,
+      "step": "event.past",
+      "note": "2 wydarzeń już się odbyło — nie idą do scalania",
+      "detail": {
+       "dropped": 2,
+       "kept": 11
+      }
+     },
+     {
+      "ms": 162694,
+      "step": "geo",
+      "note": "„Centrum Tradycji i Kultury w Komornikach\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Centrum Tradycji i Kultury w Komornikach",
+       "town": "Komorniki",
+       "hit": false
+      }
+     },
+     {
+      "ms": 162694,
+      "step": "geo",
+      "note": "„Dom Kultury \"Nad Wirynką\" w Łęczycy, ul. Poznańska 14, 62-052 Łęczyca\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Dom Kultury \"Nad Wirynką\" w Łęczycy, ul. Poznańska 14, 62-052 Łęczyca",
+       "town": "Łęczyca",
+       "hit": false
+      }
+     },
+     {
+      "ms": 162694,
+      "step": "geo",
+      "note": "„Dom Kultury \"Klub\" Rosnówko\" → 52.3020792, 16.7649647",
+      "detail": {
+       "venue": "Dom Kultury \"Klub\" Rosnówko",
+       "town": "Rosnówko",
+       "hit": true
+      }
+     },
+     {
+      "ms": 162694,
+      "step": "geo",
+      "note": "„Wiry\" → 52.3013658, 16.829074",
+      "detail": {
+       "venue": "Wiry",
+       "town": "Wiry",
+       "hit": true
+      }
+     },
+     {
+      "ms": 163877,
+      "step": "geo",
+      "note": "„Stacja Szreniawa\" → 52.3166895, 16.7976544",
+      "detail": {
+       "venue": "Stacja Szreniawa",
+       "town": "Szreniawa",
+       "hit": true
+      }
+     },
+     {
+      "ms": 163877,
+      "step": "done",
+      "note": "status „ok\" — 11 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "ok",
+       "events": 11,
+       "ms": 20710
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„Kurs tańca towarzyskiego - Wiry\" scalone do „Kurs tańca towarzyskiego - Wiry\" ze źródła „gok-komorniki-kalendarz\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "Kurs tańca towarzyskiego - Wiry",
+       "date": "2026-08-28",
+       "winner": "gok-komorniki-kalendarz",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„Kino letnie w Wirach\" scalone do „Kino letnie w Wirach - Krudowie 2\" ze źródła „gok-komorniki-kalendarz\" (tytuł zawarty w tamtym)",
+      "detail": {
+       "title": "Kino letnie w Wirach",
+       "date": "2026-08-19",
+       "winner": "gok-komorniki-kalendarz",
+       "why": "zawieranie"
+      }
+     }
+    ]
+   },
+   {
+    "id": "gosir-komorniki-wydarzenia",
+    "steps": [
+     {
+      "ms": 164308,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://gosirkomorniki.pl/aktualnosci/wydarzenia/",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 164505,
+      "step": "content",
+      "note": "3305 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 3305,
+       "hash": "066035b39635",
+       "was": null
+      }
+     },
+     {
+      "ms": 164519,
+      "step": "block",
+      "note": "podział: DOM, 4 kart → 7 bloków, 6 z cache, 1 do modelu",
+      "detail": {
+       "blocks": 7,
+       "cached": 6,
+       "fresh": 1,
+       "how": "DOM, 4 kart"
+      }
+     },
+     {
+      "ms": 166829,
+      "step": "llm",
+      "note": "paczka 1 bloków → 0 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 1,
+       "events": 0,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://gosirkomorniki.pl/aktualnosci/wydarzenia/"
+      }
+     },
+     {
+      "ms": 166829,
+      "step": "done",
+      "note": "status „empty\" — 0 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "empty",
+       "events": 0,
+       "ms": 2952
+      }
+     }
+    ]
+   },
+   {
+    "id": "biblioteka-komorniki-kalendarz",
+    "steps": [
+     {
+      "ms": 167105,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://www.biblioteka-komorniki.pl/kalendarz-wydarzen/",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 167263,
+      "step": "content",
+      "note": "3298 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 3298,
+       "hash": "062c68b22621",
+       "was": null
+      }
+     },
+     {
+      "ms": 167276,
+      "step": "block",
+      "note": "podział: DOM, 35 kart → 40 bloków, 28 z cache, 12 do modelu",
+      "detail": {
+       "blocks": 40,
+       "cached": 28,
+       "fresh": 12,
+       "how": "DOM, 35 kart"
+      }
+     },
+     {
+      "ms": 169055,
+      "step": "llm",
+      "note": "paczka 12 bloków → 0 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 12,
+       "events": 0,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://www.biblioteka-komorniki.pl/kalendarz-wydarzen/"
+      }
+     },
+     {
+      "ms": 169055,
+      "step": "done",
+      "note": "status „empty\" — 0 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "empty",
+       "events": 0,
+       "ms": 2225
+      }
+     }
+    ]
+   },
+   {
+    "id": "fb-gok-komorniki",
+    "steps": [
+     {
+      "ms": 169055,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "fb-gmina-komorniki",
+    "steps": [
+     {
+      "ms": 169055,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "fb-gosir-komorniki",
+    "steps": [
+     {
+      "ms": 169055,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "fb-biblioteka-komorniki",
+    "steps": [
+     {
+      "ms": 169055,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "fb-group-kultura-komorniki",
+    "steps": [
+     {
+      "ms": 169055,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "fb-group-mieszkancy-gminy-komorniki",
+    "steps": [
+     {
+      "ms": 169055,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "fb-group-komorniki-ogloszenia",
+    "steps": [
+     {
+      "ms": 169055,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "lubon-pl-wydarzenia",
+    "steps": [
+     {
+      "ms": 169275,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://lubon.pl/artykuly/350/wydarzenia",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 169390,
+      "step": "content",
+      "note": "4462 znaków, ten sam hash co poprzednio — bez wywołania modelu",
+      "detail": {
+       "chars": 4462,
+       "hash": "983745ee6c41"
+      }
+     },
+     {
+      "ms": 169390,
+      "step": "cache.hit",
+      "note": "1 wydarzeń z cache (ekstrakcja z 2026-08-08)",
+      "detail": {
+       "events": 1,
+       "since": "2026-08-08T05:05:19.118Z"
+      }
+     },
+     {
+      "ms": 169390,
+      "step": "geo",
+      "note": "„Plac Edmunda Bojanowskiego\" → 52.3500732, 16.8609783",
+      "detail": {
+       "venue": "Plac Edmunda Bojanowskiego",
+       "town": "Luboń",
+       "hit": true
+      }
+     },
+     {
+      "ms": 169390,
+      "step": "done",
+      "note": "status „unchanged\" — 1 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "unchanged",
+       "events": 1,
+       "ms": 335
+      }
+     }
+    ]
+   },
+   {
+    "id": "lubon-pl-kalendarz-2026-2",
+    "steps": [
+     {
+      "ms": 169582,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://lubon.pl/artykul/352/4766/kalendarz-wydarzen-miejskich-w-2026-roku",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 169718,
+      "step": "content",
+      "note": "11110 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 11110,
+       "hash": "b082bca9ce33",
+       "was": null
+      }
+     },
+     {
+      "ms": 169740,
+      "step": "block",
+      "note": "podział: DOM, 3 kart → 43 bloków, 1 z cache, 42 do modelu",
+      "detail": {
+       "blocks": 43,
+       "cached": 1,
+       "fresh": 42,
+       "how": "DOM, 3 kart"
+      }
+     },
+     {
+      "ms": 224214,
+      "step": "llm",
+      "note": "paczka 42 bloków → 64 wydarzeń, 3 bloków bez pewnego wyniku (odpowiedź ucięta)",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 42,
+       "events": 64,
+       "orphans": 0,
+       "unsafe": 3,
+       "url": "https://lubon.pl/artykul/352/4766/kalendarz-wydarzen-miejskich-w-2026-roku"
+      }
+     },
+     {
+      "ms": 224214,
+      "step": "llm",
+      "note": "odpowiedź ucięta na limicie 12000 tok. — odzyskano 64 wydarzeń",
+      "detail": {
+       "task": "extract",
+       "url": "https://lubon.pl/artykul/352/4766/kalendarz-wydarzen-miejskich-w-2026-roku",
+       "why": "truncated"
+      }
+     },
+     {
+      "ms": 224214,
+      "step": "event.past",
+      "note": "58 wydarzeń już się odbyło — nie idą do scalania",
+      "detail": {
+       "dropped": 58,
+       "kept": 5
+      }
+     },
+     {
+      "ms": 224214,
+      "step": "geo",
+      "note": "„Ośrodek Kultury w Luboniu, ul. Jana III Sobieskiego 97\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Ośrodek Kultury w Luboniu, ul. Jana III Sobieskiego 97",
+       "town": "Luboń",
+       "hit": false
+      }
+     },
+     {
+      "ms": 224214,
+      "step": "geo",
+      "note": "„Plaża Miejska, ul. Rzeczna\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Plaża Miejska, ul. Rzeczna",
+       "town": "Luboń",
+       "hit": false
+      }
+     },
+     {
+      "ms": 225511,
+      "step": "geo",
+      "note": "„Start: Dworzec PKP w Luboniu\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Start: Dworzec PKP w Luboniu",
+       "town": "Luboń",
+       "hit": false
+      }
+     },
+     {
+      "ms": 225511,
+      "step": "done",
+      "note": "status „ok\" — 5 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "ok",
+       "events": 5,
+       "ms": 56121
+      }
+     }
+    ]
+   },
+   {
+    "id": "nasz-lubon-fb",
+    "steps": [
+     {
+      "ms": 225511,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "mok-mosina",
+    "steps": [
+     {
+      "ms": 226326,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://www.kultura.gmina.pl/",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 226464,
+      "step": "content",
+      "note": "3412 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 3412,
+       "hash": "134dc9409a4d",
+       "was": null
+      }
+     },
+     {
+      "ms": 226477,
+      "step": "block",
+      "note": "podział: akapity (brak listy) → 4 bloków, 0 z cache, 4 do modelu",
+      "detail": {
+       "blocks": 4,
+       "cached": 0,
+       "fresh": 4,
+       "how": "akapity (brak listy)"
+      }
+     },
+     {
+      "ms": 228193,
+      "step": "llm",
+      "note": "paczka 4 bloków → 0 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 4,
+       "events": 0,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://www.kultura.gmina.pl/"
+      }
+     },
+     {
+      "ms": 228193,
+      "step": "followup.proposed",
+      "note": "wejście z etapu 1 (listing, ×22 odnośników) dołącza do followupów",
+      "detail": {
+       "url": "https://www.kultura.gmina.pl/category/aktualnosci/page/1",
+       "via": "llm",
+       "confidence": 0.9
+      }
+     },
+     {
+      "ms": 238740,
+      "step": "llm",
+      "note": "ekstrakcja z 26164 znaków → 6 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 26164,
+       "events": 6,
+       "url": "https://www.kultura.gmina.pl/category/aktualnosci/page/1"
+      }
+     },
+     {
+      "ms": 238740,
+      "step": "followup",
+      "note": "podstrona → 6 wydarzeń",
+      "detail": {
+       "url": "https://www.kultura.gmina.pl/category/aktualnosci/page/1"
+      }
+     },
+     {
+      "ms": 238740,
+      "step": "event.past",
+      "note": "3 wydarzeń już się odbyło — nie idą do scalania",
+      "detail": {
+       "dropped": 3,
+       "kept": 3
+      }
+     },
+     {
+      "ms": 238740,
+      "step": "geo",
+      "note": "„Kościół w Mosinie\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Kościół w Mosinie",
+       "town": "Mosina",
+       "hit": false
+      }
+     },
+     {
+      "ms": 238740,
+      "step": "geo",
+      "note": "„Mosiński Ośrodek Kultury\" → 52.2421909, 16.8503581",
+      "detail": {
+       "venue": "Mosiński Ośrodek Kultury",
+       "town": "Mosina",
+       "hit": true
+      }
+     },
+     {
+      "ms": 238740,
+      "step": "geo",
+      "note": "„Mosina\" → 52.2403658, 16.8516538",
+      "detail": {
+       "venue": "Mosina",
+       "town": "Mosina",
+       "hit": true
+      }
+     },
+     {
+      "ms": 238740,
+      "step": "done",
+      "note": "status „ok\" — 3 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "ok",
+       "events": 3,
+       "ms": 13229
+      }
+     }
+    ]
+   },
+   {
+    "id": "mosina-pl-wydarzenia",
+    "steps": [
+     {
+      "ms": 239803,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://www.mosina.pl/wydarzenia",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 239939,
+      "step": "content",
+      "note": "6538 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 6538,
+       "hash": "aba200d3abc0",
+       "was": null
+      }
+     },
+     {
+      "ms": 239950,
+      "step": "block",
+      "note": "podział: DOM, 9 kart → 13 bloków, 0 z cache, 13 do modelu",
+      "detail": {
+       "blocks": 13,
+       "cached": 0,
+       "fresh": 13,
+       "how": "DOM, 9 kart"
+      }
+     },
+     {
+      "ms": 249248,
+      "step": "llm",
+      "note": "paczka 13 bloków → 7 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 13,
+       "events": 7,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://www.mosina.pl/wydarzenia"
+      }
+     },
+     {
+      "ms": 249248,
+      "step": "followup.proposed",
+      "note": "model wskazał 1 odnośników do dociągnięcia",
+      "detail": {
+       "proposed": 1,
+       "taken": 1
+      }
+     },
+     {
+      "ms": 249248,
+      "step": "followup.proposed",
+      "note": "wejście z etapu 1 (listing, ×9 odnośników) dołącza do followupów",
+      "detail": {
+       "url": "https://www.mosina.pl/wydarzenia?page=1",
+       "via": "llm",
+       "confidence": 0.9
+      }
+     },
+     {
+      "ms": 257432,
+      "step": "llm",
+      "note": "ekstrakcja z 6538 znaków → 4 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 6538,
+       "events": 4,
+       "url": "https://www.mosina.pl/wydarzenia?page=1"
+      }
+     },
+     {
+      "ms": 257432,
+      "step": "followup",
+      "note": "podstrona → 4 wydarzeń",
+      "detail": {
+       "url": "https://www.mosina.pl/wydarzenia?page=1"
+      }
+     },
+     {
+      "ms": 264209,
+      "step": "llm",
+      "note": "ekstrakcja z 7514 znaków → 3 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 7514,
+       "events": 3,
+       "url": "https://www.mosina.pl/wydarzenia/festiwal-kina-plenerowego-w-gminie-mosina"
+      }
+     },
+     {
+      "ms": 264209,
+      "step": "followup",
+      "note": "podstrona → 3 wydarzeń",
+      "detail": {
+       "url": "https://www.mosina.pl/wydarzenia/festiwal-kina-plenerowego-w-gminie-mosina"
+      }
+     },
+     {
+      "ms": 264209,
+      "step": "event.past",
+      "note": "1 wydarzeń już się odbyło — nie idą do scalania",
+      "detail": {
+       "dropped": 1,
+       "kept": 13
+      }
+     },
+     {
+      "ms": 264209,
+      "step": "geo",
+      "note": "„Świetlica Wiejska w Mieczewie\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Świetlica Wiejska w Mieczewie",
+       "town": "Mieczewo",
+       "hit": false
+      }
+     },
+     {
+      "ms": 264209,
+      "step": "geo",
+      "note": "„Mosiński Kościół\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Mosiński Kościół",
+       "town": "Mosina",
+       "hit": false
+      }
+     },
+     {
+      "ms": 264210,
+      "step": "geo",
+      "note": "„Biblioteka w Rogalinku\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Biblioteka w Rogalinku",
+       "town": "Rogalinko",
+       "hit": false
+      }
+     },
+     {
+      "ms": 264210,
+      "step": "geo",
+      "note": "„Sala Wiejska Budynku Wielofunkcyjnego w Pecnej, ul. Główna 50\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Sala Wiejska Budynku Wielofunkcyjnego w Pecnej, ul. Główna 50",
+       "town": "Pecna",
+       "hit": false
+      }
+     },
+     {
+      "ms": 264210,
+      "step": "done",
+      "note": "status „ok\" — 13 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "ok",
+       "events": 13,
+       "ms": 25469
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„Koncert \"Klasyka w plenerze\"\" scalone do „KONCERT \"KLASYKA W PLENERZE\"\" ze źródła „mosina-pl-wydarzenia\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "Koncert \"Klasyka w plenerze\"",
+       "date": "2026-08-28",
+       "winner": "mosina-pl-wydarzenia",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„Dożynki Wiórka i Czapur – wspólne święto plonów\" scalone do „Dożynki Wiórka i Czapur – wspólne święto plonów\" ze źródła „mosina-pl-wydarzenia\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "Dożynki Wiórka i Czapur – wspólne święto plonów",
+       "date": "2026-08-29",
+       "winner": "mosina-pl-wydarzenia",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„Dożynki Dwóch Sołectw\" scalone do „Dożynki Dwóch Sołectw\" ze źródła „mosina-pl-wydarzenia\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "Dożynki Dwóch Sołectw",
+       "date": "2026-09-05",
+       "winner": "mosina-pl-wydarzenia",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„Wystawa kostiumów w bibliotece\" scalone do „WYSTAWA KOSTIUMÓW W BIBLIOTECE\" ze źródła „mosina-pl-wydarzenia\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "Wystawa kostiumów w bibliotece",
+       "date": "2026-08-06",
+       "winner": "mosina-pl-wydarzenia",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„Koncert \"Klasyka w plenerze\"\" scalone do „KONCERT \"KLASYKA W PLENERZE\"\" ze źródła „mosina-pl-wydarzenia\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "Koncert \"Klasyka w plenerze\"",
+       "date": "2026-08-28",
+       "winner": "mosina-pl-wydarzenia",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„Wystawa kostiumów w bibliotece\" scalone do „WYSTAWA KOSTIUMÓW W BIBLIOTECE\" ze źródła „mosina-pl-wydarzenia\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "Wystawa kostiumów w bibliotece",
+       "date": "2026-08-06",
+       "winner": "mosina-pl-wydarzenia",
+       "why": "klucz"
+      }
+     }
+    ]
+   },
+   {
+    "id": "biblioteka-mosina",
+    "steps": [
+     {
+      "ms": 265000,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://www.bibliotekamosina.pl/",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 265125,
+      "step": "content",
+      "note": "7918 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 7918,
+       "hash": "aa4498dc67ff",
+       "was": null
+      }
+     },
+     {
+      "ms": 265141,
+      "step": "block",
+      "note": "podział: DOM, 7 kart → 12 bloków, 0 z cache, 12 do modelu",
+      "detail": {
+       "blocks": 12,
+       "cached": 0,
+       "fresh": 12,
+       "how": "DOM, 7 kart"
+      }
+     },
+     {
+      "ms": 269502,
+      "step": "llm",
+      "note": "paczka 12 bloków → 2 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 12,
+       "events": 2,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://www.bibliotekamosina.pl/"
+      }
+     },
+     {
+      "ms": 269502,
+      "step": "followup.proposed",
+      "note": "model wskazał 2 odnośników do dociągnięcia",
+      "detail": {
+       "proposed": 2,
+       "taken": 2
+      }
+     },
+     {
+      "ms": 272102,
+      "step": "llm",
+      "note": "ekstrakcja z 4288 znaków → 0 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 4288,
+       "events": 0,
+       "url": "https://www.bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/akcja-lato-z-biblioteka"
+      }
+     },
+     {
+      "ms": 272102,
+      "step": "followup",
+      "note": "podstrona → 0 wydarzeń",
+      "detail": {
+       "url": "https://www.bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/akcja-lato-z-biblioteka"
+      }
+     },
+     {
+      "ms": 304784,
+      "step": "llm",
+      "note": "ekstrakcja z 3877 znaków → 1 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 3877,
+       "events": 1,
+       "url": "https://www.bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/spektakl-klaudek-i-klaudynka-w-bibliotece"
+      }
+     },
+     {
+      "ms": 304784,
+      "step": "followup",
+      "note": "podstrona → 1 wydarzeń",
+      "detail": {
+       "url": "https://www.bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/spektakl-klaudek-i-klaudynka-w-bibliotece"
+      }
+     },
+     {
+      "ms": 304784,
+      "step": "event.past",
+      "note": "2 wydarzeń już się odbyło — nie idą do scalania",
+      "detail": {
+       "dropped": 2,
+       "kept": 1
+      }
+     },
+     {
+      "ms": 304784,
+      "step": "geo",
+      "note": "„Mosińska Biblioteka Publiczna, ul. Dworcowa 4\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Mosińska Biblioteka Publiczna, ul. Dworcowa 4",
+       "town": "Mosina",
+       "hit": false
+      }
+     },
+     {
+      "ms": 304784,
+      "step": "done",
+      "note": "status „ok\" — 1 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "ok",
+       "events": 1,
+       "ms": 40574
+      }
+     }
+    ]
+   },
+   {
+    "id": "osir-mosina-kalendarz",
+    "steps": [
+     {
+      "ms": 304784,
+      "step": "capability",
+      "note": "źródło oddaje „jsonld\" — bierzemy gotowe rekordy zamiast skrobać HTML",
+      "detail": {
+       "kind": "jsonld",
+       "url": "https://osirmosina.pl/index.php/kalendarz/",
+       "itemsSeen": 11,
+       "checked": "2026-08-09"
+      }
+     },
+     {
+      "ms": 305161,
+      "step": "fetch",
+      "note": "wyjście maszynowe „jsonld\" — HTTP 200",
+      "detail": {
+       "url": "https://osirmosina.pl/index.php/kalendarz/",
+       "strategy": "jsonld",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 305368,
+      "step": "content",
+      "note": "140739 znaków, hash inny niż poprzednio — mapujemy rekordy",
+      "detail": {
+       "chars": 140739,
+       "hash": "e0a7bf29b5f5",
+       "was": null
+      }
+     },
+     {
+      "ms": 305369,
+      "step": "capability.parsed",
+      "note": "11 rekordów → 6 wydarzeń (odpadło: 5 zakończonych), bez wywołania modelu",
+      "detail": {
+       "kind": "jsonld",
+       "seen": 11,
+       "events": 6,
+       "past": 5,
+       "noDate": 0,
+       "noTitle": 0
+      }
+     },
+     {
+      "ms": 305369,
+      "step": "done",
+      "note": "status „ok\" — 6 wydarzeń idzie do scalania (ścieżka maszynowa, zero wywołań modelu)",
+      "detail": {
+       "status": "ok",
+       "events": 6,
+       "ms": 585
+      }
+     },
+     {
+      "ms": 645869,
+      "step": "series",
+      "note": "„Wakacyjne wyjazdy\" — 2 rekordów różniących się wyłącznie datą zwinięte w jedną serię (2 terminów do 2026-08-18)",
+      "detail": {
+       "title": "Wakacyjne wyjazdy",
+       "folded": 2,
+       "occurrences": 2
+      }
+     },
+     {
+      "ms": 645869,
+      "step": "series",
+      "note": "„\"Zdrowy kręgosłup\" na trawie\" — 2 rekordów różniących się wyłącznie datą zwinięte w jedną serię (2 terminów do 2026-08-19)",
+      "detail": {
+       "title": "\"Zdrowy kręgosłup\" na trawie",
+       "folded": 2,
+       "occurrences": 2
+      }
+     }
+    ]
+   },
+   {
+    "id": "fb-mok-mosina",
+    "steps": [
+     {
+      "ms": 305369,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "fb-gmina-mosina",
+    "steps": [
+     {
+      "ms": 305369,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "fb-biblioteka-mosina",
+    "steps": [
+     {
+      "ms": 305369,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "fb-osir-mosina",
+    "steps": [
+     {
+      "ms": 305369,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "fb-group-gmina-mosina-aktualnosci",
+    "steps": [
+     {
+      "ms": 305369,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "fb-group-co-sie-dzieje-mosina",
+    "steps": [
+     {
+      "ms": 305369,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "poznan-co-gdzie-kiedy",
+    "steps": [
+     {
+      "ms": 305643,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://www.poznan.pl/mim/events/",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 305800,
+      "step": "content",
+      "note": "30001 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 30001,
+       "hash": "fd92f7e2818c",
+       "was": null
+      }
+     },
+     {
+      "ms": 305851,
+      "step": "block",
+      "note": "podział: DOM, 34 kart → 50 bloków, 0 z cache, 50 do modelu",
+      "detail": {
+       "blocks": 50,
+       "cached": 0,
+       "fresh": 50,
+       "how": "DOM, 34 kart"
+      }
+     },
+     {
+      "ms": 332043,
+      "step": "llm",
+      "note": "paczka 50 bloków → 20 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 50,
+       "events": 20,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://www.poznan.pl/mim/events/"
+      }
+     },
+     {
+      "ms": 332043,
+      "step": "followup.proposed",
+      "note": "wejście z etapu 1 (listing, ×38 odnośników) dołącza do followupów",
+      "detail": {
+       "url": "https://www.poznan.pl/mim/events/seances/",
+       "via": "llm",
+       "confidence": 0.9
+      }
+     },
+     {
+      "ms": 334777,
+      "step": "llm",
+      "note": "ekstrakcja z 40000 znaków (treść ucięta z 46963) → 0 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 40000,
+       "events": 0,
+       "url": "https://www.poznan.pl/mim/events/seances/"
+      }
+     },
+     {
+      "ms": 334777,
+      "step": "followup",
+      "note": "podstrona → 0 wydarzeń",
+      "detail": {
+       "url": "https://www.poznan.pl/mim/events/seances/"
+      }
+     },
+     {
+      "ms": 334777,
+      "step": "geo",
+      "note": "„Dom Kultury Orle Gniazdo, os. Lecha 43, Poznań\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Dom Kultury Orle Gniazdo, os. Lecha 43, Poznań",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 334777,
+      "step": "geo",
+      "note": "„Jagoda nie Porzeczka, ul. Małeckiego 36, Poznań\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Jagoda nie Porzeczka, ul. Małeckiego 36, Poznań",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 334777,
+      "step": "geo",
+      "note": "„Stadion Żużlowy POSiR Golęcin, ul. Warmińska 1 w Poznaniu\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Stadion Żużlowy POSiR Golęcin, ul. Warmińska 1 w Poznaniu",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 334777,
+      "step": "geo",
+      "note": "„Klub na Fali, ul. Piastowska 40, Poznań\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Klub na Fali, ul. Piastowska 40, Poznań",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 334777,
+      "step": "geo",
+      "note": "„ENEA Stadion, ul. Bułgarska 17 w Poznaniu\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "ENEA Stadion, ul. Bułgarska 17 w Poznaniu",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 336034,
+      "step": "geo",
+      "note": "„BaRock Club, ul. Wielka 9, Poznań\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "BaRock Club, ul. Wielka 9, Poznań",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 337254,
+      "step": "geo",
+      "note": "„Tama, ul. Niezłomnych 2, Poznań\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Tama, ul. Niezłomnych 2, Poznań",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 339018,
+      "step": "geo",
+      "note": "„2Progi, Al. Niepodległości 36, Poznań\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "2Progi, Al. Niepodległości 36, Poznań",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 340781,
+      "step": "geo",
+      "note": "„Tor Regatowy Malta, ul. Wiankowa 3 w Poznaniu\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Tor Regatowy Malta, ul. Wiankowa 3 w Poznaniu",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 342059,
+      "step": "geo",
+      "note": "„Brama Poznania, ul. Gdańska 2, Poznań\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Brama Poznania, ul. Gdańska 2, Poznań",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 343702,
+      "step": "geo",
+      "note": "„Jeziero Kierskie w Poznaniu, ul. Wilków Morskich 17/19\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Jeziero Kierskie w Poznaniu, ul. Wilków Morskich 17/19",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 345559,
+      "step": "geo",
+      "note": "„Brama Poznania ICHOT, ul. Gdańska 2, Poznań\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Brama Poznania ICHOT, ul. Gdańska 2, Poznań",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 346913,
+      "step": "geo",
+      "note": "„Zbiórka: Hol Wielki, CK Zamek, ul. Święty Marcin 80/82, Poznań\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Zbiórka: Hol Wielki, CK Zamek, ul. Święty Marcin 80/82, Poznań",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 348428,
+      "step": "geo",
+      "note": "„Ogród SP nr 52 SPECTO, ul. Fabianowo 29, Poznań\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Ogród SP nr 52 SPECTO, ul. Fabianowo 29, Poznań",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 349676,
+      "step": "geo",
+      "note": "„Muzeum Archidiecezjalne - Akademia Lubrańskiego, ul. Jana Lubrańskiego 1 (Ostrów Tumski), Poznań\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Muzeum Archidiecezjalne - Akademia Lubrańskiego, ul. Jana Lubrańskiego 1 (Ostrów Tumski), Poznań",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 350940,
+      "step": "geo",
+      "note": "„Centrum Szyfrów Enigma, ul. Święty Marcin 78, Poznań\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Centrum Szyfrów Enigma, ul. Święty Marcin 78, Poznań",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 352249,
+      "step": "geo",
+      "note": "„Teren zielony przy górce między ul. Owidiusza i ul. Horacego, Poznań\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Teren zielony przy górce między ul. Owidiusza i ul. Horacego, Poznań",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 352249,
+      "step": "done",
+      "note": "status „ok\" — 20 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "ok",
+       "events": 20,
+       "ms": 46880
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„ZBUDUJMY OSTRÓW TUMSKI - RODZINNE OPROWADZANIE W BRAMIE POZNANIA\" scalone do „ZBUDUJMY OSTRÓW TUMSKI - RODZINNE OPROWADZANIE W BRAMIE POZNANIA\" ze źródła „kultura-poznan\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "ZBUDUJMY OSTRÓW TUMSKI - RODZINNE OPROWADZANIE W BRAMIE POZNANIA",
+       "date": "2026-08-11",
+       "winner": "kultura-poznan",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„RODZINNE ZWIEDZANIE ZAMKU Z PRZEWODNIKIEM\" scalone do „RODZINNE ZWIEDZANIE ZAMKU Z PRZEWODNIKIEM\" ze źródła „kultura-poznan\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "RODZINNE ZWIEDZANIE ZAMKU Z PRZEWODNIKIEM",
+       "date": "2026-08-11",
+       "winner": "kultura-poznan",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„SZYFRY PRZEZ WIEKI - BEZPŁATNE ZWIEDZANIE EKSPOZYCJI DLA SENIORÓW\" scalone do „SZYFRY PRZEZ WIEKI - BEZPŁATNE ZWIEDZANIE EKSPOZYCJI DLA SENIORÓW\" ze źródła „kultura-poznan\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "SZYFRY PRZEZ WIEKI - BEZPŁATNE ZWIEDZANIE EKSPOZYCJI DLA SENIORÓW",
+       "date": "2026-08-11",
+       "winner": "kultura-poznan",
+       "why": "klucz"
+      }
+     }
+    ]
+   },
+   {
+    "id": "kultura-poznan",
+    "steps": [
+     {
+      "ms": 352659,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://kultura.poznan.pl/mim/kultura/events/",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 352960,
+      "step": "content",
+      "note": "20059 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 20059,
+       "hash": "979314644070",
+       "was": null
+      }
+     },
+     {
+      "ms": 352981,
+      "step": "block",
+      "note": "podział: DOM, 32 kart → 43 bloków, 9 z cache, 34 do modelu",
+      "detail": {
+       "blocks": 43,
+       "cached": 9,
+       "fresh": 34,
+       "how": "DOM, 32 kart"
+      }
+     },
+     {
+      "ms": 386618,
+      "step": "llm",
+      "note": "paczka 34 bloków → 20 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 34,
+       "events": 20,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://kultura.poznan.pl/mim/kultura/events/"
+      }
+     },
+     {
+      "ms": 386618,
+      "step": "followup.proposed",
+      "note": "wejście z etapu 1 (listing, ×48 odnośników) dołącza do followupów",
+      "detail": {
+       "url": "https://kultura.poznan.pl/mim/kultura/seances/",
+       "via": "llm",
+       "confidence": 0.9
+      }
+     },
+     {
+      "ms": 390136,
+      "step": "llm",
+      "note": "ekstrakcja z 40000 znaków (treść ucięta z 40428) → 0 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 40000,
+       "events": 0,
+       "url": "https://kultura.poznan.pl/mim/kultura/seances/"
+      }
+     },
+     {
+      "ms": 390136,
+      "step": "followup",
+      "note": "podstrona → 0 wydarzeń",
+      "detail": {
+       "url": "https://kultura.poznan.pl/mim/kultura/seances/"
+      }
+     },
+     {
+      "ms": 390136,
+      "step": "geo",
+      "note": "„Jagoda nie Porzeczka, ul. Małeckiego 36\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Jagoda nie Porzeczka, ul. Małeckiego 36",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 390136,
+      "step": "geo",
+      "note": "„Klub na Fali, ul. Piastowska 40\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Klub na Fali, ul. Piastowska 40",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 390136,
+      "step": "geo",
+      "note": "„BaRock Club, ul. Wielka 9\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "BaRock Club, ul. Wielka 9",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 390136,
+      "step": "geo",
+      "note": "„Tama, ul. Niezłomnych 2\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Tama, ul. Niezłomnych 2",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 390136,
+      "step": "geo",
+      "note": "„2Progi, Al. Niepodległości 36\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "2Progi, Al. Niepodległości 36",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 390136,
+      "step": "geo",
+      "note": "„Brama Poznania, ul. Gdańska 2\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Brama Poznania, ul. Gdańska 2",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 390136,
+      "step": "geo",
+      "note": "„Brama Poznania ICHOT, ul. Gdańska 2\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Brama Poznania ICHOT, ul. Gdańska 2",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 390136,
+      "step": "geo",
+      "note": "„Zbiórka: Hol Wielki, CK Zamek, ul. Święty Marcin 80/82\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Zbiórka: Hol Wielki, CK Zamek, ul. Święty Marcin 80/82",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 390136,
+      "step": "geo",
+      "note": "„Muzeum Archidiecezjalne - Akademia Lubrańskiego, ul. Jana Lubrańskiego 1 (Ostrów Tumski)\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Muzeum Archidiecezjalne - Akademia Lubrańskiego, ul. Jana Lubrańskiego 1 (Ostrów Tumski)",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 390136,
+      "step": "geo",
+      "note": "„Centrum Szyfrów Enigma, ul. Święty Marcin 78\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Centrum Szyfrów Enigma, ul. Święty Marcin 78",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 390136,
+      "step": "geo",
+      "note": "„Ogród SP nr 52 SPECTO, ul. Fabianowo 29\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Ogród SP nr 52 SPECTO, ul. Fabianowo 29",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 390136,
+      "step": "geo",
+      "note": "„Teren zielony przy górce między ul. Owidiusza i ul. Horacego\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Teren zielony przy górce między ul. Owidiusza i ul. Horacego",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 390136,
+      "step": "geo",
+      "note": "„Nowy Rynek\" → 52.4009011, 16.9197463",
+      "detail": {
+       "venue": "Nowy Rynek",
+       "town": "Poznań",
+       "hit": true
+      }
+     },
+     {
+      "ms": 390136,
+      "step": "geo",
+      "note": "„Klub Muzyczny B17, Enea Stadion, ul. Bułgarska 17\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Klub Muzyczny B17, Enea Stadion, ul. Bułgarska 17",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 390136,
+      "step": "geo",
+      "note": "„Muzeum Archeologiczne, Pałac Górków, ul. Wodna 27\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Muzeum Archeologiczne, Pałac Górków, ul. Wodna 27",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 390136,
+      "step": "geo",
+      "note": "„Park Górczyński, ul. Ostrobramska 35\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Park Górczyński, ul. Ostrobramska 35",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 390136,
+      "step": "done",
+      "note": "status „ok\" — 20 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "ok",
+       "events": 20,
+       "ms": 37887
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„PODAJ ŁAPĘ - DOBRO WRACA - WARSZTATY RĘKODZIELNICZE Z TWORZENIA ZABAWEK DLA ZWIERZĄT\" scalone do „PODAJ ŁAPĘ - DOBRO WRACA - WARSZTATY RĘKODZIELNICZE Z TWORZENIA ZABAWEK DLA ZWIERZĄT\" ze źródła „poznan-co-gdzie-kiedy\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "PODAJ ŁAPĘ - DOBRO WRACA - WARSZTATY RĘKODZIELNICZE Z TWORZENIA ZABAWEK DLA ZWIERZĄT",
+       "date": "2026-08-09",
+       "winner": "poznan-co-gdzie-kiedy",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„MALOWANIE CERAMIKI NA FALI\" scalone do „MALOWANIE CERAMIKI NA FALI\" ze źródła „poznan-co-gdzie-kiedy\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "MALOWANIE CERAMIKI NA FALI",
+       "date": "2026-08-09",
+       "winner": "poznan-co-gdzie-kiedy",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„STAND-UP ŁUKASZ KOWALSKI - PERKUSISTA\" scalone do „STAND-UP ŁUKASZ KOWALSKI - PERKUSISTA\" ze źródła „poznan-co-gdzie-kiedy\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "STAND-UP ŁUKASZ KOWALSKI - PERKUSISTA",
+       "date": "2026-08-09",
+       "winner": "poznan-co-gdzie-kiedy",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„ALESTORM + METAL DE FACTO - KONCERT\" scalone do „ALESTORM + METAL DE FACTO - KONCERT\" ze źródła „poznan-co-gdzie-kiedy\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "ALESTORM + METAL DE FACTO - KONCERT",
+       "date": "2026-08-09",
+       "winner": "poznan-co-gdzie-kiedy",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„THIS WILL DESTROY YOU - KONCERT\" scalone do „THIS WILL DESTROY YOU - KONCERT\" ze źródła „poznan-co-gdzie-kiedy\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "THIS WILL DESTROY YOU - KONCERT",
+       "date": "2026-08-09",
+       "winner": "poznan-co-gdzie-kiedy",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„RZEKA ŻYWA 2026 - CYKL KULTURALNO - PRZYRODNICZY W BRAMIE POZNANIA\" scalone do „RZEKA ŻYWA 2026 - CYKL KULTURALNO - PRZYRODNICZY W BRAMIE POZNANIA\" ze źródła „poznan-co-gdzie-kiedy\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "RZEKA ŻYWA 2026 - CYKL KULTURALNO - PRZYRODNICZY W BRAMIE POZNANIA",
+       "date": "2026-07-11",
+       "winner": "poznan-co-gdzie-kiedy",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„GEORDIE GREEP - KONCERT\" scalone do „GEORDIE GREEP - KONCERT\" ze źródła „poznan-co-gdzie-kiedy\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "GEORDIE GREEP - KONCERT",
+       "date": "2026-08-10",
+       "winner": "poznan-co-gdzie-kiedy",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„RÓŻNE OBLICZA AKORDEONU\" scalone do „RÓŻNE OBLICZA AKORDEONU\" ze źródła „poznan-co-gdzie-kiedy\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "RÓŻNE OBLICZA AKORDEONU",
+       "date": "2026-08-11",
+       "winner": "poznan-co-gdzie-kiedy",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„10. LATO Z ESTRADĄ - FABIANOWO-KOTOWO - SPEKTAKL OPOWIEŚCI MAŁEJ LUPITINY GONZÁLEZ\" scalone do „10. LATO Z ESTRADĄ - FABIANOWO-KOTOWO - SPEKTAKL OPOWIEŚCI MAŁEJ LUPITINY GONZÁLEZ\" ze źródła „poznan-co-gdzie-kiedy\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "10. LATO Z ESTRADĄ - FABIANOWO-KOTOWO - SPEKTAKL OPOWIEŚCI MAŁEJ LUPITINY GONZÁLEZ",
+       "date": "2026-08-11",
+       "winner": "poznan-co-gdzie-kiedy",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„10. LATO Z ESTRADĄ - STRZESZYN - AKCJA TEATRALNA LUDO&ARSÈNE\" scalone do „10. LATO Z ESTRADĄ - STRZESZYN - AKCJA TEATRALNA LUDO&ARSÈNE\" ze źródła „poznan-co-gdzie-kiedy\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "10. LATO Z ESTRADĄ - STRZESZYN - AKCJA TEATRALNA LUDO&ARSÈNE",
+       "date": "2026-08-11",
+       "winner": "poznan-co-gdzie-kiedy",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„10. LATO Z ESTRADĄ - STRZESZYN - AKCJA TEATRALNA LUDO&ARSÈNE\" scalone do „10. LATO Z ESTRADĄ - STRZESZYN - AKCJA TEATRALNA LUDO&ARSÈNE\" ze źródła „poznan-co-gdzie-kiedy\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "10. LATO Z ESTRADĄ - STRZESZYN - AKCJA TEATRALNA LUDO&ARSÈNE",
+       "date": "2026-08-11",
+       "winner": "poznan-co-gdzie-kiedy",
+       "why": "klucz"
+      }
+     }
+    ]
+   },
+   {
+    "id": "ck-zamek",
+    "steps": [
+     {
+      "ms": 390674,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://ckzamek.pl/",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 390813,
+      "step": "content",
+      "note": "5417 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 5417,
+       "hash": "8ec4595b0a5e",
+       "was": "75729f0d9c01"
+      }
+     },
+     {
+      "ms": 390836,
+      "step": "block",
+      "note": "podział: DOM, 15 kart → 21 bloków, 0 z cache, 21 do modelu",
+      "detail": {
+       "blocks": 21,
+       "cached": 0,
+       "fresh": 21,
+       "how": "DOM, 15 kart"
+      }
+     },
+     {
+      "ms": 398433,
+      "step": "llm",
+      "note": "paczka 21 bloków → 6 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 21,
+       "events": 6,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://ckzamek.pl/"
+      }
+     },
+     {
+      "ms": 398433,
+      "step": "event.past",
+      "note": "4 wydarzeń już się odbyło — nie idą do scalania",
+      "detail": {
+       "dropped": 4,
+       "kept": 2
+      }
+     },
+     {
+      "ms": 399908,
+      "step": "geo",
+      "note": "„Centrum Kultury ZAMEK, Poznań\" → 52.407776, 16.9191858",
+      "detail": {
+       "venue": "Centrum Kultury ZAMEK, Poznań",
+       "town": "Poznań",
+       "hit": true
+      }
+     },
+     {
+      "ms": 399908,
+      "step": "geo",
+      "note": "„Centrum Kultury ZAMEK\" → 52.407776, 16.9191858",
+      "detail": {
+       "venue": "Centrum Kultury ZAMEK",
+       "town": "Poznań",
+       "hit": true
+      }
+     },
+     {
+      "ms": 399908,
+      "step": "done",
+      "note": "status „ok\" — 2 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "ok",
+       "events": 2,
+       "ms": 9772
+      }
+     }
+    ]
+   },
+   {
+    "id": "ck-zamek-fb",
+    "steps": [
+     {
+      "ms": 399908,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "dk-stokrotka",
+    "steps": [
+     {
+      "ms": 400458,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://www.dkstokrotka.pl/",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 400590,
+      "step": "content",
+      "note": "6167 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 6167,
+       "hash": "ebf1849300f3",
+       "was": null
+      }
+     },
+     {
+      "ms": 400604,
+      "step": "block",
+      "note": "podział: DOM, 15 kart → 22 bloków, 1 z cache, 21 do modelu",
+      "detail": {
+       "blocks": 22,
+       "cached": 1,
+       "fresh": 21,
+       "how": "DOM, 15 kart"
+      }
+     },
+     {
+      "ms": 403576,
+      "step": "llm",
+      "note": "paczka 21 bloków → 0 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 21,
+       "events": 0,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://www.dkstokrotka.pl/"
+      }
+     },
+     {
+      "ms": 403576,
+      "step": "followup.proposed",
+      "note": "model wskazał 5 odnośników do dociągnięcia",
+      "detail": {
+       "proposed": 5,
+       "taken": 5
+      }
+     },
+     {
+      "ms": 406445,
+      "step": "llm",
+      "note": "ekstrakcja z 3167 znaków → 0 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 3167,
+       "events": 0,
+       "url": "https://www.dkstokrotka.pl/propozycje-sierpien-dk-stokrotka"
+      }
+     },
+     {
+      "ms": 406445,
+      "step": "followup",
+      "note": "podstrona → 0 wydarzeń",
+      "detail": {
+       "url": "https://www.dkstokrotka.pl/propozycje-sierpien-dk-stokrotka"
+      }
+     },
+     {
+      "ms": 411345,
+      "step": "llm",
+      "note": "ekstrakcja z 4139 znaków → 1 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 4139,
+       "events": 1,
+       "url": "https://www.dkstokrotka.pl/rodzinna-podroz-pod-para"
+      }
+     },
+     {
+      "ms": 411345,
+      "step": "followup",
+      "note": "podstrona → 1 wydarzeń",
+      "detail": {
+       "url": "https://www.dkstokrotka.pl/rodzinna-podroz-pod-para"
+      }
+     },
+     {
+      "ms": 413415,
+      "step": "llm",
+      "note": "ekstrakcja z 3153 znaków → 0 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 3153,
+       "events": 0,
+       "url": "https://www.dkstokrotka.pl/viva-seniorzy"
+      }
+     },
+     {
+      "ms": 413415,
+      "step": "followup",
+      "note": "podstrona → 0 wydarzeń",
+      "detail": {
+       "url": "https://www.dkstokrotka.pl/viva-seniorzy"
+      }
+     },
+     {
+      "ms": 415310,
+      "step": "llm",
+      "note": "ekstrakcja z 7361 znaków → 0 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 7361,
+       "events": 0,
+       "url": "https://www.dkstokrotka.pl/spotkanie-basinski-3"
+      }
+     },
+     {
+      "ms": 415310,
+      "step": "followup",
+      "note": "podstrona → 0 wydarzeń",
+      "detail": {
+       "url": "https://www.dkstokrotka.pl/spotkanie-basinski-3"
+      }
+     },
+     {
+      "ms": 418304,
+      "step": "llm",
+      "note": "ekstrakcja z 13231 znaków → 0 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 13231,
+       "events": 0,
+       "url": "https://www.dkstokrotka.pl/lato-z-kultura-2026"
+      }
+     },
+     {
+      "ms": 418304,
+      "step": "followup",
+      "note": "podstrona → 0 wydarzeń",
+      "detail": {
+       "url": "https://www.dkstokrotka.pl/lato-z-kultura-2026"
+      }
+     },
+     {
+      "ms": 418304,
+      "step": "event.past",
+      "note": "1 wydarzeń już się odbyło — nie idą do scalania",
+      "detail": {
+       "dropped": 1,
+       "kept": 0
+      }
+     },
+     {
+      "ms": 418304,
+      "step": "done",
+      "note": "status „empty\" — 0 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "empty",
+       "events": 0,
+       "ms": 18395
+      }
+     }
+    ]
+   },
+   {
+    "id": "jck-poznan",
+    "steps": [
+     {
+      "ms": 420051,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://jck-poznan.pl/",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 420183,
+      "step": "content",
+      "note": "10945 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 10945,
+       "hash": "783c4b17cf28",
+       "was": null
+      }
+     },
+     {
+      "ms": 420211,
+      "step": "block",
+      "note": "podział: DOM, 14 kart → 26 bloków, 0 z cache, 26 do modelu",
+      "detail": {
+       "blocks": 26,
+       "cached": 0,
+       "fresh": 26,
+       "how": "DOM, 14 kart"
+      }
+     },
+     {
+      "ms": 426077,
+      "step": "llm",
+      "note": "paczka 26 bloków → 3 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 26,
+       "events": 3,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://jck-poznan.pl/"
+      }
+     },
+     {
+      "ms": 426077,
+      "step": "followup.proposed",
+      "note": "wejście z etapu 1 (listing, ×12 odnośników) dołącza do followupów",
+      "detail": {
+       "url": "https://jck-poznan.pl/wydarzenia/",
+       "via": "llm",
+       "confidence": 0.9
+      }
+     },
+     {
+      "ms": 431683,
+      "step": "llm",
+      "note": "ekstrakcja z 9511 znaków → 1 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 9511,
+       "events": 1,
+       "url": "https://jck-poznan.pl/wydarzenia/"
+      }
+     },
+     {
+      "ms": 431683,
+      "step": "followup",
+      "note": "podstrona → 1 wydarzeń",
+      "detail": {
+       "url": "https://jck-poznan.pl/wydarzenia/"
+      }
+     },
+     {
+      "ms": 431683,
+      "step": "event.past",
+      "note": "4 wydarzeń już się odbyło — nie idą do scalania",
+      "detail": {
+       "dropped": 4,
+       "kept": 0
+      }
+     },
+     {
+      "ms": 431683,
+      "step": "done",
+      "note": "status „empty\" — 0 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "empty",
+       "events": 0,
+       "ms": 13380
+      }
+     }
+    ]
+   },
+   {
+    "id": "mdk1-poznan",
+    "steps": [
+     {
+      "ms": 432481,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://mdk1.poznan.pl/",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 432613,
+      "step": "content",
+      "note": "13803 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 13803,
+       "hash": "829977345831",
+       "was": null
+      }
+     },
+     {
+      "ms": 432646,
+      "step": "block",
+      "note": "podział: DOM, 17 kart → 27 bloków, 0 z cache, 27 do modelu",
+      "detail": {
+       "blocks": 27,
+       "cached": 0,
+       "fresh": 27,
+       "how": "DOM, 17 kart"
+      }
+     },
+     {
+      "ms": 440542,
+      "step": "llm",
+      "note": "paczka 27 bloków → 3 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 27,
+       "events": 3,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://mdk1.poznan.pl/"
+      }
+     },
+     {
+      "ms": 440542,
+      "step": "followup.proposed",
+      "note": "model wskazał 3 odnośników do dociągnięcia",
+      "detail": {
+       "proposed": 3,
+       "taken": 3
+      }
+     },
+     {
+      "ms": 440542,
+      "step": "followup.proposed",
+      "note": "wejście z etapu 1 (listing, ×7 odnośników) dołącza do followupów",
+      "detail": {
+       "url": "https://mdk1.poznan.pl/wydarzenia.html",
+       "via": "llm",
+       "confidence": 0.9
+      }
+     },
+     {
+      "ms": 448111,
+      "step": "llm",
+      "note": "ekstrakcja z 13953 znaków → 4 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 13953,
+       "events": 4,
+       "url": "https://mdk1.poznan.pl/wydarzenia.html"
+      }
+     },
+     {
+      "ms": 448111,
+      "step": "followup",
+      "note": "podstrona → 4 wydarzeń",
+      "detail": {
+       "url": "https://mdk1.poznan.pl/wydarzenia.html"
+      }
+     },
+     {
+      "ms": 451409,
+      "step": "llm",
+      "note": "ekstrakcja z 3927 znaków → 0 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 3927,
+       "events": 0,
+       "url": "https://mdk1.poznan.pl/images/dokumenty/2026_2027/Oferta_zajęć_do_zapisów_na_rok_szkolny_2026-2027.pdf"
+      }
+     },
+     {
+      "ms": 451409,
+      "step": "followup",
+      "note": "podstrona → 0 wydarzeń",
+      "detail": {
+       "url": "https://mdk1.poznan.pl/images/dokumenty/2026_2027/Oferta_zajęć_do_zapisów_na_rok_szkolny_2026-2027.pdf"
+      }
+     },
+     {
+      "ms": 454024,
+      "step": "llm",
+      "note": "ekstrakcja z 1209 znaków → 0 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 1209,
+       "events": 0,
+       "url": "https://mdk1.poznan.pl/images/dokumenty/2026_2027/1.oświadczenie_rekrutacja_2026_-_2_etapy.pdf"
+      }
+     },
+     {
+      "ms": 454024,
+      "step": "followup",
+      "note": "podstrona → 0 wydarzeń",
+      "detail": {
+       "url": "https://mdk1.poznan.pl/images/dokumenty/2026_2027/1.oświadczenie_rekrutacja_2026_-_2_etapy.pdf"
+      }
+     },
+     {
+      "ms": 456173,
+      "step": "llm",
+      "note": "ekstrakcja z 5201 znaków → 0 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 5201,
+       "events": 0,
+       "url": "https://mdk1.poznan.pl/images/dokumenty/2026_2027/1.MDK1.Rekrutacja_2026-2027_Procedura.pdf"
+      }
+     },
+     {
+      "ms": 456173,
+      "step": "followup",
+      "note": "podstrona → 0 wydarzeń",
+      "detail": {
+       "url": "https://mdk1.poznan.pl/images/dokumenty/2026_2027/1.MDK1.Rekrutacja_2026-2027_Procedura.pdf"
+      }
+     },
+     {
+      "ms": 456173,
+      "step": "event.past",
+      "note": "7 wydarzeń już się odbyło — nie idą do scalania",
+      "detail": {
+       "dropped": 7,
+       "kept": 0
+      }
+     },
+     {
+      "ms": 456173,
+      "step": "done",
+      "note": "status „empty\" — 0 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "empty",
+       "events": 0,
+       "ms": 24489
+      }
+     }
+    ]
+   },
+   {
+    "id": "mdk2-poznan",
+    "steps": [
+     {
+      "ms": 457169,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://mdk2.poznan.pl/",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 457305,
+      "step": "content",
+      "note": "15682 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 15682,
+       "hash": "f59948f6a34a",
+       "was": null
+      }
+     },
+     {
+      "ms": 457326,
+      "step": "block",
+      "note": "podział: DOM, 18 kart → 29 bloków, 8 z cache, 21 do modelu",
+      "detail": {
+       "blocks": 29,
+       "cached": 8,
+       "fresh": 21,
+       "how": "DOM, 18 kart"
+      }
+     },
+     {
+      "ms": 463283,
+      "step": "llm",
+      "note": "paczka 21 bloków → 2 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 21,
+       "events": 2,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://mdk2.poznan.pl/"
+      }
+     },
+     {
+      "ms": 463283,
+      "step": "followup.proposed",
+      "note": "model wskazał 3 odnośników do dociągnięcia",
+      "detail": {
+       "proposed": 3,
+       "taken": 3
+      }
+     },
+     {
+      "ms": 463283,
+      "step": "followup.proposed",
+      "note": "wejście z etapu 1 (listing, ×5 odnośników) dołącza do followupów",
+      "detail": {
+       "url": "https://mdk2.poznan.pl/aktualnosci.html",
+       "via": "llm",
+       "confidence": 0.9
+      }
+     },
+     {
+      "ms": 469229,
+      "step": "llm",
+      "note": "ekstrakcja z 15842 znaków → 2 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 15842,
+       "events": 2,
+       "url": "https://mdk2.poznan.pl/aktualnosci.html"
+      }
+     },
+     {
+      "ms": 469229,
+      "step": "followup",
+      "note": "podstrona → 2 wydarzeń",
+      "detail": {
+       "url": "https://mdk2.poznan.pl/aktualnosci.html"
+      }
+     },
+     {
+      "ms": 469352,
+      "step": "followup",
+      "note": "nieudany: HTTP 404 https://mdk2.poznan.pl/images/mdk/rekrutacja_2026_2007/Oferta%20do%20rekrutacji%20otwartej.pdf",
+      "detail": {
+       "url": "https://mdk2.poznan.pl/images/mdk/rekrutacja_2026_2007/Oferta%20do%20rekrutacji%20otwartej.pdf"
+      }
+     },
+     {
+      "ms": 469436,
+      "step": "followup",
+      "note": "nieudany: HTTP 404 https://mdk2.poznan.pl/images/mdk/rekrutacja_2026_2007/oswiadczenie_rekrutacja_2026.pdf",
+      "detail": {
+       "url": "https://mdk2.poznan.pl/images/mdk/rekrutacja_2026_2007/oswiadczenie_rekrutacja_2026.pdf"
+      }
+     },
+     {
+      "ms": 469495,
+      "step": "followup",
+      "note": "nieudany: HTTP 404 https://mdk2.poznan.pl/images/mdk/rekrutacja_2026_2007/Zasady_rekrutacji_w_roku_szkolnym_2026-2027.pdf",
+      "detail": {
+       "url": "https://mdk2.poznan.pl/images/mdk/rekrutacja_2026_2007/Zasady_rekrutacji_w_roku_szkolnym_2026-2027.pdf"
+      }
+     },
+     {
+      "ms": 469496,
+      "step": "event.past",
+      "note": "4 wydarzeń już się odbyło — nie idą do scalania",
+      "detail": {
+       "dropped": 4,
+       "kept": 0
+      }
+     },
+     {
+      "ms": 469496,
+      "step": "done",
+      "note": "status „empty\" — 0 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "empty",
+       "events": 0,
+       "ms": 13323
+      }
+     }
+    ]
+   },
+   {
+    "id": "dk-orle-gniazdo-fb",
+    "steps": [
+     {
+      "ms": 469496,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "posir-poznan",
+    "steps": [
+     {
+      "ms": 470588,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://posir.poznan.pl/wydarzenia",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 470738,
+      "step": "content",
+      "note": "15314 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 15314,
+       "hash": "ac3eb2337144",
+       "was": null
+      }
+     },
+     {
+      "ms": 470752,
+      "step": "block",
+      "note": "podział: akapity (brak listy) → 21 bloków, 0 z cache, 21 do modelu",
+      "detail": {
+       "blocks": 21,
+       "cached": 0,
+       "fresh": 21,
+       "how": "akapity (brak listy)"
+      }
+     },
+     {
+      "ms": 502177,
+      "step": "llm",
+      "note": "paczka 21 bloków → 41 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 21,
+       "events": 41,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://posir.poznan.pl/wydarzenia"
+      }
+     },
+     {
+      "ms": 503985,
+      "step": "geo",
+      "note": "„Malta, Tor Regatowy Malta\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Malta, Tor Regatowy Malta",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 505648,
+      "step": "geo",
+      "note": "„Golęcin, Stadion żużlowy\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Golęcin, Stadion żużlowy",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 506881,
+      "step": "geo",
+      "note": "„Chwiałka, Hale sportowe, Hala A\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Chwiałka, Hale sportowe, Hala A",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 508646,
+      "step": "geo",
+      "note": "„MOS, Boisko piłkarskie, ul. Gdańska 1\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "MOS, Boisko piłkarskie, ul. Gdańska 1",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 509832,
+      "step": "geo",
+      "note": "„MOS, Korty Pickleball\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "MOS, Korty Pickleball",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 509832,
+      "step": "geo",
+      "note": "„Strzeszynek\" → 52.4623634, 16.8285188",
+      "detail": {
+       "venue": "Strzeszynek",
+       "town": "Poznań",
+       "hit": true
+      }
+     },
+     {
+      "ms": 511125,
+      "step": "geo",
+      "note": "„Malta\" → 52.4073935, 16.9794958",
+      "detail": {
+       "venue": "Malta",
+       "town": "Poznań",
+       "hit": true
+      }
+     },
+     {
+      "ms": 512895,
+      "step": "geo",
+      "note": "„MOS, Boisko piłkarskie\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "MOS, Boisko piłkarskie",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 514542,
+      "step": "geo",
+      "note": "„Malta, Trybuna ziemna\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Malta, Trybuna ziemna",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 515775,
+      "step": "geo",
+      "note": "„Golęcin, Stadion lekkoatletyczny\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Golęcin, Stadion lekkoatletyczny",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 517537,
+      "step": "geo",
+      "note": "„Malta, Plac przy mecie\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Malta, Plac przy mecie",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 517537,
+      "step": "geo",
+      "note": "„Międzynarodowe Targi Poznańskie\" → 52.4032147, 16.9070454",
+      "detail": {
+       "venue": "Międzynarodowe Targi Poznańskie",
+       "town": "Poznań",
+       "hit": true
+      }
+     },
+     {
+      "ms": 517537,
+      "step": "done",
+      "note": "status „ok\" — 41 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "ok",
+       "events": 41,
+       "ms": 48042
+      }
+     },
+     {
+      "ms": 645845,
+      "step": "event.dropped",
+      "note": "„PÓŁKOLONIE MULTISPORTOWE\" — półkolonie to turnus z zapisami, nie wydarzenie do przyjścia",
+      "detail": {
+       "title": "PÓŁKOLONIE MULTISPORTOWE",
+       "date": "2026-08-10",
+       "why": "półkolonie"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„41. MŁODZIEŻOWE MISTRZOSTWA POLSKI, 25. MISTRZOSTWA POLSKI MŁODZIKÓW, MISTRZOSTWA POLSKI PARAKAJAKARZY W KAJAKARSTWIE\" scalone do „41. MŁODZIEŻOWE MISTRZOSTWA POLSKI ORAZ 25. MISTRZOSTWA POLSKI MŁODZIKÓW W KAJAKARSTWIE/ MISTRZOSTWA POLSKI PARAKAJAKARZY\" ze źródła „poznan-co-gdzie-kiedy\" (tytuł zawarty w tamtym)",
+      "detail": {
+       "title": "41. MŁODZIEŻOWE MISTRZOSTWA POLSKI, 25. MISTRZOSTWA POLSKI MŁODZIKÓW, MISTRZOSTWA POLSKI PARAKAJAKARZY W KAJAKARSTWIE",
+       "date": "2026-08-07",
+       "winner": "poznan-co-gdzie-kiedy",
+       "why": "zawieranie"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„PSŻ - KROSNO\" scalone do „METALKAS 2. EKSTRALIGA: HUNTERS PSŻ POZNAŃ - CELLFAST WILKI KROSNO\" ze źródła „poznan-co-gdzie-kiedy\" (tytuł zawarty w tamtym)",
+      "detail": {
+       "title": "PSŻ - KROSNO",
+       "date": "2026-08-09",
+       "winner": "poznan-co-gdzie-kiedy",
+       "why": "zawieranie"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„WIARA LECHA - SKP SŁUPCA\" scalone do „MECZ WIARA LECHA - SKP SŁUPCA\" ze źródła „posir-poznan\" (tytuł zawarty w tamtym)",
+      "detail": {
+       "title": "WIARA LECHA - SKP SŁUPCA",
+       "date": "2026-09-12",
+       "winner": "posir-poznan",
+       "why": "zawieranie"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„WIARA LECHA - UKS ŚREM\" scalone do „MECZ WIARA LECHA - UKS ŚREM\" ze źródła „posir-poznan\" (tytuł zawarty w tamtym)",
+      "detail": {
+       "title": "WIARA LECHA - UKS ŚREM",
+       "date": "2026-10-03",
+       "winner": "posir-poznan",
+       "why": "zawieranie"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„WIARA LECHA - WARTA POZNAŃ II\" scalone do „MECZ WIARA LECHA - WARTA II POZNAŃ\" ze źródła „posir-poznan\" (tytuł zawarty w tamtym)",
+      "detail": {
+       "title": "WIARA LECHA - WARTA POZNAŃ II",
+       "date": "2026-10-17",
+       "winner": "posir-poznan",
+       "why": "zawieranie"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„WIARA LECHA - KŁOS ZANIEMYŚL\" scalone do „MECZ WIARA LECHA - KŁOS ZANIEMYŚL\" ze źródła „posir-poznan\" (tytuł zawarty w tamtym)",
+      "detail": {
+       "title": "WIARA LECHA - KŁOS ZANIEMYŚL",
+       "date": "2026-10-31",
+       "winner": "posir-poznan",
+       "why": "zawieranie"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„WIARA LECHA - OLIMPIA KOŁO\" scalone do „MECZ WIARA LECHA - OLIMPIA KOŁO\" ze źródła „posir-poznan\" (tytuł zawarty w tamtym)",
+      "detail": {
+       "title": "WIARA LECHA - OLIMPIA KOŁO",
+       "date": "2026-11-14",
+       "winner": "posir-poznan",
+       "why": "zawieranie"
+      }
+     },
+     {
+      "ms": 645869,
+      "step": "series",
+      "note": "„BEZPŁATNE WEJŚCIE NA PICKLEBALL\" — 2 rekordów różniących się wyłącznie datą zwinięte w jedną serię (2 terminów do 2026-08-28)",
+      "detail": {
+       "title": "BEZPŁATNE WEJŚCIE NA PICKLEBALL",
+       "folded": 2,
+       "occurrences": 2
+      }
+     }
+    ]
+   },
+   {
+    "id": "posir-poznan-fb",
+    "steps": [
+     {
+      "ms": 517537,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "biblioteka-raczynskch",
+    "steps": [
+     {
+      "ms": 517537,
+      "step": "capability",
+      "note": "źródło oddaje „tribe\" — bierzemy gotowe rekordy zamiast skrobać HTML",
+      "detail": {
+       "kind": "tribe",
+       "url": "https://bracz.edu.pl/wp-json/tribe/events/v1/events",
+       "itemsSeen": 11,
+       "checked": "2026-08-09"
+      }
+     },
+     {
+      "ms": 518973,
+      "step": "fetch",
+      "note": "wyjście maszynowe „tribe\" — HTTP 200",
+      "detail": {
+       "url": "https://bracz.edu.pl/wp-json/tribe/events/v1/events",
+       "strategy": "tribe",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 519162,
+      "step": "content",
+      "note": "17619 znaków, hash inny niż poprzednio — mapujemy rekordy",
+      "detail": {
+       "chars": 17619,
+       "hash": "8d0c6215891f",
+       "was": null
+      }
+     },
+     {
+      "ms": 519163,
+      "step": "capability.parsed",
+      "note": "11 rekordów → 11 wydarzeń, bez wywołania modelu",
+      "detail": {
+       "kind": "tribe",
+       "seen": 11,
+       "events": 11,
+       "past": 0,
+       "noDate": 0,
+       "noTitle": 0
+      }
+     },
+     {
+      "ms": 519163,
+      "step": "done",
+      "note": "status „ok\" — 11 wydarzeń idzie do scalania (ścieżka maszynowa, zero wywołań modelu)",
+      "detail": {
+       "status": "ok",
+       "events": 11,
+       "ms": 1626
+      }
+     }
+    ]
+   },
+   {
+    "id": "biblioteka-wielkopolska",
+    "steps": [
+     {
+      "ms": 519374,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://bw.poznan.pl/biblioteka/wydarzenia/",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 519555,
+      "step": "content",
+      "note": "6459 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 6459,
+       "hash": "942b5a98f694",
+       "was": null
+      }
+     },
+     {
+      "ms": 519567,
+      "step": "block",
+      "note": "podział: DOM, 9 kart → 12 bloków, 0 z cache, 12 do modelu",
+      "detail": {
+       "blocks": 12,
+       "cached": 0,
+       "fresh": 12,
+       "how": "DOM, 9 kart"
+      }
+     },
+     {
+      "ms": 521915,
+      "step": "llm",
+      "note": "paczka 12 bloków → 0 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 12,
+       "events": 0,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://bw.poznan.pl/biblioteka/wydarzenia/"
+      }
+     },
+     {
+      "ms": 521915,
+      "step": "done",
+      "note": "status „empty\" — 0 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "empty",
+       "events": 0,
+       "ms": 2751
+      }
+     }
+    ]
+   },
+   {
+    "id": "wbp-poznan",
+    "steps": [
+     {
+      "ms": 521953,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 522103,
+      "step": "content",
+      "note": "3129 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 3129,
+       "hash": "eb129a5f5811",
+       "was": null
+      }
+     },
+     {
+      "ms": 522112,
+      "step": "block",
+      "note": "podział: DOM, 3 kart → 6 bloków, 1 z cache, 5 do modelu",
+      "detail": {
+       "blocks": 6,
+       "cached": 1,
+       "fresh": 5,
+       "how": "DOM, 3 kart"
+      }
+     },
+     {
+      "ms": 528032,
+      "step": "llm",
+      "note": "paczka 5 bloków → 3 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 5,
+       "events": 3,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/"
+      }
+     },
+     {
+      "ms": 528032,
+      "step": "followup.proposed",
+      "note": "model wskazał 3 odnośników do dociągnięcia",
+      "detail": {
+       "proposed": 3,
+       "taken": 3
+      }
+     },
+     {
+      "ms": 540976,
+      "step": "llm",
+      "note": "ekstrakcja z 8510 znaków → 10 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 8510,
+       "events": 10,
+       "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/lato-w-bibliotece-2026/"
+      }
+     },
+     {
+      "ms": 540976,
+      "step": "series",
+      "note": "„Zielarnia Poetycka\" — rytm „wt\" rozwinięty na 3 terminów do 2026-08-25",
+      "detail": {
+       "title": "Zielarnia Poetycka",
+       "repeat": "wt",
+       "occurrences": 3
+      }
+     },
+     {
+      "ms": 540977,
+      "step": "series",
+      "note": "„Rysowanie postaci – od klasyki do mangi\" — rytm „cz,pt\" rozwinięty na 2 terminów do 2026-08-14",
+      "detail": {
+       "title": "Rysowanie postaci – od klasyki do mangi",
+       "repeat": "cz,pt",
+       "occurrences": 2
+      }
+     },
+     {
+      "ms": 540977,
+      "step": "followup",
+      "note": "podstrona → 13 wydarzeń",
+      "detail": {
+       "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/lato-w-bibliotece-2026/"
+      }
+     },
+     {
+      "ms": 545903,
+      "step": "llm",
+      "note": "ekstrakcja z 4560 znaków → 1 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 4560,
+       "events": 1,
+       "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/konkurs-plastyczny-a-propos-derwicha-satyra-jest-kobieta/"
+      }
+     },
+     {
+      "ms": 545903,
+      "step": "followup",
+      "note": "podstrona → 1 wydarzeń",
+      "detail": {
+       "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/konkurs-plastyczny-a-propos-derwicha-satyra-jest-kobieta/"
+      }
+     },
+     {
+      "ms": 560410,
+      "step": "llm",
+      "note": "ekstrakcja z 7967 znaków → 10 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "chars": 7967,
+       "events": 10,
+       "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/lato-na-jezycach-w-bibliotece-wielkopolskiej/"
+      }
+     },
+     {
+      "ms": 560410,
+      "step": "series",
+      "note": "„Zielarnia Poetycka\" — rytm „wt\" rozwinięty na 3 terminów do 2026-08-25",
+      "detail": {
+       "title": "Zielarnia Poetycka",
+       "repeat": "wt",
+       "occurrences": 3
+      }
+     },
+     {
+      "ms": 560410,
+      "step": "series",
+      "note": "„Rysowanie postaci – od klasyki do mangi\" — rytm „sr\" rozwinięty na 2 terminów do 2026-08-19",
+      "detail": {
+       "title": "Rysowanie postaci – od klasyki do mangi",
+       "repeat": "sr",
+       "occurrences": 2
+      }
+     },
+     {
+      "ms": 560410,
+      "step": "followup",
+      "note": "podstrona → 13 wydarzeń",
+      "detail": {
+       "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/lato-na-jezycach-w-bibliotece-wielkopolskiej/"
+      }
+     },
+     {
+      "ms": 560410,
+      "step": "event.past",
+      "note": "11 wydarzeń już się odbyło — nie idą do scalania",
+      "detail": {
+       "dropped": 11,
+       "kept": 19
+      }
+     },
+     {
+      "ms": 561801,
+      "step": "geo",
+      "note": "„Biblioteka Wielkopolska\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Biblioteka Wielkopolska",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 564379,
+      "step": "geo",
+      "note": "„Biblioteka Wielkopolska, sala 207\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Biblioteka Wielkopolska, sala 207",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 565939,
+      "step": "geo",
+      "note": "„Biblioteka Wielkopolska, sala 215\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Biblioteka Wielkopolska, sala 215",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 567365,
+      "step": "geo",
+      "note": "„Biblioteka Wielkopolska, sala 605\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Biblioteka Wielkopolska, sala 605",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 569133,
+      "step": "geo",
+      "note": "„Biblioteka Wielkopolska im. Stanisława Barańczaka\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Biblioteka Wielkopolska im. Stanisława Barańczaka",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 570510,
+      "step": "geo",
+      "note": "„Biblioteka Wielkopolska im. Stanisława Barańczaka, ul. Bolesława Prusa 3, sala 207\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Biblioteka Wielkopolska im. Stanisława Barańczaka, ul. Bolesława Prusa 3, sala 207",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 571929,
+      "step": "geo",
+      "note": "„Biblioteka Wielkopolska im. Stanisława Barańczaka, ul. Bolesława Prusa 3, sala 215\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Biblioteka Wielkopolska im. Stanisława Barańczaka, ul. Bolesława Prusa 3, sala 215",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 573301,
+      "step": "geo",
+      "note": "„Biblioteka Wielkopolska im. Stanisława Barańczaka, ul. Bolesława Prusa 3, sala 605\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Biblioteka Wielkopolska im. Stanisława Barańczaka, ul. Bolesława Prusa 3, sala 605",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 574597,
+      "step": "geo",
+      "note": "„Biblioteka Wielkopolska im. Stanisława Barańczaka, ul. Bolesława Prusa 3, hol biblioteki\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Biblioteka Wielkopolska im. Stanisława Barańczaka, ul. Bolesława Prusa 3, hol biblioteki",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 575846,
+      "step": "geo",
+      "note": "„Biblioteka Wielkopolska im. Stanisława Barańczaka, ul. Bolesława Prusa 3\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Biblioteka Wielkopolska im. Stanisława Barańczaka, ul. Bolesława Prusa 3",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 575846,
+      "step": "done",
+      "note": "status „ok\" — 19 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "ok",
+       "events": 19,
+       "ms": 53931
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„KONKURS PLASTYCZNY \"À PROPOS DERWICHA – SATYRA JEST KOBIETĄ\"\" scalone do „Konkurs plastyczny „À propos Derwicha – satyra jest kobietą\" ze źródła „wbp-poznan\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "KONKURS PLASTYCZNY \"À PROPOS DERWICHA – SATYRA JEST KOBIETĄ\"",
+       "date": "2026-07-01",
+       "winner": "wbp-poznan",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„Zielarnia Poetycka\" scalone do „Zielarnia Poetycka\" ze źródła „wbp-poznan\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "Zielarnia Poetycka",
+       "date": "2026-08-11",
+       "winner": "wbp-poznan",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„Zielarnia Poetycka\" scalone do „Zielarnia Poetycka\" ze źródła „wbp-poznan\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "Zielarnia Poetycka",
+       "date": "2026-08-18",
+       "winner": "wbp-poznan",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„Zielarnia Poetycka\" scalone do „Zielarnia Poetycka\" ze źródła „wbp-poznan\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "Zielarnia Poetycka",
+       "date": "2026-08-25",
+       "winner": "wbp-poznan",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645869,
+      "step": "series",
+      "note": "„Zielarnia Poetycka\" — 3 rekordów różniących się wyłącznie datą zwinięte w jedną serię (3 terminów do 2026-08-25)",
+      "detail": {
+       "title": "Zielarnia Poetycka",
+       "folded": 3,
+       "occurrences": 3
+      }
+     },
+     {
+      "ms": 645869,
+      "step": "series",
+      "note": "„Rysowanie postaci – od klasyki do mangi\" — 2 rekordów różniących się wyłącznie datą zwinięte w jedną serię (2 terminów do 2026-08-14)",
+      "detail": {
+       "title": "Rysowanie postaci – od klasyki do mangi",
+       "folded": 2,
+       "occurrences": 2
+      }
+     },
+     {
+      "ms": 645869,
+      "step": "series",
+      "note": "„Rysowanie postaci – od klasyki do mangi\" — 2 rekordów różniących się wyłącznie datą zwinięte w jedną serię (2 terminów do 2026-08-19)",
+      "detail": {
+       "title": "Rysowanie postaci – od klasyki do mangi",
+       "folded": 2,
+       "occurrences": 2
+      }
+     }
+    ]
+   },
+   {
+    "id": "cik-poznan-fb",
+    "steps": [
+     {
+      "ms": 575846,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "fb-group-wydarzenia-w-poznaniu-1",
+    "steps": [
+     {
+      "ms": 575846,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "fb-group-poznan-wydarzenia",
+    "steps": [
+     {
+      "ms": 575846,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "fb-group-wydarzenia-poznan-2",
+    "steps": [
+     {
+      "ms": 575846,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "fb-group-imprezy-poznan",
+    "steps": [
+     {
+      "ms": 575846,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "fb-group-allin-poznan",
+    "steps": [
+     {
+      "ms": 575846,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "fb-group-wydarzenia-poznan-3",
+    "steps": [
+     {
+      "ms": 575846,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "fb-group-baba-cool",
+    "steps": [
+     {
+      "ms": 575846,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "fb-group-wydarzenia-poznan-4",
+    "steps": [
+     {
+      "ms": 575846,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "epoznan-kultura",
+    "steps": [
+     {
+      "ms": 575846,
+      "step": "skip",
+      "note": "URL oznaczony jako martwy przez discover --verify — bez próby pobrania",
+      "detail": {
+       "url": "https://epoznan.pl/culture"
+      }
+     }
+    ]
+   },
+   {
+    "id": "okpoznan-wydarzenia",
+    "steps": [
+     {
+      "ms": 577320,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://okpoznan.pl/wydarzenia",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 577495,
+      "step": "content",
+      "note": "39378 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 39378,
+       "hash": "4894243c2f8e",
+       "was": null
+      }
+     },
+     {
+      "ms": 577558,
+      "step": "block",
+      "note": "podział: DOM, 51 kart → 69 bloków, 0 z cache, 69 do modelu",
+      "detail": {
+       "blocks": 69,
+       "cached": 0,
+       "fresh": 69,
+       "how": "DOM, 51 kart"
+      }
+     },
+     {
+      "ms": 601349,
+      "step": "llm",
+      "note": "paczka 69 bloków → 16 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 69,
+       "events": 16,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://okpoznan.pl/wydarzenia"
+      }
+     },
+     {
+      "ms": 602681,
+      "step": "geo",
+      "note": "„Stary Rynek 3, Poznań\" → 52.4083064, 16.9331074",
+      "detail": {
+       "venue": "Stary Rynek 3, Poznań",
+       "town": "Poznań",
+       "hit": true
+      }
+     },
+     {
+      "ms": 603986,
+      "step": "geo",
+      "note": "„Stary Rynek 84, Poznań\" → 52.4088834, 16.9327177",
+      "detail": {
+       "venue": "Stary Rynek 84, Poznań",
+       "town": "Poznań",
+       "hit": true
+      }
+     },
+     {
+      "ms": 605748,
+      "step": "geo",
+      "note": "„ul. Franciszka Ratajczaka 44, Poznań\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "ul. Franciszka Ratajczaka 44, Poznań",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 607011,
+      "step": "geo",
+      "note": "„Plac Kolegiacki 17, Poznań\" → 52.4060312, 16.9356647",
+      "detail": {
+       "venue": "Plac Kolegiacki 17, Poznań",
+       "town": "Poznań",
+       "hit": true
+      }
+     },
+     {
+      "ms": 608880,
+      "step": "geo",
+      "note": "„ul. Lubrańskiego 1, Poznań\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "ul. Lubrańskiego 1, Poznań",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 610190,
+      "step": "geo",
+      "note": "„ul. Warmińska 1, Poznań\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "ul. Warmińska 1, Poznań",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 610190,
+      "step": "done",
+      "note": "status „ok\" — 16 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "ok",
+       "events": 16,
+       "ms": 34344
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„41. Młodzieżowe Mistrzostwa Polski oraz 25. Mistrzostwa Polski Młodzików w kajakarstwie/ Mistrzostwa Polski Parakajakarzy\" scalone do „41. MŁODZIEŻOWE MISTRZOSTWA POLSKI ORAZ 25. MISTRZOSTWA POLSKI MŁODZIKÓW W KAJAKARSTWIE/ MISTRZOSTWA POLSKI PARAKAJAKARZY\" ze źródła „poznan-co-gdzie-kiedy\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "41. Młodzieżowe Mistrzostwa Polski oraz 25. Mistrzostwa Polski Młodzików w kajakarstwie/ Mistrzostwa Polski Parakajakarzy",
+       "date": "2026-08-07",
+       "winner": "poznan-co-gdzie-kiedy",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„Żeglarski Puchar Miasta Poznania\" scalone do „ŻEGLARSKI PUCHAR MIASTA POZNANIA\" ze źródła „poznan-co-gdzie-kiedy\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "Żeglarski Puchar Miasta Poznania",
+       "date": "2026-08-08",
+       "winner": "poznan-co-gdzie-kiedy",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„Wakacje z planszówkami\" scalone do „WAKACJE Z PLANSZÓWKAMI\" ze źródła „poznan-co-gdzie-kiedy\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "Wakacje z planszówkami",
+       "date": "2026-08-09",
+       "winner": "poznan-co-gdzie-kiedy",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„Podaj łapę - dobro wraca - warsztaty rękodzielnicze z tworzenia zabawek dla zwierząt\" scalone do „PODAJ ŁAPĘ - DOBRO WRACA - WARSZTATY RĘKODZIELNICZE Z TWORZENIA ZABAWEK DLA ZWIERZĄT\" ze źródła „poznan-co-gdzie-kiedy\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "Podaj łapę - dobro wraca - warsztaty rękodzielnicze z tworzenia zabawek dla zwierząt",
+       "date": "2026-08-09",
+       "winner": "poznan-co-gdzie-kiedy",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„Metalkas 2. Ekstraliga: Hunters PSŻ Poznań - Cellfast Wilki Krosno\" scalone do „METALKAS 2. EKSTRALIGA: HUNTERS PSŻ POZNAŃ - CELLFAST WILKI KROSNO\" ze źródła „poznan-co-gdzie-kiedy\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "Metalkas 2. Ekstraliga: Hunters PSŻ Poznań - Cellfast Wilki Krosno",
+       "date": "2026-08-09",
+       "winner": "poznan-co-gdzie-kiedy",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„Malowanie ceramiki na Fali\" scalone do „MALOWANIE CERAMIKI NA FALI\" ze źródła „poznan-co-gdzie-kiedy\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "Malowanie ceramiki na Fali",
+       "date": "2026-08-09",
+       "winner": "poznan-co-gdzie-kiedy",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„PKO BP Ekstraklasa: Lech Poznań - Piast Gliwice\" scalone do „PKO BP EKSTRAKLASA: LECH POZNAŃ - PIAST GLIWICE\" ze źródła „poznan-co-gdzie-kiedy\" (ten sam tytuł i data)",
+      "detail": {
+       "title": "PKO BP Ekstraklasa: Lech Poznań - Piast Gliwice",
+       "date": "2026-08-09",
+       "winner": "poznan-co-gdzie-kiedy",
+       "why": "klucz"
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "„Hunters PSŻ Poznań - Cellfast Wilki Krosno\" scalone do „METALKAS 2. EKSTRALIGA: HUNTERS PSŻ POZNAŃ - CELLFAST WILKI KROSNO\" ze źródła „poznan-co-gdzie-kiedy\" (tytuł zawarty w tamtym)",
+      "detail": {
+       "title": "Hunters PSŻ Poznań - Cellfast Wilki Krosno",
+       "date": "2026-08-09",
+       "winner": "poznan-co-gdzie-kiedy",
+       "why": "zawieranie"
+      }
+     }
+    ]
+   },
+   {
+    "id": "puszczykowo-pl-wydarzenia",
+    "steps": [
+     {
+      "ms": 611609,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://puszczykowo.pl/wydarzenia",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 611880,
+      "step": "content",
+      "note": "5754 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 5754,
+       "hash": "12ac86e50fbf",
+       "was": null
+      }
+     },
+     {
+      "ms": 611889,
+      "step": "block",
+      "note": "podział: DOM, 13 kart → 18 bloków, 0 z cache, 18 do modelu",
+      "detail": {
+       "blocks": 18,
+       "cached": 0,
+       "fresh": 18,
+       "how": "DOM, 13 kart"
+      }
+     },
+     {
+      "ms": 631465,
+      "step": "llm",
+      "note": "paczka 18 bloków → 7 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 18,
+       "events": 7,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://puszczykowo.pl/wydarzenia"
+      }
+     },
+     {
+      "ms": 633267,
+      "step": "geo",
+      "note": "„KP Las Puszczykowo\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "KP Las Puszczykowo",
+       "town": "Puszczykowo",
+       "hit": false
+      }
+     },
+     {
+      "ms": 634583,
+      "step": "geo",
+      "note": "„Muzeum Polskiej Motoryzacji w Puszczykowie\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Muzeum Polskiej Motoryzacji w Puszczykowie",
+       "town": "Puszczykowo",
+       "hit": false
+      }
+     },
+     {
+      "ms": 634583,
+      "step": "done",
+      "note": "status „ok\" — 7 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "ok",
+       "events": 7,
+       "ms": 24393
+      }
+     }
+    ]
+   },
+   {
+    "id": "puszczykowo-pl-kultura-wydarzenia",
+    "steps": [
+     {
+      "ms": 635892,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://puszczykowo.pl/strefa-miejska/kultura/wydarzenia-kulturalne",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 636058,
+      "step": "content",
+      "note": "6394 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 6394,
+       "hash": "d62e1d581c11",
+       "was": null
+      }
+     },
+     {
+      "ms": 636067,
+      "step": "block",
+      "note": "podział: DOM, 13 kart → 19 bloków, 10 z cache, 9 do modelu",
+      "detail": {
+       "blocks": 19,
+       "cached": 10,
+       "fresh": 9,
+       "how": "DOM, 13 kart"
+      }
+     },
+     {
+      "ms": 644577,
+      "step": "llm",
+      "note": "paczka 9 bloków → 6 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 9,
+       "events": 6,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://puszczykowo.pl/strefa-miejska/kultura/wydarzenia-kulturalne"
+      }
+     },
+     {
+      "ms": 644577,
+      "step": "geo",
+      "note": "„Wielkopolska Izba Rzemieślnicza w Poznaniu\" — geokoder nie zna tego adresu",
+      "detail": {
+       "venue": "Wielkopolska Izba Rzemieślnicza w Poznaniu",
+       "town": "Poznań",
+       "hit": false
+      }
+     },
+     {
+      "ms": 645843,
+      "step": "geo",
+      "note": "„Dwór Skrzynki\" → 52.5007572, 19.33909",
+      "detail": {
+       "venue": "Dwór Skrzynki",
+       "town": "Skrzynki",
+       "hit": true
+      }
+     },
+     {
+      "ms": 645843,
+      "step": "geo",
+      "note": "„Wielkopolski Park Narodowy\" → 52.2741269, 16.7807831",
+      "detail": {
+       "venue": "Wielkopolski Park Narodowy",
+       "town": "",
+       "hit": true
+      }
+     },
+     {
+      "ms": 645843,
+      "step": "done",
+      "note": "status „ok\" — 6 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "ok",
+       "events": 6,
+       "ms": 11259
+      }
+     }
+    ]
+   },
+   {
+    "id": "willa-mimoza-fb",
+    "steps": [
+     {
+      "ms": 645843,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "biblioteka-puszczykowo-fb",
+    "steps": [
+     {
+      "ms": 645843,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "biblioteka-puszczykowo-sowa",
+    "steps": [
+     {
+      "ms": 645843,
+      "step": "skip",
+      "note": "URL oznaczony jako martwy przez discover --verify — bez próby pobrania",
+      "detail": {
+       "url": "https://www.puszczykowo-mbp.sowa.pl/"
+      }
+     }
+    ]
+   },
+   {
+    "id": "hala-puszczykowo-fb",
+    "steps": [
+     {
+      "ms": 645843,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "puszczykowo-na-sportowo-fb",
+    "steps": [
+     {
+      "ms": 645843,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "miasto-puszczykowo-fb",
+    "steps": [
+     {
+      "ms": 645843,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "grupa-puszczykowo-fb",
+    "steps": [
+     {
+      "ms": 645843,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "kocham-puszczykowo-fb",
+    "steps": [
+     {
+      "ms": 645843,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "puszczykowo-ogloszenia-fb",
+    "steps": [
+     {
+      "ms": 645843,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "(run)",
+    "steps": [
+     {
+      "ms": 645845,
+      "step": "event.dropped",
+      "note": "odsiew półkolonii: 2 wpisów nie idzie do publikacji",
+      "detail": {
+       "dropped": 2,
+       "kept": 231
+      }
+     },
+     {
+      "ms": 645850,
+      "step": "dedupe.dropped",
+      "note": "scalanie: 45 duplikatów, zostaje 186 wydarzeń",
+      "detail": {
+       "dropped": 45,
+       "kept": 186
+      }
+     },
+     {
+      "ms": 645869,
+      "step": "series",
+      "note": "serie: 20 powtórzeń zwiniętych, zostaje 166 wydarzeń",
+      "detail": {
+       "folded": 20,
+       "kept": 166
+      }
+     },
+     {
+      "ms": 646398,
+      "step": "pii",
+      "note": "usunięto 4 numerów komórkowych i 1 adresów e-mail",
+      "detail": {
+       "phones": 4,
+       "emails": 1
+      }
+     },
+     {
+      "ms": 646398,
+      "step": "done",
+      "note": "publikacja: 166 wydarzeń, 3 błędów potoku",
+      "detail": {
+       "events": 166,
+       "errors": 3
+      }
+     }
+    ]
+   }
+  ]
  }
 ]
