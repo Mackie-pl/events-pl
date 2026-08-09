@@ -1,0 +1,477 @@
+[
+ {
+  "run": "2026-08-08T18:49:06.152Z",
+  "day": "2026-08-08",
+  "sources": [
+   {
+    "id": "ok-lubon-www",
+    "steps": [
+     {
+      "ms": 418,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://www.oklubon.pl/wydarzenia",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 657,
+      "step": "content",
+      "note": "7440 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 7440,
+       "hash": "2723b1856d06",
+       "was": null
+      }
+     },
+     {
+      "ms": 682,
+      "step": "block",
+      "note": "podział: akapity (brak listy) → 10 bloków, 0 z cache, 10 do modelu",
+      "detail": {
+       "blocks": 10,
+       "cached": 0,
+       "fresh": 10,
+       "how": "akapity (brak listy)"
+      }
+     },
+     {
+      "ms": 6932,
+      "step": "llm",
+      "note": "paczka 10 bloków → 4 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 10,
+       "events": 4,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://www.oklubon.pl/wydarzenia"
+      }
+     },
+     {
+      "ms": 6935,
+      "step": "event.past",
+      "note": "1 wydarzeń już się odbyło — nie idą do scalania",
+      "detail": {
+       "dropped": 1,
+       "kept": 3
+      }
+     },
+     {
+      "ms": 8251,
+      "step": "geo",
+      "note": "„Ośrodek Kultury\" → [tel. w źródle], 17.294874",
+      "detail": {
+       "venue": "Ośrodek Kultury",
+       "town": "",
+       "hit": true
+      }
+     },
+     {
+      "ms": 8251,
+      "step": "done",
+      "note": "status „ok\" — 3 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "ok",
+       "events": 3,
+       "ms": 8235
+      }
+     }
+    ]
+   },
+   {
+    "id": "ok-lubon-fb",
+    "steps": [
+     {
+      "ms": 8251,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "lubon-pl-kalendarium",
+    "steps": [
+     {
+      "ms": 8467,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://lubon.pl/kalendarium/5/1/5",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 8641,
+      "step": "content",
+      "note": "997 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 997,
+       "hash": "8e651e0d3e60",
+       "was": null
+      }
+     },
+     {
+      "ms": 8653,
+      "step": "block",
+      "note": "podział: akapity (brak listy) → 3 bloków, 0 z cache, 3 do modelu",
+      "detail": {
+       "blocks": 3,
+       "cached": 0,
+       "fresh": 3,
+       "how": "akapity (brak listy)"
+      }
+     },
+     {
+      "ms": 10585,
+      "step": "llm",
+      "note": "paczka 3 bloków → 0 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 3,
+       "events": 0,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://lubon.pl/kalendarium/5/1/5"
+      }
+     },
+     {
+      "ms": 10585,
+      "step": "followup.proposed",
+      "note": "wejście z etapu 1 (listing, ×56 odnośników) dołącza do followupów",
+      "detail": {
+       "url": "https://lubon.pl/kalendarium/1/5",
+       "via": "llm",
+       "confidence": 0.9
+      }
+     },
+     {
+      "ms": 10915,
+      "step": "followup",
+      "note": "ten sam hash treści — 0 wydarzeń z cache, bez modelu",
+      "detail": {
+       "url": "https://lubon.pl/kalendarium/1/5"
+      }
+     },
+     {
+      "ms": 10915,
+      "step": "done",
+      "note": "status „empty\" — 0 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "empty",
+       "events": 0,
+       "ms": 2664
+      }
+     }
+    ]
+   },
+   {
+    "id": "lubon-pl-kalendarz-2026",
+    "steps": [
+     {
+      "ms": 11100,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://lubon.pl/news/content/4766",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 11263,
+      "step": "content",
+      "note": "11110 znaków, ten sam hash co poprzednio — bez wywołania modelu",
+      "detail": {
+       "chars": 11110,
+       "hash": "b082bca9ce33"
+      }
+     },
+     {
+      "ms": 11263,
+      "step": "cache.hit",
+      "note": "42 wydarzeń z cache (ekstrakcja z 2026-08-08)",
+      "detail": {
+       "events": 42,
+       "since": "2026-08-08T05:05:21.480Z"
+      }
+     },
+     {
+      "ms": 11263,
+      "step": "followup.proposed",
+      "note": "wejście z etapu 1 (listing, ×63 odnośników) dołącza do followupów",
+      "detail": {
+       "url": "https://lubon.pl/artykuly/350/wydarzenia",
+       "via": "llm",
+       "confidence": 0.9
+      }
+     },
+     {
+      "ms": 11519,
+      "step": "followup",
+      "note": "ten sam hash treści — 0 wydarzeń z cache, bez modelu",
+      "detail": {
+       "url": "https://lubon.pl/artykuly/350/wydarzenia"
+      }
+     },
+     {
+      "ms": 11519,
+      "step": "event.past",
+      "note": "42 wydarzeń już się odbyło — nie idą do scalania",
+      "detail": {
+       "dropped": 42,
+       "kept": 0
+      }
+     },
+     {
+      "ms": 11519,
+      "step": "done",
+      "note": "status „empty\" — 0 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "empty",
+       "events": 0,
+       "ms": 604
+      }
+     }
+    ]
+   },
+   {
+    "id": "miasto-lubon-fb",
+    "steps": [
+     {
+      "ms": 11519,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "biblioteka-lubon-www",
+    "steps": [
+     {
+      "ms": 13338,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://biblub.com/",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 13473,
+      "step": "content",
+      "note": "4613 znaków, hash inny niż poprzednio — idzie do modelu",
+      "detail": {
+       "chars": 4613,
+       "hash": "a2c0e428ab78",
+       "was": null
+      }
+     },
+     {
+      "ms": 13487,
+      "step": "block",
+      "note": "podział: DOM, 9 kart → 16 bloków, 0 z cache, 16 do modelu",
+      "detail": {
+       "blocks": 16,
+       "cached": 0,
+       "fresh": 16,
+       "how": "DOM, 9 kart"
+      }
+     },
+     {
+      "ms": 15142,
+      "step": "llm",
+      "note": "paczka 16 bloków → 0 wydarzeń",
+      "detail": {
+       "model": "anthropic/claude-haiku-4.5",
+       "task": "extract",
+       "blocks": 16,
+       "events": 0,
+       "orphans": 0,
+       "unsafe": 0,
+       "url": "https://biblub.com/"
+      }
+     },
+     {
+      "ms": 15142,
+      "step": "followup.proposed",
+      "note": "wejście z etapu 1 (listing, ×6 odnośników) dołącza do followupów",
+      "detail": {
+       "url": "https://biblub.com/category/aktualnosci/page/1",
+       "via": "llm",
+       "confidence": 0.9
+      }
+     },
+     {
+      "ms": 16572,
+      "step": "followup",
+      "note": "ten sam hash treści — 0 wydarzeń z cache, bez modelu",
+      "detail": {
+       "url": "https://biblub.com/category/aktualnosci/page/1"
+      }
+     },
+     {
+      "ms": 16572,
+      "step": "done",
+      "note": "status „empty\" — 0 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "empty",
+       "events": 0,
+       "ms": 5053
+      }
+     }
+    ]
+   },
+   {
+    "id": "biblioteka-lubon-fb",
+    "steps": [
+     {
+      "ms": 16573,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "losir-lubon-fb",
+    "steps": [
+     {
+      "ms": 16573,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "gazeta-lubon-kalendarium",
+    "steps": [
+     {
+      "ms": 16684,
+      "step": "fetch",
+      "note": "pobrane strategią „plain\" — HTTP 200",
+      "detail": {
+       "url": "https://www.gazeta-lubon.pl/2026/losir-kalendarium/",
+       "strategy": "plain",
+       "httpStatus": 200
+      }
+     },
+     {
+      "ms": 16831,
+      "step": "content",
+      "note": "2407 znaków, ten sam hash co poprzednio — bez wywołania modelu",
+      "detail": {
+       "chars": 2407,
+       "hash": "3edd5357e38c"
+      }
+     },
+     {
+      "ms": 16831,
+      "step": "cache.hit",
+      "note": "2 wydarzeń z cache (ekstrakcja z 2026-08-08)",
+      "detail": {
+       "events": 2,
+       "since": "2026-08-08T05:05:19.984Z"
+      }
+     },
+     {
+      "ms": 16831,
+      "step": "event.past",
+      "note": "2 wydarzeń już się odbyło — nie idą do scalania",
+      "detail": {
+       "dropped": 2,
+       "kept": 0
+      }
+     },
+     {
+      "ms": 16831,
+      "step": "done",
+      "note": "status „empty\" — 0 wydarzeń idzie do scalania",
+      "detail": {
+       "status": "empty",
+       "events": 0,
+       "ms": 259
+      }
+     }
+    ]
+   },
+   {
+    "id": "wydarzenia-w-luboniu-fb-group",
+    "steps": [
+     {
+      "ms": 16831,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "lubon-fb-group",
+    "steps": [
+     {
+      "ms": 16831,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "mieszkancy-lubonia-fb-group",
+    "steps": [
+     {
+      "ms": 16831,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb_group\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "plaza-miejska-lubon-fb",
+    "steps": [
+     {
+      "ms": 16831,
+      "step": "skip",
+      "note": "źródło FB (fetch:„fb\") bez klucza Bright Data — tryb zero-cost"
+     }
+    ]
+   },
+   {
+    "id": "(run)",
+    "steps": [
+     {
+      "ms": 16832,
+      "step": "dedupe.dropped",
+      "note": "scalanie: 0 duplikatów, zostaje 3 wydarzeń",
+      "detail": {
+       "dropped": 0,
+       "kept": 3
+      }
+     },
+     {
+      "ms": 17049,
+      "step": "pii",
+      "note": "usunięto 0 numerów komórkowych i 0 adresów e-mail",
+      "detail": {
+       "phones": 0,
+       "emails": 0
+      }
+     },
+     {
+      "ms": 17049,
+      "step": "done",
+      "note": "publikacja: 3 wydarzeń, 0 błędów potoku",
+      "detail": {
+       "events": 3,
+       "errors": 0
+      }
+     }
+    ]
+   }
+  ]
+ }
+]

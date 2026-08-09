@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-08T05:05:22.674Z",
+ "updated": "2026-08-08T18:49:23.239Z",
  "rates": {
   "bdPerRecord": 0.0015,
   "searchPerQuery": 0.001,
@@ -1348,6 +1348,151 @@
    "usd": 0,
    "estimated": true,
    "units": 2.534,
+   "unit": "MB"
+  },
+  {
+   "day": "2026-08-08",
+   "at": "2026-08-08T18:48:05.108Z",
+   "stage": "discover",
+   "run": "2026-08-08T18:46:38.042Z",
+   "category": "llm-discover",
+   "usd": 0.057171,
+   "estimated": false,
+   "units": 1,
+   "unit": "calls",
+   "tokensIn": 12102,
+   "tokensOut": 1391,
+   "top": [
+    {
+     "id": "Luboń",
+     "usd": 0.057171,
+     "units": 1
+    }
+   ]
+  },
+  {
+   "day": "2026-08-08",
+   "at": "2026-08-08T18:48:05.108Z",
+   "stage": "discover",
+   "run": "2026-08-08T18:46:38.042Z",
+   "category": "llm-verify",
+   "usd": 0.015162,
+   "estimated": false,
+   "units": 5,
+   "unit": "calls",
+   "tokensIn": 12057,
+   "tokensOut": 621,
+   "top": [
+    {
+     "id": "ok-lubon-www",
+     "usd": 0.003957,
+     "units": 1
+    },
+    {
+     "id": "lubon-pl-kalendarium",
+     "usd": 0.003269,
+     "units": 1
+    },
+    {
+     "id": "lubon-pl-kalendarz-2026",
+     "usd": 0.003219,
+     "units": 1
+    },
+    {
+     "id": "biblioteka-lubon-www",
+     "usd": 0.002658,
+     "units": 1
+    },
+    {
+     "id": "gazeta-lubon-kalendarium",
+     "usd": 0.002059,
+     "units": 1
+    }
+   ]
+  },
+  {
+   "day": "2026-08-08",
+   "at": "2026-08-08T18:48:05.108Z",
+   "stage": "discover",
+   "run": "2026-08-08T18:46:38.042Z",
+   "category": "search",
+   "usd": 0.01,
+   "estimated": true,
+   "units": 10,
+   "unit": "queries"
+  },
+  {
+   "day": "2026-08-08",
+   "at": "2026-08-08T18:48:05.108Z",
+   "stage": "discover",
+   "run": "2026-08-08T18:46:38.042Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 28,
+   "unit": "fetches"
+  },
+  {
+   "day": "2026-08-08",
+   "at": "2026-08-08T18:49:23.205Z",
+   "stage": "daily",
+   "run": "2026-08-08T18:49:06.152Z",
+   "category": "llm-extract",
+   "usd": 0.020417,
+   "estimated": false,
+   "units": 3,
+   "unit": "calls",
+   "tokensIn": 17327,
+   "tokensOut": 618,
+   "top": [
+    {
+     "id": "ok-lubon-www",
+     "usd": 0.010002,
+     "units": 1
+    },
+    {
+     "id": "biblioteka-lubon-www",
+     "usd": 0.006049,
+     "units": 1
+    },
+    {
+     "id": "lubon-pl-kalendarium",
+     "usd": 0.004366,
+     "units": 1
+    }
+   ]
+  },
+  {
+   "day": "2026-08-08",
+   "at": "2026-08-08T18:49:23.205Z",
+   "stage": "daily",
+   "run": "2026-08-08T18:49:06.152Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 8,
+   "unit": "fetches"
+  },
+  {
+   "day": "2026-08-08",
+   "at": "2026-08-08T18:49:23.205Z",
+   "stage": "daily",
+   "run": "2026-08-08T18:49:06.152Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 1,
+   "unit": "lookups"
+  },
+  {
+   "day": "2026-08-08",
+   "at": "2026-08-08T18:49:23.205Z",
+   "stage": "daily",
+   "run": "2026-08-08T18:49:06.152Z",
+   "category": "storage",
+   "usd": 0,
+   "estimated": true,
+   "units": 0.069,
    "unit": "MB"
   }
  ]
