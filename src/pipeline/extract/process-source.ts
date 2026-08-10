@@ -33,6 +33,10 @@ import {
 } from "./extract.js";
 
 const MAX_FOLLOWUPS_PER_SOURCE = 5;
+// bez limitu Bright Data potrafi scrapować całą historię grupy — realny przypadek: jedna grupa
+// wisiała ~10h i wygenerowała 729 rekordów, zanim nasz timeout i tak porzucił wynik ($8+ za nic).
+// Nas interesują tylko świeże posty (diff dzienny), więc kilkadziesiąt najnowszych wystarczy.
+const MAX_FB_GROUP_POSTS = 50;
 
 /** Ten sam adres wg reguł rejestru (bez schematu, `www.`, końcowego `/`). */
 const isSameUrl = (a: string, b: string): boolean => urlKey(a) === urlKey(b);
@@ -53,7 +57,7 @@ async function fetchSource(
     // posty otwartej grupy przez Bright Data (FB blokuje zwykły fetch); BD zawsze zwraca
     // pełną treść — brak 304, diff załatwia standardowe porównanie hashy w processSource
     try {
-      const records = await bdCollect(BD_DATASETS.fbGroupPosts, [url]);
+      const records = await bdCollect(BD_DATASETS.fbGroupPosts, [url], MAX_FB_GROUP_POSTS);
       return { kind: "html", text: fbGroupPostsToText(records), httpStatus: 200 };
     } catch (e) {
       bdUsage.errors += 1;

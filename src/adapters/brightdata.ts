@@ -78,11 +78,14 @@ function authHeaders(): Record<string, string> {
   return { Authorization: `Bearer ${key}`, "Content-Type": "application/json" };
 }
 
-async function trigger(datasetId: string, inputs: Array<{ url: string }>): Promise<string> {
+async function trigger(
+  datasetId: string, inputs: Array<{ url: string }>, limitPerInput?: number,
+): Promise<string> {
   bdUsage.triggers += 1;
   bdUsage.inputs += inputs.length;
+  const limitParam = limitPerInput ? `&limit_per_input=${limitPerInput}` : "";
   const res = await fetchUrl(
-    `${BASE}/trigger?dataset_id=${datasetId}&include_errors=true`,
+    `${BASE}/trigger?dataset_id=${datasetId}&include_errors=true${limitParam}`,
     {
       method: "POST",
       headers: authHeaders(),
@@ -111,6 +114,25 @@ async function progress(snapshotId: string): Promise<string> {
   return json.status ?? "unknown";
 }
 
+/**
+ * Bright Data rozlicza za czas/rekordy niezależnie od tego, czy klient jeszcze słucha —
+ * porzucona migawka (np. po naszym timeout) leci dalej i płynie kasa bez żadnego wyniku
+ * po naszej stronie. Wołane best-effort: nieudane anulowanie nie powinno przykryć
+ * właściwego błędu timeoutu.
+ */
+async function cancelSnapshot(snapshotId: string): Promise<void> {
+  try {
+    await fetchUrl(
+      `${BASE}/snapshot/${snapshotId}/cancel`,
+      { method: "POST", headers: authHeaders() },
+      15_000,
+      `Bright Data cancel ${snapshotId}`,
+    );
+  } catch {
+    // best-effort — brak anulowania nie powinien zgłuszyć oryginalnego błędu timeoutu
+  }
+}
+
 async function download(snapshotId: string): Promise<BdRecord[]> {
   const res = await fetchUrl(
     `${BASE}/snapshot/${snapshotId}?format=json`,
@@ -127,14 +149,16 @@ async function download(snapshotId: string): Promise<BdRecord[]> {
  * Pełny cykl dla zbioru URL-i tego samego datasetu.
  * Zwraca surowe rekordy (przy include_errors mogą zawierać wpisy z polem błędu — filtruje warstwa FB).
  */
-export async function collect(datasetId: string, urls: string[]): Promise<BdRecord[]> {
+export async function collect(
+  datasetId: string, urls: string[], limitPerInput?: number,
+): Promise<BdRecord[]> {
   const uniq = [...new Set(urls.map((u) => u.trim()).filter(Boolean))];
   if (!uniq.length) return [];
 
   const pollMs = Number(process.env["BD_POLL_MS"] ?? 10_000);
   const timeoutMs = Number(process.env["BD_TIMEOUT_MS"] ?? 480_000);
 
-  const snapshotId = await trigger(datasetId, uniq.map((url) => ({ url })));
+  const snapshotId = await trigger(datasetId, uniq.map((url) => ({ url })), limitPerInput);
   // od razu po triggerze — id nieudanego/przeterminowanego zbioru też chcemy mieć w logu
   bdUsage.snapshots.push(snapshotId);
   const deadline = Date.now() + timeoutMs;
@@ -148,7 +172,11 @@ export async function collect(datasetId: string, urls: string[]): Promise<BdReco
     }
     if (status === "ready") break;
     if (status === "failed") throw new Error(`Bright Data snapshot ${snapshotId} failed`);
-    if (Date.now() > deadline) throw new Error(`Bright Data snapshot ${snapshotId} timeout (status=${status})`);
+    if (Date.now() > deadline) {
+      // porzucona migawka płynie dalej i kosztuje bez wyniku (patrz cancelSnapshot) — anulujemy, żeby nie płacić za coś, czego już nie odbieramy
+      await cancelSnapshot(snapshotId);
+      throw new Error(`Bright Data snapshot ${snapshotId} timeout (status=${status}) — anulowano`);
+    }
   }
 
   const rows = await download(snapshotId);
