@@ -8,8 +8,10 @@ import { functionRules, sizeRules } from "./eslint.shared.js";
 
 export default defineConfig([
   // node_modules/** i pliki kropkowe flat config ignoruje sam; tu tylko to, co naprawdę trzeba:
-  // panel/** bo jego pliki nie należą do rootowego tsconfiga (projectService by się wywalił).
-  globalIgnores(["dist/**", "_site/**", "panel/**", "coverage/**"]),
+  // panel/** bo jego pliki nie należą do rootowego tsconfiga (projectService by się wywalił),
+  // .claude/** bo trzyma worktree'y agenta — kopie repo, które lintowały się drugi raz
+  // (lokalnie 60 problemów zamiast 30 w CI) i to na nieaktualnym kodzie.
+  globalIgnores(["dist/**", "_site/**", "panel/**", "coverage/**", ".claude/**"]),
   {
     files: ["**/*.ts"],
     extends: [

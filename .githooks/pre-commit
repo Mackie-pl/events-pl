@@ -1,0 +1,18 @@
+#!/bin/sh
+# Bramka przed commitem: to samo, co job `pipeline` w .github/workflows/ci.yml, minus testy
+# (te chodzą ~7 s — jeśli mają być w bramce, dopisz `npm test` niżej).
+#
+# Włączenie w świeżym klonie: git config core.hooksPath .githooks
+# Pominięcie na jeden commit: git commit --no-verify
+#
+# Uwaga: sprawdzany jest katalog roboczy, nie sam indeks. Commit częściowy (git add -p)
+# przejdzie, jeśli reszta drzewa jest czysta — CI i tak zobaczy prawdę.
+set -e
+
+echo "pre-commit: typecheck…"
+npm run --silent typecheck
+
+echo "pre-commit: lint…"
+npm run --silent lint
+
+echo "pre-commit: ok"
