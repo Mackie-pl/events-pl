@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-09T18:25:02.896Z",
+ "updated": "2026-08-10T05:24:07.497Z",
  "rates": {
   "bdPerRecord": 0.0015,
   "searchPerQuery": 0.001,
@@ -1782,6 +1782,79 @@
    "usd": 0,
    "estimated": true,
    "units": 1.921,
+   "unit": "MB"
+  },
+  {
+   "day": "2026-08-10",
+   "at": "2026-08-10T05:24:07.459Z",
+   "stage": "daily",
+   "run": "2026-08-10T05:20:45.665Z",
+   "category": "llm-extract",
+   "usd": 0.159688,
+   "estimated": false,
+   "units": 10,
+   "unit": "calls",
+   "tokensIn": 106318,
+   "tokensOut": 10674,
+   "top": [
+    {
+     "id": "poznan-co-gdzie-kiedy",
+     "usd": 0.042402,
+     "units": 2
+    },
+    {
+     "id": "kultura-poznan",
+     "usd": 0.034855,
+     "units": 2
+    },
+    {
+     "id": "okpoznan-wydarzenia",
+     "usd": 0.027661,
+     "units": 1
+    },
+    {
+     "id": "dopiewo-pl-wydarzenia",
+     "usd": 0.024434,
+     "units": 2
+    },
+    {
+     "id": "cusdopiewo-oferta",
+     "usd": 0.014955,
+     "units": 1
+    }
+   ]
+  },
+  {
+   "day": "2026-08-10",
+   "at": "2026-08-10T05:24:07.459Z",
+   "stage": "daily",
+   "run": "2026-08-10T05:20:45.665Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 67,
+   "unit": "fetches"
+  },
+  {
+   "day": "2026-08-10",
+   "at": "2026-08-10T05:24:07.459Z",
+   "stage": "daily",
+   "run": "2026-08-10T05:20:45.665Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 6,
+   "unit": "lookups"
+  },
+  {
+   "day": "2026-08-10",
+   "at": "2026-08-10T05:24:07.459Z",
+   "stage": "daily",
+   "run": "2026-08-10T05:20:45.665Z",
+   "category": "storage",
+   "usd": 0,
+   "estimated": true,
+   "units": 1.225,
    "unit": "MB"
   }
  ]
