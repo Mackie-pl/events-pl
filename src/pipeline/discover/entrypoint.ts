@@ -32,7 +32,8 @@ const SAMPLE_CHARS = 1_200;
  * `event` jest tu mimo polskiego kontekstu, bo motywy WordPressa robią `/event/` i `/events/`
  * niezależnie od języka serwisu — estrada.poznan.pl wypisuje tak cały repertuar.
  */
-const GOOD = /(wydarzeni|aktualnosc|aktualnoś|kalendar|imprez|repertuar|afisz|program|co-gdzie-kiedy|kultura|event)/i;
+const GOOD =
+  /(wydarzeni|aktualnosc|aktualnoś|kalendar|imprez|repertuar|afisz|program|co-gdzie-kiedy|kultura|event|lato|zima|wiosna|jesien|jesień|wakacj|ferie)/i;
 /** Miejsca, które wyglądają podobnie, a wydarzeń nie wypisują. */
 const BAD = /(archiw|relacj|galeri|przetarg|bip|zamowien|nabor|rodo|polityka|regulamin|cennik|kontakt|\/20\d\d\b|\.pdf$)/i;
 
@@ -229,11 +230,41 @@ function needsModel(measured: readonly Candidate[]): boolean {
   return !best || scoreOf(best) < CONFIDENT || (runner !== undefined && scoreOf(best) - scoreOf(runner) < 1);
 }
 
+/**
+ * Kandydaci ze strony głównej domeny — niezależnie od tego, pod jakim adresem osadzone jest
+ * źródło. `rootUrl` bywa głęboką podstroną (bo tyle znalazło discovery), a banery kampanijne
+ * i sezonowe działy („Lato w Centrum" pod `/lato26/`) potrafią wisieć WYŁĄCZNIE na stronie
+ * głównej — nie w trwałej nawigacji, która jedna towarzyszy każdej podstronie serwisu. Bez
+ * tego dodatkowego pobrania takie adresy są niewidoczne, dopóki źródło akurat nie siedzi
+ * pod samym korzeniem.
+ */
+async function homeCandidates(rootUrl: string): Promise<Candidate[]> {
+  let origin: string;
+  try {
+    origin = `${new URL(rootUrl).origin}/`;
+  } catch {
+    return [];
+  }
+  if (origin === rootUrl) return [];
+  const html = await rawHtml(origin);
+  if (html === null) return [];
+  return rankLinks(extractLinks(html, origin), origin);
+}
+
+/** Scalenie dwóch list kandydatów: ten sam adres zostaje raz, z wyższym z dwóch wyników. */
+function mergeCandidates(a: readonly Candidate[], b: readonly Candidate[]): Candidate[] {
+  const byUrl = new Map<string, number>();
+  for (const c of [...a, ...b]) byUrl.set(c.url, Math.max(byUrl.get(c.url) ?? 0, c.hint));
+  return [...byUrl.entries()].map(([url, hint]) => ({ url, hint })).sort((a, b) => b.hint - a.hint);
+}
+
 /** Rozpoznanie entrypointów źródła. `html` to surowa treść korzenia (już pobrana przy drabinie). */
 export async function resolveEntrypoints(
   src: Source, rootUrl: string, html: string,
 ): Promise<EntrypointVerdict> {
-  const ranked = rankLinks(extractLinks(html, rootUrl), rootUrl).slice(0, MAX_CANDIDATES);
+  const own = rankLinks(extractLinks(html, rootUrl), rootUrl);
+  const home = await homeCandidates(rootUrl);
+  const ranked = mergeCandidates(own, home).slice(0, MAX_CANDIDATES);
   const measured: Candidate[] = [];
   for (const c of ranked) measured.push(await measure(c));
   measured.sort((a, b) => scoreOf(b) - scoreOf(a) || b.hint - a.hint);
