@@ -38,7 +38,11 @@ jobs:
           git config user.email "bot@users.noreply.github.com"
           # costs.json: księga wydatków. Bez commitu przebieg liczyłby koszt i od razu
           # o nim zapominał — panel czyta ją z repo, nie z artefaktów Actions.
-          git add events.json index.html state.json runs.json costs.json
+          # audit.json: ślad decyzyjny, retencja 7 dni RÓWNOLEGLE do runs.json — i przez
+          # przeoczenie nie było go na tej liście, więc każdy przebieg crona zapisywał ślad
+          # na runnerze i wyrzucał razem z nim. W repo stały ślady wyłącznie z przebiegów
+          # ręcznych, a panel pokazywał pustą zakładkę dla wszystkich pozostałych.
+          git add events.json index.html state.json runs.json costs.json audit.json
           git add brightdata-usage.jsonl 2>/dev/null || true # istnieje tylko gdy BRIGHTDATA_API_KEY ustawiony
           git diff --cached --quiet || git commit -m "daily $(date +%F)"
           git push
