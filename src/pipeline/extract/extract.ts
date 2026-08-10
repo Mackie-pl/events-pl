@@ -132,6 +132,7 @@ export async function extractEvents(text: string, sourceUrl: string): Promise<Ex
     user: `ŹRÓDŁO: ${sourceUrl}\n\n${text.slice(0, MAX_INPUT_CHARS)}`,
     maxTokens: MAX_TOKENS,
     schema: RESPONSE_SCHEMA,
+    temperature: 0,
   });
   const result = parseModelJson(out, wasTruncated());
   audit("llm", text.length > MAX_INPUT_CHARS
@@ -237,6 +238,7 @@ export async function extractBatch(texts: string[], sourceUrl: string): Promise<
     user: `ŹRÓDŁO: ${sourceUrl}\n\n${user.slice(0, MAX_INPUT_CHARS)}`,
     maxTokens: MAX_TOKENS,
     schema: RESPONSE_SCHEMA_BATCH,
+    temperature: 0,
   });
   const truncated = wasTruncated();
   const parsed = parseRaw(out, truncated);
@@ -270,6 +272,7 @@ export async function extractPoster(
     user: [imagePart(img.data, img.mediaType), { type: "text", text: `ŹRÓDŁO: ${sourceUrl}` }],
     maxTokens: 2000,
     schema: RESPONSE_SCHEMA,
+    temperature: 0,
   });
   const result = parseModelJson(out, wasTruncated());
   audit("llm", `odczyt plakatu (${img.mediaType}) → ${result.events.length} wydarzeń`,
