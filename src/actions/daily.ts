@@ -192,6 +192,13 @@ async function run(): Promise<void> {
       `Bright Data: ${bdUsage.triggers} trigger · ${bdUsage.inputs} URL · ${bdUsage.records} rekordów · ` +
       `${bdUsage.polls} polls · ${bdUsage.errors} błędów`,
     );
+    if (bdUsage.errors > 0) {
+      // pierwszy błąd wystarczy do diagnozy (401 vs timeout vs failed snapshot) — reszta jest zwykle tym samym
+      const first = errors.find((e) => e.err.startsWith("Bright Data"))?.err ?? "?";
+      // adnotacja GH Actions: bez niej przebieg z samymi błędami BD i tak kończy się zielonym haczykiem
+      if (process.env["GITHUB_ACTIONS"]) console.log(`::warning::Bright Data: ${bdUsage.errors} błędów, pierwszy: ${first}`);
+      else console.log(`Bright Data pierwszy błąd: ${first}`);
+    }
   }
   if (archiveEnabled()) {
     const a = archiveStats();
