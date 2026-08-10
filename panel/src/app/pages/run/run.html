@@ -16,6 +16,30 @@
     </div>
   </header>
 
+  <!-- Bright Data płaci się per rekord, więc przebieg z samymi błędami jest DROŻSZY niż
+       udany i wyglądał dotąd identycznie: liczby siedziały w runs.json, a na ekranie nie było
+       ich nigdzie. Cztery dni cichych 401 przeszły niezauważone dokładnie tędy. -->
+  @if (r.brightdata; as bd) {
+    @if (bd.triggers || bd.records || bd.errors) {
+      <section class="bd" [class.bd--bad]="bd.errors > 0">
+        <tui-icon [icon]="bd.errors > 0 ? '@tui.triangle-alert' : '@tui.database'" />
+        <span class="bd-label">Bright Data</span>
+        <span>{{ bd.triggers }} trigger</span>
+        <span>{{ bd.inputs }} URL</span>
+        <span>{{ num(bd.records) }} rekordów</span>
+        <span>{{ bd.polls }} polls</span>
+        @if (bd.errors > 0) {
+          <strong class="bd-err">{{ bd.errors }} błędów</strong>
+        }
+        @if (bd.errors > 0 && bd.records === 0) {
+          <span class="bd-hint">
+            zero rekordów mimo {{ bd.triggers }} prób — patrz błędy źródeł niżej
+          </span>
+        }
+      </section>
+    }
+  }
+
   <div class="toolbar">
     <div class="filters">
       <button

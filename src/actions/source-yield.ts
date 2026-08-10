@@ -14,22 +14,14 @@
  * się z dnia na dzień, więc sprzed tygodnia dane i tak nie mówią nic pewnego o dzisiejszym kodzie.
  *
  *   npm run source-yield
+ *   npm run source-yield -- --dry   # policz i wypisz, ale nie zapisuj yield.json
  */
-import { collection } from "../storage/index.js";
-import type { RunReport, SourceRun } from "../types/index.js";
+import { collection, doc } from "../storage/index.js";
+import type { RunReport, SourceRun, YieldReport, YieldSource } from "../types/index.js";
 
 const FETCHED_STATUSES = new Set<SourceRun["status"]>(["ok", "unchanged", "error", "empty"]);
 
-interface Row {
-  id: string;
-  runs: number;
-  events: number;
-  costUsd: number;
-  zeroYieldCostUsd: number;
-  zeroYieldRuns: number;
-  emptyRuns: number;
-  errorRuns: number;
-}
+type Row = YieldSource;
 
 function aggregate(reports: RunReport[]): Row[] {
   const byId = new Map<string, Row>();
@@ -56,8 +48,13 @@ function aggregate(reports: RunReport[]): Row[] {
   return [...byId.values()];
 }
 
-function printReport(rows: Row[], from: string, to: string): void {
-  console.log(`Okno: ${from} … ${to} (${rows.length} źródeł z co najmniej jednym realnym pobraniem)\n`);
+/** Płatne i zawsze puste mimo ≥2 pobrań. Darmowe źródło bywa puste bez problemu (RSS bez ruchu). */
+const chronicOf = (rows: Row[]): Row[] =>
+  rows.filter((r) => r.runs >= 2 && r.events === 0 && r.costUsd > 0);
+
+function printReport(report: YieldReport): void {
+  const { sources: rows, totals } = report;
+  console.log(`Okno: ${report.from} … ${report.to} (${rows.length} źródeł z co najmniej jednym realnym pobraniem)\n`);
   console.log(
     "źródło".padEnd(30) + "przeb.".padStart(7) + "wyd.".padStart(6) + "wyd./przeb.".padStart(12) +
     "koszt$".padStart(9) + "$ za nic".padStart(9) + "puste".padStart(7),
@@ -70,14 +67,11 @@ function printReport(rows: Row[], from: string, to: string): void {
       r.zeroYieldCostUsd.toFixed(3).padStart(9) + `${r.emptyRuns}/${r.runs}`.padStart(7),
     );
   }
-  const wasted = rows.reduce((a, r) => a + r.zeroYieldCostUsd, 0);
-  // darmowe źródła bywają puste bez problemu (RSS/API bez ruchu) — kandydatem jest tylko to,
-  // co realnie kosztowało i i tak nic nie dało, wielokrotnie
-  const chronic = rows.filter((r) => r.runs >= 2 && r.events === 0 && r.costUsd > 0);
   console.log(
-    `\n$ zapłacone za przebiegi z 0 wydarzeń (model wywołany, nic nie wrócił): $${wasted.toFixed(3)}\n` +
+    `\n$ zapłacone za przebiegi z 0 wydarzeń (model wywołany, nic nie wrócił): ` +
+    `$${totals.wastedUsd.toFixed(3)}\n` +
     `źródła płatne i zawsze puste mimo ≥2 realnych pobrań (kandydaci do poprawy discovery): ` +
-    `${chronic.length ? chronic.map((r) => r.id).join(", ") : "brak"}`,
+    `${totals.chronic.length ? totals.chronic.join(", ") : "brak"}`,
   );
 }
 
@@ -92,7 +86,26 @@ async function main(): Promise<void> {
   // marnotrawstwo najpierw ($ za 0 wydarzeń), potem najniższy plon na przebieg
   rows.sort((a, b) => b.zeroYieldCostUsd - a.zeroYieldCostUsd
     || (a.events / a.runs) - (b.events / b.runs));
-  printReport(rows, daily[0]!.startedAt.slice(0, 10), daily.at(-1)!.startedAt.slice(0, 10));
+
+  const report: YieldReport = {
+    generated: new Date().toISOString(),
+    from: daily[0]!.startedAt.slice(0, 10),
+    to: daily.at(-1)!.startedAt.slice(0, 10),
+    totals: {
+      sources: rows.length,
+      wastedUsd: rows.reduce((a, r) => a + r.zeroYieldCostUsd, 0),
+      chronic: chronicOf(rows).map((r) => r.id),
+    },
+    sources: rows,
+  };
+  printReport(report);
+
+  if (process.argv.includes("--dry")) {
+    console.log("\n--dry: nic nie zapisano.");
+    return;
+  }
+  await doc<YieldReport>("yield", () => report).save(report);
+  console.log(`\nZapisano yield.json (${rows.length} źródeł). Panel: zakładka Yield.`);
 }
 
 main().catch((e: unknown) => {

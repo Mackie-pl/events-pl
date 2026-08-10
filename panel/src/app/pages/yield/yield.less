@@ -1,0 +1,169 @@
+.page-title {
+  margin-bottom: 1.25rem;
+}
+
+.page-loader {
+  margin: 4rem auto;
+}
+
+.error-box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: var(--tui-status-negative-pale);
+  color: var(--tui-status-negative);
+}
+
+.empty {
+  padding: 2rem;
+  border-radius: 0.9rem;
+  border: 1px dashed var(--tui-border-normal);
+  color: var(--tui-text-secondary);
+
+  p + p {
+    margin-bottom: 0;
+  }
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.filter-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--tui-text-secondary);
+  margin-right: 0.25rem;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 1rem 1.15rem;
+  border-radius: 0.9rem;
+  background: var(--tui-background-neutral-1);
+  border: 1px solid var(--tui-border-normal);
+
+  &.hero {
+    grid-column: span 2;
+  }
+}
+
+.card-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--tui-text-secondary);
+}
+
+.card-value {
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+
+  &.big {
+    font-size: 3rem;
+  }
+}
+
+.card-sub {
+  font-size: 0.8rem;
+  color: var(--tui-text-secondary);
+}
+
+// ---------------- tabela źródeł ----------------
+
+.tbl {
+  width: 100%;
+  font-variant-numeric: tabular-nums;
+
+  .right {
+    text-align: right;
+  }
+
+  .money {
+    font-weight: 600;
+  }
+
+  code {
+    font-size: 0.85em;
+  }
+
+  [tuiBadge] {
+    margin-left: 0.5rem;
+    vertical-align: 0.05em;
+  }
+}
+
+.row {
+  &:hover {
+    background: var(--tui-background-neutral-1);
+  }
+
+  // płatne i zawsze puste — jedyny wiersz, który realnie woła o zmianę w rejestrze
+  &.chronic code {
+    font-weight: 700;
+  }
+}
+
+// Progi do PATRZENIA, nie do alarmu: „tu nic nie rośnie", a nie „tu jest awaria".
+.weak {
+  color: var(--tui-text-secondary);
+}
+
+.alert {
+  color: var(--tui-status-warning);
+  font-weight: 700;
+}
+
+// ---------------- legenda ----------------
+
+.legend {
+  margin-top: 2rem;
+  padding: 1.25rem 1.4rem;
+  border-radius: 0.9rem;
+  background: var(--tui-background-neutral-1);
+  border: 1px solid var(--tui-border-normal);
+
+  h2 {
+    margin: 0 0 0.75rem;
+    font-size: 1rem;
+  }
+
+  dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.4rem 1rem;
+  }
+
+  dt {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  dd {
+    margin: 0;
+    color: var(--tui-text-secondary);
+  }
+}

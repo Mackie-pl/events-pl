@@ -14,6 +14,41 @@
   margin-bottom: 1rem;
 }
 
+.bd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.9rem;
+  margin-bottom: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--tui-border-normal);
+  background: var(--tui-background-neutral-1);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--tui-text-secondary);
+
+  // przebieg z błędami BD kosztuje więcej niż udany — nie może wyglądać tak samo
+  &--bad {
+    background: var(--tui-status-warning-pale);
+    border-color: var(--tui-status-warning);
+    color: var(--tui-text-primary);
+  }
+}
+
+.bd-label {
+  font-weight: 700;
+  color: var(--tui-text-primary);
+}
+
+.bd-err {
+  color: var(--tui-status-warning);
+}
+
+.bd-hint {
+  font-style: italic;
+}
+
 .toolbar {
   display: flex;
   flex-wrap: wrap;

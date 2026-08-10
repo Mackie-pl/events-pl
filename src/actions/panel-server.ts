@@ -36,6 +36,7 @@ import { ProbeError, probeSource } from "../pipeline/extract/probe-source.js";
 import { describeError } from "../shared/errors.js";
 import {
   AUDIT_PATH, COSTS_PATH, DISCOVER_RUNS_PATH, EVENTS_PATH, REUSE_PATH, RUNS_PATH, SOURCES_PATH,
+  YIELD_PATH,
 } from "../shared/paths.js";
 
 const PORT = Number(process.env["ARCHIVE_PORT"] ?? 8787);
@@ -63,6 +64,7 @@ const LOCAL_FILES: Readonly<Record<string, string>> = {
   "discover-runs.json": DISCOVER_RUNS_PATH,
   "costs.json": COSTS_PATH,
   "reuse.json": REUSE_PATH,
+  "yield.json": YIELD_PATH,
 };
 
 const cors = (origin: string | undefined): Record<string, string> =>

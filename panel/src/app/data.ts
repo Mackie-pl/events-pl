@@ -11,6 +11,7 @@ import type {
   RunTrail,
   SourceTrail,
   SourcesFile,
+  YieldReport,
 } from './types';
 
 /** Raw GitHub serves fresh JSON (CDN cache ~5 min) with permissive CORS. */
@@ -104,6 +105,22 @@ export class DataService {
 
   requestReuse(): void {
     this.reuseRequested.set(true);
+  }
+
+  /**
+   * Plon źródeł (`npm run source-yield`). Tak jak reuse.json: plik powstaje na żądanie,
+   * nie w cronie, więc jego brak jest normalnym stanem i pobranie startuje dopiero,
+   * gdy zakładka o nie poprosi.
+   */
+  private readonly yieldRequested = signal(false);
+
+  readonly yield = httpResource<YieldReport | null>(
+    () => (this.yieldRequested() ? this.file('yield.json') : undefined),
+    { defaultValue: null },
+  );
+
+  requestYield(): void {
+    this.yieldRequested.set(true);
   }
 
   /**

@@ -13,6 +13,9 @@ export * from './types-probe';
 // Pomiar powtarzalności treści (reuse.json + przykłady z prywatnego archiwum).
 export * from './types-reuse';
 
+// Plon źródeł (yield.json): co kosztuje, a nic nie daje.
+export * from './types-yield';
+
 // Profil źródła z etapu 1: osiągalność, entrypointy, maszynowe wyjścia.
 // Tu tylko `import`, bez `export *` jak wyżej: te typy są osiągalne przez pola `Source`,
 // więc nikt nie importuje ich po nazwie, a ten plik siedzi dokładnie na progu 350 linii kodu.

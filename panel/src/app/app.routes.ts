@@ -27,6 +27,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/reuse/reuse').then((m) => m.ReusePage),
   },
   {
+    path: 'yield',
+    title: 'Plon · events-pl',
+    loadComponent: () => import('./pages/yield/yield').then((m) => m.YieldPage),
+  },
+  {
     path: 'discovery',
     title: 'Discovery · events-pl',
     loadComponent: () => import('./pages/discovery/discovery').then((m) => m.DiscoveryPage),

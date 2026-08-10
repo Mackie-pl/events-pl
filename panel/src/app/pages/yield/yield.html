@@ -1,0 +1,153 @@
+@if (data.yield.error()) {
+  <div class="error-box">
+    <tui-icon icon="@tui.triangle-alert" />
+    Nie udało się wczytać yield.json
+    <button tuiButton size="s" appearance="secondary" (click)="data.yield.reload()">Ponów</button>
+  </div>
+} @else if (data.yield.isLoading() && !report()) {
+  <tui-loader size="xl" class="page-loader" />
+} @else if (!report(); as _) {
+  <header tuiTitle class="page-title">
+    <h1>Plon źródeł</h1>
+  </header>
+  <section class="empty">
+    <p>
+      Raportu jeszcze nie było. Powstaje na żądanie, nie w cronie — czyta
+      <code>runs.json</code> i liczy, które źródła kosztują, a nic nie dają. Nie woła modelu ani
+      Bright Data, więc uruchomienie jest darmowe.
+    </p>
+    <p><code>npm run source-yield</code></p>
+  </section>
+} @else if (report(); as r) {
+  <header tuiTitle class="page-title">
+    <h1>Plon źródeł</h1>
+    <div tuiSubtitle>
+      {{ r.from }} … {{ r.to }} · {{ r.sources.length }} źródeł · raport {{ dt(r.generated) }}
+    </div>
+  </header>
+
+  <!-- Okno jest krótkie i to jest cecha, nie wada — reguły ekstrakcji zmieniają się z dnia
+       na dzień, więc dane sprzed tygodnia nie mówią nic o dzisiejszym kodzie. -->
+  <section class="cards">
+    <div class="card hero">
+      <span class="card-label">Zapłacone za nic</span>
+      <span class="card-value big">{{ usd(r.totals.wastedUsd) }}</span>
+      <span class="card-sub">
+        model poszedł i wrócił z zerem wydarzeń — czysta strata, nie „strona nic nie miała"
+      </span>
+    </div>
+    <div class="card">
+      <span class="card-label">Płatne i zawsze puste</span>
+      <span class="card-value">{{ r.totals.chronic.length }}</span>
+      <span class="card-sub"
+        >≥2 pobrania, koszt &gt; 0, zero wydarzeń — kandydaci do discovery</span
+      >
+    </div>
+    <div class="card">
+      <span class="card-label">Źródła bez wydarzeń</span>
+      <span class="card-value">{{ emptyCount() }} / {{ r.sources.length }}</span>
+      <span class="card-sub">łącznie z darmowymi (RSS/API bez ruchu bywa puste bez problemu)</span>
+    </div>
+  </section>
+
+  <section class="filters">
+    <span class="filter-label">Sortuj</span>
+    @for (s of sorts; track s.key) {
+      <button
+        tuiButton
+        size="s"
+        [appearance]="sort() === s.key ? 'primary' : 'secondary'"
+        [title]="s.hint"
+        (click)="sort.set(s.key)"
+      >
+        {{ s.label }}
+      </button>
+    }
+    <span class="spacer"></span>
+    <button
+      tuiButton
+      size="s"
+      [appearance]="onlyProblems() ? 'primary' : 'secondary'"
+      (click)="onlyProblems.set(!onlyProblems())"
+    >
+      <tui-icon icon="@tui.filter" />
+      tylko bez wydarzeń ({{ emptyCount() }})
+    </button>
+  </section>
+
+  <table tuiTable class="tbl">
+    <thead>
+      <tr>
+        <th tuiTh>źródło</th>
+        <th tuiTh class="right">przeb.</th>
+        <th tuiTh class="right">wyd.</th>
+        <th tuiTh class="right">wyd./przeb.</th>
+        <th tuiTh class="right">koszt</th>
+        <th tuiTh class="right">$ za nic</th>
+        <th tuiTh class="right">pusto</th>
+        <th tuiTh class="right">błędy</th>
+      </tr>
+    </thead>
+    <tbody tuiTbody>
+      @for (s of rows(); track s.id) {
+        <tr class="row" [class.chronic]="chronic().has(s.id)">
+          <td tuiTd>
+            <code>{{ s.id }}</code>
+            @if (chronic().has(s.id)) {
+              <span
+                tuiBadge
+                appearance="warning"
+                title="Płatne i zawsze puste mimo ≥2 pobrań — najpewniej discovery wskazało niewłaściwą stronę"
+              >
+                do poprawy
+              </span>
+            }
+          </td>
+          <td tuiTd class="right">{{ s.runs }}</td>
+          <td tuiTd class="right">{{ s.events }}</td>
+          <td tuiTd class="right" [class.weak]="perRun(s) < 1">{{ perRun(s).toFixed(2) }}</td>
+          <td tuiTd class="right money">{{ usd(s.costUsd) }}</td>
+          <td tuiTd class="right money" [class.alert]="s.zeroYieldCostUsd > 0">
+            {{ usd(s.zeroYieldCostUsd) }}
+          </td>
+          <td tuiTd class="right">{{ s.emptyRuns }}/{{ s.runs }}</td>
+          <td tuiTd class="right" [class.alert]="s.errorRuns > 0">{{ s.errorRuns || '' }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <section class="legend">
+    <h2>Jak to czytać</h2>
+    <dl>
+      <dt>$ za nic</dt>
+      <dd>
+        Koszt przebiegów, w których model ZOSTAŁ wywołany i wrócił z zerem wydarzeń. To nie to samo,
+        co „źródło było puste": puste i darmowe (cache trafiony, RSS bez ruchu) nic nie kosztuje i
+        nie stoi w tej kolumnie.
+      </dd>
+      <dt>do poprawy</dt>
+      <dd>
+        Źródło płatne i ZAWSZE puste mimo co najmniej dwóch realnych pobrań. Zwykle nie znaczy
+        „serwis nic nie ma", tylko „discovery wskazało niewłaściwą podstronę" — realny kalendarz
+        bywa pod innym adresem tej samej domeny.
+      </dd>
+      <dt>wyd./przeb.</dt>
+      <dd>
+        Plon na jeden przebieg. Niski przy zerowym koszcie jest w porządku (źródło maszynowe, które
+        po prostu milczy); niski przy realnym koszcie to kandydat do zmiany adresu.
+      </dd>
+      <dt>a co z cache'em?</dt>
+      <dd>
+        To inna oś i inna zakładka. <strong>Powtarzalność</strong> mówi, ile z treści płacimy DRUGI
+        raz; tutaj chodzi o to, ile płacimy za treść, z której i tak nic nie wychodzi. Źródło z
+        odzyskiem 100% potrafi stać na samej górze tej tabeli.
+      </dd>
+      <dt>okno</dt>
+      <dd>
+        Liczone z <code>runs.json</code>, czyli ~7 dni. Krótko i celowo: reguły ekstrakcji zmieniają
+        się z dnia na dzień, więc dane sprzed tygodnia nie mówią nic pewnego o dzisiejszym kodzie.
+      </dd>
+    </dl>
+  </section>
+}

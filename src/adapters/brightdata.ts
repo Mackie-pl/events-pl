@@ -173,7 +173,8 @@ export async function collect(
     if (status === "ready") break;
     if (status === "failed") throw new Error(`Bright Data snapshot ${snapshotId} failed`);
     if (Date.now() > deadline) {
-      // porzucona migawka płynie dalej i kosztuje bez wyniku (patrz cancelSnapshot) — anulujemy, żeby nie płacić za coś, czego już nie odbieramy
+      // porzucona migawka płynie dalej i kosztuje bez wyniku (patrz cancelSnapshot) —
+      // anulujemy, żeby nie płacić za coś, czego już nie odbieramy
       await cancelSnapshot(snapshotId);
       throw new Error(`Bright Data snapshot ${snapshotId} timeout (status=${status}) — anulowano`);
     }

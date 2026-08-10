@@ -31,6 +31,8 @@ export const COSTS_PATH = join(ROOT, "costs.json");
 export const BD_USAGE_LOG = join(ROOT, "brightdata-usage.jsonl");
 /** Pomiar powtarzalności treści — same liczby, treść stron zostaje w prywatnym archiwum. */
 export const REUSE_PATH = join(ROOT, "reuse.json");
+/** Plon źródeł: co kosztuje, a nic nie daje. Liczone z runs.json, więc okno jest krótkie. */
+export const YIELD_PATH = join(ROOT, "yield.json");
 
 /** Szablon strony i wyrenderowany serwis. */
 export const TEMPLATE_HTML = join(ROOT, "template.html");

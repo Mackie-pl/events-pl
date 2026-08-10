@@ -1,0 +1,1076 @@
+{
+ "generated": "2026-08-10T19:31:09.620Z",
+ "from": "2026-08-04",
+ "to": "2026-08-10",
+ "totals": {
+  "sources": 105,
+  "wastedUsd": 0.30149799999999993,
+  "chronic": [
+   "cusdopiewo-oferta",
+   "dk-stokrotka",
+   "mdk1-poznan",
+   "puszczykowo-bmcak",
+   "mdk2-poznan",
+   "jck-poznan",
+   "biblioteka-wielkopolska",
+   "biblioteka-lubon-www",
+   "biblub-wydarzenia",
+   "lubon-pl-kalendarz",
+   "lubon-pl-kalendarium",
+   "biblioteka-komorniki-kalendarz",
+   "gosir-komorniki-wydarzenia"
+  ]
+ },
+ "sources": [
+  {
+   "id": "cusdopiewo-oferta",
+   "runs": 3,
+   "events": 0,
+   "costUsd": 0.05136,
+   "zeroYieldCostUsd": 0.05136,
+   "zeroYieldRuns": 2,
+   "emptyRuns": 3,
+   "errorRuns": 0
+  },
+  {
+   "id": "dk-stokrotka",
+   "runs": 3,
+   "events": 0,
+   "costUsd": 0.042797,
+   "zeroYieldCostUsd": 0.042797,
+   "zeroYieldRuns": 1,
+   "emptyRuns": 3,
+   "errorRuns": 0
+  },
+  {
+   "id": "mdk1-poznan",
+   "runs": 3,
+   "events": 0,
+   "costUsd": 0.042469999999999994,
+   "zeroYieldCostUsd": 0.042469999999999994,
+   "zeroYieldRuns": 1,
+   "emptyRuns": 3,
+   "errorRuns": 0
+  },
+  {
+   "id": "puszczykowo-bmcak",
+   "runs": 5,
+   "events": 0,
+   "costUsd": 0.033344,
+   "zeroYieldCostUsd": 0.033344,
+   "zeroYieldRuns": 5,
+   "emptyRuns": 5,
+   "errorRuns": 0
+  },
+  {
+   "id": "biblioteka-mosina",
+   "runs": 3,
+   "events": 1,
+   "costUsd": 0.053486,
+   "zeroYieldCostUsd": 0.027177999999999997,
+   "zeroYieldRuns": 1,
+   "emptyRuns": 2,
+   "errorRuns": 0
+  },
+  {
+   "id": "mdk2-poznan",
+   "runs": 3,
+   "events": 0,
+   "costUsd": 0.02562,
+   "zeroYieldCostUsd": 0.02562,
+   "zeroYieldRuns": 1,
+   "emptyRuns": 3,
+   "errorRuns": 0
+  },
+  {
+   "id": "jck-poznan",
+   "runs": 3,
+   "events": 0,
+   "costUsd": 0.019406,
+   "zeroYieldCostUsd": 0.019406,
+   "zeroYieldRuns": 1,
+   "emptyRuns": 3,
+   "errorRuns": 0
+  },
+  {
+   "id": "mosina-biblioteka",
+   "runs": 5,
+   "events": 8,
+   "costUsd": 0.06577,
+   "zeroYieldCostUsd": 0.012295,
+   "zeroYieldRuns": 1,
+   "emptyRuns": 1,
+   "errorRuns": 0
+  },
+  {
+   "id": "biblioteka-wielkopolska",
+   "runs": 3,
+   "events": 0,
+   "costUsd": 0.006716,
+   "zeroYieldCostUsd": 0.006716,
+   "zeroYieldRuns": 1,
+   "emptyRuns": 3,
+   "errorRuns": 0
+  },
+  {
+   "id": "brama-poznania",
+   "runs": 5,
+   "events": 89,
+   "costUsd": 0.180929,
+   "zeroYieldCostUsd": 0.006231,
+   "zeroYieldRuns": 1,
+   "emptyRuns": 1,
+   "errorRuns": 0
+  },
+  {
+   "id": "biblioteka-lubon-www",
+   "runs": 4,
+   "events": 0,
+   "costUsd": 0.006049,
+   "zeroYieldCostUsd": 0.006049,
+   "zeroYieldRuns": 1,
+   "emptyRuns": 4,
+   "errorRuns": 0
+  },
+  {
+   "id": "biblub-wydarzenia",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0.005972,
+   "zeroYieldCostUsd": 0.005972,
+   "zeroYieldRuns": 1,
+   "emptyRuns": 2,
+   "errorRuns": 0
+  },
+  {
+   "id": "rokietnica-gok",
+   "runs": 5,
+   "events": 16,
+   "costUsd": 0.045948,
+   "zeroYieldCostUsd": 0.004673,
+   "zeroYieldRuns": 1,
+   "emptyRuns": 1,
+   "errorRuns": 0
+  },
+  {
+   "id": "lubon-pl-kalendarz",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0.004566000000000001,
+   "zeroYieldCostUsd": 0.004566000000000001,
+   "zeroYieldRuns": 1,
+   "emptyRuns": 2,
+   "errorRuns": 0
+  },
+  {
+   "id": "lubon-pl-kalendarium",
+   "runs": 4,
+   "events": 0,
+   "costUsd": 0.004366,
+   "zeroYieldCostUsd": 0.004366,
+   "zeroYieldRuns": 1,
+   "emptyRuns": 4,
+   "errorRuns": 0
+  },
+  {
+   "id": "biblioteka-komorniki-kalendarz",
+   "runs": 3,
+   "events": 0,
+   "costUsd": 0.00425,
+   "zeroYieldCostUsd": 0.00425,
+   "zeroYieldRuns": 1,
+   "emptyRuns": 3,
+   "errorRuns": 0
+  },
+  {
+   "id": "gosir-komorniki-wydarzenia",
+   "runs": 3,
+   "events": 0,
+   "costUsd": 0.004205,
+   "zeroYieldCostUsd": 0.004205,
+   "zeroYieldRuns": 1,
+   "emptyRuns": 3,
+   "errorRuns": 0
+  },
+  {
+   "id": "poznan-city-api",
+   "runs": 5,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 5,
+   "errorRuns": 0
+  },
+  {
+   "id": "poznan-kultura-rss",
+   "runs": 5,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 5,
+   "errorRuns": 0
+  },
+  {
+   "id": "teatr-animacji",
+   "runs": 5,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 5,
+   "errorRuns": 0
+  },
+  {
+   "id": "lubon-biblioteka",
+   "runs": 3,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 3,
+   "errorRuns": 0
+  },
+  {
+   "id": "mosina-mok",
+   "runs": 5,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 5,
+   "errorRuns": 0
+  },
+  {
+   "id": "suchylas-city",
+   "runs": 5,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 5
+  },
+  {
+   "id": "czerwonak-gok",
+   "runs": 5,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 5
+  },
+  {
+   "id": "kornik-arboretum",
+   "runs": 5,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 5,
+   "errorRuns": 0
+  },
+  {
+   "id": "fb-events",
+   "runs": 3,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 3
+  },
+  {
+   "id": "fb-wydarzenia-w-luboniu",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "fb-lubon-grupa-informacyjna",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "fb-mieszkancy-lubonia-675",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "fb-lubon-ogloszenia",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "wydarzenia-w-luboniu-fb-group",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "lubon-fb-group",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "mieszkancy-lubonia-fb-group",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "dopiewo-aktywnie-kulturalnie-fb",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "dopiewo-mieszkancy-fb",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "dopiewo-tablica-ogloszen-fb",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "dabrowa-dopiewo-fb",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "fb-group-kultura-komorniki",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "fb-group-mieszkancy-gminy-komorniki",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "fb-group-komorniki-ogloszenia",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "fb-group-gmina-mosina-aktualnosci",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "fb-group-co-sie-dzieje-mosina",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "fb-group-wydarzenia-w-poznaniu-1",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "fb-group-poznan-wydarzenia",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "fb-group-wydarzenia-poznan-2",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "fb-group-imprezy-poznan",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "fb-group-allin-poznan",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "fb-group-wydarzenia-poznan-3",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "fb-group-baba-cool",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "fb-group-wydarzenia-poznan-4",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "grupa-puszczykowo-fb",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "kocham-puszczykowo-fb",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "puszczykowo-ogloszenia-fb",
+   "runs": 2,
+   "events": 0,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 2
+  },
+  {
+   "id": "gazeta-lubon-kalendarium",
+   "runs": 6,
+   "events": 4,
+   "costUsd": 0.004756,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 4,
+   "errorRuns": 0
+  },
+  {
+   "id": "lubon-pl-wydarzenia",
+   "runs": 5,
+   "events": 5,
+   "costUsd": 0.008953,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "rokietnica-city",
+   "runs": 5,
+   "events": 6,
+   "costUsd": 0.007453,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "dopiewo-gosir",
+   "runs": 5,
+   "events": 7,
+   "costUsd": 0.035880999999999996,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "nowe-zoo",
+   "runs": 5,
+   "events": 12,
+   "costUsd": 0.031694,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 1
+  },
+  {
+   "id": "ok-lubon-www",
+   "runs": 4,
+   "events": 12,
+   "costUsd": 0.010002,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "mok-mosina",
+   "runs": 3,
+   "events": 9,
+   "costUsd": 0.027527,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "mosina-galeria",
+   "runs": 5,
+   "events": 20,
+   "costUsd": 0.062400000000000004,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "suchylas-ckbp",
+   "runs": 5,
+   "events": 22,
+   "costUsd": 0.024493,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "gazeta-lubon-kalendarium-2",
+   "runs": 2,
+   "events": 10,
+   "costUsd": 0.009914,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "lubon-pl-kalendarz-2026-2",
+   "runs": 3,
+   "events": 15,
+   "costUsd": 0.069059,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "lubon-city",
+   "runs": 5,
+   "events": 26,
+   "costUsd": 0.048364,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 2,
+   "errorRuns": 1
+  },
+  {
+   "id": "tarnowo-city",
+   "runs": 5,
+   "events": 30,
+   "costUsd": 0.077902,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "osir-mosina-kalendarz",
+   "runs": 3,
+   "events": 18,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "puszczykowo-pl-wydarzenia",
+   "runs": 3,
+   "events": 19,
+   "costUsd": 0.021221,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "swarzedz-ok",
+   "runs": 5,
+   "events": 32,
+   "costUsd": 0.085299,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "mosina-osir",
+   "runs": 5,
+   "events": 34,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "kornik-city",
+   "runs": 5,
+   "events": 36,
+   "costUsd": 0.071685,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "lubon-ok",
+   "runs": 5,
+   "events": 38,
+   "costUsd": 0.046283,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "kleszczewo-gokis",
+   "runs": 5,
+   "events": 39,
+   "costUsd": 0.05473,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "ok-lubon-wydarzenia",
+   "runs": 2,
+   "events": 16,
+   "costUsd": 0.009596,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "puszczykowo-pl-kultura-wydarzenia",
+   "runs": 3,
+   "events": 24,
+   "costUsd": 0.019619,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "mosina-city",
+   "runs": 5,
+   "events": 44,
+   "costUsd": 0.15224300000000002,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 1
+  },
+  {
+   "id": "palmiarnia",
+   "runs": 5,
+   "events": 45,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "bibldop-wydarzenia",
+   "runs": 3,
+   "events": 27,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "gok-komorniki-kalendarz",
+   "runs": 3,
+   "events": 27,
+   "costUsd": 0.016882,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "komorniki-pl-kalendarz",
+   "runs": 3,
+   "events": 29,
+   "costUsd": 0.027566,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "dk-pod-lipami",
+   "runs": 5,
+   "events": 50,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "dk-orbita",
+   "runs": 5,
+   "events": 50,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "puszczykowo-city",
+   "runs": 5,
+   "events": 53,
+   "costUsd": 0.107927,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "biblraczynskich",
+   "runs": 5,
+   "events": 55,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "swarzedz-city",
+   "runs": 5,
+   "events": 55,
+   "costUsd": 0.15036499999999997,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "gosir-dopiewo-kalendarz",
+   "runs": 3,
+   "events": 33,
+   "costUsd": 0.038504,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "biblioteka-raczynskch",
+   "runs": 3,
+   "events": 33,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "mosina-pl-wydarzenia",
+   "runs": 3,
+   "events": 39,
+   "costUsd": 0.033209,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "lubon-pl-kalendarz-2026",
+   "runs": 6,
+   "events": 84,
+   "costUsd": 0.0661,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 4,
+   "errorRuns": 0
+  },
+  {
+   "id": "czerwonak-city",
+   "runs": 5,
+   "events": 79,
+   "costUsd": 0.213977,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "okpoznan-wydarzenia",
+   "runs": 3,
+   "events": 48,
+   "costUsd": 0.077025,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "dopiewo-pl-wydarzenia",
+   "runs": 3,
+   "events": 53,
+   "costUsd": 0.049481,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "kornik-kok",
+   "runs": 5,
+   "events": 95,
+   "costUsd": 0,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "wbp-poznan",
+   "runs": 3,
+   "events": 57,
+   "costUsd": 0.052047,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "tarnowo-gok",
+   "runs": 5,
+   "events": 96,
+   "costUsd": 0.181029,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "poznan-events",
+   "runs": 5,
+   "events": 100,
+   "costUsd": 0.296033,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "poznan-co-gdzie-kiedy",
+   "runs": 3,
+   "events": 60,
+   "costUsd": 0.103487,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "kultura-poznan",
+   "runs": 3,
+   "events": 60,
+   "costUsd": 0.09013099999999999,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "komorniki-gok",
+   "runs": 5,
+   "events": 153,
+   "costUsd": 0.20420999999999997,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "komorniki-city",
+   "runs": 5,
+   "events": 162,
+   "costUsd": 0.232338,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "ck-zamek",
+   "runs": 8,
+   "events": 282,
+   "costUsd": 0.299439,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "estrada",
+   "runs": 5,
+   "events": 190,
+   "costUsd": 0.295224,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "posir-poznan",
+   "runs": 3,
+   "events": 119,
+   "costUsd": 0.043211,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "poznan-kultura",
+   "runs": 5,
+   "events": 211,
+   "costUsd": 0.37881399999999993,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  },
+  {
+   "id": "dopiewo-city",
+   "runs": 5,
+   "events": 276,
+   "costUsd": 0.46314999999999995,
+   "zeroYieldCostUsd": 0,
+   "zeroYieldRuns": 0,
+   "emptyRuns": 0,
+   "errorRuns": 0
+  }
+ ]
+}
