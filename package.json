@@ -22,7 +22,8 @@
     "test:live": "node --import tsx --test \"test/live/*.live.ts\"",
     "build": "tsc",
     "panel-server": "tsx --env-file-if-exists=.env src/actions/panel-server.ts",
-    "compare-segmentation": "tsx --env-file-if-exists=.env src/actions/compare-segmentation.ts"
+    "compare-segmentation": "tsx --env-file-if-exists=.env src/actions/compare-segmentation.ts",
+    "diff-runs": "tsx src/actions/diff-runs.ts"
   },
   "dependencies": {
     "@sinclair/typebox": "^0.34.52",

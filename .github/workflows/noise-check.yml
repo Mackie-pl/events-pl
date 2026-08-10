@@ -1,0 +1,43 @@
+name: noise-check
+# Ręczne narzędzie eksploracyjne: dwa niezależne przebiegi daily z tego samego stanu źródeł,
+# kilka-kilkanaście minut od siebie (tyle, ile zajmuje pierwszy przebieg), porównane pod kątem
+# szumu w potoku (flaky fetch, wariancja LLM, geokoding). Facebook (Bright Data) pomijany
+# celowo — grupy realnie zmieniają się w kilka minut, co zagłuszyłoby sygnał, a scraping
+# kosztuje. Nic tu nie commituje ani nie pushuje — oba przebiegi są jednorazowe i odrzucane.
+on:
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          path: run-a
+      - uses: actions/checkout@v5
+        with:
+          path: run-b
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: run-a/package-lock.json
+      - run: npm ci
+        working-directory: run-a
+      - run: npm ci
+        working-directory: run-b
+      - run: npx playwright install --with-deps chromium
+        working-directory: run-a
+      - name: Przebieg A
+        run: npm run daily
+        working-directory: run-a
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      - name: Przebieg B
+        run: npm run daily
+        working-directory: run-b
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      - name: Diff A vs B
+        run: npm run diff-runs -- ../run-a ../run-b
+        working-directory: run-a
