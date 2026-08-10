@@ -780,6 +780,38 @@
    ]
   },
   {
+   "title": "Joga na trawie",
+   "date_start": "2026-08-23",
+   "date_end": "2026-08-30",
+   "repeat": "nd",
+   "time_start": "11:00",
+   "time_end": null,
+   "venue": "Owocowa Plaża w Zborowie",
+   "town": "Zborów",
+   "price": {
+    "free": true,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": "maybe",
+   "tags": [
+    "sport:joga"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "Zborowo na Sportowo",
+   "source_url": "https://gosir.dopiewo.pl/aktualnosci/sloneczne-zborowo-na-sportowo",
+   "is_noise": false,
+   "source_id": "gosir-dopiewo-kalendarz",
+   "geo": null,
+   "dates": [
+    "2026-08-23",
+    "2026-08-30"
+   ]
+  },
+  {
    "title": "Owocowe Psoty - animacje dla dzieci",
    "date_start": "2026-08-09",
    "date_end": "2026-08-30",
@@ -810,6 +842,39 @@
    "dates": [
     "2026-08-09",
     "2026-08-16",
+    "2026-08-23",
+    "2026-08-30"
+   ]
+  },
+  {
+   "title": "Owocowe Psoty - animacje dla dzieci",
+   "date_start": "2026-08-23",
+   "date_end": "2026-08-30",
+   "repeat": "nd",
+   "time_start": "12:00",
+   "time_end": "15:00",
+   "venue": "Owocowa Plaża w Zborowie",
+   "town": "Zborów",
+   "price": {
+    "free": true,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": true,
+   "tags": [
+    "dzieci:animacje",
+    "dzieci:dmuchańce"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "Zborowo na Sportowo",
+   "source_url": "https://gosir.dopiewo.pl/aktualnosci/sloneczne-zborowo-na-sportowo",
+   "is_noise": false,
+   "source_id": "gosir-dopiewo-kalendarz",
+   "geo": null,
+   "dates": [
     "2026-08-23",
     "2026-08-30"
    ]
@@ -4105,6 +4170,36 @@
    ]
   },
   {
+   "title": "Zielarnia Poetycka",
+   "date_start": "2026-08-25",
+   "date_end": null,
+   "repeat": "wt",
+   "time_start": "16:30",
+   "time_end": null,
+   "venue": "Biblioteka Wielkopolska im. Stanisława Barańczaka, ul. Bolesława Prusa 3, sala 207",
+   "town": "Poznań",
+   "price": {
+    "free": true,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": true,
+   "tags": [
+    "warsztaty:sztuka",
+    "warsztaty:literatura",
+    "warsztaty:przyroda"
+   ],
+   "registration": "https://bw.poznan.pl/biblioteka/wydarzenia-2/lato-w-bibliotece-2026/",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "Lato na Jeżycach",
+   "source_url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/lato-na-jezycach-w-bibliotece-wielkopolskiej/",
+   "is_noise": false,
+   "source_id": "wbp-poznan",
+   "geo": null
+  },
+  {
    "title": "Mała Zielarnia – zajęcia edukacyjno-czytelnicze z teatrem Kamishibai",
    "date_start": "2026-07-03",
    "date_end": "2026-08-12",
@@ -4560,92 +4655,6 @@
    "source_id": "okpoznan-wydarzenia"
   },
   {
-   "title": "Kino na Wolnym",
-   "date_start": "2026-08-07",
-   "date_end": "2026-08-28",
-   "repeat": "",
-   "time_start": null,
-   "time_end": null,
-   "venue": "Plac Kolegiacki 17, Poznań",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": true,
-   "tags": [
-    "film:plener"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://okpoznan.pl/szczegoly-wydarzenia/4r0C6pFWryAyR0aFNgbv_kino-na-wolnym",
-   "is_noise": false,
-   "source_id": "okpoznan-wydarzenia",
-   "geo": {
-    "lat": 52.4060312,
-    "lon": 16.9356647
-   }
-  },
-  {
-   "title": "Akademia Lubrańskiego | Wstawa Kisling. W sercu Montparnasse'u",
-   "date_start": "2026-08-08",
-   "date_end": "2026-08-23",
-   "repeat": "",
-   "time_start": null,
-   "time_end": null,
-   "venue": "ul. Lubrańskiego 1, Poznań",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": false,
-   "tags": [
-    "sztuka:wystawa"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://okpoznan.pl/szczegoly-wydarzenia/Oalr1IqYZN3ER7sHf0iF_akademia-lubranskiego-wstawa-kisling-w-sercu-montparnasseu",
-   "is_noise": false,
-   "source_id": "okpoznan-wydarzenia",
-   "geo": null
-  },
-  {
-   "title": "20 spacerów na 20 lat Traktu",
-   "date_start": "2026-08-08",
-   "date_end": "2026-09-05",
-   "repeat": "",
-   "time_start": null,
-   "time_end": null,
-   "venue": "",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": false,
-   "tags": [
-    "spacer"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://okpoznan.pl/szczegoly-wydarzenia/8tIQtUvDVKDO0rOCmqGg_20-spacerow-na-20-lat-traktu",
-   "is_noise": false,
-   "source_id": "okpoznan-wydarzenia"
-  },
-  {
    "title": "AMAkids | warsztaty wakacyjne: Cyfrowy Skarb",
    "date_start": "2026-08-10",
    "date_end": "2026-08-14",
@@ -4779,6 +4788,104 @@
     "lat": 52.4063791,
     "lon": 16.9266874
    }
+  },
+  {
+   "title": "Staromiejskie Koncerty Organowe 2026",
+   "date_start": "2026-08-13",
+   "date_end": "2026-09-03",
+   "repeat": "",
+   "time_start": null,
+   "time_end": null,
+   "venue": "ul. Gołębia 1, Poznań",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": 60,
+    "max": null,
+    "label": "60+"
+   },
+   "family_friendly": false,
+   "tags": [
+    "muzyka:koncert"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://okpoznan.pl/szczegoly-wydarzenia/LJpsT0Wh7MrbZteuyjP0_staromiejskie-koncerty-organowe-2026",
+   "is_noise": false,
+   "source_id": "okpoznan-wydarzenia",
+   "geo": null
+  },
+  {
+   "title": "Kino na Wolnym",
+   "date_start": "2026-08-14",
+   "date_end": "2026-08-28",
+   "repeat": "",
+   "time_start": null,
+   "time_end": null,
+   "venue": "Plac Kolegiacki 17, Poznań",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": 60,
+    "max": null,
+    "label": "60+"
+   },
+   "family_friendly": "maybe",
+   "tags": [
+    "film:plener"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://okpoznan.pl/szczegoly-wydarzenia/4r0C6pFWryAyR0aFNgbv_kino-na-wolnym",
+   "is_noise": false,
+   "source_id": "okpoznan-wydarzenia",
+   "geo": {
+    "lat": 52.4060312,
+    "lon": 16.9356647
+   }
+  },
+  {
+   "title": "20 spacerów na 20 lat Traktu",
+   "date_start": "2026-08-15",
+   "date_end": "2026-09-05",
+   "repeat": "",
+   "time_start": null,
+   "time_end": null,
+   "venue": "",
+   "town": "",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": 60,
+    "max": null,
+    "label": "60+"
+   },
+   "family_friendly": "maybe",
+   "tags": [
+    "spacer"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://okpoznan.pl/szczegoly-wydarzenia/8tIQtUvDVKDO0rOCmqGg_20-spacerow-na-20-lat-traktu",
+   "is_noise": false,
+   "source_id": "okpoznan-wydarzenia"
   },
   {
    "title": "Smukła Sylwetka - Bezpłatne Zajęcia w Plenerze",
@@ -5163,51 +5270,51 @@
  "errors": [
   {
    "id": "wydarzenia-w-luboniu-fb-group",
-   "err": "Bright Data trigger 401: {}"
+   "err": "Bright Data snapshot sd_msmxrmx314yzlcwmjx timeout (status=running)"
   },
   {
    "id": "lubon-fb-group",
-   "err": "Bright Data trigger 401: {}"
+   "err": "Bright Data snapshot sd_msmy25a0avvyupomv timeout (status=running)"
   },
   {
    "id": "mieszkancy-lubonia-fb-group",
-   "err": "Bright Data trigger 401: {}"
+   "err": "Bright Data snapshot sd_msmyclxu1h6crxn2qh timeout (status=running)"
   },
   {
    "id": "dopiewo-aktywnie-kulturalnie-fb",
-   "err": "Bright Data trigger 401: {}"
+   "err": "Bright Data snapshot sd_msmynb3o3ov7vafnu timeout (status=running)"
   },
   {
    "id": "dopiewo-mieszkancy-fb",
-   "err": "Bright Data trigger 401: {}"
+   "err": "Bright Data trigger 400: {}"
   },
   {
    "id": "dopiewo-tablica-ogloszen-fb",
-   "err": "Bright Data trigger 401: {}"
+   "err": "Bright Data trigger 400: {}"
   },
   {
    "id": "dabrowa-dopiewo-fb",
-   "err": "Bright Data trigger 401: {}"
+   "err": "Bright Data trigger 400: {}"
   },
   {
    "id": "fb-group-kultura-komorniki",
-   "err": "Bright Data trigger 401: {}"
+   "err": "Bright Data trigger 400: {}"
   },
   {
    "id": "fb-group-mieszkancy-gminy-komorniki",
-   "err": "Bright Data trigger 401: {}"
+   "err": "Bright Data trigger 400: {}"
   },
   {
    "id": "fb-group-komorniki-ogloszenia",
-   "err": "Bright Data trigger 401: {}"
+   "err": "Bright Data trigger 400: {}"
   },
   {
    "id": "fb-group-gmina-mosina-aktualnosci",
-   "err": "Bright Data trigger 401: {}"
+   "err": "Bright Data trigger 400: {}"
   },
   {
    "id": "fb-group-co-sie-dzieje-mosina",
-   "err": "Bright Data trigger 401: {}"
+   "err": "Bright Data trigger 400: {}"
   },
   {
    "id": "mdk2-poznan",
@@ -5226,56 +5333,61 @@
   },
   {
    "id": "fb-group-wydarzenia-w-poznaniu-1",
-   "err": "Bright Data trigger 401: {}"
+   "err": "Bright Data trigger 400: {}"
   },
   {
    "id": "fb-group-poznan-wydarzenia",
-   "err": "Bright Data trigger 401: {}"
+   "err": "Bright Data trigger 400: {}"
   },
   {
    "id": "fb-group-wydarzenia-poznan-2",
-   "err": "Bright Data trigger 401: {}"
+   "err": "Bright Data trigger 400: {}"
   },
   {
    "id": "fb-group-imprezy-poznan",
-   "err": "Bright Data trigger 401: {}"
+   "err": "Bright Data trigger 400: {}"
   },
   {
    "id": "fb-group-allin-poznan",
-   "err": "Bright Data trigger 401: {}"
+   "err": "Bright Data trigger 400: {}"
   },
   {
    "id": "fb-group-wydarzenia-poznan-3",
-   "err": "Bright Data trigger 401: {}"
+   "err": "Bright Data trigger 400: {}"
   },
   {
    "id": "fb-group-baba-cool",
-   "err": "Bright Data trigger 401: {}"
+   "err": "Bright Data trigger 400: {}"
   },
   {
    "id": "fb-group-wydarzenia-poznan-4",
-   "err": "Bright Data trigger 401: {}"
+   "err": "Bright Data trigger 400: {}"
   },
   {
    "id": "grupa-puszczykowo-fb",
-   "err": "Bright Data trigger 401: {}"
+   "err": "Bright Data trigger 400: {}"
   },
   {
    "id": "kocham-puszczykowo-fb",
-   "err": "Bright Data trigger 401: {}"
+   "err": "Bright Data trigger 400: {}"
   },
   {
    "id": "puszczykowo-ogloszenia-fb",
-   "err": "Bright Data trigger 401: {}"
+   "err": "Bright Data trigger 400: {}"
   }
  ],
  "brightdata": {
   "triggers": 23,
   "inputs": 23,
-  "polls": 0,
+  "polls": 192,
   "records": 0,
   "errors": 23,
-  "snapshots": [],
+  "snapshots": [
+   "sd_msmxrmx314yzlcwmjx",
+   "sd_msmy25a0avvyupomv",
+   "sd_msmyclxu1h6crxn2qh",
+   "sd_msmynb3o3ov7vafnu"
+  ],
   "byDataset": {}
  }
 }

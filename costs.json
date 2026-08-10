@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-10T05:24:07.497Z",
+ "updated": "2026-08-10T08:29:12.011Z",
  "rates": {
   "bdPerRecord": 0.0015,
   "searchPerQuery": 0.001,
@@ -1855,6 +1855,84 @@
    "usd": 0,
    "estimated": true,
    "units": 1.225,
+   "unit": "MB"
+  },
+  {
+   "day": "2026-08-10",
+   "at": "2026-08-10T08:29:11.981Z",
+   "stage": "daily",
+   "run": "2026-08-10T07:54:34.951Z",
+   "category": "llm-extract",
+   "usd": 0.018068,
+   "estimated": false,
+   "units": 2,
+   "unit": "calls",
+   "tokensIn": 12913,
+   "tokensOut": 1031,
+   "top": [
+    {
+     "id": "okpoznan-wydarzenia",
+     "usd": 0.011626,
+     "units": 1
+    },
+    {
+     "id": "biblioteka-mosina",
+     "usd": 0.006442,
+     "units": 1
+    }
+   ]
+  },
+  {
+   "day": "2026-08-10",
+   "at": "2026-08-10T08:29:11.981Z",
+   "stage": "daily",
+   "run": "2026-08-10T07:54:34.951Z",
+   "category": "llm-vision",
+   "usd": 0.020736,
+   "estimated": false,
+   "units": 2,
+   "unit": "calls",
+   "tokensIn": 9611,
+   "tokensOut": 2225,
+   "top": [
+    {
+     "id": "biblioteka-mosina",
+     "usd": 0.020736,
+     "units": 2
+    }
+   ]
+  },
+  {
+   "day": "2026-08-10",
+   "at": "2026-08-10T08:29:11.981Z",
+   "stage": "daily",
+   "run": "2026-08-10T07:54:34.951Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 67,
+   "unit": "fetches"
+  },
+  {
+   "day": "2026-08-10",
+   "at": "2026-08-10T08:29:11.981Z",
+   "stage": "daily",
+   "run": "2026-08-10T07:54:34.951Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 1,
+   "unit": "lookups"
+  },
+  {
+   "day": "2026-08-10",
+   "at": "2026-08-10T08:29:11.981Z",
+   "stage": "daily",
+   "run": "2026-08-10T07:54:34.951Z",
+   "category": "storage",
+   "usd": 0,
+   "estimated": true,
+   "units": 1.033,
    "unit": "MB"
   }
  ]
