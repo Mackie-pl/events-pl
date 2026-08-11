@@ -12,7 +12,9 @@ import { describe, it } from "node:test";
 
 import { Value } from "@sinclair/typebox/value";
 
-import { bestCapability, capabilityEvents, isMappable } from "../src/pipeline/extract/from-capability.js";
+import {
+  bestCapability, capabilityEvents, hashableFeed, isMappable,
+} from "../src/pipeline/extract/from-capability.js";
 import { EventSchema } from "../src/types/event-schema.js";
 import type { SourceCapability } from "../src/types/index.js";
 
@@ -274,5 +276,58 @@ describe("zgodność ze schematem wydarzenia", () => {
 
   it("rodzaj nieobsługiwany (rss) daje pusty plon, nie wyjątek", () => {
     assert.deepEqual(capabilityEvents("rss", "<rss/>", "https://x.pl/r", TODAY).events, []);
+  });
+});
+
+// ---------------- treść do haszowania ----------------
+
+/** Odpowiedź `tribe` z dnia D: okno zapytania odbite w adresach, kalendarz bez zmian. */
+const tribeOnDay = (day: string): string => JSON.stringify({
+  rest_url: `https://bracz.edu.pl/wp-json/tribe/events/v1/events/?page=1&start_date=${day} 00:00:00`,
+  next_rest_url: `https://bracz.edu.pl/wp-json/tribe/events/v1/events/?start_date=${day}+00%3A00%3A00&page=2`,
+  total: 17, total_pages: 2, events: (JSON.parse(TRIBE) as { events: unknown[] }).events,
+});
+
+describe("hashableFeed", () => {
+  it("tribe: samo przesunięcie doby w rest_url nie jest zmianą treści", () => {
+    // sedno błędu: obie odpowiedzi mają tę samą DŁUGOŚĆ, więc „chars” w raporcie nic nie
+    // podpowiadał — źródło meldowało `changed` co dobę, a kalendarz stał w miejscu
+    const wczoraj = tribeOnDay("2026-08-10"), dzis = tribeOnDay("2026-08-11");
+    assert.equal(wczoraj.length, dzis.length);
+    assert.notEqual(wczoraj, dzis);
+    assert.equal(hashableFeed("tribe", wczoraj), hashableFeed("tribe", dzis));
+  });
+
+  it("tribe: nowy rekord w feedzie zostaje zmianą", () => {
+    const wiecej = JSON.parse(tribeOnDay("2026-08-11")) as { events: unknown[]; total: number };
+    wiecej.events.push({ title: "Nowe", start_date: "2026-09-01 10:00:00" });
+    wiecej.total += 1;
+    assert.notEqual(hashableFeed("tribe", JSON.stringify(wiecej)),
+      hashableFeed("tribe", tribeOnDay("2026-08-11")));
+  });
+
+  it("tribe: zepsuty JSON idzie do hasza w całości, bez wyjątku", () => {
+    assert.equal(hashableFeed("tribe", "{ to nie jest json"), "{ to nie jest json");
+  });
+
+  it("ical: DTSTAMP to chwila eksportu, nie treść — z parametrem i bez", () => {
+    const stamped = (t: string): string => [
+      "BEGIN:VCALENDAR", "BEGIN:VEVENT", `DTSTAMP:${t}`,
+      "DTSTART;TZID=Europe/Warsaw:20260731T180000", "SUMMARY:Recital",
+      "END:VEVENT", "BEGIN:VEVENT", `DTSTAMP;VALUE=DATE-TIME:${t}`,
+      "DTSTART;VALUE=DATE:20260815", "SUMMARY:Piknik", "END:VEVENT", "END:VCALENDAR",
+    ].join("\r\n");
+    assert.equal(hashableFeed("ical", stamped("20260810T041500Z")),
+      hashableFeed("ical", stamped("20260811T050130Z")));
+  });
+
+  it("ical: DTSTART zostaje — przesunięty termin MA być zmianą", () => {
+    assert.notEqual(hashableFeed("ical", ICAL),
+      hashableFeed("ical", ICAL.replace("20260731T180000", "20260731T190000")));
+  });
+
+  it("nie rusza rodzajów, których nie zna (jsonld: cała strona)", () => {
+    assert.equal(hashableFeed("jsonld", JSONLD), JSONLD);
+    assert.equal(hashableFeed("rss", "<rss>DTSTAMP:x</rss>"), "<rss>DTSTAMP:x</rss>");
   });
 });

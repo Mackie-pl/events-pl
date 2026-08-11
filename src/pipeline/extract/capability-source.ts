@@ -21,7 +21,9 @@ import type {
   CachedExtraction, EventItem, PipelineState, Source, SourceCapability, SourceRun,
 } from "../../types/index.js";
 
-import { bestCapability, type CapabilityYield, capabilityEvents } from "./from-capability.js";
+import {
+  bestCapability, type CapabilityYield, capabilityEvents, hashableFeed,
+} from "./from-capability.js";
 
 /** „2 zakończone, 1 bez daty" — puste, gdy nic nie odpadło. */
 function dropNote(d: CapabilityYield["dropped"]): string {
@@ -103,7 +105,9 @@ export async function capabilitySource(
   const fetched = got.body;
   const cache = (state.extractions ??= {});
   const cached = cache[src.id];
-  const hash = sha256(fetched.text);
+  // hash liczony z treści BEZ pól przepisywanych co pobranie (patrz hashableFeed) — inaczej
+  // `tribe` i `ical` mijają się z cache'em każdej doby, choć kalendarz stoi w miejscu
+  const hash = sha256(hashableFeed(cap.kind, fetched.text));
   const v = {
     ...(fetched.etag ? { etag: fetched.etag } : {}),
     ...(fetched.lastModified ? { lastModified: fetched.lastModified } : {}),

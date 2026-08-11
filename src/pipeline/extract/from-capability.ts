@@ -341,3 +341,35 @@ export function capabilityEvents(
   if (kind === "jsonld") return fromJsonLd(body, url, today);
   return emptyYield();
 }
+
+/** Odbicie zapytania w odpowiedzi `tribe` — niesie DZISIEJSZĄ datę, nie treść kalendarza. */
+const TRIBE_ECHO = ["rest_url", "next_rest_url"];
+/** `DTSTAMP` = chwila wygenerowania eksportu iCal, przepisywana przy każdym pobraniu. */
+const ICAL_STAMP = /^DTSTAMP(?:;[^:\r\n]*)?:[^\r\n]*\r?\n?/gim;
+
+/**
+ * Treść feedu OKROJONA O POLA, które serwis przepisuje przy każdym pobraniu — wyłącznie
+ * do liczenia hasza. Do mapowania i do archiwum idzie oryginał.
+ *
+ * Bez tego cache całej odpowiedzi (`state.extractions`) nie trafiał NIGDY przez granicę
+ * doby: `tribe` odbija w `rest_url`/`next_rest_url` rozwiązane okno zapytania, a domyślne
+ * `start_date` to dziś 00:00:00. Zmiana jest co do znaku tej samej DŁUGOŚCI, więc w raporcie
+ * wyglądała jak prawdziwa („17619 znaków, hash inny niż poprzednio") i codziennie meldowała
+ * `changed` na źródłach, które stały w miejscu — psując plon i pomiar powtarzalności.
+ * Mapowania to nie kosztowało modelu, ale iCal ma to samo w `DTSTAMP`, a tam fallback ze
+ * ścieżki `tribe` trafiłby już na realny rachunek.
+ *
+ * `total`/`total_pages` zostają: nowy rekord w feedzie MA być zmianą.
+ */
+export function hashableFeed(kind: SourceCapability["kind"], body: string): string {
+  if (kind === "ical") return body.replace(ICAL_STAMP, "");
+  if (kind !== "tribe") return body;
+  let parsed: Record<string, unknown>;
+  try {
+    parsed = JSON.parse(body) as Record<string, unknown>;
+  } catch {
+    return body; // zepsuty JSON i tak nie da wydarzeń — hash z całości niczego tu nie psuje
+  }
+  for (const key of TRIBE_ECHO) delete parsed[key];
+  return JSON.stringify(parsed);
+}
