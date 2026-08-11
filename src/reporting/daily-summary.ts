@@ -63,7 +63,7 @@ function fbValueTable(report: RunReport): string[] {
   const rows = report.fbValue;
   if (!rows?.length) return [];
   const VERDICT: Record<string, string> = {
-    keep: "✅ zostaje", muted: "💸 wyciszone",
+    keep: "✅ zostaje", muted: "💸 wyciszone", "town-floor": "🏘️ podłoga gminy",
     "too-few-runs": "⏳ za mało pobrań", "no-threshold": "— brak progu",
   };
   const lines = [
@@ -123,11 +123,13 @@ export function fbValueLine(rows: readonly FbValueRow[]): string {
   const cost = rows.reduce((n, r) => n + r.costUsd, 0);
   const novel = rows.reduce((n, r) => n + r.novel, 0);
   const muted = rows.filter((r) => r.verdict === "muted").length;
+  const floored = rows.filter((r) => r.verdict === "town-floor").length;
   const waiting = rows.filter((r) => r.verdict === "too-few-runs").length;
   return (
     `FB: $${cost.toFixed(4)} za ${novel} wydarzeń spoza sieci` +
     (novel ? ` ($${(cost / novel).toFixed(4)}/wyd.)` : "") +
     (muted ? ` · ${muted} wyciszonych` : "") +
+    (floored ? ` · ${floored} zostaje podłogą gminy` : "") +
     (waiting ? ` · ${waiting} czeka na pomiar` : "")
   );
 }

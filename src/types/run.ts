@@ -40,7 +40,12 @@ export interface FbValueRow {
   costUsd: number;
   /** brak = `novel === 0`, czyli koszt za nic nowego (traktowane jak przekroczenie progu) */
   usdPerNovel?: number;
-  verdict: "keep" | "muted" | "too-few-runs" | "no-threshold";
+  /**
+   * `town-floor` = przekroczyło próg, ale zostaje, bo gmina straciłaby całą obecność na FB.
+   * Osobno od `keep`, bo to nie jest ta sama wiadomość: źródło JEST za drogie i warto o tym
+   * wiedzieć, tylko cena wycięcia gminy z serwisu jest wyższa niż cena rekordów.
+   */
+  verdict: "keep" | "muted" | "town-floor" | "too-few-runs" | "no-threshold";
 }
 
 /**

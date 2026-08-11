@@ -42,6 +42,8 @@ afterEach(() => {
   delete process.env["FB_MAX_USD_PER_EVENT"];
   delete process.env["FB_YIELD_MIN_RUNS"];
   delete process.env["FB_MUTE_DAYS"];
+  delete process.env["FB_MIN_SOURCES_PER_TOWN"];
+  delete process.env["FB_GROUP_BLOCKED_LIMIT"];
 });
 
 describe("verdictFor — kiedy próg MA nie zadziałać", () => {
@@ -81,12 +83,18 @@ describe("verdictFor — próg", () => {
 });
 
 describe("applyFbMutes — zapis i wygasanie", () => {
+  /**
+   * Tania grupa w tej samej gminie. Bez niej podłoga obsady ratowałaby jedyne źródło Lubonia
+   * i te testy sprawdzałyby podłogę zamiast wyciszania.
+   */
+  const sasiadka = fb({ id: "tania-sasiadka", usdPerNovel: 0.001 });
+
   it("wycisza czasowo i podaje podstawę werdyktu", () => {
     process.env["FB_MAX_USD_PER_EVENT"] = "0.1";
     process.env["FB_MUTE_DAYS"] = "30";
     const s = state();
-    const rows = applyFbMutes([fb({ usdPerNovel: 0.25 })], s, "2026-08-12");
-    assert.equal(rows[0]?.verdict, "muted");
+    const rows = applyFbMutes([fb({ usdPerNovel: 0.25 }), sasiadka], s, "2026-08-12");
+    assert.equal(rows.find((r) => r.id === "g")?.verdict, "muted");
     assert.equal(s.fbMuted?.["g"]?.until, "2026-09-11");
     assert.equal(s.fbMuted?.["g"]?.novel, 4, "podstawa zostaje, żeby dało się werdykt sprawdzić");
   });
@@ -94,7 +102,7 @@ describe("applyFbMutes — zapis i wygasanie", () => {
   it("wyciszenie wygasa samo — bez tego chudy tydzień byłby wyrokiem dożywotnim", () => {
     process.env["FB_MAX_USD_PER_EVENT"] = "0.1";
     const s = state();
-    applyFbMutes([fb({ usdPerNovel: 0.25 })], s, "2026-08-12");
+    applyFbMutes([fb({ usdPerNovel: 0.25 }), sasiadka], s, "2026-08-12");
     assert.ok(mutedSkip(group, s, "2026-09-10"), "dzień przed terminem jeszcze cisza");
     assert.equal(mutedSkip(group, s, "2026-09-11"), null, "w dniu `until` wraca do pomiaru");
   });
@@ -102,8 +110,9 @@ describe("applyFbMutes — zapis i wygasanie", () => {
   it("poprawa zdejmuje wyciszenie przed terminem", () => {
     process.env["FB_MAX_USD_PER_EVENT"] = "0.1";
     const s = state();
-    applyFbMutes([fb({ usdPerNovel: 0.25 })], s, "2026-08-12");
-    applyFbMutes([fb({ usdPerNovel: 0.05 })], s, "2026-08-13");
+    applyFbMutes([fb({ usdPerNovel: 0.25 }), sasiadka], s, "2026-08-12");
+    assert.ok(s.fbMuted?.["g"], "najpierw musi być co zdejmować");
+    applyFbMutes([fb({ usdPerNovel: 0.05 }), sasiadka], s, "2026-08-13");
     assert.equal(s.fbMuted?.["g"], undefined);
   });
 
@@ -141,5 +150,121 @@ describe("applyFbMutes — zapis i wygasanie", () => {
     const s = state();
     applyFbMutes([omit(fb({ id: "dk-stokrotka", fetch: "fb", novel: 0 }), "usdPerNovel")], s, "2026-08-12");
     assert.deepEqual(s.fbMuted, {});
+  });
+});
+
+/**
+ * Próg czysto kosztowy jest stronniczy geograficznie i to nie przez jakość źródeł, tylko
+ * przez arytmetykę: ten sam koszt rekordów dzieli się w gminie wiejskiej przez kilka
+ * wydarzeń, a w Poznaniu przez pięćdziesiąt. Bez podłogi zdjąłby najpierw Puszczykowo,
+ * Luboń i Dopiewo — czyli dokładnie te gminy, dla których ten serwis powstał.
+ */
+describe("podłoga obsady gminy", () => {
+  const verdictOf = (rows: ReturnType<typeof applyFbMutes>, id: string): string | undefined =>
+    rows.find((r) => r.id === id)?.verdict;
+
+  it("jedyna grupa w gminie zostaje, choćby była najdroższa", () => {
+    process.env["FB_MAX_USD_PER_EVENT"] = "0.01";
+    const s = state();
+    const rows = applyFbMutes(
+      [fb({ id: "kocham-puszczykowo", town: "Puszczykowo", usdPerNovel: 0.0908 })], s, "2026-08-12",
+    );
+    assert.equal(verdictOf(rows, "kocham-puszczykowo"), "town-floor");
+    assert.deepEqual(s.fbMuted, {}, "nie może zostać zapisane jako wyciszone");
+  });
+
+  it("z trzech drogich grup w gminie zostaje NAJTAŃSZA, reszta leci", () => {
+    process.env["FB_MAX_USD_PER_EVENT"] = "0.01";
+    const s = state();
+    const rows = applyFbMutes([
+      fb({ id: "drogie", town: "Puszczykowo", usdPerNovel: 0.09 }),
+      fb({ id: "najtansze", town: "Puszczykowo", usdPerNovel: 0.03 }),
+      fb({ id: "srednie", town: "Puszczykowo", usdPerNovel: 0.05 }),
+    ], s, "2026-08-12");
+    assert.equal(verdictOf(rows, "najtansze"), "town-floor");
+    assert.equal(verdictOf(rows, "srednie"), "muted");
+    assert.equal(verdictOf(rows, "drogie"), "muted");
+  });
+
+  it("gmina z tanią grupą nie ratuje drogiej — podłoga jest już obsadzona", () => {
+    process.env["FB_MAX_USD_PER_EVENT"] = "0.01";
+    const s = state();
+    const rows = applyFbMutes([
+      fb({ id: "tanie", town: "Poznań", usdPerNovel: 0.002 }),
+      fb({ id: "drogie", town: "Poznań", usdPerNovel: 0.09 }),
+    ], s, "2026-08-12");
+    assert.equal(verdictOf(rows, "tanie"), "keep");
+    assert.equal(verdictOf(rows, "drogie"), "muted");
+  });
+
+  it("podłoga liczy się osobno dla każdej gminy", () => {
+    process.env["FB_MAX_USD_PER_EVENT"] = "0.01";
+    const s = state();
+    const rows = applyFbMutes([
+      fb({ id: "poznan-tanie", town: "Poznań", usdPerNovel: 0.002 }),
+      fb({ id: "lubon-drogie", town: "Luboń", usdPerNovel: 0.09 }),
+    ], s, "2026-08-12");
+    assert.equal(verdictOf(rows, "lubon-drogie"), "town-floor",
+      "tania grupa w Poznaniu nie obsadza Lubonia");
+  });
+
+  it("grupa niedostępna nie obsadza gminy — inaczej blokowałaby jedyną działającą", () => {
+    process.env["FB_MAX_USD_PER_EVENT"] = "0.01";
+    const s = state();
+    s.fbGroupBlocked = { prywatna: { runs: 3, since: "2026-08-01", lastTry: "2026-08-11" } };
+    const rows = applyFbMutes([
+      fb({ id: "prywatna", town: "Dopiewo", novel: 0, usdPerNovel: 0.5 }),
+      fb({ id: "dzialajaca", town: "Dopiewo", usdPerNovel: 0.09 }),
+    ], s, "2026-08-12");
+    assert.equal(verdictOf(rows, "dzialajaca"), "town-floor");
+    assert.equal(verdictOf(rows, "prywatna"), "muted", "niedostępnej nie ratujemy");
+  });
+
+  it("podłoga zdejmuje wyciszenie z poprzedniego przebiegu", () => {
+    process.env["FB_MAX_USD_PER_EVENT"] = "0.01";
+    const s = state();
+    // najpierw dwie grupy: droga leci
+    applyFbMutes([
+      fb({ id: "tanie", town: "Mosina", usdPerNovel: 0.002 }),
+      fb({ id: "drogie", town: "Mosina", usdPerNovel: 0.09 }),
+    ], s, "2026-08-12");
+    assert.ok(s.fbMuted?.["drogie"]);
+    // nazajutrz tania grupa wypada z okna — droga zostaje jedyna i musi wrócić
+    applyFbMutes([fb({ id: "drogie", town: "Mosina", usdPerNovel: 0.09 })], s, "2026-08-13");
+    assert.equal(s.fbMuted?.["drogie"], undefined);
+  });
+
+  it("FB_MIN_SOURCES_PER_TOWN=0 wyłącza podłogę", () => {
+    process.env["FB_MAX_USD_PER_EVENT"] = "0.01";
+    process.env["FB_MIN_SOURCES_PER_TOWN"] = "0";
+    const s = state();
+    const rows = applyFbMutes(
+      [fb({ id: "jedyna", town: "Puszczykowo", usdPerNovel: 0.09 })], s, "2026-08-12",
+    );
+    assert.equal(verdictOf(rows, "jedyna"), "muted");
+  });
+
+  it("podłoga 2 zostawia dwie najtańsze", () => {
+    process.env["FB_MAX_USD_PER_EVENT"] = "0.01";
+    process.env["FB_MIN_SOURCES_PER_TOWN"] = "2";
+    const s = state();
+    const rows = applyFbMutes([
+      fb({ id: "a", town: "Luboń", usdPerNovel: 0.09 }),
+      fb({ id: "b", town: "Luboń", usdPerNovel: 0.03 }),
+      fb({ id: "c", town: "Luboń", usdPerNovel: 0.05 }),
+    ], s, "2026-08-12");
+    assert.equal(verdictOf(rows, "b"), "town-floor");
+    assert.equal(verdictOf(rows, "c"), "town-floor");
+    assert.equal(verdictOf(rows, "a"), "muted");
+  });
+
+  it("źródło bez ani jednego nowego wydarzenia też może zostać podłogą", () => {
+    // brak `usdPerNovel` sortuje się na koniec, ale gdy nie ma nikogo innego — ratuje je podłoga
+    process.env["FB_MAX_USD_PER_EVENT"] = "0.01";
+    const s = state();
+    const rows = applyFbMutes(
+      [omit(fb({ id: "jedyna", town: "Puszczykowo", novel: 0 }), "usdPerNovel")], s, "2026-08-12",
+    );
+    assert.equal(verdictOf(rows, "jedyna"), "town-floor");
   });
 });

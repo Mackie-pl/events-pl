@@ -243,10 +243,22 @@ nie dało **żadne źródło spoza FB** — i `usdPerNovel = costUsd / novel`. R
 do `RunReport.fbValue`, do job summary jako tabela „Wartość kanału FB" i na stdout jedną linią.
 Po ustawieniu `FB_MAX_USD_PER_EVENT` źródła powyżej progu są wyciszane jako `skipped-costly`.
 
-Trzy bezpieczniki, bo pomyłka kasuje źródło, nie wiersz w raporcie: (1) **bez zmiennej mechanizm
+Cztery bezpieczniki, bo pomyłka kasuje źródło, nie wiersz w raporcie: (1) **bez zmiennej mechanizm
 nie działa** — wycena wydarzenia jest decyzją właściciela, nie stałą w kodzie; (2) `FB_YIELD_MIN_RUNS`
 (5) realnych pobrań, zanim cokolwiek zapadnie — pominięte przebiegi się nie liczą; (3) wyciszenie
-wygasa po `FB_MUTE_DAYS` (30) i źródło wraca samo do pomiaru, a poprawa zdejmuje je wcześniej.
+wygasa po `FB_MUTE_DAYS` (30) i źródło wraca samo do pomiaru, a poprawa zdejmuje je wcześniej;
+(4) **podłoga obsady gminy** `FB_MIN_SOURCES_PER_TOWN` (1).
+
+Podłoga jest tu najważniejsza, bo naprawia wadę samej miary, a nie jej implementacji. Ranking
+kosztowy układa się wzdłuż granicy administracyjnej, nie jakościowej: ten sam koszt rekordów
+dzieli się w gminie wiejskiej przez kilka wydarzeń, a w Poznaniu przez pięćdziesiąt, więc pomiar
+2026-08-12 daje $0.0023–0.0026 wyłącznie dla grup poznańskich i $0.04–0.09 wyłącznie dla
+Puszczykowa, Lubonia i Dopiewa. Próg bez podłogi zdjąłby najpierw te gminy, dla których serwis
+powstał, i zrobiłby z niego agregator samego Poznania. Podłoga gwarantuje, że gmina nie straci
+całej obecności na FB — ratowane jest **najtańsze** z pozostałych źródeł gminy (werdykt
+`town-floor`, osobny od `keep`: źródło JEST za drogie, tylko cena wycięcia gminy jest wyższa).
+Grupy niedostępne dla scrapera nie obsadzają gminy i nie są ratowane — inaczej jedna prywatna
+grupa „zajmowałaby" miejsce i pozwalała wyciszyć jedyną działającą.
 `novel === 0` przy spełnionym minimum jest traktowane jak przekroczenie progu, nie jak brak danych.
 Świadomie **nie** to samo co `exclusive` z symulacji zdejmowania: dwie grupy niosące to samo
 wydarzenie spoza sieci mają `exclusive: 0` obie i próg postawiony na tamtej mierze wyciszyłby obie.
@@ -256,7 +268,7 @@ Patrz `src/pipeline/extract/fb-cost-mute.ts`.
 (nadpisanie ID datasetu), `BD_POLL_MS` (10000), `BD_TIMEOUT_MS` (480000), `BD_MAX_FB_EVENTS` (40),
 `FB_GROUP_BLOCKED_LIMIT` (3), `FB_GROUP_BLOCKED_RECHECK_DAYS` (14), `FB_GROUP_LIMIT_MAX` (50),
 `FB_GROUP_LIMIT_MIN` (10), `FB_GROUP_LIMIT_MARGIN` (0.2), `FB_MAX_USD_PER_EVENT` (brak = wyłączone),
-`FB_YIELD_MIN_RUNS` (5), `FB_MUTE_DAYS` (30).
+`FB_YIELD_MIN_RUNS` (5), `FB_MUTE_DAYS` (30), `FB_MIN_SOURCES_PER_TOWN` (1).
 
 **Liczenie kosztu.** Bright Data rozlicza per-rekord. Każdy przebieg z FB dopisuje linię do
 `brightdata-usage.jsonl` (commitowany) i loguje na stdout: `triggers · inputs (URL) · records · polls ·
