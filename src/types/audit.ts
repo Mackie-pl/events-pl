@@ -36,6 +36,8 @@ export type AuditKind =
   | "followup"
   /** linki facebook.com/events/… wyłuskane z treści */
   | "fb.harvest"
+  /** rytm publikacji grupy FB i werdykt dostępności (płatne rekordy vs. faktyczne posty) */
+  | "fb.group"
   /** geokodowanie miejsca (Nominatim + cache) */
   | "geo"
   /** rekord przegrał scalanie duplikatów */

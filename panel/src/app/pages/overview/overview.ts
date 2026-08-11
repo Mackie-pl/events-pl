@@ -56,6 +56,8 @@ export class OverviewPage {
         return run.totals.skippedDead ?? 0;
       case 'skipped-inactive':
         return run.totals.skippedInactive ?? 0;
+      case 'skipped-blocked':
+        return run.totals.skippedBlocked ?? 0;
       case 'empty':
         return run.totals.empty;
     }

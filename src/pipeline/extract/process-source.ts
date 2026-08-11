@@ -16,18 +16,20 @@ import {
 } from "../../adapters/page-fetch.js";
 import { archiveRaw, beginSource, sourcePaths } from "../../adapters/supabase-archive.js";
 import { audit } from "../../shared/audit.js";
+import { todayIso } from "../../shared/dates.js";
 import { describeError } from "../../shared/errors.js";
 import { sha256 } from "../../shared/hash.js";
 import { urlKey } from "../../shared/url.js";
 import type {
-  EventItem, FollowupRun, PipelineError, PipelineState, Source, SourceRun,
+  EventItem, FbGroupStats, FollowupRun, PipelineError, PipelineState, Source, SourceRun,
 } from "../../types/index.js";
-import { fbGroupPostsToText, harvestEventUrls, isEventUrl } from "../facebook.js";
+import { fbGroupPostsToText, fbGroupStats, harvestEventUrls, isEventUrl } from "../facebook.js";
 
 import { dropPast } from "./block-cache.js";
 import { blockSource } from "./block-source.js";
 import { capabilitySource } from "./capability-source.js";
 import { entryUrl } from "./entry-url.js";
+import { noteFbGroup } from "./fb-group-blocked.js";
 import {
   droppedInvalidStats, extractEvents, extractPoster, resetDroppedInvalid,
 } from "./extract.js";
@@ -49,6 +51,40 @@ export function newSourceRun(src: Source, url: string, status: SourceRun["status
   };
 }
 
+/**
+ * Ślad rytmu grupy FB.
+ *
+ * Ten krok NIE rusza jeszcze limitu — zapisuje liczby, na których decyzja o limicie liczonym
+ * per grupa ma się dopiero oprzeć. Po drodze rozstrzyga rzecz nieudokumentowaną u dostawcy:
+ * czy `limit_per_input` oddaje NAJNOWSZE posty, czy dowolne. Świeży `newest` przy nasyconym
+ * limicie znaczy „najnowsze"; `newest` sprzed tygodni znaczy „dowolne" — a wtedy tempo
+ * policzone z tego okna jest bez wartości i cały pomysł trzeba porzucić, zanim zacznie
+ * sterować wydatkiem.
+ */
+function auditFbGroup(s: FbGroupStats): void {
+  if (!s.posts) {
+    audit("fb.group",
+      `${s.records} płatnych rekordów, ani jednego postu — same wiersze błędu scrapera`,
+      { records: s.records, errorRows: s.errorRows, why: s.blockedWhy ?? null });
+    return;
+  }
+  const rate = s.postsPerDay === undefined
+    ? `wszystko z jednej chwili — tempa nie da się policzyć, wiadomo tylko ≥${s.posts}/dobę`
+    // okno krótsze od doby trafia w godziny szczytu i zawyża tempo (noc nic nie publikuje) —
+    // limit policzony z takiej próbki byłby za wysoki, czyli droższy
+    : `${s.postsPerDay} postów/dobę${(s.spanDays ?? 0) < 1 ? " (okno < doby — zawyżone)" : ""}`;
+  audit("fb.group",
+    `${s.posts} postów z ${s.records} płatnych rekordów · najnowszy ${s.newest}, najstarszy ${s.oldest} `
+    + `(okno ${s.spanDays} dni) → ${rate} · `
+    + (s.atLimit
+      ? `limit ${s.limit} wyczerpany, więc to DOLNA granica tempa`
+      : `limit ${s.limit} niewyczerpany, więc okno to cała dostępna grupa`),
+    {
+      posts: s.posts, records: s.records, newest: s.newest ?? null, oldest: s.oldest ?? null,
+      spanDays: s.spanDays ?? null, postsPerDay: s.postsPerDay ?? null, atLimit: s.atLimit,
+    });
+}
+
 /** Fetch wg strategii źródła; 403/429 przy zwykłym fetchu to zwykle anty-bot — jedna próba przez headless. */
 async function fetchSource(
   src: Source, url: string, run: SourceRun, extraHeaders: Record<string, string> = {},
@@ -58,6 +94,10 @@ async function fetchSource(
     // pełną treść — brak 304, diff załatwia standardowe porównanie hashy w processSource
     try {
       const records = await bdCollect(BD_DATASETS.fbGroupPosts, [url], MAX_FB_GROUP_POSTS);
+      // pomiar PRZED spłaszczeniem do tekstu: daty postów są w rekordach, a w tekście dla
+      // modelu już tylko jako napis, z którego nikt ich nie policzy
+      run.fbGroup = fbGroupStats(records, MAX_FB_GROUP_POSTS);
+      auditFbGroup(run.fbGroup);
       return { kind: "html", text: fbGroupPostsToText(records), httpStatus: 200 };
     } catch (e) {
       bdUsage.errors += 1;
@@ -269,6 +309,9 @@ export async function processSource(
     return finalize([]);
   }
   run.httpStatus = fetched.httpStatus;
+  // dopiero po udanym pobraniu: rzucony fetch (timeout, 401, anulowana migawka) nie jest
+  // dowodem NA GRUPĘ, tylko na Bright Data — karanie za niego wyłączałoby zdrowe grupy
+  if (run.fbGroup) noteFbGroup(src.id, run.fbGroup, state, todayIso());
   audit("fetch", `pobrane strategią „${src.fetch}" — HTTP ${fetched.httpStatus ?? "—"}`, {
     url, strategy: src.fetch, httpStatus: fetched.httpStatus,
   });

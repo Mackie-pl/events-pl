@@ -177,6 +177,8 @@ export type SourceStatus =
   | 'skipped-dead'
   /** discovery przestało je znajdować i nic nie plonuje — wraca samo przy pierwszym trafieniu */
   | 'skipped-inactive'
+  /** grupa FB oddająca sam wiersz błędu (prywatna/usunięta) — wraca po sondzie co N dni */
+  | 'skipped-blocked'
   | 'empty';
 
 export interface FollowupRun {
@@ -210,6 +212,24 @@ export interface BdUsage {
   snapshots: string[];
   /** rekordy per dataset (fb_events / fb_group_posts) */
   byDataset?: Record<string, number>;
+}
+
+/**
+ * Rytm publikacji grupy FB. `records` to jednostka rozliczenia, `posts` to treść —
+ * grupa prywatna oddaje płatny wiersz błędu i zerową treść, i tylko ta różnica ją zdradza.
+ */
+export interface FbGroupStats {
+  records: number;
+  posts: number;
+  errorRows: number;
+  blockedWhy?: string;
+  limit: number;
+  /** limit wyczerpany → `postsPerDay` jest dolnym oszacowaniem, nie pomiarem */
+  atLimit: boolean;
+  newest?: string;
+  oldest?: string;
+  spanDays?: number;
+  postsPerDay?: number;
 }
 
 /**
@@ -255,6 +275,8 @@ export interface SourceRun {
   llmByTask?: TaskUsage;
   /** zużycie Bright Data przypisane temu źródłu (grupa FB / zbiorcze wydarzenia) */
   bd?: BdUsage;
+  /** rytm publikacji grupy FB; brak = źródło nie jest grupą albo pobranie się nie udało */
+  fbGroup?: FbGroupStats;
   ms: number;
   err?: string;
   /** np. "HTTP 403 → headless fallback ok" */
@@ -278,6 +300,7 @@ export interface RunTotals extends LlmUsage {
   /** opcjonalne — starsze przebiegi w runs.json nie mają tych pól */
   skippedDead?: number;
   skippedInactive?: number;
+  skippedBlocked?: number;
   empty: number;
   events: number;
   followupsTried: number;

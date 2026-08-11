@@ -8,8 +8,8 @@
  * po kilka wariantów każdego pola.
  */
 import type { BdRecord } from "../adapters/brightdata.js";
-import { splitDateTime } from "../shared/dates.js";
-import type { AgeRange, EventItem, Price } from "../types/index.js";
+import { parseInstant, splitDateTime } from "../shared/dates.js";
+import type { AgeRange, EventItem, FbGroupStats, Price } from "../types/index.js";
 
 const EVENT_URL_RE = /(?:https?:\/\/)?(?:[\w-]+\.)?facebook\.com\/events\/(\d+)/gi;
 
@@ -104,6 +104,64 @@ export function fbEventToItem(rec: BdRecord, today: string): EventItem | null {
   };
 }
 
+/** Treść postu — ten sam zestaw wariantów, którego używa spłaszczanie do tekstu. */
+const postContent = (r: BdRecord): string | null =>
+  pick(r, "content", "text", "post_text", "message", "description", "post_content");
+
+const isoDay = (ms: number): string => new Date(ms).toISOString().slice(0, 10);
+
+/**
+ * Rytm publikacji grupy, zmierzony na rekordach, za które właśnie zapłaciliśmy.
+ *
+ * Rozliczenie Bright Data jest per-rekord, a limit na grupę jest dziś jedną stałą wziętą
+ * z sufitu — więc wioskowa grupa z jednym postem na tydzień kosztuje tyle samo, co poznańska
+ * z dwustoma dziennie, i obie oddają równo `limit` rekordów. Ten pomiar rozróżnia te dwa
+ * przypadki i jest wejściem do limitu liczonego osobno dla każdej grupy. Sam limitu NIE
+ * rusza — najpierw kilka dni pomiaru, potem decyzja.
+ *
+ * Rekord bez treści to przy `include_errors=true` raport błędu scrapera (grupa prywatna,
+ * usunięta, zmieniony adres), a nie post — płatny tak samo, wart zera. Rozdzielenie
+ * `records` od `posts` jest jedynym miejscem, w którym ta różnica w ogóle widać.
+ */
+export function fbGroupStats(records: BdRecord[], limit: number): FbGroupStats {
+  const times: number[] = [];
+  let posts = 0;
+  let errorRows = 0;
+  let blockedWhy: string | null = null;
+
+  for (const r of records) {
+    if (postContent(r)) {
+      posts += 1;
+      const t = parseInstant(pick(r, "date_posted", "date", "timestamp", "created_time", "post_date"));
+      if (t !== null) times.push(t);
+    } else {
+      errorRows += 1;
+      blockedWhy ??= pick(r, "error", "warning", "error_code", "warning_code", "message");
+    }
+  }
+
+  const stats: FbGroupStats = {
+    records: records.length,
+    posts,
+    errorRows,
+    limit,
+    atLimit: records.length >= limit,
+    ...(blockedWhy ? { blockedWhy } : {}),
+  };
+  if (!times.length) return stats;
+
+  const newest = Math.max(...times);
+  const oldest = Math.min(...times);
+  stats.newest = isoDay(newest);
+  stats.oldest = isoDay(oldest);
+  const spanDays = (newest - oldest) / 86_400_000;
+  stats.spanDays = Number(spanDays.toFixed(2));
+  // okno zerowe (wszystko z jednej chwili) nie daje się podzielić: wiadomo tylko tyle,
+  // że tempo jest NIE MNIEJSZE niż `posts` na dobę — a to nie jest pomiar tempa
+  if (spanDays > 0) stats.postsPerDay = Number((posts / spanDays).toFixed(1));
+  return stats;
+}
+
 /**
  * Posty z grupy FB (rekordy Bright Data) → jeden blok tekstu dla ekstraktora LLM.
  * Zachowujemy datę i link postu, żeby model mógł wywnioskować rok i osadzić source_url.
@@ -111,7 +169,7 @@ export function fbEventToItem(rec: BdRecord, today: string): EventItem | null {
 export function fbGroupPostsToText(records: BdRecord[]): string {
   const blocks: string[] = [];
   for (const r of records) {
-    const content = pick(r, "content", "text", "post_text", "message", "description", "post_content");
+    const content = postContent(r);
     if (!content) continue;
     const date = pick(r, "date_posted", "date", "timestamp", "created_time", "post_date");
     const link = pick(r, "url", "post_url", "link", "post_link");

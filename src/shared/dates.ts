@@ -39,6 +39,24 @@ export function fmtDayPl(iso: string): string {
 }
 
 /**
+ * Napis daty → punkt w czasie (ms), albo null.
+ *
+ * Osobno od `splitDateTime`, bo mierzy co innego. Tamto oddaje DZIEŃ KALENDARZOWY i celowo
+ * omija `Date` przy "YYYY-MM-DD", żeby strefa nie przesunęła doby — tu potrzebna jest
+ * odległość między dwoma postami z dokładnością do godzin, czyli dokładnie ta precyzja,
+ * którą tamto wyrzuca. Zlanie ich w jedno dałoby albo złe daty, albo zerowe rozpiętości.
+ */
+export function parseInstant(raw: string | null): number | null {
+  if (!raw) return null;
+  if (/^\d{10,13}$/.test(raw)) {
+    const ms = raw.length === 10 ? Number(raw) * 1000 : Number(raw);
+    return Number.isFinite(ms) ? ms : null;
+  }
+  const ms = Date.parse(raw);
+  return Number.isNaN(ms) ? null : ms;
+}
+
+/**
  * "2026-07-25T18:00:00Z" | "2026-07-25 18:00" | "1721930400"(unix) → {date, time}.
  * Godzinę emitujemy tylko gdy jest jawnie w napisie (unikamy przesunięć stref przy fallbacku).
  *

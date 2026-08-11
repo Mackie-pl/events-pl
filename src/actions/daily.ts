@@ -21,6 +21,7 @@ import { dedupe } from "../pipeline/dedupe.js";
 import { harvestEventUrls, isEventUrl } from "../pipeline/facebook.js";
 import { pruneBlocks } from "../pipeline/extract/block-cache.js";
 import { resolveFbEvents } from "../pipeline/extract/fb-events.js";
+import { blockedSkip, recheckDays } from "../pipeline/extract/fb-group-blocked.js";
 import {
   newSourceRun,
   processSource,
@@ -42,6 +43,7 @@ import {
   beginAuditRun,
   beginAuditSource,
 } from "../shared/audit.js";
+import { todayIso } from "../shared/dates.js";
 import { BD_USAGE_LOG } from "../shared/paths.js";
 import { eventsStore, sourcesStore, stateStore } from "../storage/index.js";
 import type {
@@ -125,6 +127,23 @@ async function run(): Promise<void> {
         `nieaktywne: ${src.missedRuns ?? 0} przebiegi discovery bez trafienia ` +
           "i zero wydarzeń — wróci przy pierwszym trafieniu",
         { url: src.url },
+      );
+      continue;
+    }
+    const blocked = blockedSkip(src, state, todayIso());
+    if (blocked) {
+      // grupa oddaje sam wiersz błędu — płatny i pusty. Pomijamy, ale nie na zawsze:
+      // sonda co `recheckDays()` dni jest jedyną drogą powrotu po ponownym otwarciu grupy.
+      sourceRuns.push(
+        newSourceRun(src, src.url.replace("{page}", "1"), "skipped-blocked"),
+      );
+      audit(
+        "skip",
+        `grupa FB niedostępna dla scrapera od ${blocked.since} ` +
+          `(${blocked.runs} pobrań z samym wierszem błędu` +
+          `${blocked.why ? `: „${blocked.why}"` : ""}) — kolejna sonda po ` +
+          `${recheckDays()} dniach od ${blocked.lastTry}`,
+        { url: src.url, runs: blocked.runs, since: blocked.since },
       );
       continue;
     }

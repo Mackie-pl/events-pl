@@ -6,7 +6,9 @@
 import { strict as assert } from "node:assert";
 import { describe, it } from "node:test";
 
-import { fbEventToItem, fbGroupPostsToText, harvestEventUrls, isEventUrl } from "../src/pipeline/facebook.js";
+import {
+  fbEventToItem, fbGroupPostsToText, fbGroupStats, harvestEventUrls, isEventUrl,
+} from "../src/pipeline/facebook.js";
 
 describe("harvestEventUrls", () => {
   it("normalizuje do kanonicznej postaci i deduplikuje", () => {
@@ -126,5 +128,63 @@ describe("fbGroupPostsToText", () => {
 
   it("pusta lista → pusty string", () => {
     assert.equal(fbGroupPostsToText([]), "");
+  });
+});
+
+/**
+ * Ten pomiar ma sterować wydatkiem (limit rekordów per grupa), więc pomyłka nie kończy się
+ * brzydkim raportem, tylko rachunkiem. Najważniejsze są tu przypadki, w których tempa NIE
+ * DA SIĘ policzyć — muszą zostać nierozstrzygnięte zamiast oddać zmyśloną liczbę.
+ */
+describe("fbGroupStats", () => {
+  const post = (date: string, content = "Treść"): Record<string, unknown> =>
+    ({ content, date_posted: date });
+
+  it("liczy tempo z rozpiętości okna", () => {
+    // 4 posty rozłożone na 2 doby → 2 posty/dobę
+    const s = fbGroupStats([
+      post("2026-08-10T12:00:00Z"), post("2026-08-09T18:00:00Z"),
+      post("2026-08-09T06:00:00Z"), post("2026-08-08T12:00:00Z"),
+    ], 50);
+    assert.equal(s.posts, 4);
+    assert.equal(s.records, 4);
+    assert.equal(s.newest, "2026-08-10");
+    assert.equal(s.oldest, "2026-08-08");
+    assert.equal(s.spanDays, 2);
+    assert.equal(s.postsPerDay, 2);
+    assert.equal(s.atLimit, false, "4 z 50 — okno to cała dostępna grupa");
+  });
+
+  it("okno zerowe nie daje tempa (zamiast dzielenia przez zero)", () => {
+    const s = fbGroupStats([post("2026-08-10T12:00:00Z"), post("2026-08-10T12:00:00Z")], 50);
+    assert.equal(s.spanDays, 0);
+    assert.equal(s.postsPerDay, undefined,
+      "wiadomo tylko, że tempo jest ≥2/dobę — to nie jest pomiar tempa");
+  });
+
+  it("wyczerpany limit oznacza dolną granicę, nie pomiar", () => {
+    const s = fbGroupStats([post("2026-08-10"), post("2026-08-09")], 2);
+    assert.equal(s.atLimit, true);
+  });
+
+  it("wiersz błędu (include_errors) nie jest postem, ale JEST płatnym rekordem", () => {
+    const s = fbGroupStats([{ error: "Group is private", error_code: "private_group" }], 50);
+    assert.equal(s.records, 1, "rekord poszedł na rachunek");
+    assert.equal(s.posts, 0);
+    assert.equal(s.errorRows, 1);
+    assert.equal(s.blockedWhy, "Group is private");
+    assert.equal(s.newest, undefined);
+  });
+
+  it("posty bez czytelnej daty liczą się do rekordów, ale nie do okna", () => {
+    const s = fbGroupStats([post("2026-08-10"), { content: "Bez daty" }], 50);
+    assert.equal(s.posts, 2);
+    assert.equal(s.spanDays, 0, "okno z jednej daty");
+    assert.equal(s.postsPerDay, undefined);
+  });
+
+  it("pusta odpowiedź nie udaje pomiaru", () => {
+    const s = fbGroupStats([], 50);
+    assert.deepEqual(s, { records: 0, posts: 0, errorRows: 0, limit: 50, atLimit: false });
   });
 });

@@ -6,7 +6,7 @@ import { writeSummary } from "./step-summary.js";
 
 const STATUS_ICON: Record<SourceRun["status"], string> = {
   ok: "✅", unchanged: "♻️", error: "⚠️", "skipped-fb": "⏭️", "skipped-dead": "💀",
-  "skipped-inactive": "💤", empty: "∅",
+  "skipped-inactive": "💤", "skipped-blocked": "🔒", empty: "∅",
 };
 
 function headerLines(report: RunReport): string[] {
@@ -15,7 +15,10 @@ function headerLines(report: RunReport): string[] {
     `## daily-events — ${report.startedAt}`,
     "",
     `**${t.sources}** źródeł · ✅ ${t.ok} ok · ♻️ ${t.unchanged} bez zmian · ` +
-    `⚠️ ${t.errors} błędów · ⏭️ ${t.skippedFb} fb · 💀 ${t.skippedDead} martwych · ∅ ${t.empty} pusto · ` +
+    `⚠️ ${t.errors} błędów · ⏭️ ${t.skippedFb} fb · 💀 ${t.skippedDead} martwych · ` +
+    // tylko gdy są: zero zablokowanych grup jest stanem normalnym i nie ma o czym meldować
+    `${t.skippedBlocked ? `🔒 ${t.skippedBlocked} zablokowanych · ` : ""}` +
+    `∅ ${t.empty} pusto · ` +
     `**${t.events}** wydarzeń` +
     `${t.droppedInvalid ? ` (−${t.droppedInvalid} odrzuconych)` : ""} · ` +
     `${t.calls} LLM (${t.promptTokens}+${t.completionTokens} tok) · ` +

@@ -203,8 +203,33 @@ Dwie funkcje (`src/adapters/brightdata.ts` + `src/pipeline/facebook.ts`):
 wydarzenia lokalne`; model triage'u zwraca otwarte grupy jako `fb_group`. Zamknięte grupy /
 kupię-sprzedam są odrzucane.
 
+**Rytm grupy i grupy niedostępne.** Limit `limit_per_input` jest dziś jedną stałą (50) dla każdej
+grupy, a rozliczenie idzie per-rekord — więc wioskowa grupa z jednym postem na tydzień kosztuje
+tyle samo, co poznańska z dwustoma dziennie, i obie oddają równo 50 rekordów. Każde pobranie mierzy
+więc rytm publikacji (`SourceRun.fbGroup`: `posts` vs płatne `records`, `newest`/`oldest`, `spanDays`,
+`postsPerDay`, `atLimit`) i zapisuje go w `runs.json` oraz w śladzie jako krok `fb.group`. Pomiar
+**niczym jeszcze nie steruje** — jest wejściem do przyszłego limitu liczonego osobno dla każdej grupy.
+
+Sonda 2026-08-11 (`fb-group-allin-poznan`, `limit_per_input=5`, koszt $0.0075) rozstrzygnęła rzecz
+nieudokumentowaną u dostawcy: **`limit_per_input` oddaje NAJNOWSZE posty, malejąco po `date_posted`**
+(5 rekordów z jednego dnia, 13:03 → 09:22), więc liczenie limitu z tempa ma sens. Ta sama sonda
+pokazała pułapkę metody: okno krótsze od doby trafia w godziny szczytu i **zawyża** tempo
+(3.7 godziny → 32.6 postów/dobę, choć noc nic nie publikuje). Wiarygodne są okna ≥1 doby — przy
+limicie 50 okno takiej grupy to ~1.5 doby, czyli akurat.
+
+Osobno działa reguła na grupy niedostępne: przy `include_errors=true` grupa prywatna/usunięta oddaje
+jeden **płatny** wiersz błędu zamiast postów — codziennie, w nieskończoność (2026-08-11: trzy z 23 grup).
+Po `FB_GROUP_BLOCKED_LIMIT` (3) takich pobraniach z rzędu daily pomija źródło ze statusem
+`skipped-blocked`, a co `FB_GROUP_BLOCKED_RECHECK_DAYS` (14) puszcza jedną sondę — grupy bywają
+otwierane z powrotem i bez sondy nie miałby tego kto zauważyć. Jeden post z jakiegokolwiek pobrania
+zeruje licznik (liczy się SERIA, nie historia), a zero rekordów **nie** jest karane: to awaria po
+stronie Bright Data, nie dowód na grupę. Świadomie osobny status od `skipped-inactive` — tamto znaczy
+„discovery przestało znajdować adres" i naprawia je wyszukiwarka, to znaczy „adres jest, scraper się
+do niego nie dostaje". Patrz `src/pipeline/extract/fb-group-blocked.ts`.
+
 **Przełączniki env** (wszystkie opcjonalne): `BD_DATASET_FB_EVENTS`, `BD_DATASET_FB_GROUP_POSTS`
-(nadpisanie ID datasetu), `BD_POLL_MS` (10000), `BD_TIMEOUT_MS` (480000), `BD_MAX_FB_EVENTS` (40).
+(nadpisanie ID datasetu), `BD_POLL_MS` (10000), `BD_TIMEOUT_MS` (480000), `BD_MAX_FB_EVENTS` (40),
+`FB_GROUP_BLOCKED_LIMIT` (3), `FB_GROUP_BLOCKED_RECHECK_DAYS` (14).
 
 **Liczenie kosztu.** Bright Data rozlicza per-rekord. Każdy przebieg z FB dopisuje linię do
 `brightdata-usage.jsonl` (commitowany) i loguje na stdout: `triggers · inputs (URL) · records · polls ·

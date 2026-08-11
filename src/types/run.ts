@@ -13,7 +13,56 @@ import type { BdUsage, LlmUsage, TaskUsage } from "./usage.js";
  * gdy wyszukiwarka znowu pokaże adres.
  */
 export type SourceStatus =
-  | "ok" | "unchanged" | "error" | "skipped-fb" | "skipped-dead" | "skipped-inactive" | "empty";
+  | "ok" | "unchanged" | "error" | "skipped-fb" | "skipped-dead" | "skipped-inactive"
+  /** grupa FB, która w kolejnych pobraniach oddawała wyłącznie wiersz błędu (prywatna/usunięta) */
+  | "skipped-blocked"
+  | "empty";
+
+/**
+ * Rytm publikacji grupy FB, zmierzony na tym, co Bright Data właśnie oddało.
+ *
+ * Po co osobne pole, skoro `bd.records` już jest: rekord to jednostka ROZLICZENIA, a nie
+ * miara treści. Grupa prywatna oddaje jeden płatny wiersz błędu i wygląda w rachunku tak
+ * samo jak grupa z jednym postem; grupa gadatliwa i zamarła wyczerpują ten sam limit 50
+ * i też są nieodróżnialne. Dopiero data najstarszego i najnowszego postu mówi, ile z tego
+ * limitu poszło na jeden dzień — a to jest wejście do limitu liczonego per grupa.
+ */
+export interface FbGroupStats {
+  /** rekordy oddane przez Bright Data — to jest jednostka rozliczenia */
+  records: number;
+  /** rekordy niosące treść postu */
+  posts: number;
+  /** rekordy bez treści = wiersze błędu z `include_errors` (grupa prywatna, usunięta, zmieniony adres) */
+  errorRows: number;
+  /** komunikat z pierwszego wiersza błędu, o ile scraper go podał */
+  blockedWhy?: string;
+  /** `limit_per_input` użyty przy tym pobraniu — bez niego `atLimit` nie da się odtworzyć */
+  limit: number;
+  /**
+   * Limit wyczerpany. Wtedy `oldest` znaczy „dotąd sięgnęliśmy", a nie „tu zaczyna się grupa",
+   * więc `postsPerDay` jest DOLNYM oszacowaniem tempa, nie pomiarem.
+   */
+  atLimit: boolean;
+  /**
+   * Data najnowszego postu w oknie. Odpowiada na pytanie, którego nie da się odczytać
+   * z dokumentacji Bright Data: czy `limit_per_input` oddaje NAJNOWSZE posty, czy dowolne.
+   * Wczorajsza data przy aktywnej grupie = najnowsze; data sprzed miesięcy = dowolne,
+   * i wtedy całe liczenie tempa jest bez sensu.
+   */
+  newest?: string;
+  oldest?: string;
+  /** rozpiętość okna w dniach (z dokładnością do godzin) */
+  spanDays?: number;
+  /**
+   * Posty na dobę; brak przy oknie zerowym albo gdy posty nie miały czytelnych dat.
+   *
+   * UWAGA przy `spanDays < 1`: okno krótsze od doby trafia zwykle w godziny szczytu i zawyża.
+   * Sonda 2026-08-11 na `fb-group-allin-poznan` (5 rekordów, okno 09:22–13:03) dała 32.6/dobę,
+   * podczas gdy to samo okno rozciągnięte na pełną dobę musi wyjść niżej — noc nic nie publikuje.
+   * Limit liczony z takiej próbki byłby za wysoki, czyli droższy. Wiarygodne są okna ≥1 doby.
+   */
+  postsPerDay?: number;
+}
 
 export interface FollowupRun {
   url: string;
@@ -88,6 +137,8 @@ export interface SourceRun {
   llmByTask?: TaskUsage;
   /** zużycie Bright Data przypisane temu źródłu (grupa FB); brak = nie dotykało BD */
   bd?: BdUsage;
+  /** rytm publikacji grupy FB; brak = źródło nie jest grupą albo pobranie się nie udało */
+  fbGroup?: FbGroupStats;
   ms: number;
   err?: string;
   /** np. "HTTP 403 → headless fallback ok" */
@@ -123,6 +174,8 @@ export interface RunTotals extends LlmUsage {
   skippedDead: number;
   /** pominięte jako zdegradowane — brak trafień w discovery i zero plonu */
   skippedInactive: number;
+  /** grupy FB pominięte jako niedostępne dla scrapera (seria wierszy błędu) */
+  skippedBlocked: number;
   empty: number;
   events: number;
   followupsTried: number;

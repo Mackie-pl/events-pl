@@ -75,4 +75,20 @@ export interface PipelineState {
    * przez to znikać z serwisu.
    */
   fbUrlsBySource?: Record<string, string[]>;
+  /**
+   * Grupy FB, które oddały same wiersze błędu — licznik serii, per source.id.
+   * Wpis znika przy pierwszym pobraniu z jakimkolwiek postem, więc obecność wpisu
+   * znaczy „ostatnie N pobrań nic nie dało", a nie „kiedyś się nie udało".
+   * Patrz `pipeline/extract/fb-group-blocked.ts`.
+   */
+  fbGroupBlocked?: Record<string, {
+    /** ile kolejnych pobrań oddało wyłącznie wiersze błędu */
+    runs: number;
+    /** pierwsze takie pobranie (YYYY-MM-DD) */
+    since: string;
+    /** ostatnia PRÓBA pobrania — od niej liczy się sonda, nie od `since` */
+    lastTry: string;
+    /** komunikat scrapera z ostatniej próby */
+    why?: string;
+  }>;
 }

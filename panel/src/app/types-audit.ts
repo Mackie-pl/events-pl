@@ -22,6 +22,8 @@ export type AuditKind =
   | 'followup.proposed'
   | 'followup'
   | 'fb.harvest'
+  /** rytm publikacji grupy FB i werdykt dostępności (płatne rekordy vs. faktyczne posty) */
+  | 'fb.group'
   | 'geo'
   | 'dedupe.dropped'
   | 'series'
