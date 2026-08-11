@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-10T08:29:12.011Z",
+ "updated": "2026-08-11T06:41:00.912Z",
  "rates": {
   "bdPerRecord": 0.0015,
   "searchPerQuery": 0.001,
@@ -1933,6 +1933,117 @@
    "usd": 0,
    "estimated": true,
    "units": 1.033,
+   "unit": "MB"
+  },
+  {
+   "day": "2026-08-11",
+   "at": "2026-08-11T06:41:00.858Z",
+   "stage": "daily",
+   "run": "2026-08-11T05:01:30.638Z",
+   "category": "llm-extract",
+   "usd": 0.742712,
+   "estimated": false,
+   "units": 51,
+   "unit": "calls",
+   "tokensIn": 429697,
+   "tokensOut": 62603,
+   "top": [
+    {
+     "id": "fb-group-baba-cool",
+     "usd": 0.057343,
+     "units": 4
+    },
+    {
+     "id": "okpoznan-wydarzenia",
+     "usd": 0.051238,
+     "units": 1
+    },
+    {
+     "id": "fb-group-wydarzenia-poznan-4",
+     "usd": 0.04936,
+     "units": 5
+    },
+    {
+     "id": "fb-group-allin-poznan",
+     "usd": 0.047588,
+     "units": 1
+    },
+    {
+     "id": "fb-group-imprezy-poznan",
+     "usd": 0.046488,
+     "units": 3
+    }
+   ]
+  },
+  {
+   "day": "2026-08-11",
+   "at": "2026-08-11T06:41:00.858Z",
+   "stage": "daily",
+   "run": "2026-08-11T05:01:30.638Z",
+   "category": "fb",
+   "usd": 1.437,
+   "estimated": true,
+   "units": 958,
+   "unit": "records",
+   "top": [
+    {
+     "id": "wydarzenia-w-luboniu-fb-group",
+     "usd": 0.075,
+     "units": 50
+    },
+    {
+     "id": "lubon-fb-group",
+     "usd": 0.075,
+     "units": 50
+    },
+    {
+     "id": "mieszkancy-lubonia-fb-group",
+     "usd": 0.075,
+     "units": 50
+    },
+    {
+     "id": "dopiewo-aktywnie-kulturalnie-fb",
+     "usd": 0.075,
+     "units": 50
+    },
+    {
+     "id": "dopiewo-tablica-ogloszen-fb",
+     "usd": 0.075,
+     "units": 50
+    }
+   ]
+  },
+  {
+   "day": "2026-08-11",
+   "at": "2026-08-11T06:41:00.858Z",
+   "stage": "daily",
+   "run": "2026-08-11T05:01:30.638Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 86,
+   "unit": "fetches"
+  },
+  {
+   "day": "2026-08-11",
+   "at": "2026-08-11T06:41:00.858Z",
+   "stage": "daily",
+   "run": "2026-08-11T05:01:30.638Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 79,
+   "unit": "lookups"
+  },
+  {
+   "day": "2026-08-11",
+   "at": "2026-08-11T06:41:00.858Z",
+   "stage": "daily",
+   "run": "2026-08-11T05:01:30.638Z",
+   "category": "storage",
+   "usd": 0,
+   "estimated": true,
+   "units": 2.575,
    "unit": "MB"
   }
  ]
