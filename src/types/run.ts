@@ -16,7 +16,32 @@ export type SourceStatus =
   | "ok" | "unchanged" | "error" | "skipped-fb" | "skipped-dead" | "skipped-inactive"
   /** grupa FB, która w kolejnych pobraniach oddawała wyłącznie wiersz błędu (prywatna/usunięta) */
   | "skipped-blocked"
+  /** grupa FB powyżej progu `FB_MAX_USD_PER_EVENT` — wyciszona czasowo, wraca sama */
+  | "skipped-costly"
   | "empty";
+
+/**
+ * Rachunek wartości jednego źródła FB w oknie `runs.json` — podstawa progu opłacalności.
+ *
+ * Trafia do raportu przebiegu także dla źródeł, których próg nie ruszył, i to jest cały
+ * sens: werdykt „wyciszone" bez widocznej podstawy jest nie do sprawdzenia, a `verdict`
+ * odróżnia „przeszło próg" od „za mało pobrań, żeby sądzić" i od „progu w ogóle nie ma".
+ */
+export interface FbValueRow {
+  id: string;
+  /** realne pobrania w oknie (bez `skipped-*`) — mianownik minimum z `FB_YIELD_MIN_RUNS` */
+  fetchedRuns: number;
+  /** różne wydarzenia, jakie źródło dało w oknie */
+  distinct: number;
+  /** z tego: takie, których nie dało ŻADNE źródło spoza FB */
+  novel: number;
+  /** takie, których nie dało żadne inne źródło w ogóle (także inna grupa FB) */
+  exclusive: number;
+  costUsd: number;
+  /** brak = `novel === 0`, czyli koszt za nic nowego (traktowane jak przekroczenie progu) */
+  usdPerNovel?: number;
+  verdict: "keep" | "muted" | "too-few-runs" | "no-threshold";
+}
 
 /**
  * Rytm publikacji grupy FB, zmierzony na tym, co Bright Data właśnie oddało.
@@ -176,6 +201,8 @@ export interface RunTotals extends LlmUsage {
   skippedInactive: number;
   /** grupy FB pominięte jako niedostępne dla scrapera (seria wierszy błędu) */
   skippedBlocked: number;
+  /** grupy FB pominięte jako zbyt drogie względem plonu spoza sieci */
+  skippedCostly: number;
   empty: number;
   events: number;
   followupsTried: number;
@@ -199,4 +226,6 @@ export interface RunReport {
   brightdata?: BdUsage;
   /** koszt przebiegu w rozbiciu na kategorie — to samo, co trafiło do costs.json */
   costs?: CostEntry[];
+  /** wartość kanału FB w oknie i werdykt progu; brak = w oknie nie było źródeł FB */
+  fbValue?: FbValueRow[];
 }

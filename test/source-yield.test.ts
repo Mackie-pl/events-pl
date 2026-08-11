@@ -35,7 +35,8 @@ function run(startedAt: string, sources: SourceRun[]): RunReport {
     sources,
     totals: {
       sources: sources.length, ok: sources.length, unchanged: 0, errors: 0, skippedFb: 0,
-      skippedDead: 0, skippedInactive: 0, skippedBlocked: 0, empty: 0, events, followupsTried: 0,
+      skippedDead: 0, skippedInactive: 0, skippedBlocked: 0, skippedCostly: 0,
+      empty: 0, events, followupsTried: 0,
       geoHits: 0, geoMisses: 0, droppedInvalid: 0, redactedPhones: 0, redactedEmails: 0,
       calls: 0, promptTokens: 0, completionTokens: 0, costUsd: 0,
     },

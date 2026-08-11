@@ -227,9 +227,36 @@ stronie Bright Data, nie dowód na grupę. Świadomie osobny status od `skipped-
 „discovery przestało znajdować adres" i naprawia je wyszukiwarka, to znaczy „adres jest, scraper się
 do niego nie dostaje". Patrz `src/pipeline/extract/fb-group-blocked.ts`.
 
+**Limit liczony per grupa.** Zamiast jednej stałej 50 dla wszystkich, `limit_per_input` wylicza
+regulator z POKRYCIA: czy to, co wróciło, sięgnęło wstecz aż do poprzedniego pobrania. Limit
+niewyczerpany → schodzimy do tego, co realnie leży; wyczerpany, a okno pokrywa przerwę z zapasem
+→ schodzimy; wyczerpany i okno krótsze niż przerwa → podnosimy, bo treść ucieka. Świadomie **nie**
+wprost z `postsPerDay`: ta liczba przy krótkim oknie jest zawyżona (patrz wyżej), a regulator
+z zawyżonego wejścia kupuje rekordy, których nikt nie potrzebuje. Sufit `FB_GROUP_LIMIT_MAX`
+jest domyślnie równy dotychczasowej stałej (50), więc mechanizm może wydatek wyłącznie
+**zmniejszyć** — pętla sama podnosząca limit u dostawcy per-rekord to dokładnie kształt awarii
+z 2026-08-10. Patrz `src/pipeline/extract/fb-group-limit.ts`.
+
+**Próg opłacalności.** Brutto plon grupy nie mówi nic o jej wartości: poznańskie grupy powielają
+w większości to, co i tak stoi na stronach domów kultury. Liczy się `novel` — wydarzenia, których
+nie dało **żadne źródło spoza FB** — i `usdPerNovel = costUsd / novel`. Rachunek per grupa trafia
+do `RunReport.fbValue`, do job summary jako tabela „Wartość kanału FB" i na stdout jedną linią.
+Po ustawieniu `FB_MAX_USD_PER_EVENT` źródła powyżej progu są wyciszane jako `skipped-costly`.
+
+Trzy bezpieczniki, bo pomyłka kasuje źródło, nie wiersz w raporcie: (1) **bez zmiennej mechanizm
+nie działa** — wycena wydarzenia jest decyzją właściciela, nie stałą w kodzie; (2) `FB_YIELD_MIN_RUNS`
+(5) realnych pobrań, zanim cokolwiek zapadnie — pominięte przebiegi się nie liczą; (3) wyciszenie
+wygasa po `FB_MUTE_DAYS` (30) i źródło wraca samo do pomiaru, a poprawa zdejmuje je wcześniej.
+`novel === 0` przy spełnionym minimum jest traktowane jak przekroczenie progu, nie jak brak danych.
+Świadomie **nie** to samo co `exclusive` z symulacji zdejmowania: dwie grupy niosące to samo
+wydarzenie spoza sieci mają `exclusive: 0` obie i próg postawiony na tamtej mierze wyciszyłby obie.
+Patrz `src/pipeline/extract/fb-cost-mute.ts`.
+
 **Przełączniki env** (wszystkie opcjonalne): `BD_DATASET_FB_EVENTS`, `BD_DATASET_FB_GROUP_POSTS`
 (nadpisanie ID datasetu), `BD_POLL_MS` (10000), `BD_TIMEOUT_MS` (480000), `BD_MAX_FB_EVENTS` (40),
-`FB_GROUP_BLOCKED_LIMIT` (3), `FB_GROUP_BLOCKED_RECHECK_DAYS` (14).
+`FB_GROUP_BLOCKED_LIMIT` (3), `FB_GROUP_BLOCKED_RECHECK_DAYS` (14), `FB_GROUP_LIMIT_MAX` (50),
+`FB_GROUP_LIMIT_MIN` (10), `FB_GROUP_LIMIT_MARGIN` (0.2), `FB_MAX_USD_PER_EVENT` (brak = wyłączone),
+`FB_YIELD_MIN_RUNS` (5), `FB_MUTE_DAYS` (30).
 
 **Liczenie kosztu.** Bright Data rozlicza per-rekord. Każdy przebieg z FB dopisuje linię do
 `brightdata-usage.jsonl` (commitowany) i loguje na stdout: `triggers · inputs (URL) · records · polls ·

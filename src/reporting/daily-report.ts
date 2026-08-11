@@ -7,7 +7,8 @@ import type { RunReport, RunTotals, SourceRun } from "../types/index.js";
 export function buildReport(startedAt: string, t0: number, sources: SourceRun[], pii: RedactionStats): RunReport {
   const totals: RunTotals = {
     sources: sources.length, ok: 0, unchanged: 0, errors: 0,
-    skippedFb: 0, skippedDead: 0, skippedInactive: 0, skippedBlocked: 0, empty: 0,
+    skippedFb: 0, skippedDead: 0, skippedInactive: 0, skippedBlocked: 0, skippedCostly: 0,
+    empty: 0,
     events: 0, followupsTried: 0, geoHits: 0, geoMisses: 0, droppedInvalid: 0,
     calls: 0, promptTokens: 0, completionTokens: 0, costUsd: 0,
     redactedPhones: pii.phones, redactedEmails: pii.emails,
@@ -22,6 +23,7 @@ export function buildReport(startedAt: string, t0: number, sources: SourceRun[],
     else if (s.status === "skipped-dead") totals.skippedDead++;
     else if (s.status === "skipped-inactive") totals.skippedInactive++;
     else if (s.status === "skipped-blocked") totals.skippedBlocked++;
+    else if (s.status === "skipped-costly") totals.skippedCostly++;
     else totals.empty++;
     totals.events += s.events;
     totals.followupsTried += s.followups.length;

@@ -17,15 +17,34 @@
  * okna nim jest. Utrata WYPRZEDZENIA jest realna i tego ten raport nie mierzy.
  */
 import { eventKey } from "../shared/event-key.js";
-import type { CostRates, RunReport } from "../types/index.js";
+import type { CostRates, FetchStrategy, RunReport, SourceRun } from "../types/index.js";
+
+/** Kanał źródła. FB kosztuje per-rekord u Bright Data, reszta jest w praktyce darmowa w pobraniu. */
+export type Channel = "fb" | "web";
+
+const FB_FETCH: ReadonlySet<FetchStrategy> = new Set<FetchStrategy>(["fb", "fb_group", "fb_event"]);
+export const channelOf = (fetch: FetchStrategy): Channel => FB_FETCH.has(fetch) ? "fb" : "web";
+
+/** Źródło było realnie pobierane; `skipped-*` to świadome pominięcie, nie próba. */
+const FETCHED: ReadonlySet<SourceRun["status"]> =
+  new Set<SourceRun["status"]>(["ok", "unchanged", "error", "empty"]);
 
 /** Rachunek jednego źródła w oknie przebiegów. */
 export interface SourceYield {
   id: string;
   name: string;
   town: string;
+  channel: Channel;
+  /** strategia pobrania — odróżnia grupę od fanpage'a i od zbiorczego wiersza `fb-events` */
+  fetch: FetchStrategy;
   /** przebiegi, w których źródło w ogóle wystąpiło (także jako pominięte) */
   runs: number;
+  /**
+   * Przebiegi, w których źródło było REALNIE pobierane. To jest mianownik każdego progu:
+   * źródło pominięte przez tydzień ma `runs: 7` i zero wydarzeń, co bez tego rozróżnienia
+   * wygląda jak dowód bezwartościowości, a jest tylko dowodem, że go nie pytaliśmy.
+   */
+  fetchedRuns: number;
   /** wydarzenia oddane przez źródło, sumarycznie przez całe okno (przed dedupe) */
   produced: number;
   /** różne wydarzenia (klucze) — powtórzenia tego samego dzień po dniu liczą się raz */
@@ -34,6 +53,23 @@ export interface SourceYield {
   exclusive: number;
   /** wydarzenia, które ma też ktoś inny */
   shared: number;
+  /**
+   * Wydarzenia, których nie dało żadne źródło SPOZA FB — czyli co kanał FB dokłada ponad
+   * to, co potok i tak ma ze stron. Obecne tylko dla źródeł FB; dla stron byłoby zawsze
+   * zerem z definicji (strona jest własnym dostawcą spoza FB) i tylko myliłoby kolumnę.
+   *
+   * Świadomie NIE to samo co `exclusive`. Dwie grupy niosące to samo wydarzenie, którego
+   * nie ma żadna strona, mają `exclusive: 0` obie (znoszą się wzajemnie) i `novel: 1` obie.
+   * Próg postawiony na `exclusive` wyciszyłby wtedy OBIE i wydarzenie przepadłoby —
+   * rozstrzyganie między nimi zostaje przy `simulate()`, które liczy `wouldLose` po kolei.
+   */
+  novel?: number;
+  /**
+   * `costUsd / novel` — ile kosztuje jedno wydarzenie, którego bez FB by nie było.
+   * Brak przy `novel === 0`: „nieskończenie drogo" nie jest liczbą, a zero w mianowniku
+   * udawałoby, że źródło jest tanie. Próg musi ten przypadek obsłużyć osobno.
+   */
+  usdPerNovel?: number;
   llmUsd: number;
   bdRecords: number;
   costUsd: number;
@@ -77,8 +113,9 @@ export interface YieldReport {
 }
 
 interface Acc {
-  meta: { id: string; name: string; town: string };
+  meta: { id: string; name: string; town: string; channel: Channel; fetch: FetchStrategy };
   runs: number;
+  fetchedRuns: number;
   produced: number;
   keys: Set<string>;
   llmUsd: number;
@@ -99,24 +136,36 @@ const hasAttribution = (run: RunReport): boolean =>
   run.totals.events === 0 || run.sources.some((s) => s.produced?.length);
 
 /** Kto dał to wydarzenie: klucz → zbiór id źródeł, w całym oknie. */
+const addProducer = (map: Map<string, Set<string>>, key: string, id: string): void => {
+  let set = map.get(key);
+  if (!set) { set = new Set(); map.set(key, set); }
+  set.add(id);
+};
+
 function collect(runs: RunReport[]): {
   producers: Map<string, Set<string>>;
+  /** dostawcy tego klucza SPOZA FB — nośnik `novel`, patrz SourceYield */
+  webProducers: Map<string, Set<string>>;
   acc: Map<string, Acc>;
 } {
   const producers = new Map<string, Set<string>>();
+  const webProducers = new Map<string, Set<string>>();
   const acc = new Map<string, Acc>();
 
   for (const run of runs) {
     for (const s of run.sources) {
+      const channel = channelOf(s.fetch);
       let a = acc.get(s.id);
       if (!a) {
         a = {
-          meta: { id: s.id, name: s.name, town: s.town },
-          runs: 0, produced: 0, keys: new Set(), llmUsd: 0, bdRecords: 0, statuses: new Map(),
+          meta: { id: s.id, name: s.name, town: s.town, channel, fetch: s.fetch },
+          runs: 0, fetchedRuns: 0, produced: 0, keys: new Set(),
+          llmUsd: 0, bdRecords: 0, statuses: new Map(),
         };
         acc.set(s.id, a);
       }
       a.runs++;
+      if (FETCHED.has(s.status)) a.fetchedRuns++;
       a.llmUsd += s.llm.costUsd;
       a.bdRecords += s.bd?.records ?? 0;
       a.statuses.set(s.status, (a.statuses.get(s.status) ?? 0) + 1);
@@ -125,13 +174,12 @@ function collect(runs: RunReport[]): {
         const key = eventKey(ref.title, ref.date);
         a.produced++;
         a.keys.add(key);
-        let set = producers.get(key);
-        if (!set) { set = new Set(); producers.set(key, set); }
-        set.add(s.id);
+        addProducer(producers, key, s.id);
+        if (channel === "web") addProducer(webProducers, key, s.id);
       }
     }
   }
-  return { producers, acc };
+  return { producers, webProducers, acc };
 }
 
 /** Z kim dane źródło dzieli wydarzenia, od najczęstszego. */
@@ -186,21 +234,30 @@ export function buildYield(allRuns: readonly RunReport[], rates: CostRates): Yie
   const runs = daily.filter(hasAttribution);
   const skippedRuns = daily.filter((r) => !hasAttribution(r)).map((r) => r.startedAt.slice(0, 10));
 
-  const { producers, acc } = collect(runs);
+  const { producers, webProducers, acc } = collect(runs);
 
   const sources: SourceYield[] = [...acc.values()].map((a) => {
     let exclusive = 0;
-    for (const key of a.keys) if ((producers.get(key)?.size ?? 0) === 1) exclusive++;
+    let novel = 0;
+    for (const key of a.keys) {
+      if ((producers.get(key)?.size ?? 0) === 1) exclusive++;
+      if (!webProducers.has(key)) novel++;
+    }
+    const costUsd = a.llmUsd + a.bdRecords * rates.bdPerRecord;
     return {
       ...a.meta,
       runs: a.runs,
+      fetchedRuns: a.fetchedRuns,
       produced: a.produced,
       distinct: a.keys.size,
       exclusive,
       shared: a.keys.size - exclusive,
+      // dla stron `novel` byłoby zawsze zerem (strona jest własnym dostawcą spoza FB)
+      ...(a.meta.channel === "fb" ? { novel } : {}),
+      ...(a.meta.channel === "fb" && novel > 0 ? { usdPerNovel: costUsd / novel } : {}),
       llmUsd: a.llmUsd,
       bdRecords: a.bdRecords,
-      costUsd: a.llmUsd + a.bdRecords * rates.bdPerRecord,
+      costUsd,
       status: dominant(a.statuses),
       overlaps: overlapsOf(a.meta.id, a.keys, producers),
     };

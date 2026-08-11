@@ -30,15 +30,12 @@ import { blockSource } from "./block-source.js";
 import { capabilitySource } from "./capability-source.js";
 import { entryUrl } from "./entry-url.js";
 import { noteFbGroup } from "./fb-group-blocked.js";
+import { fbGroupLimit, noteFbGroupRate } from "./fb-group-limit.js";
 import {
   droppedInvalidStats, extractEvents, extractPoster, resetDroppedInvalid,
 } from "./extract.js";
 
 const MAX_FOLLOWUPS_PER_SOURCE = 5;
-// bez limitu Bright Data potrafi scrapować całą historię grupy — realny przypadek: jedna grupa
-// wisiała ~10h i wygenerowała 729 rekordów, zanim nasz timeout i tak porzucił wynik ($8+ za nic).
-// Nas interesują tylko świeże posty (diff dzienny), więc kilkadziesiąt najnowszych wystarczy.
-const MAX_FB_GROUP_POSTS = 50;
 
 /** Ten sam adres wg reguł rejestru (bez schematu, `www.`, końcowego `/`). */
 const isSameUrl = (a: string, b: string): boolean => urlKey(a) === urlKey(b);
@@ -87,16 +84,22 @@ function auditFbGroup(s: FbGroupStats): void {
 
 /** Fetch wg strategii źródła; 403/429 przy zwykłym fetchu to zwykle anty-bot — jedna próba przez headless. */
 async function fetchSource(
-  src: Source, url: string, run: SourceRun, extraHeaders: Record<string, string> = {},
+  src: Source, url: string, run: SourceRun,
+  opts: { state: PipelineState; headers: Record<string, string> },
 ): Promise<Fetched> {
+  const { state, headers } = opts;
   if (src.fetch === "fb_group") {
     // posty otwartej grupy przez Bright Data (FB blokuje zwykły fetch); BD zawsze zwraca
-    // pełną treść — brak 304, diff załatwia standardowe porównanie hashy w processSource
+    // pełną treść — brak 304, diff załatwia standardowe porównanie hashy w processSource.
+    // Limit jest liczony per grupa (regulator pokrycia, sufit = dotychczasowa stała 50):
+    // bez limitu BD scrapuje całą historię — jedna grupa wisiała ~10h i wygenerowała
+    // 729 rekordów, zanim nasz timeout i tak porzucił wynik ($8+ za nic).
+    const limit = fbGroupLimit(src.id, state, todayIso());
     try {
-      const records = await bdCollect(BD_DATASETS.fbGroupPosts, [url], MAX_FB_GROUP_POSTS);
+      const records = await bdCollect(BD_DATASETS.fbGroupPosts, [url], limit);
       // pomiar PRZED spłaszczeniem do tekstu: daty postów są w rekordach, a w tekście dla
       // modelu już tylko jako napis, z którego nikt ich nie policzy
-      run.fbGroup = fbGroupStats(records, MAX_FB_GROUP_POSTS);
+      run.fbGroup = fbGroupStats(records, limit);
       auditFbGroup(run.fbGroup);
       return { kind: "html", text: fbGroupPostsToText(records), httpStatus: 200 };
     } catch (e) {
@@ -106,7 +109,7 @@ async function fetchSource(
   }
   if (src.fetch === "headless") return fetchHeadless(url);
   try {
-    return await fetchPlain(url, extraHeaders);
+    return await fetchPlain(url, headers);
   } catch (e) {
     const hs = (e as { httpStatus?: number }).httpStatus;
     if (hs !== 403 && hs !== 429) throw e;
@@ -296,7 +299,7 @@ export async function processSource(
 
   let fetched: Fetched;
   try {
-    fetched = await fetchSource(src, url, run, validators(cached));
+    fetched = await fetchSource(src, url, run, { state, headers: validators(cached) });
   } catch (e) {
     const err = describeError(e);
     errors.push({ id: src.id, err });
@@ -311,7 +314,10 @@ export async function processSource(
   run.httpStatus = fetched.httpStatus;
   // dopiero po udanym pobraniu: rzucony fetch (timeout, 401, anulowana migawka) nie jest
   // dowodem NA GRUPĘ, tylko na Bright Data — karanie za niego wyłączałoby zdrowe grupy
-  if (run.fbGroup) noteFbGroup(src.id, run.fbGroup, state, todayIso());
+  if (run.fbGroup) {
+    noteFbGroup(src.id, run.fbGroup, state, todayIso());
+    noteFbGroupRate(src.id, run.fbGroup, state, todayIso());
+  }
   audit("fetch", `pobrane strategią „${src.fetch}" — HTTP ${fetched.httpStatus ?? "—"}`, {
     url, strategy: src.fetch, httpStatus: fetched.httpStatus,
   });

@@ -179,6 +179,8 @@ export type SourceStatus =
   | 'skipped-inactive'
   /** grupa FB oddająca sam wiersz błędu (prywatna/usunięta) — wraca po sondzie co N dni */
   | 'skipped-blocked'
+  /** grupa FB powyżej progu $ za wydarzenie spoza sieci — wyciszona czasowo, wraca sama */
+  | 'skipped-costly'
   | 'empty';
 
 export interface FollowupRun {
@@ -301,6 +303,7 @@ export interface RunTotals extends LlmUsage {
   skippedDead?: number;
   skippedInactive?: number;
   skippedBlocked?: number;
+  skippedCostly?: number;
   empty: number;
   events: number;
   followupsTried: number;

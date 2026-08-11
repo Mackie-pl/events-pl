@@ -58,6 +58,8 @@ export class OverviewPage {
         return run.totals.skippedInactive ?? 0;
       case 'skipped-blocked':
         return run.totals.skippedBlocked ?? 0;
+      case 'skipped-costly':
+        return run.totals.skippedCostly ?? 0;
       case 'empty':
         return run.totals.empty;
     }

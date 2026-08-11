@@ -56,6 +56,7 @@ export const STATUS_META: Record<SourceStatus, StatusMeta> = {
   'skipped-dead': { label: 'skipped dead', appearance: 'negative', icon: '@tui.skull' },
   'skipped-inactive': { label: 'skipped inactive', appearance: 'warning', icon: '@tui.moon' },
   'skipped-blocked': { label: 'skipped blocked', appearance: 'negative', icon: '@tui.lock' },
+  'skipped-costly': { label: 'skipped costly', appearance: 'warning', icon: '@tui.banknote' },
   empty: { label: 'empty', appearance: 'warning', icon: '@tui.circle-dashed' },
 };
 
@@ -67,6 +68,7 @@ export const ALL_STATUSES: readonly SourceStatus[] = [
   'skipped-dead',
   'skipped-inactive',
   'skipped-blocked',
+  'skipped-costly',
   'empty',
 ];
 
@@ -102,6 +104,8 @@ export const STEP_META: Record<
   'fb.harvest': { icon: '@tui.link', tone: 'plain' },
   // 'spend': krok mówi, ile PŁATNYCH rekordów poszło na tę grupę i ile z nich było postami
   'fb.group': { icon: '@tui.activity', tone: 'spend' },
+  // 'save': ten krok albo wycisza kosztowne źródło, albo pokazuje, że kanał zarabia na siebie
+  'fb.value': { icon: '@tui.scale', tone: 'save' },
   geo: { icon: '@tui.map-pin', tone: 'plain' },
   'dedupe.dropped': { icon: '@tui.merge', tone: 'loss' },
   // 'save', nie 'loss': zwinięcie serii nic nie usuwa z serwisu, tylko przestaje płacić

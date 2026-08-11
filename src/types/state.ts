@@ -81,6 +81,33 @@ export interface PipelineState {
    * znaczy „ostatnie N pobrań nic nie dało", a nie „kiedyś się nie udało".
    * Patrz `pipeline/extract/fb-group-blocked.ts`.
    */
+  /**
+   * Grupy FB wyciszone progiem opłacalności (`FB_MAX_USD_PER_EVENT`). Wpis wygasa sam
+   * w dniu `until` — patrz `pipeline/extract/fb-cost-mute.ts`.
+   */
+  fbMuted?: Record<string, {
+    since: string;
+    /** YYYY-MM-DD, od którego źródło wraca do pomiaru */
+    until: string;
+    /** podstawa werdyktu, żeby dało się go sprawdzić bez odtwarzania okna */
+    novel: number;
+    costUsd: number;
+    /** brak = źródło nie dało ANI JEDNEGO wydarzenia spoza sieci */
+    usdPerNovel?: number;
+  }>;
+  /**
+   * Regulator `limit_per_input` per grupa: co zapisać na następne pobranie i kiedy zmierzono.
+   * Patrz `pipeline/extract/fb-group-limit.ts`.
+   */
+  fbGroupRate?: Record<string, {
+    /** YYYY-MM-DD ostatniego udanego pobrania */
+    at: string;
+    /** limit na NASTĘPNE pobranie, przy jednodniowej przerwie */
+    next: number;
+    /** pomiar tempa; `null` = okno było zerowe. Nie steruje niczym, zostaje jako ślad */
+    postsPerDay: number | null;
+    spanDays: number;
+  }>;
   fbGroupBlocked?: Record<string, {
     /** ile kolejnych pobrań oddało wyłącznie wiersze błędu */
     runs: number;

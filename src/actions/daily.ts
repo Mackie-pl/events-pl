@@ -21,6 +21,7 @@ import { dedupe } from "../pipeline/dedupe.js";
 import { harvestEventUrls, isEventUrl } from "../pipeline/facebook.js";
 import { pruneBlocks } from "../pipeline/extract/block-cache.js";
 import { resolveFbEvents } from "../pipeline/extract/fb-events.js";
+import { applyFbMutes, mutedSkip } from "../pipeline/extract/fb-cost-mute.js";
 import { blockedSkip, recheckDays } from "../pipeline/extract/fb-group-blocked.js";
 import {
   newSourceRun,
@@ -29,11 +30,12 @@ import {
 import { redactEvents, redactText } from "../pipeline/pii.js";
 import { foldSeries } from "../pipeline/series.js";
 import { auditStore, redactTrail } from "../reporting/audit-trail.js";
-import { recordCosts } from "../reporting/cost-ledger.js";
+import { costRates, recordCosts } from "../reporting/cost-ledger.js";
+import { buildYield } from "../reporting/source-yield.js";
 import { buildDailyCosts } from "../reporting/daily-costs.js";
 import { buildReport, dailyRunsStore } from "../reporting/daily-report.js";
 import { attachProduced } from "../reporting/event-refs.js";
-import { summaryLine, writeDailySummary } from "../reporting/daily-summary.js";
+import { fbValueLine, summaryLine, writeDailySummary } from "../reporting/daily-summary.js";
 import { renderHtml } from "../reporting/render-index.js";
 import {
   RUN_SCOPE,
@@ -127,6 +129,24 @@ async function run(): Promise<void> {
         `nieaktywne: ${src.missedRuns ?? 0} przebiegi discovery bez trafienia ` +
           "i zero wydarzeń — wróci przy pierwszym trafieniu",
         { url: src.url },
+      );
+      continue;
+    }
+    const muted = mutedSkip(src, state, todayIso());
+    if (muted) {
+      // powyżej progu opłacalności — wyciszone CZASOWO. Wpis wygasa sam w dniu `until`
+      // i źródło wraca do pomiaru; nie ma tu decyzji trwałej.
+      sourceRuns.push(
+        newSourceRun(src, src.url.replace("{page}", "1"), "skipped-costly"),
+      );
+      audit(
+        "skip",
+        `powyżej progu opłacalności od ${muted.since}: ` +
+          (muted.usdPerNovel === undefined
+            ? `${muted.novel} wydarzeń spoza sieci za $${muted.costUsd.toFixed(4)}`
+            : `$${muted.usdPerNovel.toFixed(4)} za wydarzenie spoza sieci`) +
+          ` — wraca ${muted.until}`,
+        { url: src.url, until: muted.until, novel: muted.novel },
       );
       continue;
     }
@@ -263,10 +283,6 @@ async function run(): Promise<void> {
     `publikacja: ${allEvents.length} wydarzeń, ${errors.length} błędów potoku`,
     { events: allEvents.length, errors: errors.length },
   );
-  // ślad niesie tytuły, miejsca i fragmenty błędów — audit.json leci do publicznego repo
-  const trails = auditTrails();
-  redactTrail(trails, pii);
-
   const out: EventsFile = {
     generated: new Date().toISOString().slice(0, 10),
     events: allEvents,
@@ -279,6 +295,22 @@ async function run(): Promise<void> {
   // żeby ta sama rozpiska poszła do runs.json, costs.json i na stdout
   report.costs = buildDailyCosts(report, archiveStats().bytes);
 
+  // Próg opłacalności FB. Okno to runs.json RAZEM z bieżącym przebiegiem — inaczej dzisiejszy
+  // koszt wchodziłby do rachunku dopiero jutro, a wyciszenie zawsze spóźniało się o dobę.
+  // Musi stać po `attachProduced` (bez `produced` nie ma czego przypisać źródłom) i przed
+  // zapisem stanu, bo to on niesie wyciszenia do następnego przebiegu.
+  const fbValue = applyFbMutes(
+    buildYield([...(await dailyRunsStore.all()), report], costRates()).sources,
+    state,
+    todayIso(),
+  );
+  if (fbValue.length) report.fbValue = fbValue;
+
+  // ślad niesie tytuły, miejsca i fragmenty błędów — audit.json leci do publicznego repo.
+  // Migawka po WSZYSTKICH krokach: werdykty progu też są decyzjami i mają zostać w śladzie.
+  const trails = auditTrails();
+  redactTrail(trails, pii);
+
   await eventsStore.save(out);
   await stateStore.save(state);
   await dailyRunsStore.append([report]);
@@ -290,6 +322,7 @@ async function run(): Promise<void> {
   await renderHtml(out, report);
   writeDailySummary(report);
   console.log(summaryLine(report));
+  if (report.fbValue?.length) console.log(fbValueLine(report.fbValue));
   if (bdEnabled()) {
     // log zużycia per przebieg → policzenie kosztu
     // (snapshot_id pozwala ponownie pobrać dane z BD za darmo)

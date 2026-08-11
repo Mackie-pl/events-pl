@@ -24,6 +24,8 @@ export type AuditKind =
   | 'fb.harvest'
   /** rytm publikacji grupy FB i werdykt dostępności (płatne rekordy vs. faktyczne posty) */
   | 'fb.group'
+  /** próg opłacalności kanału FB: koszt za wydarzenie, którego nie dała żadna strona */
+  | 'fb.value'
   | 'geo'
   | 'dedupe.dropped'
   | 'series'
