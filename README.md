@@ -723,7 +723,7 @@ w `.env.example` (też generowanym).
 | `FB_GROUP_BLOCKED_LIMIT` | `3` | próg | po tylu płatnych wierszach błędu z rzędu grupa jest pomijana |
 | `FB_GROUP_BLOCKED_RECHECK_DAYS` | `14` | próg | co tyle dni jedna sonda do pomijanej grupy — jedyna droga powrotna |
 | `FB_GROUP_LIMIT_MAX` | `50` | próg | sufit rekordów na grupę; regulator może zejść niżej, nigdy wyżej |
-| `FB_GROUP_LIMIT_MIN` | `10` | próg | podłoga rekordów na grupę |
+| `FB_GROUP_LIMIT_MIN` | `5` | próg | podłoga rekordów na grupę |
 | `FB_GROUP_LIMIT_MARGIN` | `0.2` | próg | zapas ponad pokrycie przerwy między pobraniami (0.2 = 20%) |
 | `FB_MAX_USD_PER_EVENT` | brak | próg | próg $ za wydarzenie spoza sieci; brak = mechanizm w ogóle nie działa |
 | `FB_YIELD_MIN_RUNS` | `5` | próg | minimum realnych pobrań, zanim próg zapadnie |

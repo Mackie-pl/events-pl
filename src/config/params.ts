@@ -173,7 +173,16 @@ export const P = defineParams({
     ],
   }),
   FB_GROUP_LIMIT_MIN: posNum({
-    group: "fb", cls: "tuning", def: 10, summary: "podłoga rekordów na grupę",
+    group: "fb", cls: "tuning", def: 5, summary: "podłoga rekordów na grupę",
+    doc: [
+      "Podłoga jest po to, żeby grupa cicha DZIŚ dała się jutro zmierzyć — regulator czyta tempo",
+      "wyłącznie z tego, co wróciło, więc limit zjechany do zera zamrażałby go na zawsze.",
+      "Pomiar 2026-08-12: podłoga wiąże 14 z 20 grup, wyliczenia sięgają tam 1–4 rekordów,",
+      "czyli 10 → 5 to ~$2.4/mies., a 5 → 3 dalsze ~$0.5. Te $0.5 nie są warte ryzyka:",
+      "rekord bez treści liczy się w fb-group-blocked jako wiersz błędu, więc przy podłodze 3",
+      "grupa o niskim udziale treści (Luboń: 22%) ma ~10% szans na trzy pobrania bez ani",
+      "jednego postu z rzędu i fałszywe wyłączenie. Przy 5 to ~2%.",
+    ],
   }),
   FB_GROUP_LIMIT_MARGIN: posNum({
     group: "fb", cls: "tuning", def: 0.2,
