@@ -25,6 +25,7 @@
  * przełącza na Brave (2000/mies. gratis, ale słabo indeksuje małe instytucje).
  */
 import { townsInRadius } from "../adapters/overpass.js";
+import { configSnapshot } from "../config/index.js";
 import { setCallRecorder } from "../adapters/openrouter.js";
 import { searchProvider } from "../adapters/search.js";
 import {
@@ -203,7 +204,7 @@ const newReport = (startedAt: string, verifyOnly: boolean, argv: string[]): Disc
   stage: "discover", mode: verifyOnly ? "verify" : "full",
   startedAt, finishedAt: "", durationMs: 0,
   towns: [], verifications: [], totals: emptyTotals(),
-  argv, archiveEnabled: archiveEnabled(),
+  argv, archiveEnabled: archiveEnabled(), config: configSnapshot(),
 });
 
 /** Wspólny start przebiegu: znacznik dla archiwum i podpięcie rejestratora wywołań LLM. */

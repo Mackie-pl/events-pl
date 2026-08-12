@@ -19,6 +19,8 @@
  * potok chodzi nocą z crona, a literówka w progu ma kosztować domyślne zachowanie, nie dobę
  * bez danych. Zrzut konfiguracji pokazuje, co faktycznie obowiązuje.
  */
+import { configValue } from "./file.js";
+import type { ConfigValue } from "./file.js";
 import type { GroupId } from "./groups.js";
 
 /**
@@ -50,11 +52,22 @@ export interface ParamMeta {
   readonly fill?: boolean;
 }
 
+/** Skąd wzięła się wartość, którą właśnie oddał `get()`. */
+export type ParamSource = "env" | "config.json" | "domyślna";
+
 export interface Param<T> extends ParamMeta {
   readonly name: string;
-  /** Wartość domyślna jako tekst — do .env.example i do zrzutu konfiguracji. */
+  /** Wartość domyślna jako tekst — do .env.example i do tabeli w README. */
   readonly defaultText: string;
+  /** Ta sama wartość domyślna jako skalar JSON — do zasiewania config.json. */
+  readonly defaultJson: ConfigValue;
   get(): T;
+  /**
+   * Wartość bez pochodzenia nie wystarcza do diagnozy: „próg wynosi 30" nie mówi, czy ktoś
+   * go tak ustawił, czy po prostu nikt go nie ruszał. To ta różnica jest odpowiedzią na
+   * połowę pytań o zachowanie przebiegu.
+   */
+  source(): ParamSource;
 }
 
 /** Konstruktor czeka na nazwę, którą wstrzyknie `defineParams` z klucza obiektu. */
@@ -65,10 +78,23 @@ const clean = (v: string | undefined): string | undefined => {
   return t === undefined || t === "" ? undefined : t;
 };
 
+/**
+ * Pierwszeństwo: `process.env` → `config.json` → wartość domyślna. Plik obsługuje wyłącznie
+ * progi (`tuning`) — reszta klas ignoruje go nawet wtedy, gdy ktoś tam wpisze ich nazwy
+ * (patrz file.ts).
+ */
 const ctor = <T>(
-  meta: ParamMeta, defaultText: string, parse: (raw: string | undefined) => T,
+  meta: ParamMeta, def: ConfigValue, parse: (raw: string | undefined) => T,
 ): Ctor<T> => (name) => ({
-  ...meta, name, defaultText, get: () => parse(clean(process.env[name])),
+  ...meta,
+  name,
+  defaultText: def === null ? "" : String(def),
+  defaultJson: def,
+  get: () => parse(clean(process.env[name]) ?? configValue(name, meta.cls)),
+  source: () => {
+    if (clean(process.env[name]) !== undefined) return "env";
+    return configValue(name, meta.cls) !== undefined ? "config.json" : "domyślna";
+  },
 });
 
 const finite = (raw: string | undefined): number | null => {
@@ -83,32 +109,32 @@ export const text = (o: ParamMeta & { def: string }): Ctor<string> =>
 
 /** Tekst bez domyślnej: `undefined` znaczy „nie ustawiono", a nie „pusty". */
 export const optText = (o: ParamMeta): Ctor<string | undefined> =>
-  ctor(o, "", (raw) => raw);
+  ctor(o, null, (raw) => raw);
 
 /** Liczba dodatnia. `0` i wartości ujemne wracają do domyślnej — patrz `num` dla progów, gdzie 0 ma sens. */
 export const posNum = (o: ParamMeta & { def: number }): Ctor<number> =>
-  ctor(o, String(o.def), (raw) => {
+  ctor(o, o.def, (raw) => {
     const v = finite(raw);
     return v !== null && v > 0 ? v : o.def;
   });
 
 /** Liczba z dolnym progiem WŁĄCZNIE — dla stawek i sufitów, gdzie `0` jest poprawną wartością. */
 export const num = (o: ParamMeta & { def: number; min: number }): Ctor<number> =>
-  ctor(o, String(o.def), (raw) => {
+  ctor(o, o.def, (raw) => {
     const v = finite(raw);
     return v !== null && v >= o.min ? v : o.def;
   });
 
 /** Liczba dodatnia albo `null` — brak wartości WYŁĄCZA mechanizm, zamiast go domyślnie ustawiać. */
 export const optPosNum = (o: ParamMeta): Ctor<number | null> =>
-  ctor(o, "", (raw) => {
+  ctor(o, null, (raw) => {
     const v = finite(raw);
     return v !== null && v > 0 ? v : null;
   });
 
 /** Liczba całkowita od `min` włącznie albo `null`. */
 export const optInt = (o: ParamMeta & { min: number }): Ctor<number | null> =>
-  ctor(o, "", (raw) => {
+  ctor(o, null, (raw) => {
     const v = finite(raw);
     return v !== null && Number.isInteger(v) && v >= o.min ? v : null;
   });
@@ -137,7 +163,7 @@ export const oneOf = <const V extends string>(
 
 /** Włączone, dopóki ktoś nie wpisze `0`. Domyślnie WŁĄCZONE — do wyłączników, nie do włączników. */
 export const offWhenZero = (o: ParamMeta): Ctor<boolean> =>
-  ctor(o, "1", (raw) => raw !== "0");
+  ctor(o, true, (raw) => raw !== "0");
 
 /**
  * Buduje rejestr, wstrzykując nazwę zmiennej z klucza obiektu. Dzięki temu nazwa istnieje

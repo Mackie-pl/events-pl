@@ -30,6 +30,8 @@ const cell = (s: string): string => s.replaceAll("|", "\\|");
 const defaultCell = (p: Param<unknown>): string =>
   p.defaultText === "" ? "brak" : `\`${cell(p.defaultText)}\``;
 
+const tuningCount = (): number => ALL_PARAMS.filter((p) => p.cls === "tuning").length;
+
 const row = (p: Param<unknown>): string =>
   `| \`${p.name}\` | ${defaultCell(p)} | ${CLASS_LABEL[p.cls]} | ${cell(p.summary)} |`;
 
@@ -40,12 +42,22 @@ export function renderReadmeConfig(): string {
     "<!-- Tabela poniżej jest generowana z src/config/params.ts przez `npm run config:docs`.",
     "     Ręczne zmiany przepadną — popraw wpis w rejestrze. -->",
     "",
-    `Wszystkie ${ALL_PARAMS.length} parametrów, jakie potok czyta ze środowiska. Kolumna **klasa** mówi,`,
-    "czym parametr jest: *sekret* nigdy nie trafia do repo, *próg* steruje zachowaniem potoku",
-    "(i jest kandydatem do wersjonowanego `config.json`), *ustawienie* to wybór właściciela,",
-    "*adres* przydaje się przy proxy i mockach, *środowisko* daje runner i nie ustawia się tego ręcznie.",
-    "Dłuższe uzasadnienia — po co dany próg istnieje i czemu ma taką wartość — stoją przy wpisach",
-    "w `.env.example` (też generowanym).",
+    `Wszystkie ${ALL_PARAMS.length} parametrów, jakie potok czyta z konfiguracji. Kolumna **klasa** mówi,`,
+    "czym parametr jest i — co ważniejsze — GDZIE mieszka:",
+    "",
+    `- **próg** (${tuningCount()} sztuk) — steruje zachowaniem potoku i stoi w commitowanym \`config.json\`.`,
+    "  Zmiana progu ma zostawiać ślad: `git log -p config.json` daje datę, autora i wartość przed i po,",
+    "  do zestawienia z tym, co w tych dniach robił potok. Każdy przebieg zapisuje w raporcie migawkę",
+    "  progów, którymi się kierował (`RunReport.config`), więc stary raport da się czytać bez zgadywania.",
+    "- **sekret** — klucz albo token, wyłącznie ze środowiska. Do repo nie trafia nigdy i `config.json`",
+    "  go nie odczyta, nawet gdyby ktoś wpisał tam jego nazwę.",
+    "- **ustawienie** — wybór właściciela (model, dostawca, adresat digestu), ze środowiska.",
+    "- **adres** — punkt końcowy API; przydaje się przy proxy i mockach, normalnie zostaw domyślny.",
+    "- **środowisko** — daje runner (GitHub Actions), nie ustawia się tego ręcznie.",
+    "",
+    "Pierwszeństwo: `process.env` → `config.json` → wartość domyślna. Env jest na górze, żeby doraźny",
+    "eksperyment nie wymagał commita — kolumna **Domyślnie** pokazuje wartość z rejestru, czyli tę,",
+    "która obowiązuje, gdy nie ustawiono nic. Dłuższe uzasadnienia stoją przy wpisach w `.env.example`.",
   ];
 
   for (const group of GROUPS) {

@@ -664,20 +664,39 @@ do podglądu używaj `npx tsx` bez `--env-file`.
 ## Parametry konfiguracji
 
 Rejestr siedzi w `src/config/params.ts` i jest **jedynym** miejscem, w którym potok czyta
-`process.env` — pilnuje tego test, więc lista poniżej nie może być niepełna. Dopisując parametr:
-wpis w rejestrze, potem `npm run config:docs`, który przebudowuje i tę tabelę, i `.env.example`.
+konfigurację — pilnuje tego test, więc lista poniżej nie może być niepełna. Dopisując parametr:
+wpis w rejestrze, potem `npm run config:docs`, który przebudowuje tę tabelę, `.env.example`
+i klucze w `config.json`.
+
+`config.json` jest commitowany i trzyma **progi** potoku. Generator pilnuje w nim wyłącznie
+kluczy — **wartości są Twoje i żadna przebudowa ich nie nadpisze**. Powód rozdziału jest jeden:
+próg zmieniony w sekretach repozytorium nie zostawia śladu nigdzie, więc pytania „od kiedy
+wyciszamy tak agresywnie" nie da się nawet postawić. Ten sam próg w pliku daje
+`git log -p config.json`, a raport przebiegu niesie migawkę progów, którymi się kierował —
+łącznie z listą tych, które tamtej nocy przyszły ze środowiska (`config.fromEnv`), bo tylko
+tego nie widać w historii.
 
 <!-- BEGIN GENERATED: config -->
 
 <!-- Tabela poniżej jest generowana z src/config/params.ts przez `npm run config:docs`.
      Ręczne zmiany przepadną — popraw wpis w rejestrze. -->
 
-Wszystkie 55 parametrów, jakie potok czyta ze środowiska. Kolumna **klasa** mówi,
-czym parametr jest: *sekret* nigdy nie trafia do repo, *próg* steruje zachowaniem potoku
-(i jest kandydatem do wersjonowanego `config.json`), *ustawienie* to wybór właściciela,
-*adres* przydaje się przy proxy i mockach, *środowisko* daje runner i nie ustawia się tego ręcznie.
-Dłuższe uzasadnienia — po co dany próg istnieje i czemu ma taką wartość — stoją przy wpisach
-w `.env.example` (też generowanym).
+Wszystkie 56 parametrów, jakie potok czyta z konfiguracji. Kolumna **klasa** mówi,
+czym parametr jest i — co ważniejsze — GDZIE mieszka:
+
+- **próg** (24 sztuk) — steruje zachowaniem potoku i stoi w commitowanym `config.json`.
+  Zmiana progu ma zostawiać ślad: `git log -p config.json` daje datę, autora i wartość przed i po,
+  do zestawienia z tym, co w tych dniach robił potok. Każdy przebieg zapisuje w raporcie migawkę
+  progów, którymi się kierował (`RunReport.config`), więc stary raport da się czytać bez zgadywania.
+- **sekret** — klucz albo token, wyłącznie ze środowiska. Do repo nie trafia nigdy i `config.json`
+  go nie odczyta, nawet gdyby ktoś wpisał tam jego nazwę.
+- **ustawienie** — wybór właściciela (model, dostawca, adresat digestu), ze środowiska.
+- **adres** — punkt końcowy API; przydaje się przy proxy i mockach, normalnie zostaw domyślny.
+- **środowisko** — daje runner (GitHub Actions), nie ustawia się tego ręcznie.
+
+Pierwszeństwo: `process.env` → `config.json` → wartość domyślna. Env jest na górze, żeby doraźny
+eksperyment nie wymagał commita — kolumna **Domyślnie** pokazuje wartość z rejestru, czyli tę,
+która obowiązuje, gdy nie ustawiono nic. Dłuższe uzasadnienia stoją przy wpisach w `.env.example`.
 
 **wymagane: ekstrakcja i discovery**
 
@@ -707,7 +726,7 @@ w `.env.example` (też generowanym).
 
 | Parametr | Domyślnie | Klasa | Do czego |
 | --- | --- | --- | --- |
-| `STRUCTURED_OUTPUTS` | `1` | ustawienie | `0` wyłącza wymuszony JSON Schema na odpowiedzi modelu |
+| `STRUCTURED_OUTPUTS` | `true` | ustawienie | `0` wyłącza wymuszony JSON Schema na odpowiedzi modelu |
 | `STRUCTURED_IGNORE_PROVIDERS` | `azure` | ustawienie | dostawcy OpenRoutera pomijani na ścieżce ze schematem (po przecinku) |
 
 **opcjonalnie: Facebook przez Bright Data (linki do wydarzeń + otwarte grupy)**
@@ -738,6 +757,7 @@ w `.env.example` (też generowanym).
 | `DISCOVER_MAX_TOKENS` | `12000` | próg | sufit tokenów odpowiedzi przy ocenie trafień wyszukiwarki |
 | `BLOCK_MAX_CALLS` | `80` | próg | sufit wywołań LLM na blokowanie źródeł w przebiegu (0 = nie wołaj) |
 | `ENTRYPOINT_LLM` | `always` | próg | kiedy pytać model o punkt wejścia gminy: always \| ambiguous \| never |
+| `CONFIG_FILE` | `true` | ustawienie | `0` ignoruje config.json — przebieg na samych wartościach domyślnych |
 
 **prywatne archiwum treści (Supabase Storage)**
 

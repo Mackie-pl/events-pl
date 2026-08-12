@@ -1,26 +1,35 @@
 /**
- * Przebudowuje dokumentację konfiguracji z rejestru parametrów: `npm run config:docs`.
+ * Przebudowuje wszystko, co wynika z rejestru parametrów: `npm run config:docs`.
  *
- * Dwa cele, jedno źródło (src/config/params.ts):
+ * Trzy cele, jedno źródło (src/config/params.ts):
  *   .env.example  — cały plik, do skopiowania i uzupełnienia,
- *   README.md     — sama tabela między znacznikami, reszta prozy zostaje nietknięta.
+ *   README.md     — sama tabela między znacznikami, reszta prozy zostaje nietknięta,
+ *   config.json   — same KLUCZE progów; wartości są własnością właściciela projektu
+ *                   i generator ich nie dotyka (patrz config/sync-file.ts).
  *
  * Woła się to po każdej zmianie w rejestrze. Test `config.test.ts` przypomni, gdyby się
- * zapomniało — oba pliki muszą być tym, co renderer produkuje teraz.
+ * zapomniało — wszystkie trzy pliki muszą być tym, co renderery produkują teraz.
  */
 import { readFileSync, writeFileSync } from "node:fs";
 
-import { applyReadmeConfig, renderEnvExample } from "../config/index.js";
-import { ENV_EXAMPLE_PATH, README_PATH } from "../shared/paths.js";
+import { applyReadmeConfig, freshConfigFile, renderEnvExample } from "../config/index.js";
+import { CONFIG_PATH, ENV_EXAMPLE_PATH, README_PATH } from "../shared/paths.js";
 
-writeFileSync(ENV_EXAMPLE_PATH, renderEnvExample(), "utf-8");
-console.log(`zapisano ${ENV_EXAMPLE_PATH}`);
+/** Zapis tylko przy realnej zmianie — inaczej każdy przebieg brudziłby drzewo robocze. */
+function write(path: string, next: string): void {
+  let current: string | null = null;
+  try {
+    current = readFileSync(path, "utf-8");
+  } catch { /* nie ma pliku — zapiszemy go poniżej */ }
 
-const readme = readFileSync(README_PATH, "utf-8");
-const updated = applyReadmeConfig(readme);
-if (updated === readme) {
-  console.log("README bez zmian");
-} else {
-  writeFileSync(README_PATH, updated, "utf-8");
-  console.log(`zapisano ${README_PATH}`);
+  if (current === next) {
+    console.log(`bez zmian: ${path}`);
+    return;
+  }
+  writeFileSync(path, next, "utf-8");
+  console.log(`zapisano ${path}`);
 }
+
+write(CONFIG_PATH, freshConfigFile());
+write(ENV_EXAMPLE_PATH, renderEnvExample());
+write(README_PATH, applyReadmeConfig(readFileSync(README_PATH, "utf-8")));

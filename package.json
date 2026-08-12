@@ -19,7 +19,7 @@
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "node --import tsx --test \"test/**/*.test.ts\"",
+    "test": "node --import tsx --import ./test/config-off.ts --test \"test/**/*.test.ts\"",
     "test:live": "node --import tsx --test \"test/live/*.live.ts\"",
     "build": "tsc",
     "panel-server": "tsx --env-file-if-exists=.env src/actions/panel-server.ts",

@@ -354,6 +354,20 @@ export const P = defineParams({
     summary: "adres Overpass (OSM) — do własnej instancji, gdy publiczna dławi",
   }),
 
+  // --- pipeline (c.d.): wyłącznik warstwy pliku ---
+  CONFIG_FILE: offWhenZero({
+    group: "pipeline", cls: "setting", example: "0",
+    summary: "`0` ignoruje config.json — przebieg na samych wartościach domyślnych",
+    doc: [
+      'Env nadpisuje pojedynczy próg, ale nie umie go COFNĄĆ do „nieustawionego": pusta wartość',
+      'znaczy „brak" i spada z powrotem na config.json. Ten wyłącznik zdejmuje całą warstwę pliku',
+      "naraz — do sprawdzenia, jak potok zachowa się na domyślnych, bez ruszania commita.",
+      "Z tego korzysta `npm test`: testy sprawdzają logikę przy progach, które same podają,",
+      "a nie to, jak akurat nastrojony jest potok. Inaczej zmiana progu w config.json robiłaby",
+      "czerwone testy w miejscach, które z tą zmianą nie mają nic wspólnego.",
+    ],
+  }),
+
   // --- ambient: nie renderują się do .env.example, bo nie my je ustawiamy ---
   GITHUB_ACTIONS: optText({
     group: "ambient", cls: "ambient", summary: "ustawia runner — po tym poznajemy, że jesteśmy w Actions",
