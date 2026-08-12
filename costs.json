@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-11T06:41:00.912Z",
+ "updated": "2026-08-12T06:26:15.962Z",
  "rates": {
   "bdPerRecord": 0.0015,
   "searchPerQuery": 0.001,
@@ -2044,6 +2044,137 @@
    "usd": 0,
    "estimated": true,
    "units": 2.575,
+   "unit": "MB"
+  },
+  {
+   "day": "2026-08-12",
+   "at": "2026-08-12T06:26:15.855Z",
+   "stage": "daily",
+   "run": "2026-08-12T05:26:58.676Z",
+   "category": "llm-extract",
+   "usd": 0.771337,
+   "estimated": false,
+   "units": 52,
+   "unit": "calls",
+   "tokensIn": 489867,
+   "tokensOut": 56294,
+   "top": [
+    {
+     "id": "mosina-pl-wydarzenia",
+     "usd": 0.095933,
+     "units": 4
+    },
+    {
+     "id": "fb-group-imprezy-poznan",
+     "usd": 0.050155,
+     "units": 2
+    },
+    {
+     "id": "kultura-poznan",
+     "usd": 0.047212,
+     "units": 3
+    },
+    {
+     "id": "poznan-co-gdzie-kiedy",
+     "usd": 0.044693,
+     "units": 2
+    },
+    {
+     "id": "fb-group-wydarzenia-w-poznaniu-1",
+     "usd": 0.042755,
+     "units": 1
+    }
+   ]
+  },
+  {
+   "day": "2026-08-12",
+   "at": "2026-08-12T06:26:15.855Z",
+   "stage": "daily",
+   "run": "2026-08-12T05:26:58.676Z",
+   "category": "llm-vision",
+   "usd": 0.012127,
+   "estimated": false,
+   "units": 3,
+   "unit": "calls",
+   "tokensIn": 9857,
+   "tokensOut": 454,
+   "top": [
+    {
+     "id": "gosir-dopiewo-kalendarz",
+     "usd": 0.012127,
+     "units": 3
+    }
+   ]
+  },
+  {
+   "day": "2026-08-12",
+   "at": "2026-08-12T06:26:15.855Z",
+   "stage": "daily",
+   "run": "2026-08-12T05:26:58.676Z",
+   "category": "fb",
+   "usd": 1.5135,
+   "estimated": true,
+   "units": 1009,
+   "unit": "records",
+   "top": [
+    {
+     "id": "wydarzenia-w-luboniu-fb-group",
+     "usd": 0.075,
+     "units": 50
+    },
+    {
+     "id": "lubon-fb-group",
+     "usd": 0.075,
+     "units": 50
+    },
+    {
+     "id": "mieszkancy-lubonia-fb-group",
+     "usd": 0.075,
+     "units": 50
+    },
+    {
+     "id": "dopiewo-aktywnie-kulturalnie-fb",
+     "usd": 0.075,
+     "units": 50
+    },
+    {
+     "id": "dopiewo-tablica-ogloszen-fb",
+     "usd": 0.075,
+     "units": 50
+    }
+   ]
+  },
+  {
+   "day": "2026-08-12",
+   "at": "2026-08-12T06:26:15.855Z",
+   "stage": "daily",
+   "run": "2026-08-12T05:26:58.676Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 91,
+   "unit": "fetches"
+  },
+  {
+   "day": "2026-08-12",
+   "at": "2026-08-12T06:26:15.855Z",
+   "stage": "daily",
+   "run": "2026-08-12T05:26:58.676Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 73,
+   "unit": "lookups"
+  },
+  {
+   "day": "2026-08-12",
+   "at": "2026-08-12T06:26:15.855Z",
+   "stage": "daily",
+   "run": "2026-08-12T05:26:58.676Z",
+   "category": "storage",
+   "usd": 0,
+   "estimated": true,
+   "units": 3.508,
    "unit": "MB"
   }
  ]
