@@ -11,9 +11,7 @@ import {
 } from "../../adapters/brightdata.js";
 import { geocode } from "../../adapters/nominatim.js";
 import { resetUsage, snapshotTasks, snapshotUsage } from "../../adapters/openrouter.js";
-import {
-  type Fetched, type FetchedImage, fetchImageB64, fetchHeadless, fetchPlain, validators,
-} from "../../adapters/page-fetch.js";
+import { type Fetched, fetchHeadless, fetchPlain, validators } from "../../adapters/page-fetch.js";
 import { archiveRaw, beginSource, sourcePaths } from "../../adapters/supabase-archive.js";
 import { audit } from "../../shared/audit.js";
 import { todayIso } from "../../shared/dates.js";
@@ -21,7 +19,7 @@ import { describeError } from "../../shared/errors.js";
 import { sha256 } from "../../shared/hash.js";
 import { urlKey } from "../../shared/url.js";
 import type {
-  EventItem, FollowupRun, PipelineError, PipelineState, Source, SourceRun,
+  EventItem, PipelineError, PipelineState, Source, SourceRun,
 } from "../../types/index.js";
 import {
   fbGroupPostsToText, fbGroupStats, fbPostExtras, harvestEventUrls, isEventUrl,
@@ -37,10 +35,9 @@ import { noteFbGroup } from "./fb-group-blocked.js";
 import { auditFbGroup, auditFbPostExtras } from "./fb-group-trail.js";
 import { fbGroupLimit, noteFbGroupRate } from "./fb-group-limit.js";
 import {
-  droppedInvalidStats, extractEvents, extractPoster, resetDroppedInvalid,
-} from "./extract.js";
-
-const MAX_FOLLOWUPS_PER_SOURCE = 5;
+  MAX_FOLLOWUPS_PER_SOURCE, followupEvents, processFollowup,
+} from "./followup.js";
+import { droppedInvalidStats, extractEvents, resetDroppedInvalid } from "./extract.js";
 
 /** Ten sam adres wg reguł rejestru (bez schematu, `www.`, końcowego `/`). */
 const isSameUrl = (a: string, b: string): boolean => urlKey(a) === urlKey(b);
@@ -98,81 +95,6 @@ async function fetchSource(
     }
   }
 }
-
-
-/**
- * Pobiera followup (podstrona / PDF / plakat) i zwraca jego wydarzenia.
- * Treść identyczna (304 albo ten sam hash) → wydarzenia z cache, zero wywołań LLM.
- */
-async function processFollowup(
-  url: string, src: Source, state: PipelineState, errors: PipelineError[],
-): Promise<FollowupRun> {
-  const isImg = /\.(jpe?g|png)(\?|$)/i.test(url);
-  const fr: FollowupRun = { url, kind: isImg ? "poster" : "page", outcome: "ok", events: 0 };
-  const cache = (state.extractions ??= {});
-  const cached = cache[url];
-
-  try {
-    let content: string | null = null;   // treść do zahashowania
-    let img: Extract<FetchedImage, { notModified: false }> | null = null;
-    let v: { etag?: string; lastModified?: string } = {};
-
-    if (isImg) {
-      const got = await fetchImageB64(url, validators(cached));
-      if (got === null) { fr.outcome = "error"; fr.err = "pobranie obrazu nieudane"; return fr; }
-      if (got.notModified) {
-        fr.outcome = "unchanged";
-        fr.events = cached?.events.length ?? 0;
-        audit("followup", `plakat bez zmian (304) — ${fr.events} wydarzeń z cache`, { url });
-        return fr;
-      }
-      img = got;
-      content = got.data;
-      v = { ...(got.etag ? { etag: got.etag } : {}), ...(got.lastModified ? { lastModified: got.lastModified } : {}) };
-    } else {
-      const sub = await fetchPlain(url, validators(cached));
-      if (sub.kind === "not-modified") {
-        fr.outcome = "unchanged";
-        fr.events = cached?.events.length ?? 0;
-        audit("followup", `podstrona bez zmian (304) — ${fr.events} wydarzeń z cache`, { url });
-        return fr;
-      }
-      content = sub.text;
-      v = { ...(sub.etag ? { etag: sub.etag } : {}), ...(sub.lastModified ? { lastModified: sub.lastModified } : {}) };
-      await archiveRaw(`${src.id}__followup`, url, sub.text, sub.kind);
-    }
-
-    // serwer nie obsłużył warunkowego GET-a — porównujemy hash treści
-    const hash = sha256(content);
-    if (cached?.hash === hash) {
-      cache[url] = { ...cached, ...v, at: new Date().toISOString() };
-      fr.outcome = "unchanged";
-      fr.events = cached.events.length;
-      audit("followup", `ten sam hash treści — ${fr.events} wydarzeń z cache, bez modelu`, { url });
-      return fr;
-    }
-
-    const added = img
-      ? (await extractPoster({ data: img.data, mediaType: img.mediaType }, url)).events
-      : (await extractEvents(content, url)).events;
-
-    cache[url] = { hash, events: detach(added), at: new Date().toISOString(), ...v };
-    fr.events = added.length;
-    audit("followup", `${fr.kind === "poster" ? "plakat" : "podstrona"} → ${added.length} wydarzeń`, { url });
-    return fr;
-  } catch (e) {
-    const err = describeError(e);
-    errors.push({ id: src.id, followup: url, err });
-    fr.outcome = "error";
-    fr.err = err;
-    audit("followup", `nieudany: ${err}`, { url });
-    return fr;
-  }
-}
-
-/** Wydarzenia followupa — z cache po przetworzeniu (processFollowup zapisuje wynik do state). */
-const followupEvents = (url: string, state: PipelineState): EventItem[] =>
-  detach(state.extractions?.[url]?.events ?? []);
 
 /**
  * DATY USTALANE „DZIŚ" — jedno przewężenie dla OBU ścieżek, maszynowej i modelowej.
@@ -323,10 +245,17 @@ export async function processSource(
   // --- strona źródła: 304 albo ten sam hash => wydarzenia z cache, bez wywołania LLM ---
   let pageEvents: EventItem[];
   let followupUrls: string[];
+  /**
+   * Hash treści strony źródła — do porównania z followupami (patrz `processFollowup`).
+   * Przy 304 bierzemy go z cache'u: treści nie mamy, ale to nadal hash TEJ SAMEJ treści,
+   * którą serwer właśnie potwierdził jako niezmienioną.
+   */
+  let pageHash: string | undefined;
 
   if (fetched.kind === "not-modified" && cached) {
     run.changed = false;
     run.kind = "html";
+    pageHash = cached.hash;
     pageEvents = detach(cached.events);
     followupUrls = state.followupsBySource?.[src.id] ?? [];
     audit("content", "HTTP 304 — serwer potwierdził brak zmian, treści w ogóle nie pobieraliśmy");
@@ -357,6 +286,7 @@ export async function processSource(
     }
 
     const hash = sha256(fetched.text);
+    pageHash = hash;
     const v = {
       ...(fetched.etag ? { etag: fetched.etag } : {}),
       ...(fetched.lastModified ? { lastModified: fetched.lastModified } : {}),
@@ -379,11 +309,12 @@ export async function processSource(
 
       // ścieżka blokowa: do modelu idą wyłącznie bloki, których jeszcze nie widzieliśmy.
       // `null` = odmówiła (brak struktury, przebudowa serwisu) i lecimy jak dawniej.
-      const viaBlocks = await blockSource(fetched, url, state, run);
+      const viaBlocks = await blockSource(fetched, url, state);
       let proposed: string[];
       if (viaBlocks) {
         pageEvents = viaBlocks.events;
         proposed = viaBlocks.followups;
+        run.blocks = viaBlocks.blocks;
         if (viaBlocks.note) run.note = viaBlocks.note;
       } else {
         const result = await extractEvents(fetched.text, url);
@@ -444,9 +375,14 @@ export async function processSource(
       if (bdEnabled()) for (const u of harvestEventUrls(fuUrl)) fbEventUrls.add(u);
       continue;
     }
-    const fr = await processFollowup(fuUrl, src, state, errors);
+    const fr = await processFollowup(fuUrl, { src, state, errors, pageHash });
     run.followups.push(fr);
-    if (fr.outcome !== "error") collected.push(...followupEvents(fuUrl, state));
+    // „same-as-page" NIE wnosi wydarzeń: to te same bajty, co strona, a jej wydarzenia
+    // stoją już w `pageEvents`. Dorzucenie ich tutaj byłoby dokładnie tym duplikatem,
+    // dla którego ten przypadek w ogóle wykrywamy.
+    if (fr.outcome === "ok" || fr.outcome === "unchanged") {
+      collected.push(...followupEvents(fuUrl, state));
+    }
   }
 
   const events = settleDates(collected, run);

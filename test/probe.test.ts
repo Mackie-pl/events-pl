@@ -23,8 +23,9 @@ const state = (): PipelineState => ({
   extractions: {
     zamek: { ...extraction("h1"), etag: "W/\"abc\"", lastModified: "Mon, 27 Jul 2026 04:00:00 GMT" },
     kultura: extraction("h2"),
-    "https://zamek.pl/program.pdf": extraction("h3"),
-    "https://kultura.pl/plakat.jpg": extraction("h4"),
+    // followupy leżą pod kluczem ZNORMALIZOWANYM (`followupKey`), nie pod surowym adresem
+    "zamek.pl/program.pdf": extraction("h3"),
+    "kultura.pl/plakat.jpg": extraction("h4"),
   },
   followupsBySource: {
     zamek: ["https://zamek.pl/program.pdf"],
@@ -44,14 +45,16 @@ describe("forgetSource (--force)", () => {
   it("kasuje też followupy źródła — plakat z cache dałby wczorajszy wynik", () => {
     const s = state();
     forgetSource(s, "zamek");
-    assert.equal(s.extractions?.["https://zamek.pl/program.pdf"], undefined);
+    // `followupsBySource` trzyma adres SUROWY, cache — znormalizowany. Bez przeliczenia
+    // kluczem `--force` cicho pomijałby followupy, a to najczęstsze źródło wczorajszego wyniku.
+    assert.equal(s.extractions?.["zamek.pl/program.pdf"], undefined);
   });
 
   it("nie rusza innych źródeł ani ich followupów", () => {
     const s = state();
     forgetSource(s, "zamek");
     assert.equal(s.extractions?.["kultura"]?.hash, "h2");
-    assert.equal(s.extractions?.["https://kultura.pl/plakat.jpg"]?.hash, "h4");
+    assert.equal(s.extractions?.["kultura.pl/plakat.jpg"]?.hash, "h4");
     assert.equal(s.hashes["kultura"], "h2");
   });
 

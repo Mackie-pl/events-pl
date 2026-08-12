@@ -54,15 +54,34 @@ const TEXT_SELECTORS = [
 ];
 
 /**
+ * `data:` URI bez ŁADUNKU — zostaje sam typ MIME.
+ *
+ * html-to-text renderuje obrazek jako „alt [src]", więc obrazek wklejony w stronę base64-em
+ * wchodzi do tekstu W CAŁOŚCI. Pomiar na mosina.pl (2026-08-12, strona pojedynczego wydarzenia
+ * `szeroko-na-waskiej-2026-1`): 1 046 664 bajtów HTML-a, z czego 640 938 to DWA
+ * `data:image/jpeg;base64`. Po konwersji 648 279 znaków tekstu — ucięte do MAX_INPUT_CHARS
+ * i wysłane modelowi po JEDNO wydarzenie. Base64 tokenizuje się fatalnie (~1 znak/token),
+ * więc samo to źródło zjadło 84 488 tokenów wejścia ($0.096): 12% rachunku CAŁEGO dnia.
+ *
+ * Wycinamy ładunek, a nie cały adres: `[data:image/jpeg]` zostaje w tekście jako ślad, że stał
+ * tu obrazek. Zwykłe `src` zostają nietknięte i to jest tu ważne — followupy-plakaty biorą się
+ * właśnie z adresów obrazków w tekście, więc wycięcie ich wszystkich (`linkBrackets: false`)
+ * kupiłoby te same znaki kosztem całej ścieżki plakatowej.
+ */
+const DATA_URI = /data:([a-z0-9.+-]+\/[a-z0-9.+-]+)[^\s"'<>)]*/gi;
+
+/**
  * Jedno przejście HTML → tekst dla WSZYSTKICH ścieżek pobrania.
  *
  * Eksportowane, bo podział na bloki po DOM-ie (extract/dom-blocks.ts) renderuje każdy
  * fragment osobno i MUSI robić to tą samą funkcją. Gdyby miał własną, tekst bloku różniłby
  * się od tekstu tego samego fragmentu w całej stronie — a to hasze bloków, więc cache
- * chybiałby zawsze i nikt by nie zgadł dlaczego.
+ * chybiałby zawsze i nikt by nie zgadł dlaczego. Z tego samego powodu odchudzanie `data:`
+ * siedzi TUTAJ, a nie przy wywołaniu modelu: inaczej hasze bloków niosłyby base64, a model
+ * dostawałby coś innego, niż mówi klucz cache'a.
  */
 export const toText = (html: string): string =>
-  htmlToText(html, { wordwrap: false, selectors: TEXT_SELECTORS });
+  htmlToText(html.replace(DATA_URI, "data:$1"), { wordwrap: false, selectors: TEXT_SELECTORS });
 
 export type Fetched = {
   kind: "html" | "pdf" | "skip" | "not-modified" | "feed";

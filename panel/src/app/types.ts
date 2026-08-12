@@ -183,13 +183,28 @@ export type SourceStatus =
   | 'skipped-costly'
   | 'empty';
 
+/** Rozliczenie ścieżki blokowej: ile bloków, ile z cache, ile poszło do modelu. */
+export interface BlockStats {
+  total: number;
+  cached: number;
+  fresh: number;
+}
+
 export interface FollowupRun {
   url: string;
   kind: 'poster' | 'page';
-  /** unchanged = treść identyczna (304 albo ten sam hash), wydarzenia odtworzone z cache */
-  outcome: 'ok' | 'error' | 'unchanged';
+  /**
+   * unchanged = treść identyczna (304 albo ten sam hash), wydarzenia odtworzone z cache.
+   * same-as-page = followup oddał DOKŁADNIE treść strony źródła, więc jego wydarzenia już są
+   * w sumie — to sukces, nie błąd (najczęściej entrypoint `?page=1` równy korzeniowi).
+   */
+  outcome: 'ok' | 'error' | 'unchanged' | 'same-as-page';
   events: number;
   err?: string;
+  /** np. „odpowiedź modelu ucięta na limicie" */
+  note?: string;
+  /** brak = followup szedł jednym wywołaniem na całość */
+  blocks?: BlockStats;
 }
 
 export interface LlmUsage {

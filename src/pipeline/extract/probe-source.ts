@@ -24,6 +24,7 @@ import type { LlmCallRecord } from "../../adapters/openrouter.js";
 import { setCallRecorder } from "../../adapters/openrouter.js";
 import { suppressArchive } from "../../adapters/supabase-archive.js";
 import { RUN_SCOPE, auditTrails, beginAuditRun, beginAuditSource } from "../../shared/audit.js";
+import { urlKey } from "../../shared/url.js";
 import { sourcesStore, stateStore } from "../../storage/index.js";
 import type {
   PipelineError, PipelineState, ProbeLlmCall, ProbeResult, Source, SourceTrail,
@@ -69,7 +70,9 @@ function unsupported(src: Source): string | null {
 export function forgetSource(state: PipelineState, id: string): void {
   const cache = state.extractions ?? {};
   delete cache[id];
-  for (const url of state.followupsBySource?.[id] ?? []) delete cache[url];
+  // followupy leżą pod kluczem ZNORMALIZOWANYM (patrz process-source.ts) — kasowanie po
+  // surowym adresie zostawiłoby je nietknięte i `--force` cicho by ich nie dotknął
+  for (const url of state.followupsBySource?.[id] ?? []) delete cache[urlKey(url)];
   delete state.hashes[id];
   // Cache bloków adresuje TREŚĆ, nie źródło, więc nie da się z niego wyjąć „bloków tego
   // źródła" bez ponownego podziału strony. Czyścimy go w całości — `state` jest kopią na tę

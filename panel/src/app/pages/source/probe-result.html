@@ -56,7 +56,11 @@
           tuiBadge
           size="s"
           [appearance]="
-            f.outcome === 'ok' ? 'positive' : f.outcome === 'unchanged' ? 'neutral' : 'negative'
+            f.outcome === 'ok'
+              ? 'positive'
+              : f.outcome === 'error'
+                ? 'negative'
+                : 'neutral'
           "
         >
           {{ f.outcome }}

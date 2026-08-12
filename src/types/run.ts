@@ -94,13 +94,31 @@ export interface FbGroupStats {
   postsPerDay?: number;
 }
 
+/**
+ * Rozliczenie ścieżki blokowej: ile bloków miała treść, ile wróciło z cache, ile poszło
+ * do modelu. `fresh: 0` przy `total > 0` to odczyt w pełni darmowy.
+ */
+export interface BlockStats {
+  total: number;
+  cached: number;
+  fresh: number;
+}
+
 export interface FollowupRun {
   url: string;
   kind: "poster" | "page";
-  /** unchanged = treść identyczna (304 albo ten sam hash), wydarzenia odtworzone z cache */
-  outcome: "ok" | "error" | "unchanged";
+  /**
+   * unchanged = treść identyczna (304 albo ten sam hash), wydarzenia odtworzone z cache.
+   * same-as-page = followup oddał DOKŁADNIE treść strony źródła, więc jego wydarzenia już są
+   * w sumie i drugi odczyt byłby płaceniem za te same bajty (patrz process-source.ts).
+   */
+  outcome: "ok" | "error" | "unchanged" | "same-as-page";
   events: number;
   err?: string;
+  /** np. „odpowiedź modelu ucięta na limicie" — followup ma własną, nie dzieli jej ze źródłem */
+  note?: string;
+  /** rozliczenie podziału na bloki; brak = followup szedł jednym wywołaniem na całość */
+  blocks?: BlockStats;
 }
 
 /**
@@ -184,11 +202,12 @@ export interface SourceRun {
    */
   droppedPast?: number;
   /**
-   * Rozliczenie ścieżki blokowej: ile bloków miała strona, ile wróciło z cache, ile poszło
-   * do modelu. Brak = źródło szło starą drogą (jedno wywołanie na całość) albo w ogóle
-   * nie dotknęło modelu. `fresh: 0` przy `total > 0` to dzień w pełni darmowy.
+   * Podział SAMEJ STRONY ŹRÓDŁA. Brak = źródło szło starą drogą (jedno wywołanie na całość)
+   * albo w ogóle nie dotknęło modelu. Followupy mają własne rozliczenie w `followups[].blocks`
+   * — sumowanie ich tutaj zlałoby „strona bez zmian" z „podstrona bez zmian", a to dwie różne
+   * diagnozy dla jałowego źródła.
    */
-  blocks?: { total: number; cached: number; fresh: number };
+  blocks?: BlockStats;
   /** followupy sprawdzone mimo niezmienionej strony źródła */
   followupsRechecked?: number;
   /** ścieżki obiektów w prywatnym archiwum (raw/ + llm/); brak = archiwum wyłączone */

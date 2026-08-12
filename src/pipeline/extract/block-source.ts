@@ -14,7 +14,7 @@ import { type Fetched } from "../../adapters/page-fetch.js";
 import { P } from "../../config/index.js";
 import { audit } from "../../shared/audit.js";
 import { todayIso } from "../../shared/dates.js";
-import type { EventItem, PipelineState, SourceRun } from "../../types/index.js";
+import type { BlockStats, EventItem, PipelineState } from "../../types/index.js";
 
 import { type Block, segment } from "./blocks.js";
 import { detach, lookupBlock, storeBlock, touchBlock } from "./block-cache.js";
@@ -96,15 +96,27 @@ export function unionOf(
   return { events, followups };
 }
 
+export interface BlockOutcome {
+  events: EventItem[];
+  followups: string[];
+  note?: string;
+  /** rozliczenie podziału — wywołujący wie, gdzie je zapisać (strona źródła czy followup) */
+  blocks: BlockStats;
+}
+
 /**
  * `null` = ścieżka odmawia, wywołujący leci starą drogą.
  *
  * Wydarzenia wracają BEZ odsiewu minionych — odsiew robi wywołujący, na komplecie
  * (strona + followupy) i raz.
+ *
+ * Rozliczenie WRACA, zamiast wpisywać się w `SourceRun`: od czasu, gdy tą samą drogą chodzą
+ * followupy (process-source.ts), jedno źródło woła tę funkcję wielokrotnie i zapis w miejscu
+ * kazałby ostatniemu followupowi zamazać rozliczenie strony źródła.
  */
 export async function blockSource(
-  fetched: Fetched, url: string, state: PipelineState, run: SourceRun,
-): Promise<{ events: EventItem[]; followups: string[]; note?: string } | null> {
+  fetched: Fetched, url: string, state: PipelineState,
+): Promise<BlockOutcome | null> {
   const { blocks, how } = pageBlocks(fetched);
   if (blocks.length < MIN_BLOCKS) return null;
 
@@ -118,9 +130,11 @@ export async function blockSource(
   }
 
   const cached = blocks.length - fresh.length;
+  // `url` w śladzie, bo tą drogą chodzą teraz także followupy: bez adresu nie da się odróżnić
+  // podziału strony źródła od podziału jej podstrony, a to osobne rozliczenia
   audit("block",
     `podział: ${how} → ${blocks.length} bloków, ${cached} z cache, ${fresh.length} do modelu`,
-    { blocks: blocks.length, cached, fresh: fresh.length, how });
+    { blocks: blocks.length, cached, fresh: fresh.length, how, url });
 
   // PACZKAMI, nie po jednym bloku: prompt systemowy waży ~900 tokenów, więc wywołanie na blok
   // sprowadzało pierwszy przebieg źródła do kilkunastokrotności ceny jednego wywołania na całą
@@ -142,6 +156,9 @@ export async function blockSource(
     }
   }
 
-  run.blocks = { total: blocks.length, cached, fresh: fresh.length };
-  return { ...unionOf(blocks, state, today), ...(note ? { note } : {}) };
+  return {
+    ...unionOf(blocks, state, today),
+    ...(note ? { note } : {}),
+    blocks: { total: blocks.length, cached, fresh: fresh.length },
+  };
 }
