@@ -10,6 +10,8 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
+import { P } from "../config/index.js";
+
 interface RunEntry {
   sources: Array<{
     id: string; status: string; events: number; httpStatus?: number; chars?: number; err?: string;
@@ -65,7 +67,7 @@ async function main(): Promise<void> {
 
   if (diffs.length) {
     for (const d of diffs) console.log(`  ${d}`);
-    if (process.env["GITHUB_ACTIONS"]) {
+    if (P.GITHUB_ACTIONS.get()) {
       const msg = `noise-check: ${diffs.length}/${allIds.size} źródeł dało różny wynik między A i B`;
       console.log(`::warning::${msg} — patrz log`);
     }

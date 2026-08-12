@@ -11,34 +11,25 @@
  *     w którym wolumen spotyka się ze stawką, jest jednocześnie jedynym miejscem, gdzie
  *     widać różnicę między „kwotą od dostawcy" a „naszym szacunkiem" (pole `estimated`).
  *
- * Stawki (wszystkie opcjonalne, patrz .env.example):
- *   BD_COST_PER_RECORD          domyślnie 0.0015  ($1.5/1000 rekordów)
- *   SEARCH_COST_PER_QUERY       domyślnie 0.001   (Serper: ~$1/1000 po darmowych 2500)
- *   SUPABASE_COST_PER_GB_MONTH  domyślnie 0       (darmowy tier ~1 GB)
- *   SCRAPE_COST_PER_FETCH       domyślnie 0       (GH Actions dla repo publicznego)
- *   COST_MONTHLY_BUDGET_USD     domyślnie 15      (linia odniesienia w panelu)
- *   COST_RETENTION_DAYS         domyślnie 90
+ * Stawki (wszystkie opcjonalne, wartości domyślne i opis: src/config/params.ts):
+ *   BD_COST_PER_RECORD, SEARCH_COST_PER_QUERY, SUPABASE_COST_PER_GB_MONTH,
+ *   SCRAPE_COST_PER_FETCH, COST_MONTHLY_BUDGET_USD, COST_RETENTION_DAYS
  */
+import { P } from "../config/index.js";
 import { dayOffset } from "../shared/dates.js";
 import { collection } from "../storage/index.js";
 import type { CollectionStore, Retention } from "../storage/index.js";
 import type { CostCategory, CostDriver, CostEntry, CostLedger, CostRates, CostUnit } from "../types/index.js";
 
-const num = (name: string, fallback: number): number => {
-  const raw = process.env[name];
-  const v = raw === undefined ? Number.NaN : Number(raw);
-  return Number.isFinite(v) ? v : fallback;
-};
-
 export const costRates = (): CostRates => ({
-  bdPerRecord: num("BD_COST_PER_RECORD", 0.0015),
-  searchPerQuery: num("SEARCH_COST_PER_QUERY", 0.001),
-  storagePerGbMonth: num("SUPABASE_COST_PER_GB_MONTH", 0),
-  scrapePerFetch: num("SCRAPE_COST_PER_FETCH", 0),
-  monthlyBudgetUsd: num("COST_MONTHLY_BUDGET_USD", 15),
+  bdPerRecord: P.BD_COST_PER_RECORD.get(),
+  searchPerQuery: P.SEARCH_COST_PER_QUERY.get(),
+  storagePerGbMonth: P.SUPABASE_COST_PER_GB_MONTH.get(),
+  scrapePerFetch: P.SCRAPE_COST_PER_FETCH.get(),
+  monthlyBudgetUsd: P.COST_MONTHLY_BUDGET_USD.get(),
 });
 
-const RETENTION_DAYS = (): number => num("COST_RETENTION_DAYS", 90);
+const RETENTION_DAYS = (): number => P.COST_RETENTION_DAYS.get();
 
 /** Ile najdroższych pozycji zostaje przy wpisie. Reszta i tak jest w raporcie przebiegu. */
 const TOP_DRIVERS = 5;

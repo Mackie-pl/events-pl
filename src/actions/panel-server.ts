@@ -38,10 +38,11 @@ import {
   AUDIT_PATH, COSTS_PATH, DISCOVER_RUNS_PATH, EVENTS_PATH, REUSE_PATH, RUNS_PATH, SOURCES_PATH,
   YIELD_PATH,
 } from "../shared/paths.js";
+import { P } from "../config/index.js";
 
-const PORT = Number(process.env["ARCHIVE_PORT"] ?? 8787);
-const BUCKET = process.env["SUPABASE_BUCKET"] ?? "archive";
-const SUPABASE_URL = (process.env["SUPABASE_URL"] ?? "").replace(/\/+$/, "");
+const PORT = P.ARCHIVE_PORT.get();
+const BUCKET = P.SUPABASE_BUCKET.get();
+const SUPABASE_URL = (P.SUPABASE_URL.get() ?? "").replace(/\/+$/, "");
 const KEY = supabaseKey();
 
 /** Czy da się czytać archiwum. Brak konfiguracji nie jest błędem — wyłącza jedną z dwóch funkcji. */

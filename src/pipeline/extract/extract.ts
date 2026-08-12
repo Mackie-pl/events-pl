@@ -1,14 +1,22 @@
-/** Wywołania modelu wyciągające wydarzenia z tekstu strony albo z plakatu. */
+/**
+ * Wywołania modelu wyciągające wydarzenia z tekstu strony albo z plakatu.
+ *
+ * Zwracają DOKŁADNIE to, co powiedział model — z `repeat` na drucie i bez rozwinięcia rytmu.
+ * Rozwinięcie stało tu do 2026-08 i było błędem: wynik tych funkcji idzie prosto do cache'a
+ * kluczowanego hashem treści, a `expandRepeat` zależy od „dziś", więc cache zapisywał wartość
+ * zależną od wejścia, którego nie miał w kluczu. Rozwijaniem zajmuje się teraz wyjście
+ * z processSource — patrz nagłówek pipeline/series.ts.
+ */
 import { Value } from "@sinclair/typebox/value";
 
 import { MODEL_EXTRACT, chat, imagePart, wasTruncated } from "../../adapters/openrouter.js";
+import { P } from "../../config/index.js";
 import { audit } from "../../shared/audit.js";
 import { salvageArray } from "../../shared/json-salvage.js";
 import { fillMissing, toWireSchema } from "../../shared/json-schema.js";
 import { BatchExtractionSchema, EventSchema, ExtractionSchema } from "../../types/event-schema.js";
 import type { EventItem, ExtractionResult, Followup } from "../../types/index.js";
 import { POSTER_SYSTEM, batchExtractionSystem, extractionSystem } from "../prompts.js";
-import { expandRepeat } from "../series.js";
 
 const MAX_INPUT_CHARS = 40_000; // ~10k tokenów
 
@@ -20,7 +28,7 @@ const MAX_INPUT_CHARS = 40_000; // ~10k tokenów
  *
  * Podniesienie sufitu samo w sobie nie kosztuje — płacimy za tokeny faktycznie wygenerowane.
  */
-const MAX_TOKENS = Number(process.env["EXTRACT_MAX_TOKENS"] ?? 12_000);
+const MAX_TOKENS = (): number => P.EXTRACT_MAX_TOKENS.get();
 
 /**
  * Schemat wysyłany jako `response_format` — ten sam obiekt, z którego renderuje się blok
@@ -130,7 +138,7 @@ export async function extractEvents(text: string, sourceUrl: string): Promise<Ex
     task: "extract",
     system: extractionSystem(new Date().toISOString().slice(0, 10)),
     user: `ŹRÓDŁO: ${sourceUrl}\n\n${text.slice(0, MAX_INPUT_CHARS)}`,
-    maxTokens: MAX_TOKENS,
+    maxTokens: MAX_TOKENS(),
     schema: RESPONSE_SCHEMA,
     temperature: 0,
   });
@@ -143,14 +151,11 @@ export async function extractEvents(text: string, sourceUrl: string): Promise<Ex
     // osobny krok śladu: „zero wydarzeń" i „zero wydarzeń, bo nie dało się odczytać odpowiedzi"
     // wyglądały dotąd tak samo, a druga diagnoza jest naprawą w kodzie, nie w serwisie
     audit("llm", result.parse === "truncated"
-      ? `odpowiedź ucięta na limicie ${MAX_TOKENS} tok. — odzyskano ${result.recovered ?? 0} wydarzeń` +
+      ? `odpowiedź ucięta na limicie ${MAX_TOKENS()} tok. — odzyskano ${result.recovered ?? 0} wydarzeń` +
         " (podnieś EXTRACT_MAX_TOKENS)"
       : `nie dało się odczytać odpowiedzi modelu (${result.parse})`,
     { task: "extract", url: sourceUrl, why: result.parse });
   }
-  // po kroku „llm", nie przed: ten ma mówić, co zwrócił MODEL. Rozwinięcie rytmu jest
-  // decyzją potoku i dostaje własny krok śladu.
-  result.events = expandRepeat(result.events);
   return result;
 }
 
@@ -220,8 +225,6 @@ export function mapBatch(
     const target = slotOf(f);
     if (target && f.url && !target.followups.includes(f.url)) target.followups.push(f.url);
   }
-  for (const entry of byBlock.values()) entry.events = expandRepeat(entry.events);
-
   return { byBlock, unsafe: safeUpTo(seen, truncated, count), kept, orphans };
 }
 
@@ -236,7 +239,7 @@ export async function extractBatch(texts: string[], sourceUrl: string): Promise<
     task: "extract",
     system: batchExtractionSystem(new Date().toISOString().slice(0, 10)),
     user: `ŹRÓDŁO: ${sourceUrl}\n\n${user.slice(0, MAX_INPUT_CHARS)}`,
-    maxTokens: MAX_TOKENS,
+    maxTokens: MAX_TOKENS(),
     schema: RESPONSE_SCHEMA_BATCH,
     temperature: 0,
   });
@@ -252,12 +255,11 @@ export async function extractBatch(texts: string[], sourceUrl: string): Promise<
     orphans, unsafe: unsafe.size, url: sourceUrl });
   if (parsed.parse) {
     audit("llm", parsed.parse === "truncated"
-      ? `odpowiedź ucięta na limicie ${MAX_TOKENS} tok. — odzyskano ${kept} wydarzeń`
+      ? `odpowiedź ucięta na limicie ${MAX_TOKENS()} tok. — odzyskano ${kept} wydarzeń`
       : `nie dało się odczytać odpowiedzi modelu (${parsed.parse})`,
     { task: "extract", url: sourceUrl, why: parsed.parse });
   }
 
-  // rozwinięcie rytmu zrobił już mapBatch — drugi przebieg podwoiłby terminy serii
   return { byBlock, unsafe, ...(parsed.parse ? { parse: parsed.parse } : {}) };
 }
 
@@ -277,6 +279,5 @@ export async function extractPoster(
   const result = parseModelJson(out, wasTruncated());
   audit("llm", `odczyt plakatu (${img.mediaType}) → ${result.events.length} wydarzeń`,
     { model: MODEL_EXTRACT, task: "poster", events: result.events.length, url: sourceUrl });
-  result.events = expandRepeat(result.events);
   return result;
 }

@@ -6,7 +6,7 @@ import type { DiscoverRunReport, SourceVerification, TownDiscoveryRun } from "..
 
 import { costLine } from "./cost-ledger.js";
 import { DECISION_ICON, OUTCOME_ICON } from "./icons.js";
-import { md, writeSummary } from "./step-summary.js";
+import { md, summaryEnabled, writeSummary } from "./step-summary.js";
 
 /** Nagłówek: co to za przebieg, czy dobiegł końca i jakim kosztem. */
 function headerLines(report: DiscoverRunReport): string[] {
@@ -130,7 +130,7 @@ function verificationTable(verifications: SourceVerification[]): string[] {
 
 export function writeDiscoverSummary(report: DiscoverRunReport): void {
   // poza Actions nie ma czego pisać, a budowanie tabel na darmo tylko kosztuje
-  if (!process.env["GITHUB_STEP_SUMMARY"]) return;
+  if (!summaryEnabled()) return;
   writeSummary([
     ...headerLines(report),
     ...(report.towns.length ? [...townTable(report.towns), ...proposalTable(report.towns)] : []),

@@ -21,15 +21,20 @@ import { describeError } from "../../shared/errors.js";
 import { sha256 } from "../../shared/hash.js";
 import { urlKey } from "../../shared/url.js";
 import type {
-  EventItem, FbGroupStats, FollowupRun, PipelineError, PipelineState, Source, SourceRun,
+  EventItem, FollowupRun, PipelineError, PipelineState, Source, SourceRun,
 } from "../../types/index.js";
-import { fbGroupPostsToText, fbGroupStats, harvestEventUrls, isEventUrl } from "../facebook.js";
+import {
+  fbGroupPostsToText, fbGroupStats, fbPostExtras, harvestEventUrls, isEventUrl,
+} from "../facebook.js";
+import { expandRepeat } from "../series.js";
 
-import { dropPast } from "./block-cache.js";
+import { detach, dropPast } from "./block-cache.js";
 import { blockSource } from "./block-source.js";
+import { fixCalendarDates } from "./calendar-links.js";
 import { capabilitySource } from "./capability-source.js";
 import { entryUrl } from "./entry-url.js";
 import { noteFbGroup } from "./fb-group-blocked.js";
+import { auditFbGroup, auditFbPostExtras } from "./fb-group-trail.js";
 import { fbGroupLimit, noteFbGroupRate } from "./fb-group-limit.js";
 import {
   droppedInvalidStats, extractEvents, extractPoster, resetDroppedInvalid,
@@ -48,39 +53,6 @@ export function newSourceRun(src: Source, url: string, status: SourceRun["status
   };
 }
 
-/**
- * Ślad rytmu grupy FB.
- *
- * Ten krok NIE rusza jeszcze limitu — zapisuje liczby, na których decyzja o limicie liczonym
- * per grupa ma się dopiero oprzeć. Po drodze rozstrzyga rzecz nieudokumentowaną u dostawcy:
- * czy `limit_per_input` oddaje NAJNOWSZE posty, czy dowolne. Świeży `newest` przy nasyconym
- * limicie znaczy „najnowsze"; `newest` sprzed tygodni znaczy „dowolne" — a wtedy tempo
- * policzone z tego okna jest bez wartości i cały pomysł trzeba porzucić, zanim zacznie
- * sterować wydatkiem.
- */
-function auditFbGroup(s: FbGroupStats): void {
-  if (!s.posts) {
-    audit("fb.group",
-      `${s.records} płatnych rekordów, ani jednego postu — same wiersze błędu scrapera`,
-      { records: s.records, errorRows: s.errorRows, why: s.blockedWhy ?? null });
-    return;
-  }
-  const rate = s.postsPerDay === undefined
-    ? `wszystko z jednej chwili — tempa nie da się policzyć, wiadomo tylko ≥${s.posts}/dobę`
-    // okno krótsze od doby trafia w godziny szczytu i zawyża tempo (noc nic nie publikuje) —
-    // limit policzony z takiej próbki byłby za wysoki, czyli droższy
-    : `${s.postsPerDay} postów/dobę${(s.spanDays ?? 0) < 1 ? " (okno < doby — zawyżone)" : ""}`;
-  audit("fb.group",
-    `${s.posts} postów z ${s.records} płatnych rekordów · najnowszy ${s.newest}, najstarszy ${s.oldest} `
-    + `(okno ${s.spanDays} dni) → ${rate} · `
-    + (s.atLimit
-      ? `limit ${s.limit} wyczerpany, więc to DOLNA granica tempa`
-      : `limit ${s.limit} niewyczerpany, więc okno to cała dostępna grupa`),
-    {
-      posts: s.posts, records: s.records, newest: s.newest ?? null, oldest: s.oldest ?? null,
-      spanDays: s.spanDays ?? null, postsPerDay: s.postsPerDay ?? null, atLimit: s.atLimit,
-    });
-}
 
 /** Fetch wg strategii źródła; 403/429 przy zwykłym fetchu to zwykle anty-bot — jedna próba przez headless. */
 async function fetchSource(
@@ -101,6 +73,8 @@ async function fetchSource(
       // modelu już tylko jako napis, z którego nikt ich nie policzy
       run.fbGroup = fbGroupStats(records, limit);
       auditFbGroup(run.fbGroup);
+      // też PRZED spłaszczeniem: obrazy i miejsca giną w nim bezpowrotnie
+      auditFbPostExtras(fbPostExtras(records), run.fbGroup.posts);
       return { kind: "html", text: fbGroupPostsToText(records), httpStatus: 200 };
     } catch (e) {
       bdUsage.errors += 1;
@@ -182,7 +156,7 @@ async function processFollowup(
       ? (await extractPoster({ data: img.data, mediaType: img.mediaType }, url)).events
       : (await extractEvents(content, url)).events;
 
-    cache[url] = { hash, events: added, at: new Date().toISOString(), ...v };
+    cache[url] = { hash, events: detach(added), at: new Date().toISOString(), ...v };
     fr.events = added.length;
     audit("followup", `${fr.kind === "poster" ? "plakat" : "podstrona"} → ${added.length} wydarzeń`, { url });
     return fr;
@@ -198,20 +172,29 @@ async function processFollowup(
 
 /** Wydarzenia followupa — z cache po przetworzeniu (processFollowup zapisuje wynik do state). */
 const followupEvents = (url: string, state: PipelineState): EventItem[] =>
-  state.extractions?.[url]?.events ?? [];
+  detach(state.extractions?.[url]?.events ?? []);
 
 /**
- * ODSIEW MINIONYCH — jedno przewężenie dla OBU ścieżek, maszynowej i modelowej.
+ * DATY USTALANE „DZIŚ" — jedno przewężenie dla OBU ścieżek, maszynowej i modelowej.
  *
  * Każdy cache w tym potoku oddaje wydarzenia ocenione „dziś" sprzed wielu dni: blok czytany
  * tydzień temu, feed odtworzony z niezmienionej treści, plakat spod tego samego adresu.
- * Dlatego odsiew nie może stać przy ŹRÓDLE wydarzeń, tylko przy wyjściu z `processSource` —
- * inaczej każda nowa ścieżka musiałaby pamiętać, żeby go powtórzyć, a jedna już zapomniała:
- * `capabilitySource` wracał wcześniej prosto do `finalize`, z pominięciem filtra. W events.json
- * dało to 62 wydarzenia minione JUŻ W DNIU PUBLIKACJI, z czego połowa z tej ścieżki.
+ * Dlatego nic, co zależy od dzisiejszej daty, nie może stać przy ŹRÓDLE wydarzeń — tylko tu,
+ * przy wyjściu z `processSource`. Inaczej każda nowa ścieżka musiałaby pamiętać, żeby to
+ * powtórzyć, a zapomniały już dwie:
+ *
+ *  - `capabilitySource` wracał prosto do `finalize`, z pominięciem odsiewu minionych.
+ *    W events.json dało to 62 wydarzenia minione JUŻ W DNIU PUBLIKACJI, połowa z tej ścieżki.
+ *  - `expandRepeat` siedziało w `extractEvents`, czyli PRZED zapisem do cache'a, więc cache
+ *    trzymał terminy policzone względem dnia pierwszej ekstrakcji. Odtworzenie z cache'a
+ *    dokładało wtedy po jednym duplikacie na przebieg (patrz block-cache.ts, `detach`).
+ *
+ * Kolejność w środku jest wymuszona: najpierw rozwinięcie rytmu, potem odsiew. Odwrotnie
+ * odsiew oglądałby zakres rytmu („do 12.08") zamiast jego terminów i przepuszczał wpisy,
+ * których wszystkie terminy już minęły.
  */
-function keepFuture(events: EventItem[], run: SourceRun): EventItem[] {
-  const past = dropPast(events);
+function settleDates(events: EventItem[], run: SourceRun): EventItem[] {
+  const past = dropPast(expandRepeat(events));
   if (past.dropped) {
     audit("event.past", `${past.dropped} wydarzeń już się odbyło — nie idą do scalania`,
       { dropped: past.dropped, kept: past.kept.length });
@@ -282,9 +265,9 @@ export async function processSource(
   // dalej normalnie. Powód zejścia zostaje w śladzie jako `capability.fallback`.
   const viaCapability = await capabilitySource(src, state, run);
   if (viaCapability) {
-    // przez ten sam odsiew, co ścieżka modelowa: `from-capability.ts` odrzuca minione przy
+    // przez to samo przewężenie, co ścieżka modelowa: `from-capability.ts` odrzuca minione przy
     // MAPOWANIU, ale wynik odtworzony z cache'a był mapowany innego dnia i zdążył się zestarzeć
-    const events = keepFuture(viaCapability, run);
+    const events = settleDates(viaCapability, run);
     await attachGeo(events, src, state, run);
     run.status = events.length > 0 ? (run.changed === false ? "unchanged" : "ok") : "empty";
     audit("done",
@@ -322,6 +305,21 @@ export async function processSource(
     url, strategy: src.fetch, httpStatus: fetched.httpStatus,
   });
 
+  // TU, przed hashem i podziałem na bloki, a nie przy wywołaniu modelu: gdyby poprawka szła
+  // dopiero do promptu, hash treści i hashe bloków zostałyby stare, cache trafiłby i oddał
+  // wydarzenia z fałszywą godziną — poprawka zadziałałaby dopiero, gdy serwis sam się zmieni.
+  // Kosztem jest jednorazowe przeczytanie tych źródeł od nowa (jak przy kodowaniu, TODO 7).
+  if (fetched.kind !== "not-modified") {
+    const cal = fixCalendarDates(fetched.text);
+    if (cal.fixed) {
+      fetched = { ...fetched, text: cal.text };
+      audit("content",
+        `${cal.fixed}× widget „dodaj do kalendarza" z godziną początku równą końcowi — `
+        + "zdjęta część godzinowa, bo to wpis całodniowy zapisany źle",
+        { fixedCalendarDates: cal.fixed });
+    }
+  }
+
   // --- strona źródła: 304 albo ten sam hash => wydarzenia z cache, bez wywołania LLM ---
   let pageEvents: EventItem[];
   let followupUrls: string[];
@@ -329,7 +327,7 @@ export async function processSource(
   if (fetched.kind === "not-modified" && cached) {
     run.changed = false;
     run.kind = "html";
-    pageEvents = cached.events;
+    pageEvents = detach(cached.events);
     followupUrls = state.followupsBySource?.[src.id] ?? [];
     audit("content", "HTTP 304 — serwer potwierdził brak zmian, treści w ogóle nie pobieraliśmy");
     audit("cache.hit", `${pageEvents.length} wydarzeń z cache (ekstrakcja z ${cached.at.slice(0, 10)})`,
@@ -368,7 +366,7 @@ export async function processSource(
       // treść bez zmian — odświeżamy tylko walidatory, wydarzenia zostają
       cache[src.id] = { ...cached, ...v, at: new Date().toISOString() };
       run.changed = false;
-      pageEvents = cached.events;
+      pageEvents = detach(cached.events);
       followupUrls = state.followupsBySource?.[src.id] ?? [];
       audit("content", `${fetched.text.length} znaków, ten sam hash co poprzednio — bez wywołania modelu`,
         { chars: fetched.text.length, hash: hash.slice(0, 12) });
@@ -401,7 +399,7 @@ export async function processSource(
       }
       // cache po haszu CAŁEJ strony zostaje obok blokowego: gdy jutro strona wróci bajt
       // w bajt taka sama, nie ma po co jej nawet dzielić
-      cache[src.id] = { hash, events: pageEvents, at: new Date().toISOString(), ...v };
+      cache[src.id] = { hash, events: detach(pageEvents), at: new Date().toISOString(), ...v };
       state.hashes[src.id] = hash; // legacy, dla zgodności ze starym state.json
       followupUrls = proposed.slice(0, MAX_FOLLOWUPS_PER_SOURCE);
       if (proposed.length) {
@@ -451,7 +449,7 @@ export async function processSource(
     if (fr.outcome !== "error") collected.push(...followupEvents(fuUrl, state));
   }
 
-  const events = keepFuture(collected, run);
+  const events = settleDates(collected, run);
 
   await attachGeo(events, src, state, run);
 

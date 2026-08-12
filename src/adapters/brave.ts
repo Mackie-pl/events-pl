@@ -8,24 +8,25 @@
  *
  * Budżet i wyłącznik przebiegu mieszkają w `search.ts` — tu jest wyłącznie jedno zapytanie.
  */
+import { P } from "../config/index.js";
 import { describeError } from "../shared/errors.js";
 import { trim } from "../shared/text.js";
 import type { SearchCall, SearchProviderOutcome } from "../types/index.js";
 
 import { fetchUrl } from "./http.js";
 
-const BRAVE_URL = process.env["BRAVE_URL"] ?? "https://api.search.brave.com/res/v1/web/search";
+
 const MAX_DESC_CHARS = 300;
 
 /** Darmowy tier Brave dopuszcza 1 zapytanie na sekundę. */
 export const RATE_LIMIT_MS = 1_100;
 
 export async function search(query: string, call: SearchCall): Promise<SearchProviderOutcome> {
-  const key = process.env["BRAVE_API_KEY"];
+  const key = P.BRAVE_API_KEY.get();
   if (!key) return { results: [], fatal: "brak BRAVE_API_KEY" };
   try {
     const res = await fetchUrl(
-      `${BRAVE_URL}?${new URLSearchParams({ q: query, count: "8", country: "pl" }).toString()}`,
+      `${P.BRAVE_URL.get()}?${new URLSearchParams({ q: query, count: "8", country: "pl" }).toString()}`,
       { headers: { "X-Subscription-Token": key } },
       20_000,
       "Brave Search",

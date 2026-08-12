@@ -7,7 +7,7 @@ import { strict as assert } from "node:assert";
 import { describe, it } from "node:test";
 
 import {
-  fbEventToItem, fbGroupPostsToText, fbGroupStats, harvestEventUrls, isEventUrl,
+  fbEventToItem, fbGroupPostsToText, fbGroupStats, fbPostExtras, harvestEventUrls, isEventUrl,
 } from "../src/pipeline/facebook.js";
 
 describe("harvestEventUrls", () => {
@@ -186,5 +186,60 @@ describe("fbGroupStats", () => {
   it("pusta odpowiedź nie udaje pomiaru", () => {
     const s = fbGroupStats([], 50);
     assert.deepEqual(s, { records: 0, posts: 0, errorRows: 0, limit: 50, atLimit: false });
+  });
+});
+
+/**
+ * Pomiar tego, co ginie w spłaszczaniu. Cała wartość tej funkcji polega na tym, że ZGADUJE
+ * kształt — nazwy pól datasetu nie znamy — więc test sprawdza każdy wariant, w jakim scrapery
+ * oddają obrazy. Funkcja, która po cichu zwraca zero, jest tu gorsza niż jej brak: kazałaby
+ * uznać, że plakatów nie ma.
+ */
+describe("fbPostExtras — co jest w rekordzie, a nie dochodzi do modelu", () => {
+  const withImage = (over: Record<string, unknown>) => ({ content: "Ogłoszenie", ...over });
+
+  it("znajduje URL niezależnie od kształtu pola", () => {
+    const url = "https://scontent.xx.fbcdn.net/v/t39/plakat.jpg?stp=dst-jpg";
+    const kształty: Record<string, unknown>[] = [
+      { post_image: url },
+      { photos: [url] },
+      { attachments: [{ url }] },
+      { media: [{ src: url }] },
+    ];
+    for (const k of kształty) {
+      const x = fbPostExtras([withImage(k)]);
+      assert.equal(x.withImage, 1, JSON.stringify(k));
+      assert.equal(x.sampleImage, url, JSON.stringify(k));
+      assert.equal(x.imageField, Object.keys(k)[0]);
+    }
+  });
+
+  it("liczy POSTY, nie obrazy — post z galerią to nadal jeden post", () => {
+    const x = fbPostExtras([withImage({ photos: ["https://a.test/1.jpg", "https://a.test/2.jpg"] })]);
+    assert.equal(x.withImage, 1);
+  });
+
+  it("nie liczy wierszy błędu scrapera jako postów z obrazem", () => {
+    const x = fbPostExtras([{ error: "Group is private", thumbnail: "https://a.test/x.jpg" }]);
+    assert.equal(x.withImage, 0);
+    assert.equal(x.imageField, null);
+  });
+
+  it("wartość, która nie jest URL-em, nie udaje obrazu", () => {
+    const x = fbPostExtras([withImage({ image: "brak" }), withImage({ photos: [] })]);
+    assert.equal(x.withImage, 0);
+    assert.equal(x.sampleImage, null);
+  });
+
+  it("osobno raportuje miejsce, które spłaszczanie też gubi", () => {
+    const x = fbPostExtras([withImage({ location: "Jezioro Strzeszyńskie" })]);
+    assert.equal(x.withPlace, 1);
+    assert.equal(x.placeField, "location");
+  });
+
+  it("pusta odpowiedź nie udaje pomiaru", () => {
+    assert.deepEqual(fbPostExtras([]), {
+      imageField: null, withImage: 0, placeField: null, withPlace: 0, sampleImage: null,
+    });
   });
 });

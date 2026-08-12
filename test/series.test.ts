@@ -13,9 +13,11 @@
 import { strict as assert } from "node:assert";
 import { beforeEach, describe, it } from "node:test";
 
+import { detach, lastDay } from "../src/pipeline/extract/block-cache.js";
 import { expandRepeat, foldSeries } from "../src/pipeline/series.js";
 import { auditTrails, beginAuditRun } from "../src/shared/audit.js";
 import { MAX_OCCURRENCES, occursIn, parseRepeat, seriesLabel } from "../src/shared/series.js";
+import type { EventItem } from "../src/types/index.js";
 
 import { event } from "./helpers.js";
 
@@ -82,6 +84,54 @@ describe("expandRepeat — rytm na terminy", () => {
     assert.match(auditTrails()[0]?.steps[0]?.note ?? "", /nie da się odczytać/);
   });
 
+  it("nierozwinięty rytm NIE zostaje zakresem — inaczej digest wypisze zły dzień", () => {
+    // „Mała Zielarnia": rytm „pt,nd", zakres 03.07–12.08, a 12.08 to środa. Zakres czytany
+    // przez occursIn jako „trwa bez przerwy" wypisał zajęcia na dzień, w którym ich nie ma.
+    const [out] = expandRepeat(
+      [event({ repeat: "pt,nd", date_start: "2026-07-03", date_end: "2026-08-12" })], "2026-08-12",
+    );
+
+    assert.equal(out?.date_end, null, "zakres rytmu nie jest czasem trwania");
+    assert.equal(out?.date_start, "2026-07-03");
+    assert.deepEqual(
+      occursIn(out, "2026-08-12", "2026-08-12"), [], "nie pokazuje się w środę",
+    );
+    assert.match(auditTrails()[0]?.steps[1]?.note ?? "", /nie znaczy/);
+  });
+
+  it("ostatni termin rytmu ZOSTAJE — odsiewamy zjawy, nie prawdziwe zajęcia", () => {
+    // druga „Mała Zielarnia", z innej podstrony tego samego serwisu: rytm „sr", ten sam
+    // zakres do 12.08. Ta środa jest prawdziwa i ma się wypisać, choć rytm nie dał serii.
+    const [out] = expandRepeat(
+      [event({ repeat: "sr", date_start: "2026-08-05", date_end: "2026-08-12" })], "2026-08-12",
+    );
+
+    assert.equal(out?.date_start, "2026-08-12", "wpis schodzi na swój jedyny pozostały termin");
+    assert.equal(out?.date_end, null);
+    assert.deepEqual(occursIn(out, "2026-08-12", "2026-08-12"), ["2026-08-12"]);
+  });
+
+  it("rytm bez ani jednego terminu w zakresie zostawia ślad", () => {
+    // jedyna gałąź, która milczała — a to ona stała za wpisem wypisanym na zły dzień
+    expandRepeat(
+      [event({ repeat: "pt,nd", date_start: "2026-07-03", date_end: "2026-08-12" })], "2026-08-12",
+    );
+    assert.match(auditTrails()[0]?.steps[0]?.note ?? "", /nie ma już ani jednego terminu/);
+  });
+
+  it("zdejmuje `repeat` i `dates` — za tą granicą kształt jest rozstrzygnięty", () => {
+    // rekord z `repeat` I `dates` naraz to dokładnie ta trucizna, którą zastaliśmy w state.json
+    const zatruty = event({
+      repeat: "nd", date_start: "2026-08-09", date_end: "2026-08-30",
+      dates: ["2026-08-09", "2026-08-16", "2026-08-23", "2026-08-30"],
+    });
+    const out = expandRepeat([zatruty], TODAY);
+
+    assert.equal(out.every((e) => e.repeat === ""), true, "rytm rozliczony, nie przechodzi dalej");
+    assert.equal(out.every((e) => e.dates === undefined), true, "stara lista terminów nie dziedziczy się");
+    assert.equal(out.every((e) => e.date_end === null), true);
+  });
+
   it("przycina początek do dziś — plakat na cały sezon przychodzi w jego połowie", () => {
     const out = expandRepeat(
       [event({ repeat: "sb", date_start: "2026-06-20", date_end: "2026-08-15" })], TODAY,
@@ -126,9 +176,21 @@ describe("foldSeries — powtórzenia w jeden wpis", () => {
     assert.equal(r.events.length, 1);
     assert.deepEqual(r.events[0]?.dates, ["2026-08-03", "2026-08-05", "2026-08-06"]);
     assert.equal(r.events[0]?.date_start, "2026-08-03", "pierwszy termin zostaje datą startu");
-    assert.equal(r.events[0]?.date_end, "2026-08-06", "date_end to ostatni termin serii");
+    assert.equal(r.events[0]?.date_end, null, "seria NIE jest zakresem — ostatni termin stoi w dates");
+    assert.equal(lastDay(r.events[0]), "2026-08-06", "ostatni dzień liczy lastDay, nie date_end");
     assert.equal(r.dropped.length, 2);
     assert.equal(r.dropped[0]?.winner, r.events[0], "wchłonięty wskazuje na wpis serii");
+  });
+
+  it("zwiniętej serii nie zwija po raz drugi", () => {
+    // `dates` to znacznik „już seria". Dotąd tę rolę pełniło `date_end`, czyli pole danych,
+    // i właśnie stąd brał się jeden duplikat na przebieg.
+    const once = foldSeries([zajecia("2026-08-03", "a"), zajecia("2026-08-05", "b")]);
+    const twice = foldSeries(once.events);
+
+    assert.equal(twice.events.length, 1);
+    assert.equal(twice.dropped.length, 0, "nie ma czego zwijać po raz drugi");
+    assert.deepEqual(twice.events[0]?.dates, ["2026-08-03", "2026-08-05"]);
   });
 
   it("różnica W TREŚCI, nie w terminie, zostaje osobnym wydarzeniem", () => {
@@ -183,6 +245,54 @@ describe("foldSeries — powtórzenia w jeden wpis", () => {
     assert.equal(r.events.length, 1);
     assert.deepEqual(r.events[0]?.dates,
       ["2026-08-01", "2026-08-02", "2026-08-08", "2026-08-09"]);
+  });
+});
+
+/**
+ * Regresja na „Joga na trawie" (gosir-dopiewo, 2026-08): z jednego wydarzenia zrobiły się
+ * cztery, po jednym duplikacie na przebieg. Składały się na to trzy rzeczy i test pilnuje
+ * wszystkich, bo każda z osobna wystarczy, żeby wróciło: cache trzymał rekordy ROZWINIĘTE
+ * (wartość zależna od „dziś" pod kluczem z samej treści), potok MUTOWAŁ obiekty cache'a,
+ * a `date_end` w roli znacznika „już zwinięte" czyniło każdą taką mutację nieodwracalną.
+ */
+describe("odtworzenie z cache'a nie mnoży wydarzeń", () => {
+  /** Dokładnie to, co powiedział model — bez rozwinięcia, tak jak leży teraz w cache'u. */
+  const surowy = () => event({
+    title: "Joga na trawie", repeat: "nd", date_start: "2026-08-09", date_end: "2026-08-30",
+    time_start: "11:00", venue: "Owocowa Plaża w Zborowie", town: "Zborów",
+    source_id: "gosir-dopiewo-kalendarz",
+  });
+
+  /** Jeden przebieg nad NIEZMIENIONYM cache'em: odczep kopię, rozwiń, zwiń. */
+  const przebieg = (cache: EventItem[], today: string): EventItem[] =>
+    foldSeries(expandRepeat(detach(cache), today)).events;
+
+  it("cztery przebiegi nad tym samym cache'em dają jedno wydarzenie, nie cztery", () => {
+    const cache = [surowy()];
+    for (const today of ["2026-08-09", "2026-08-10", "2026-08-11", "2026-08-12"]) {
+      const out = przebieg(cache, today);
+      assert.equal(out.length, 1, `przebieg ${today} zwrócił ${out.length} rekordów`);
+    }
+  });
+
+  it("przebieg nie zostawia śladu w cache'u — ani rozwinięcia, ani zwinięcia", () => {
+    const cache = [surowy()];
+    przebieg(cache, "2026-08-10");
+
+    assert.deepEqual(cache, [surowy()], "cache po przebiegu jest bajt w bajt tym, co był");
+  });
+
+  it("terminy liczą się od DZIŚ, więc każdy przebieg widzi inną serię — i to jest poprawne", () => {
+    const cache = [surowy()];
+    assert.deepEqual(przebieg(cache, "2026-08-10")[0]?.dates,
+      ["2026-08-16", "2026-08-23", "2026-08-30"]);
+    assert.deepEqual(przebieg(cache, "2026-08-20")[0]?.dates,
+      ["2026-08-23", "2026-08-30"]);
+    // ostatni termin: rytmu nie da się już rozwinąć, zostaje wpis jednodniowy
+    const koniec = przebieg(cache, "2026-08-28");
+    assert.equal(koniec[0]?.date_start, "2026-08-30");
+    assert.equal(koniec[0]?.dates, undefined);
+    assert.equal(koniec[0]?.date_end, null);
   });
 });
 

@@ -111,6 +111,78 @@ describe("scalanie po zawieraniu tytułu", () => {
   });
 });
 
+/**
+ * Reguła 2: wspólny dzień + tytuł identyczny. Wszystkie atrapy to prawdziwe rekordy
+ * z state.json (okpoznan-wydarzenia, 2026-08-11) — serwis wypisuje tę samą wystawę
+ * w dwóch blokach jednej strony, raz jako zakres, raz jako rytm „codziennie".
+ */
+describe("scalanie po wspólnym dniu", () => {
+  const wystawa = "Rodzinna wystawa sensoryczna \"Mela i szczun na historycznej ścieżce\"";
+  /** Zakres z listy wystaw. */
+  const zakres = () => ev(wystawa, { date_start: "2026-07-28", date_end: "2026-10-06" });
+  /** Termin z listy „co się dzieje w tym tygodniu", po rozwinięciu rytmu „codziennie". */
+  const termin = (date: string) => ev(wystawa, { date_start: date });
+
+  it("zakres wchłania termin, który w niego wpada, choć daty startu się różnią", () => {
+    const r = dedupe([zakres(), termin("2026-08-12")]);
+
+    assert.equal(r.events.length, 1);
+    assert.equal(r.events[0]?.date_end, "2026-10-06", "zostaje zakres, nie wycinek");
+    assert.equal(r.dropped[0]?.why, "zawieranie");
+  });
+
+  it("zakres wchłania WSZYSTKIE rozwinięte terminy, nie tylko pierwszy", () => {
+    // to jest powód, dla którego zakres bije termin: gdyby wygrał pierwszy termin,
+    // pozostałe nie miałyby już z czym się scalać i zostałyby w events.json
+    const terminy = ["2026-08-12", "2026-08-13", "2026-08-14", "2026-08-15"].map(termin);
+    for (const wejscie of [[zakres(), ...terminy], [...terminy, zakres()]]) {
+      const r = dedupe(wejscie);
+      assert.equal(r.events.length, 1, "kolejność wejścia nie może zmieniać wyniku");
+      assert.equal(r.events[0]?.date_end, "2026-10-06");
+      assert.equal(r.dropped.length, 4);
+      for (const d of r.dropped) {
+        assert.equal(d.winner, r.events[0], "każdy przegrany wskazuje rekord z events.json");
+      }
+    }
+  });
+
+  it("termin POZA zakresem zostaje osobno", () => {
+    const r = dedupe([zakres(), termin("2026-10-07")]);
+    assert.equal(r.events.length, 2);
+  });
+
+  it("różne miejscowości nie scalają się nawet przy wspólnym dniu", () => {
+    // ta sama wystawa opisana raz jako Wolsztyn, raz jako Poznań — zostaje do osobnej decyzji
+    const r = dedupe([
+      ev("Wolsztyn. Historia napędzana parą", { date_start: "2026-08-03", date_end: "2026-09-30" }),
+      ev("Wolsztyn. Historia napędzana parą", { date_start: "2026-08-12", town: "Wolsztyn" }),
+    ]);
+    assert.equal(r.events.length, 2);
+  });
+
+  /**
+   * Ostrożność reguły 2 w jednym teście: przy tytule ZAWARTYM (a nie identycznym) zakres
+   * cyklu wchłonąłby każdy swój seans, bo nazwa cyklu zawiera się w nazwie seansu, a dzień
+   * seansu zawsze wpada w zakres cyklu.
+   */
+  it("zakres cyklu NIE wchłania swojego seansu — tytuł musi być identyczny", () => {
+    const r = dedupe([
+      ev("Lato z Estradą", { date_start: "2026-06-01", date_end: "2026-08-31" }),
+      ev("Lato z Estradą - Żegrze - seans kina plenerowego", { date_start: "2026-08-12" }),
+    ]);
+    assert.equal(r.events.length, 2);
+  });
+
+  it("dwa zakresy tego samego wydarzenia o różnych granicach scalają się", () => {
+    // „Pokonał Krzyżaka" stał w state.json jako 28.07–21.11 i jako 03.08–30.09
+    const r = dedupe([
+      ev("Pokonał Krzyżaka, zaczarował Strach", { date_start: "2026-07-28", date_end: "2026-11-21" }),
+      ev("Pokonał Krzyżaka, zaczarował Strach", { date_start: "2026-08-03", date_end: "2026-09-30" }),
+    ]);
+    assert.equal(r.events.length, 1);
+  });
+});
+
 describe("współpraca obu przejść", () => {
   it("identyczne tytuły nadal scala pierwsze przejście, z własnym powodem", () => {
     const r = dedupe([ev("Dożynki Gminne"), ev("Dożynki Gminne")]);

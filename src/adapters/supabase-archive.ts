@@ -18,14 +18,15 @@
  * Bucket musi być PRYWATNY.
  */
 
+import { P } from "../config/index.js";
 import { fetchUrl } from "./http.js";
 import { describeError } from "../shared/errors.js";
 import { sha256 } from "../shared/hash.js";
 import type { LlmCallRecord } from "./openrouter.js";
 
-const BUCKET = process.env["SUPABASE_BUCKET"] ?? "archive";
+const BUCKET = (): string => P.SUPABASE_BUCKET.get();
 /** Retencja: pomocnicze, do cyklicznego czyszczenia (Supabase nie ma lifecycle rules). */
-export const RETENTION_DAYS = Number(process.env["ARCHIVE_RETENTION_DAYS"] ?? 90);
+export const RETENTION_DAYS = (): number => P.ARCHIVE_RETENTION_DAYS.get();
 
 export interface ArchiveStats {
   uploaded: number;
@@ -53,7 +54,7 @@ let authBroken = false;
  * wyłączył archiwum mimo poprawnie ustawionego SUPABASE_SERVICE_ROLE_KEY.
  */
 export const supabaseKey = (): string =>
-  process.env["SUPABASE_SECRET_KEY"] || process.env["SUPABASE_SERVICE_ROLE_KEY"] || "";
+  P.SUPABASE_SECRET_KEY.get() || P.SUPABASE_SERVICE_ROLE_KEY.get() || "";
 
 /**
  * Wczesne ostrzeżenie przed najczęstszą pomyłką: klucz publiczny (publishable/anon)
@@ -96,7 +97,7 @@ export function suppressArchive(on: boolean): void {
 
 const cfg = (): { url: string; key: string } | null => {
   if (suppressed) return null;
-  const url = process.env["SUPABASE_URL"];
+  const url = P.SUPABASE_URL.get();
   const key = supabaseKey();
   return url && key ? { url: url.replace(/\/+$/, ""), key } : null;
 };
@@ -140,7 +141,7 @@ export async function put(path: string, body: string, contentType = "application
   if (authBroken) { stats.skipped++; return false; }
   try {
     const res = await fetchUrl(
-      `${c.url}/storage/v1/object/${BUCKET}/${path}`,
+      `${c.url}/storage/v1/object/${BUCKET()}/${path}`,
       {
         method: "POST",
         headers: {
@@ -151,7 +152,7 @@ export async function put(path: string, body: string, contentType = "application
         body,
       },
       30_000,
-      `Supabase Storage ${BUCKET}/${path}`, // label: URL nie zawiera klucza, ale trzymamy spójny opis
+      `Supabase Storage ${BUCKET()}/${path}`, // label: URL nie zawiera klucza, ale trzymamy spójny opis
     );
     if (!res.ok) {
       stats.failed++;
@@ -212,14 +213,14 @@ export async function listArchive(prefix: string): Promise<ArchiveEntry[]> {
     let page: { name: string; id: string | null; metadata: { size?: number } | null }[];
     try {
       const res = await fetchUrl(
-        `${c.url}/storage/v1/object/list/${BUCKET}`,
+        `${c.url}/storage/v1/object/list/${BUCKET()}`,
         {
           method: "POST",
           headers: { ...authHeaders(c.key), "Content-Type": "application/json" },
           body: JSON.stringify({ prefix, limit, offset, sortBy: { column: "name", order: "asc" } }),
         },
         30_000,
-        `Supabase Storage list ${BUCKET}/${prefix}`,
+        `Supabase Storage list ${BUCKET()}/${prefix}`,
       );
       if (!res.ok) {
         console.warn(`archiwum: listing ${prefix} → HTTP ${res.status} ${(await res.text()).slice(0, 200)}`);
@@ -241,10 +242,10 @@ export async function getArchive(path: string): Promise<string | null> {
   if (!c) return null;
   try {
     const res = await fetchUrl(
-      `${c.url}/storage/v1/object/${BUCKET}/${path}`,
+      `${c.url}/storage/v1/object/${BUCKET()}/${path}`,
       { headers: authHeaders(c.key) },
       30_000,
-      `Supabase Storage get ${BUCKET}/${path}`,
+      `Supabase Storage get ${BUCKET()}/${path}`,
     );
     if (!res.ok) return null;
     return await res.text();

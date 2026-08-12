@@ -9,13 +9,14 @@
  * w logach, w `SearchCall.query` raportu i w komunikatach błędów `fetchUrl`, a `discover-runs.json`
  * jest commitowany do PUBLICZNEGO repo. To ta sama zasada, dla której `fetchUrl` przyjmuje `label`.
  */
+import { P } from "../config/index.js";
 import { describeError } from "../shared/errors.js";
 import { trim } from "../shared/text.js";
 import type { SearchCall, SearchProviderOutcome } from "../types/index.js";
 
 import { fetchUrl } from "./http.js";
 
-const SERPER_URL = process.env["SERPER_URL"] ?? "https://google.serper.dev/search";
+
 const MAX_DESC_CHARS = 300;
 
 /**
@@ -39,12 +40,12 @@ export function readError(body: string): string {
 }
 
 export async function search(query: string, call: SearchCall): Promise<SearchProviderOutcome> {
-  const key = process.env["SERPER_API_KEY"];
+  const key = P.SERPER_API_KEY.get();
   if (!key) return { results: [], fatal: "brak SERPER_API_KEY" };
 
   try {
     const res = await fetchUrl(
-      SERPER_URL,
+      P.SERPER_URL.get(),
       {
         method: "POST",
         headers: { "X-API-KEY": key, "Content-Type": "application/json" },

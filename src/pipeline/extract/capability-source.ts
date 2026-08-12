@@ -21,6 +21,7 @@ import type {
   CachedExtraction, EventItem, PipelineState, Source, SourceCapability, SourceRun,
 } from "../../types/index.js";
 
+import { detach } from "./block-cache.js";
 import {
   bestCapability, type CapabilityYield, capabilityEvents, hashableFeed,
 } from "./from-capability.js";
@@ -81,7 +82,7 @@ async function fetchFeed(
       return null;
     }
     audit("content", "HTTP 304 — serwer potwierdził brak zmian, treści w ogóle nie pobieraliśmy");
-    return { events: replay(cached, cap, run) };
+    return { events: detach(replay(cached, cap, run)) };
   }
 
   run.chars = fetched.text.length;
@@ -149,7 +150,7 @@ export async function capabilitySource(
   // Tu, a nie w attachGeo: tam `??=` celowo nie rusza `""` i zmiana ruszyłaby ścieżkę modelu.
   for (const ev of plon.events) ev.town ||= src.town;
 
-  cache[src.id] = { hash, events: plon.events, at: new Date().toISOString(), ...v };
+  cache[src.id] = { hash, events: detach(plon.events), at: new Date().toISOString(), ...v };
   state.hashes[src.id] = hash; // legacy, dla zgodności ze starym state.json
   return plon.events;
 }

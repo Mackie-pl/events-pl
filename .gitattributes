@@ -1,3 +1,7 @@
 # Hooki muszą mieć LF-y: core.autocrlf=true przepisałby je na CRLF, a wtedy Git Bash
 # wywala się na shebangu (`/bin/sh^M: bad interpreter`).
 .githooks/** text eol=lf
+
+# Plik generowany (npm run env:example). Bez wymuszonego LF-a autocrlf robiłby z checkoutu
+# CRLF-y, a generator i tak pisze LF — czyli plik byłby „zmieniony" zaraz po sklonowaniu.
+.env.example text eol=lf

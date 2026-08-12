@@ -166,6 +166,83 @@ export function fbGroupStats(records: BdRecord[], limit: number): FbGroupStats {
  * Posty z grupy FB (rekordy Bright Data) → jeden blok tekstu dla ekstraktora LLM.
  * Zachowujemy datę i link postu, żeby model mógł wywnioskować rok i osadzić source_url.
  */
+/**
+ * Co jeszcze siedzi w opłaconym rekordzie, a czego NIE dostaje model.
+ *
+ * Spłaszczanie do tekstu bierze wyłącznie treść postu, więc plakat — na którym u wielu
+ * ogłoszeń stoi całe „gdzie" — nie istnieje dla potoku. Zmierzone na „W podwodnym świecie"
+ * (fb-group-wydarzenia-w-poznaniu-1, 2026-08-12): wydarzenie weszło do digestu z `venue: ""`,
+ * bo lokalizacja była tylko na obrazku.
+ *
+ * To POMIAR, nie naprawa: nazwy pól datasetu Bright Data nie znamy (BdRecord to
+ * `Record<string, unknown>`, a archiwum trzyma tekst już po spłaszczeniu), a wstawienie pola
+ * o nieznanym znaczeniu do promptu groziłoby wymyślonym miejscem. Najpierw ślad mówi, KTÓRE
+ * pole niesie obraz i w ilu postach — dopiero to jest wejściem do decyzji o czytaniu plakatów.
+ */
+export interface FbPostExtras {
+  /** pole z obrazem, pierwsze rozpoznane; null = w żadnym poście nic nie znaleziono */
+  imageField: string | null;
+  /** ile POSTÓW (nie rekordów) ma choć jeden obraz */
+  withImage: number;
+  /** pole z miejscem/adresem postu, jeśli scraper takie oddaje */
+  placeField: string | null;
+  withPlace: number;
+  /** jeden URL do obejrzenia w śladzie — czy w ogóle da się go pobrać bez ciasteczek FB */
+  sampleImage: string | null;
+}
+
+/** Kolejność od najbardziej konkretnego: pierwsze pole z URL-em wygrywa i trafia do śladu. */
+const IMAGE_KEYS = [
+  "attachments", "photos", "images", "post_image", "post_images",
+  "image", "photo", "media", "attachment", "thumbnail",
+];
+
+const PLACE_KEYS = ["location", "place", "place_name", "venue", "location_name", "address"];
+
+/**
+ * URL-e ukryte w wartości pola. Scrapery oddają obrazy raz jako string, raz jako listę
+ * stringów, raz jako listę obiektów `{url}` — a nazwy pól bywają różne między wersjami,
+ * więc zgadujemy kształt, nie polegamy na jednym.
+ */
+function urlsIn(value: unknown, depth = 0): string[] {
+  if (typeof value === "string") {
+    const s = value.trim();
+    return /^https?:\/\//i.test(s) ? [s] : [];
+  }
+  if (depth >= 2) return []; // dalej niż listę obiektów nie schodzimy — to już nie jest pole z URL-em
+  if (Array.isArray(value)) return value.flatMap((v) => urlsIn(v, depth + 1));
+  if (value && typeof value === "object") {
+    const rec = value as Record<string, unknown>;
+    return ["url", "src", "uri", "link", "image", "photo"].flatMap((k) => urlsIn(rec[k], depth + 1));
+  }
+  return [];
+}
+
+export function fbPostExtras(records: BdRecord[]): FbPostExtras {
+  const out: FbPostExtras = {
+    imageField: null, withImage: 0, placeField: null, withPlace: 0, sampleImage: null,
+  };
+  for (const r of records) {
+    // rekord bez treści to wiersz błędu scrapera, nie post — patrz fbGroupStats
+    if (!postContent(r)) continue;
+    for (const key of IMAGE_KEYS) {
+      const urls = urlsIn(r[key]);
+      if (!urls.length) continue;
+      out.withImage += 1;
+      out.imageField ??= key;
+      out.sampleImage ??= urls[0] ?? null;
+      break;
+    }
+    for (const key of PLACE_KEYS) {
+      if (!pick(r, key)) continue;
+      out.withPlace += 1;
+      out.placeField ??= key;
+      break;
+    }
+  }
+  return out;
+}
+
 export function fbGroupPostsToText(records: BdRecord[]): string {
   const blocks: string[] = [];
   for (const r of records) {

@@ -32,11 +32,32 @@ const EMPTY_TTL_DAYS = 14;
 const KEEP_DAYS = 30;
 
 /**
- * Ostatni dzień wydarzenia. `date_end ?? date_start`, NIGDY samo `date_start` — seria
- * „czerwiec–sierpień" ma start w przeszłości już w lipcu i odsiew po starcie wyciąłby
- * ją w trakcie trwania. Ta sama reguła stoi w from-capability.ts i fb-events.ts.
+ * Ostatni dzień wydarzenia. NIGDY samo `date_start` — seria „czerwiec–sierpień" ma start
+ * w przeszłości już w lipcu i odsiew po starcie wyciąłby ją w trakcie trwania.
+ *
+ * `dates` idzie PRZED `date_end`, bo to dwa różne kształty i tylko jeden z nich ma zakres:
+ * seria niesie jawną listę terminów i `date_end: null` (patrz types/event.ts), więc czytanie
+ * samego `date_end` skróciłoby ją do pierwszego terminu i odsiew wyciąłby żywą serię w dniu
+ * jej drugiego spotkania. To jedyne miejsce, w którym „ostatni dzień" jest zdefiniowany —
+ * from-capability.ts i fb-events.ts liczyły to kiedyś same.
  */
-export const lastDay = (ev: EventItem): string => ev.date_end ?? ev.date_start;
+export const lastDay = (ev: EventItem): string =>
+  ev.dates?.[ev.dates.length - 1] ?? ev.date_end ?? ev.date_start;
+
+/**
+ * Wydarzenia WYJĘTE z cache'a, odczepione od niego kopią.
+ *
+ * Trzecia poprawka do „cache niesie datę sprzed" (dwie pierwsze w nagłówku), i jedyna, która
+ * chroni cache od strony potoku, a nie odwrotnie: cache oddawał własne obiekty, a potok mutuje
+ * wydarzenia w miejscu — `foldSeries` dopisuje `dates` (świadomie, po tożsamości obiektu
+ * rozpoznają je `producedBy` i redakcja PII), `attachGeo` dopisuje `geo`. Mutacja wracała więc
+ * do state.json i cache przestawał być zapisem tego, co powiedział model.
+ *
+ * Zmierzone na „Joga na trawie" (gosir-dopiewo, 2026-08): każdy przebieg promował w cache'u
+ * jeden kolejny rekord na głowę serii, a taki rekord nie wraca już do zwijania. Przez cztery
+ * przebiegi z jednego wydarzenia zrobiły się cztery — po jednym duplikacie na przebieg.
+ */
+export const detach = (events: EventItem[]): EventItem[] => structuredClone(events);
 
 const daysBetween = (from: string, to: string): number =>
   Math.floor((Date.parse(to) - Date.parse(from)) / 86_400_000);
@@ -75,10 +96,11 @@ export function touchBlock(state: PipelineState, hash: string, today: string): v
   if (entry) entry.seen = today;
 }
 
+/** Zapis do cache'a bierze KOPIĘ z tego samego powodu, z którego odczyt ją oddaje (patrz `detach`). */
 export function storeBlock(
   state: PipelineState, hash: string, got: { events: EventItem[]; followups: string[] }, today: string,
 ): void {
-  (state.blocks ??= {})[hash] = { ...got, at: today, seen: today };
+  (state.blocks ??= {})[hash] = { ...got, events: detach(got.events), at: today, seen: today };
 }
 
 /**

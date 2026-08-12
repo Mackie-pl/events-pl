@@ -11,12 +11,13 @@
  * to scalanie byłoby jedynym miejscem, gdzie da się po cichu zepsuć events.json.
  */
 import { type Fetched } from "../../adapters/page-fetch.js";
+import { P } from "../../config/index.js";
 import { audit } from "../../shared/audit.js";
 import { todayIso } from "../../shared/dates.js";
 import type { EventItem, PipelineState, SourceRun } from "../../types/index.js";
 
 import { type Block, segment } from "./blocks.js";
-import { lookupBlock, storeBlock, touchBlock } from "./block-cache.js";
+import { detach, lookupBlock, storeBlock, touchBlock } from "./block-cache.js";
 import { segmentHtml } from "./dom-blocks.js";
 import { extractBatch } from "./extract.js";
 
@@ -29,7 +30,7 @@ import { extractBatch } from "./extract.js";
  * 2 wywołania i $0.037 po zbiorczych). Zostaje jako hamulec na patologię: stronę losowaną
  * przy każdym pobraniu, która inaczej co dzień dosypywałaby setki martwych wpisów do cache'a.
  */
-const MAX_BLOCK_CALLS = Number(process.env["BLOCK_MAX_CALLS"] ?? 80);
+const MAX_BLOCK_CALLS = (): number => P.BLOCK_MAX_CALLS.get();
 /** Poniżej tylu bloków podział nic nie wnosi — jedno wywołanie na całość jest tańsze. */
 const MIN_BLOCKS = 2;
 /** Sufit treści w jednej paczce — ten sam, co MAX_INPUT_CHARS przy wywołaniu na całą stronę. */
@@ -89,7 +90,7 @@ export function unionOf(
     touchBlock(state, b.hash, today);
     const entry = state.blocks?.[b.hash];
     if (!entry) continue;
-    events.push(...entry.events);
+    events.push(...detach(entry.events));
     for (const f of entry.followups) if (!followups.includes(f)) followups.push(f);
   }
   return { events, followups };
@@ -109,10 +110,10 @@ export async function blockSource(
 
   const today = todayIso();
   const fresh = freshOf(blocks, state, today);
-  if (fresh.length > MAX_BLOCK_CALLS) {
+  if (fresh.length > MAX_BLOCK_CALLS()) {
     audit("block", `${blocks.length} bloków, aż ${fresh.length} nieznanych — to wygląda na `
       + `przebudowę serwisu, więc jedno wywołanie na całość zamiast ${fresh.length}`,
-    { blocks: blocks.length, fresh: fresh.length, limit: MAX_BLOCK_CALLS });
+    { blocks: blocks.length, fresh: fresh.length, limit: MAX_BLOCK_CALLS() });
     return null;
   }
 

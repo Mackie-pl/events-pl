@@ -4,6 +4,7 @@ import {
   MODEL_DISCOVER, chat, finishReason, resetUsage, snapshotUsage, wasTruncated,
 } from "../../adapters/openrouter.js";
 import { archiveRaw, beginSource, sourcePaths } from "../../adapters/supabase-archive.js";
+import { P } from "../../config/index.js";
 import { todayIso } from "../../shared/dates.js";
 import { describeError } from "../../shared/errors.js";
 import { salvageArray } from "../../shared/json-salvage.js";
@@ -31,7 +32,7 @@ import { toSource } from "./to-source.js";
  * 12000 daje ~3x zapasu przy obecnej liczbie zapytań. To sufit bezpieczeństwa, nie budżet:
  * płacimy za tokeny FAKTYCZNIE wygenerowane, więc małe gminy nic na tym nie tracą.
  */
-const MAX_TOKENS = Number(process.env["DISCOVER_MAX_TOKENS"] ?? 12_000);
+const MAX_TOKENS = (): number => P.DISCOVER_MAX_TOKENS.get();
 
 /**
  * Schemat wysyłany jako `response_format`. Liczony raz: jest stały, a discovery chodzi
@@ -132,14 +133,14 @@ export async function discoverTown(town: string, reg: Registry, runStartedAt: st
 
     // najdłuższy pojedynczy krok przebiegu (Poznań: 60 s) — bez tej linii CLI milczał
     // przez minutę i nie dawało się odróżnić pracy od zawieszenia
-    console.log(`  🧠 ${town}: ${MODEL_DISCOVER} ocenia ${hits.length} wyników (limit ${MAX_TOKENS} tok.)…`);
+    console.log(`  🧠 ${town}: ${MODEL_DISCOVER} ocenia ${hits.length} wyników (limit ${MAX_TOKENS()} tok.)…`);
     const tLlm = performance.now();
     const out = await chat({
       model: MODEL_DISCOVER,
       task: "discover",
       system: DISCOVERY_SYSTEM,
       user: `Miasto/gmina: ${town}\nWyniki wyszukiwania:\n${JSON.stringify(hits.map((h) => h.result))}`,
-      maxTokens: MAX_TOKENS,
+      maxTokens: MAX_TOKENS(),
       // bez tego jeden cudzysłów w polu „why" kasuje ogon listy — patrz types/source-schema.ts
       schema: RESPONSE_SCHEMA,
     });
@@ -165,7 +166,7 @@ export async function discoverTown(town: string, reg: Registry, runStartedAt: st
       if (wasTruncated()) {
         // JSON się domknął, ale model i tak został przerwany — lista jest niepełna,
         // a bez ostrzeżenia wyglądałaby na kompletną odpowiedź „tyle jest w tej gminie"
-        console.warn(`  ⚠️ ${town}: odpowiedź ucięta na limicie ${MAX_TOKENS} tok. — lista może być niepełna`);
+        console.warn(`  ⚠️ ${town}: odpowiedź ucięta na limicie ${MAX_TOKENS()} tok. — lista może być niepełna`);
       }
     } catch (e) {
       // Ucięcie psuje WYŁĄCZNIE ogon dokumentu. Kompletne rekordy sprzed miejsca przerwania
@@ -175,7 +176,7 @@ export async function discoverTown(town: string, reg: Registry, runStartedAt: st
       const cut = wasTruncated();
       run.parse = cut ? "truncated" : "bad-json";
       run.err = (cut
-        ? `odpowiedź ucięta na limicie ${MAX_TOKENS} tokenów (podnieś DISCOVER_MAX_TOKENS)`
+        ? `odpowiedź ucięta na limicie ${MAX_TOKENS()} tokenów (podnieś DISCOVER_MAX_TOKENS)`
         : `niepoprawny JSON od modelu: ${describeError(e)}`)
         + ` — odzyskano ${raw.length} kompletnych propozycji`;
       console.warn(`  ⚠️ ${town}: ${run.err}`);

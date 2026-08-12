@@ -91,8 +91,9 @@ function verdict(full: boolean, minimal: boolean, noFormat: boolean): string {
 }
 
 async function main(): Promise<void> {
-  // STRUCTURED_OUTPUTS czyta się przy ładowaniu modułu, więc import musi być PO ustawieniu
-  // flagi — sonda ma sprawdzać ścieżkę ze schematem niezależnie od tego, co jest w .env.
+  // Sonda ma sprawdzać ścieżkę ze schematem niezależnie od tego, co stoi w .env — stąd
+  // nadpisanie środowiska. Rejestr czyta je leniwie, więc kolejność importów nie ma już
+  // znaczenia (dynamiczne `import` niżej zostają, bo nic nie kosztują).
   process.env["STRUCTURED_OUTPUTS"] = "1";
   const api = await import("../adapters/openrouter.js");
   const { extractionSystem } = await import("../pipeline/prompts.js");

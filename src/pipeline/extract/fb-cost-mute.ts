@@ -20,12 +20,10 @@
  *   3. wyciszenie WYGASA po `FB_MUTE_DAYS` i źródło wraca samo do pomiaru. Bez tego
  *      pierwszy chudy tydzień byłby wyrokiem dożywotnim, a sezon imprez trwa cały rok.
  *
- * Env:
- *   FB_MAX_USD_PER_EVENT      (brak = wyłączone) próg $ za jedno wydarzenie spoza sieci
- *   FB_YIELD_MIN_RUNS         (opc.) minimum realnych pobrań do werdyktu, domyślnie 5
- *   FB_MUTE_DAYS              (opc.) na ile dni wycisza, domyślnie 30
- *   FB_MIN_SOURCES_PER_TOWN   (opc.) podłoga obsady gminy, domyślnie 1 (`0` wyłącza)
+ * Progi (wartości domyślne i pełny opis: src/config/params.ts):
+ *   FB_MAX_USD_PER_EVENT, FB_YIELD_MIN_RUNS, FB_MUTE_DAYS, FB_MIN_SOURCES_PER_TOWN
  */
+import { P } from "../../config/index.js";
 import { addDays } from "../../shared/dates.js";
 import { audit, auditFor } from "../../shared/audit.js";
 import type { SourceYield } from "../../reporting/source-yield.js";
@@ -33,32 +31,17 @@ import type { FbValueRow, PipelineState, Source } from "../../types/index.js";
 
 import { blockedLimit } from "./fb-group-blocked.js";
 
-const num = (name: string, fallback: number): number => {
-  const v = Number(process.env[name]);
-  return Number.isFinite(v) && v > 0 ? v : fallback;
-};
-
 /** `null` = próg nieustawiony, czyli mechanizm nie działa. */
-export function maxUsdPerEvent(): number | null {
-  const raw = process.env["FB_MAX_USD_PER_EVENT"];
-  if (raw === undefined || raw.trim() === "") return null;
-  const v = Number(raw);
-  return Number.isFinite(v) && v > 0 ? v : null;
-}
+export const maxUsdPerEvent = (): number | null => P.FB_MAX_USD_PER_EVENT.get();
 
-export const minRuns = (): number => num("FB_YIELD_MIN_RUNS", 5);
-export const muteDays = (): number => num("FB_MUTE_DAYS", 30);
+export const minRuns = (): number => P.FB_YIELD_MIN_RUNS.get();
+export const muteDays = (): number => P.FB_MUTE_DAYS.get();
 
 /**
  * Ile grup FB musi zostać w gminie, choćby były powyżej progu. Domyślnie 1: żadna gmina
  * nie może stracić całej obecności na FB przez sam rachunek. `0` wyłącza podłogę.
  */
-export function minPerTown(): number {
-  const raw = process.env["FB_MIN_SOURCES_PER_TOWN"];
-  if (raw === undefined || raw.trim() === "") return 1;
-  const v = Number(raw);
-  return Number.isFinite(v) && v >= 0 ? v : 1;
-}
+export const minPerTown = (): number => P.FB_MIN_SOURCES_PER_TOWN.get();
 
 export type MuteEntry = NonNullable<PipelineState["fbMuted"]>[string];
 

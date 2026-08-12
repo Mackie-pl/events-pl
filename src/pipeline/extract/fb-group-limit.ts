@@ -19,22 +19,16 @@
  * sobie podnosi limit u dostawcy rozliczającego się per-rekord, jest dokładnie tym kształtem
  * awarii, który 2026-08-10 kosztował $8 (patrz adapters/brightdata.ts).
  *
- * Env:
- *   FB_GROUP_LIMIT_MAX     (opc.) sufit rekordów na grupę, domyślnie 50
- *   FB_GROUP_LIMIT_MIN     (opc.) podłoga, domyślnie 10
- *   FB_GROUP_LIMIT_MARGIN  (opc.) zapas ponad pokrycie, domyślnie 0.2 (20%)
+ * Progi (wartości domyślne i pełny opis: src/config/params.ts):
+ *   FB_GROUP_LIMIT_MAX, FB_GROUP_LIMIT_MIN, FB_GROUP_LIMIT_MARGIN
  */
+import { P } from "../../config/index.js";
 import { audit } from "../../shared/audit.js";
 import type { FbGroupStats, PipelineState } from "../../types/index.js";
 
-const num = (name: string, fallback: number): number => {
-  const v = Number(process.env[name]);
-  return Number.isFinite(v) && v > 0 ? v : fallback;
-};
-
-export const limitMax = (): number => num("FB_GROUP_LIMIT_MAX", 50);
-export const limitMin = (): number => num("FB_GROUP_LIMIT_MIN", 10);
-export const limitMargin = (): number => num("FB_GROUP_LIMIT_MARGIN", 0.2);
+export const limitMax = (): number => P.FB_GROUP_LIMIT_MAX.get();
+export const limitMin = (): number => P.FB_GROUP_LIMIT_MIN.get();
+export const limitMargin = (): number => P.FB_GROUP_LIMIT_MARGIN.get();
 
 const clamp = (n: number): number => Math.min(limitMax(), Math.max(limitMin(), Math.ceil(n)));
 

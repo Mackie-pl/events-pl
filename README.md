@@ -73,7 +73,8 @@ npm run check:structured        # PŁATNE (~$0.004): mówi, czy MODEL_EXTRACT pr
 # jeśli odbija → STRUCTURED_OUTPUTS=0 w .env (potok i tak gasi flagę sam po odbiciu)
 ```
 
-**Konfiguracja idzie przez `.env`** (wzór w `.env.example`, plik jest w `.gitignore`).
+**Konfiguracja idzie przez `.env`** (wzór w `.env.example`, plik jest w `.gitignore`; pełna
+lista pokręteł: [Parametry konfiguracji](#parametry-konfiguracji)).
 Skrypty `npm run …` wczytują go same — `node --env-file-if-exists`, bez `dotenv` i bez
 zależności od powłoki. To istotne na Windowsie: `VAR=... npm run x` i `export VAR=...`
 to składnia bash-a, **w PowerShellu nie działa** (`... is not recognized as a name of a cmdlet`).
@@ -264,11 +265,8 @@ grupa „zajmowałaby" miejsce i pozwalała wyciszyć jedyną działającą.
 wydarzenie spoza sieci mają `exclusive: 0` obie i próg postawiony na tamtej mierze wyciszyłby obie.
 Patrz `src/pipeline/extract/fb-cost-mute.ts`.
 
-**Przełączniki env** (wszystkie opcjonalne): `BD_DATASET_FB_EVENTS`, `BD_DATASET_FB_GROUP_POSTS`
-(nadpisanie ID datasetu), `BD_POLL_MS` (10000), `BD_TIMEOUT_MS` (480000), `BD_MAX_FB_EVENTS` (40),
-`FB_GROUP_BLOCKED_LIMIT` (3), `FB_GROUP_BLOCKED_RECHECK_DAYS` (14), `FB_GROUP_LIMIT_MAX` (50),
-`FB_GROUP_LIMIT_MIN` (10), `FB_GROUP_LIMIT_MARGIN` (0.2), `FB_MAX_USD_PER_EVENT` (brak = wyłączone),
-`FB_YIELD_MIN_RUNS` (5), `FB_MUTE_DAYS` (30), `FB_MIN_SOURCES_PER_TOWN` (1).
+**Przełączniki env** (wszystkie opcjonalne) — grupy `fb` i `costs` w tabeli
+[Parametry konfiguracji](#parametry-konfiguracji).
 
 **Liczenie kosztu.** Bright Data rozlicza per-rekord. Każdy przebieg z FB dopisuje linię do
 `brightdata-usage.jsonl` (commitowany) i loguje na stdout: `triggers · inputs (URL) · records · polls ·
@@ -662,6 +660,136 @@ npm run backfill-costs -- --force                        # przelicza księgę z 
 
 ⚠️ `npm run digest` ładuje `.env` i przy ustawionym `TELEGRAM_BOT_TOKEN` **naprawdę wyśle** —
 do podglądu używaj `npx tsx` bez `--env-file`.
+
+## Parametry konfiguracji
+
+Rejestr siedzi w `src/config/params.ts` i jest **jedynym** miejscem, w którym potok czyta
+`process.env` — pilnuje tego test, więc lista poniżej nie może być niepełna. Dopisując parametr:
+wpis w rejestrze, potem `npm run config:docs`, który przebudowuje i tę tabelę, i `.env.example`.
+
+<!-- BEGIN GENERATED: config -->
+
+<!-- Tabela poniżej jest generowana z src/config/params.ts przez `npm run config:docs`.
+     Ręczne zmiany przepadną — popraw wpis w rejestrze. -->
+
+Wszystkie 55 parametrów, jakie potok czyta ze środowiska. Kolumna **klasa** mówi,
+czym parametr jest: *sekret* nigdy nie trafia do repo, *próg* steruje zachowaniem potoku
+(i jest kandydatem do wersjonowanego `config.json`), *ustawienie* to wybór właściciela,
+*adres* przydaje się przy proxy i mockach, *środowisko* daje runner i nie ustawia się tego ręcznie.
+Dłuższe uzasadnienia — po co dany próg istnieje i czemu ma taką wartość — stoją przy wpisach
+w `.env.example` (też generowanym).
+
+**wymagane: ekstrakcja i discovery**
+
+| Parametr | Domyślnie | Klasa | Do czego |
+| --- | --- | --- | --- |
+| `OPENROUTER_API_KEY` | brak | sekret | klucz do OpenRoutera — bez niego nie ruszy ani ekstrakcja, ani discovery |
+
+**discovery / naprawa martwych URL-i**
+
+| Parametr | Domyślnie | Klasa | Do czego |
+| --- | --- | --- | --- |
+| `SERPER_API_KEY` | brak | sekret | klucz Serpera — bez niego discovery i naprawa martwych URL-i nie działają |
+| `SEARCH_PROVIDER` | `serper` | ustawienie | serper (domyślnie) \| google \| brave |
+| `GOOGLE_API_KEY` | brak | sekret | tylko dla SEARCH_PROVIDER=google (konta sprzed 07.2026) |
+| `GOOGLE_CSE_CX` | brak | ustawienie | id silnika; MUSI mieć włączone „Search the entire web” |
+| `BRAVE_API_KEY` | brak | sekret | tylko dla SEARCH_PROVIDER=brave (2000 zapytań/mies. gratis) |
+| `DISCOVER_MAX_SEARCHES` | `300` | próg | sufit zapytań do wyszukiwarki na jeden przebieg discovery |
+
+**opcjonalnie: ewaluacja innych modeli bez zmian w kodzie**
+
+| Parametr | Domyślnie | Klasa | Do czego |
+| --- | --- | --- | --- |
+| `MODEL_EXTRACT` | `anthropic/claude-haiku-4.5` | ustawienie | model codziennej ekstrakcji — musi umieć obrazy i JSON po polsku |
+| `MODEL_DISCOVER` | `anthropic/claude-sonnet-4.6` | ustawienie | model miesięcznego discovery — mocniejszy, bo ocenia trafienia wyszukiwarki |
+
+**opcjonalnie: structured outputs (response_format: json_schema)**
+
+| Parametr | Domyślnie | Klasa | Do czego |
+| --- | --- | --- | --- |
+| `STRUCTURED_OUTPUTS` | `1` | ustawienie | `0` wyłącza wymuszony JSON Schema na odpowiedzi modelu |
+| `STRUCTURED_IGNORE_PROVIDERS` | `azure` | ustawienie | dostawcy OpenRoutera pomijani na ścieżce ze schematem (po przecinku) |
+
+**opcjonalnie: Facebook przez Bright Data (linki do wydarzeń + otwarte grupy)**
+
+| Parametr | Domyślnie | Klasa | Do czego |
+| --- | --- | --- | --- |
+| `BRIGHTDATA_API_KEY` | brak | sekret | klucz Bright Data — bez niego cały kanał FB jest pomijany |
+| `BD_MAX_FB_EVENTS` | `40` | próg | sufit rozwijanych linków do wydarzeń FB na jeden przebieg |
+| `BD_DATASET_FB_EVENTS` | `gd_m14sd0to1jz48ppm51` | ustawienie | id scrapera wydarzeń FB (nadpisanie na wypadek zmian po stronie BD) |
+| `BD_DATASET_FB_GROUP_POSTS` | `gd_lz11l67o2cb3r0lkj3` | ustawienie | id scrapera postów z grup FB |
+| `BD_POLL_MS` | `10000` | próg | co ile odpytywać Bright Data o gotowość migawki |
+| `BD_TIMEOUT_MS` | `480000` | próg | po tylu ms migawka jest porzucana i anulowana (awaria 2026-08-10) |
+| `FB_GROUP_BLOCKED_LIMIT` | `3` | próg | po tylu płatnych wierszach błędu z rzędu grupa jest pomijana |
+| `FB_GROUP_BLOCKED_RECHECK_DAYS` | `14` | próg | co tyle dni jedna sonda do pomijanej grupy — jedyna droga powrotna |
+| `FB_GROUP_LIMIT_MAX` | `50` | próg | sufit rekordów na grupę; regulator może zejść niżej, nigdy wyżej |
+| `FB_GROUP_LIMIT_MIN` | `10` | próg | podłoga rekordów na grupę |
+| `FB_GROUP_LIMIT_MARGIN` | `0.2` | próg | zapas ponad pokrycie przerwy między pobraniami (0.2 = 20%) |
+| `FB_MAX_USD_PER_EVENT` | brak | próg | próg $ za wydarzenie spoza sieci; brak = mechanizm w ogóle nie działa |
+| `FB_YIELD_MIN_RUNS` | `5` | próg | minimum realnych pobrań, zanim próg zapadnie |
+| `FB_MUTE_DAYS` | `30` | próg | na ile dni wycisza, zanim źródło wróci do pomiaru |
+| `FB_MIN_SOURCES_PER_TOWN` | `1` | próg | ile grup FB zostaje w gminie mimo progu; 0 wyłącza podłogę |
+
+**potok: sufity i tryby (tokeny, wywołania LLM, punkt wejścia)**
+
+| Parametr | Domyślnie | Klasa | Do czego |
+| --- | --- | --- | --- |
+| `EXTRACT_MAX_TOKENS` | `12000` | próg | sufit tokenów odpowiedzi przy ekstrakcji wydarzeń |
+| `DISCOVER_MAX_TOKENS` | `12000` | próg | sufit tokenów odpowiedzi przy ocenie trafień wyszukiwarki |
+| `BLOCK_MAX_CALLS` | `80` | próg | sufit wywołań LLM na blokowanie źródeł w przebiegu (0 = nie wołaj) |
+| `ENTRYPOINT_LLM` | `always` | próg | kiedy pytać model o punkt wejścia gminy: always \| ambiguous \| never |
+
+**prywatne archiwum treści (Supabase Storage)**
+
+| Parametr | Domyślnie | Klasa | Do czego |
+| --- | --- | --- | --- |
+| `SUPABASE_URL` | brak | ustawienie | adres projektu Supabase; brak = archiwum wyłączone, reszta działa |
+| `SUPABASE_SECRET_KEY` | brak | sekret | klucz Secret (sb_secret_…), NIE Publishable — omija RLS |
+| `SUPABASE_SERVICE_ROLE_KEY` | brak | sekret | dawna nazwa tego samego klucza (projekty z JWT eyJ…) |
+| `SUPABASE_BUCKET` | `archive` | ustawienie | bucket archiwum treści |
+| `ARCHIVE_RETENTION_DAYS` | `90` | próg | po tylu dniach obiekty archiwum idą do skasowania |
+| `ARCHIVE_PORT` | `8787` | ustawienie | port lokalnego mostu panelu (npm run panel-server) |
+
+**księga kosztów (costs.json)**
+
+| Parametr | Domyślnie | Klasa | Do czego |
+| --- | --- | --- | --- |
+| `COST_MONTHLY_BUDGET_USD` | `15` | próg | linia odniesienia w panelu (nie limit twardy) |
+| `COST_RETENTION_DAYS` | `90` | próg | ile dni kwot trzyma księga (runs.json trzyma 7 dni szczegółów) |
+| `BD_COST_PER_RECORD` | `0.0015` | próg | stawka Bright Data za rekord (potwierdź w panelu BD) |
+| `SEARCH_COST_PER_QUERY` | `0.001` | próg | stawka za zapytanie: Serper ~0.001, Google 0.005, Brave 0 |
+| `SUPABASE_COST_PER_GB_MONTH` | `0` | próg | stawka za GB archiwum na miesiąc (darmowy tier ~1 GB) |
+| `SCRAPE_COST_PER_FETCH` | `0` | próg | stawka za pobranie strony (GH Actions dla repo publicznego: 0) |
+
+**digest (Telegram aktywny, e-mail w zapasie)**
+
+| Parametr | Domyślnie | Klasa | Do czego |
+| --- | --- | --- | --- |
+| `TELEGRAM_BOT_TOKEN` | brak | sekret | token bota; brak = digest Telegramem wyłączony |
+| `TELEGRAM_CHAT_ID` | brak | ustawienie | dokąd bot wysyła digest |
+| `DIGEST_CHILD_AGE` | brak | ustawienie | wiek dziecka; brak = digest bez filtra wiekowego |
+| `RESEND_API_KEY` | brak | sekret | klucz Resend — e-mailowy wariant digestu, w zapasie |
+| `DIGEST_TO` | brak | ustawienie | adresat e-maila; brak = wariant e-mail wyłączony |
+| `DIGEST_FROM` | `events-pl <onboarding@resend.dev>` | ustawienie | nadawca e-maila |
+
+**adresy API — do proxy i mocków w testach, normalnie zostaw puste**
+
+| Parametr | Domyślnie | Klasa | Do czego |
+| --- | --- | --- | --- |
+| `OPENROUTER_URL` | `https://openrouter.ai/api/v1/chat/completions` | adres | adres chat completions |
+| `SERPER_URL` | `https://google.serper.dev/search` | adres | adres wyszukiwarki Serper |
+| `BRAVE_URL` | `https://api.search.brave.com/res/v1/web/search` | adres | adres wyszukiwarki Brave |
+| `GOOGLE_URL` | `https://www.googleapis.com/customsearch/v1` | adres | adres Google Programmable Search |
+| `OVERPASS_URL` | `https://overpass-api.de/api/interpreter` | adres | adres Overpass (OSM) — do własnej instancji, gdy publiczna dławi |
+
+**od środowiska, nie od nas**
+
+| Parametr | Domyślnie | Klasa | Do czego |
+| --- | --- | --- | --- |
+| `GITHUB_ACTIONS` | brak | środowisko | ustawia runner — po tym poznajemy, że jesteśmy w Actions |
+| `GITHUB_STEP_SUMMARY` | brak | środowisko | ścieżka pliku job summary; poza Actions nie istnieje |
+
+<!-- END GENERATED: config -->
 
 ## Znane ograniczenia / TODO
 

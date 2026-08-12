@@ -7,16 +7,16 @@
  */
 
 import { fetchUrl } from "./http.js";
+import { P } from "../config/index.js";
 import { audit } from "../shared/audit.js";
 import { describeError } from "../shared/errors.js";
 import type { LlmTask, LlmUsage, TaskUsage } from "../types/index.js";
 
-// nadpisywalne: pozwala wpiąć proxy/gateway albo mock w testach integracyjnych
-const OPENROUTER_URL =
-  process.env["OPENROUTER_URL"] ?? "https://openrouter.ai/api/v1/chat/completions";
-
-export const MODEL_EXTRACT = process.env["MODEL_EXTRACT"] ?? "anthropic/claude-haiku-4.5";
-export const MODEL_DISCOVER = process.env["MODEL_DISCOVER"] ?? "anthropic/claude-sonnet-4.6";
+// Wybór modelu zapada raz na proces — te dwie stałe są świadomie czytane przy ładowaniu
+// modułu, żeby nie przerabiać czternastu miejsc użycia na wywołania. Reszta parametrów
+// czyta się leniwie (patrz config/param.ts).
+export const MODEL_EXTRACT = P.MODEL_EXTRACT.get();
+export const MODEL_DISCOVER = P.MODEL_DISCOVER.get();
 
 /**
  * Akumulator zużycia LLM. Wywołania chat() są sekwencyjne (await) — bez współbieżności,
@@ -91,17 +91,11 @@ export interface ChatOptions {
  * Wyłącznik zostaje (`STRUCTURED_OUTPUTS=0`), bo MODEL_EXTRACT jest podmieniany z .env,
  * a obsługa zależy od modelu I od dostawcy, na którego zrouteruje OpenRouter. Odbicie
  * schematu i tak gasi flagę na resztę procesu (patrz `structuredOff` niżej).
+ *
+ * Zawężenie dostawców (`STRUCTURED_IGNORE_PROVIDERS`) działa tylko na ścieżce ze schematem —
+ * zwykłe wywołania dalej routują się swobodnie, żeby nie tracić dostępności tam, gdzie
+ * problemu nie ma. Po co domyślnie `azure`: patrz src/config/params.ts.
  */
-const STRUCTURED = process.env["STRUCTURED_OUTPUTS"] !== "0";
-
-/**
- * Dostawcy pomijani PRZY SCHEMACIE (slugi OpenRoutera, małymi literami). Domyślnie `azure`,
- * bo sonda z 2026-07-28 wykazała, że tamtejszy workspace odbija structured outputs mimo
- * zadeklarowanej obsługi. Zawężenie działa tylko na ścieżce ze schematem — zwykłe wywołania
- * dalej routują się swobodnie, żeby nie tracić dostępności tam, gdzie problemu nie ma.
- */
-const IGNORE_PROVIDERS = (process.env["STRUCTURED_IGNORE_PROVIDERS"] ?? "azure")
-  .split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
 
 /**
  * Model odmówił schematu — do końca procesu jedziemy bez niego. Flaga jest modułowa
@@ -133,7 +127,7 @@ let lastProvider: string | null = null;
  */
 let lastFinish: string | null = null;
 
-export const structuredActive = (): boolean => STRUCTURED && !structuredOff;
+export const structuredActive = (): boolean => P.STRUCTURED_OUTPUTS.get() && !structuredOff;
 export const structuredRejection = (): string | null => structuredError;
 export const servingProvider = (): string | null => lastProvider;
 export const finishReason = (): string | null => lastFinish;
@@ -252,9 +246,10 @@ function buildBody(opts: ChatOptions, withSchema: boolean): string {
      *
      * Lista jest w .env, bo to własność KONTA, nie modelu — u kogoś innego Azure zadziała.
      */
+    const ignore = P.STRUCTURED_IGNORE_PROVIDERS.get();
     body["provider"] = {
       require_parameters: true,
-      ...(IGNORE_PROVIDERS.length ? { ignore: IGNORE_PROVIDERS } : {}),
+      ...(ignore.length ? { ignore } : {}),
     };
   }
   return JSON.stringify(body);
@@ -264,7 +259,7 @@ function buildBody(opts: ChatOptions, withSchema: boolean): string {
 async function callOnce(
   apiKey: string, opts: ChatOptions, withSchema: boolean,
 ): Promise<ChatCompletionResponse> {
-  const res = await fetchUrl(OPENROUTER_URL, {
+  const res = await fetchUrl(P.OPENROUTER_URL.get(), {
     method: "POST",
     headers: {
       Authorization: `Bearer ${apiKey}`,
@@ -291,7 +286,7 @@ async function callOnce(
 }
 
 export async function chat(opts: ChatOptions): Promise<string> {
-  const apiKey = process.env["OPENROUTER_API_KEY"];
+  const apiKey = P.OPENROUTER_API_KEY.get();
   if (!apiKey) throw new Error("Brak OPENROUTER_API_KEY");
 
   const t0 = performance.now();

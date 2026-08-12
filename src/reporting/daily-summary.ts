@@ -2,7 +2,7 @@
 import type { FbValueRow, RunReport, SourceRun } from "../types/index.js";
 
 import { costLine } from "./cost-ledger.js";
-import { writeSummary } from "./step-summary.js";
+import { summaryEnabled, writeSummary } from "./step-summary.js";
 
 const STATUS_ICON: Record<SourceRun["status"], string> = {
   ok: "✅", unchanged: "♻️", error: "⚠️", "skipped-fb": "⏭️", "skipped-dead": "💀",
@@ -106,7 +106,7 @@ function sourceTable(sources: SourceRun[]): string[] {
 /** Tabela statusu do GitHub Actions job summary (Markdown). */
 export function writeDailySummary(report: RunReport): void {
   // poza Actions nie ma czego pisać, a budowanie tabel na darmo tylko kosztuje
-  if (!process.env["GITHUB_STEP_SUMMARY"]) return;
+  if (!summaryEnabled()) return;
   writeSummary([
     ...headerLines(report),
     ...costTable(report),

@@ -19,6 +19,7 @@
  */
 import { setTimeout as sleep } from "node:timers/promises";
 
+import { P } from "../config/index.js";
 import { fetchUrl } from "./http.js";
 import type { BdUsage } from "../types/index.js";
 
@@ -26,8 +27,8 @@ const BASE = "https://api.brightdata.com/datasets/v3";
 
 /** ID gotowych scraperów Bright Data (nadpisywalne env-em na wypadek zmian po stronie BD). */
 export const BD_DATASETS = {
-  fbEvents: process.env["BD_DATASET_FB_EVENTS"] ?? "gd_m14sd0to1jz48ppm51",
-  fbGroupPosts: process.env["BD_DATASET_FB_GROUP_POSTS"] ?? "gd_lz11l67o2cb3r0lkj3",
+  fbEvents: P.BD_DATASET_FB_EVENTS.get(),
+  fbGroupPosts: P.BD_DATASET_FB_GROUP_POSTS.get(),
 } as const;
 
 export type BdRecord = Record<string, unknown>;
@@ -69,11 +70,11 @@ export function bdDelta(before: BdUsage): BdUsage | null {
 }
 
 export function bdEnabled(): boolean {
-  return Boolean(process.env["BRIGHTDATA_API_KEY"]);
+  return Boolean(P.BRIGHTDATA_API_KEY.get());
 }
 
 function authHeaders(): Record<string, string> {
-  const key = process.env["BRIGHTDATA_API_KEY"];
+  const key = P.BRIGHTDATA_API_KEY.get();
   if (!key) throw new Error("Brak BRIGHTDATA_API_KEY");
   return { Authorization: `Bearer ${key}`, "Content-Type": "application/json" };
 }
@@ -155,8 +156,8 @@ export async function collect(
   const uniq = [...new Set(urls.map((u) => u.trim()).filter(Boolean))];
   if (!uniq.length) return [];
 
-  const pollMs = Number(process.env["BD_POLL_MS"] ?? 10_000);
-  const timeoutMs = Number(process.env["BD_TIMEOUT_MS"] ?? 480_000);
+  const pollMs = P.BD_POLL_MS.get();
+  const timeoutMs = P.BD_TIMEOUT_MS.get();
 
   const snapshotId = await trigger(datasetId, uniq.map((url) => ({ url })), limitPerInput);
   // od razu po triggerze — id nieudanego/przeterminowanego zbioru też chcemy mieć w logu

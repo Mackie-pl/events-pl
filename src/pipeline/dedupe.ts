@@ -82,36 +82,110 @@ function sameEvent(a: EventItem, b: EventItem): boolean {
 const richer = (a: EventItem, b: EventItem): boolean =>
   JSON.stringify(a).length > JSON.stringify(b).length;
 
+/** Wydarzenie ciągłe („trwa bez przerwy do"), w odróżnieniu od pojedynczego terminu. */
+const isSpan = (ev: EventItem): boolean => ev.date_end !== null;
+
 /**
- * Scalanie po zawieraniu, w kubełkach (data + miejscowość). Miejscowość jest warunkiem
+ * Czy rekordy mają choć jeden wspólny dzień.
+ *
+ * Dedupe stoi PRZED foldSeries, więc `dates` tutaj jeszcze nie istnieje (a `expandRepeat`
+ * je zdejmuje) — każdy rekord jest jednodniowy albo zakresem, i wystarczy przecięcie
+ * przedziałów. Gdyby ta kolejność się kiedyś zmieniła, ta funkcja jest pierwszym miejscem
+ * do poprawienia.
+ */
+const overlaps = (a: EventItem, b: EventItem): boolean =>
+  a.date_start <= (b.date_end ?? b.date_start) && b.date_start <= (a.date_end ?? a.date_start);
+
+/**
+ * Czy porównywać te dwa rekordy — dwie reguły, bo kupione dwoma różnymi błędami.
+ *
+ * 1. TA SAMA DATA + zawieranie tytułu. Reguła pierwotna, patrz sameEvent().
+ * 2. WSPÓLNY DZIEŃ + tytuł IDENTYCZNY po normalizacji. Dołożona, bo okpoznan-wydarzenia
+ *    wypisuje tę samą wystawę w dwóch blokach jednej strony: raz jako zakres („Rodzinna
+ *    wystawa sensoryczna", 28.07–06.10), raz jako rytm „codziennie" 11–23.08 z listy
+ *    „co się dzieje w tym tygodniu". Po rozwinięciu rytmu żaden termin nie ma tej samej
+ *    daty startu co zakres, więc reguła 1 ich nie widzi — a w digeście stały obok siebie
+ *    cztery takie pary dziennie.
+ *
+ * Reguła 2 wymaga tytułu identycznego, nie zawartego, i to jest cała jej ostrożność:
+ * przy zawieraniu zakres „Lato z Estradą" (cały czerwiec–sierpień) wchłonąłby każdy swój
+ * seans z osobna, bo nazwa cyklu zawiera się w nazwie seansu i dzień zawsze wpada w zakres.
+ * Wszystkie cztery zmierzone pary miały tytuł identyczny co do znaku.
+ */
+const comparable = (a: EventItem, b: EventItem): boolean => {
+  if (!sameEvent(a, b)) return false;
+  if (a.date_start === b.date_start) return true;
+  return norm(a.title) === norm(b.title) && overlaps(a, b);
+};
+
+/**
+ * Kto z pary zostaje: ZAKRES bije pojedynczy termin, a przy tym samym kształcie — bogatszy.
+ *
+ * Zakres wygrywa, bo inaczej scalanie kończy się w pół drogi: zakres 28.07–06.10 spotyka
+ * dwanaście rozwiniętych terminów tego samego wydarzenia, więc gdyby wygrał pierwszy z nich,
+ * pozostałe jedenaście przestałoby mieć z czym się scalać (nie nakładają się na siebie)
+ * i w events.json zostałby jeden termin plus seria. To gorsze niż duplikat, od którego
+ * wyszliśmy. Przy okazji zakres jest prawdziwszym opisem: wystawa naprawdę trwa do października,
+ * a blok „co się dzieje w tym tygodniu" to tylko jej wycinek.
+ */
+const beats = (a: EventItem, b: EventItem): boolean =>
+  isSpan(a) === isSpan(b) ? richer(a, b) : isSpan(a);
+
+/**
+ * Scalanie po zawieraniu, w kubełkach po MIEJSCOWOŚCI. Miejscowość jest warunkiem
  * KONIECZNYM: „Kino letnie w Wirach" i „Swarzędzkie kino letnie" tego samego dnia to dwa
  * różne wydarzenia trzydzieści kilometrów od siebie.
+ *
+ * Data wypadła z klucza kubełka i przeniosła się do `comparable()` — inaczej reguła 2
+ * (wspólny dzień) nie miałaby jak dopasować rekordów o różnych datach startu.
  */
 function foldContained(events: EventItem[]): DedupeResult {
-  const slots: EventItem[] = [];
-  const byBucket = new Map<string, number[]>();
+  /** `null` = rekord wchłonięty; indeksy zostają na miejscu, żeby kubełki się nie rozjechały */
+  const slots: (EventItem | null)[] = [];
+  /** slot → slot, który go wchłonął (albo on sam). Rozwija łańcuchy A→B→C. */
+  const absorbedBy: number[] = [];
   const losers: { loser: EventItem; slot: number }[] = [];
+  const byBucket = new Map<string, number[]>();
+
+  const surviving = (i: number): number => {
+    while (absorbedBy[i] !== i) i = absorbedBy[i]!;
+    return i;
+  };
 
   for (const ev of events) {
-    const key = `${ev.date_start}|${norm(ev.town)}`;
+    const key = norm(ev.town);
     const bucket = byBucket.get(key) ?? [];
-    const hit = bucket.find((i) => sameEvent(slots[i]!, ev));
-    if (hit === undefined) {
-      byBucket.set(key, [...bucket, slots.push(ev) - 1]);
+    const hits = bucket.filter((i) => slots[i] !== null && comparable(slots[i]!, ev));
+    if (!hits.length) {
+      const seat = slots.push(ev) - 1;
+      absorbedBy[seat] = seat;
+      byBucket.set(key, [...bucket, seat]);
       continue;
     }
-    // zwycięzcę rozstrzygamy na miejscu, ale wskazujemy go dopiero na końcu — w łańcuchu
-    // A→B→C przegrany A ma pokazywać na C, a nie na pośrednie B
-    if (richer(ev, slots[hit]!)) {
-      losers.push({ loser: slots[hit]!, slot: hit });
-      slots[hit] = ev;
+
+    // najpierw najlepszy z już zajętych miejsc, potem porównanie z nowym rekordem —
+    // dopiero to rozstrzyga, czy nowy zostaje, czy dokłada się do przegranych
+    let best = hits[0]!;
+    for (const i of hits) if (beats(slots[i]!, slots[best]!)) best = i;
+    if (beats(ev, slots[best]!)) {
+      losers.push({ loser: slots[best]!, slot: best });
+      slots[best] = ev;
     } else {
-      losers.push({ loser: ev, slot: hit });
+      losers.push({ loser: ev, slot: best });
+    }
+    // wszystkie pozostałe dopasowania idą do zwycięzcy — patrz beats()
+    for (const i of hits) {
+      if (i === best) continue;
+      losers.push({ loser: slots[i]!, slot: i });
+      slots[i] = null;
+      absorbedBy[i] = best;
     }
   }
+
   return {
-    events: slots,
-    dropped: losers.map(({ loser, slot }) => ({ loser, winner: slots[slot]!, why: "zawieranie" as const })),
+    events: slots.filter((ev): ev is EventItem => ev !== null),
+    dropped: losers.map(({ loser, slot }) =>
+      ({ loser, winner: slots[surviving(slot)]!, why: "zawieranie" as const })),
   };
 }
 

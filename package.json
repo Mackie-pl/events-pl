@@ -13,6 +13,7 @@
     "discover": "tsx --env-file-if-exists=.env src/actions/discover.ts",
     "probe": "tsx --env-file-if-exists=.env src/actions/probe.ts",
     "check:structured": "tsx --env-file-if-exists=.env src/actions/check-structured.ts",
+    "config:docs": "tsx src/actions/gen-config-docs.ts",
     "backfill-costs": "tsx --env-file-if-exists=.env src/actions/backfill-costs.ts",
     "measure-reuse": "tsx --env-file-if-exists=.env src/actions/measure-reuse.ts",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",

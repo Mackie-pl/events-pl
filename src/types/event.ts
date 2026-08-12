@@ -11,18 +11,36 @@ import type { BdUsage } from "./usage.js";
 
 export type { AgeRange, Followup, Price, SubSlot } from "./event-schema.js";
 
+/**
+ * KSZTAŁT TERMINU W MAGAZYNIE — trzy możliwości i nigdy dwie naraz:
+ *
+ *   jednodniowe  date_start,                      date_end: null, dates: brak
+ *   zakres       date_start + date_end,                           dates: brak
+ *   seria        date_start + dates[],            date_end: null
+ *
+ * Rozłączność jest wymuszona w pipeline/series.ts i nie jest kosmetyką — `date_end` niosło
+ * kiedyś trzy znaczenia naraz („trwa bez przerwy", „tu kończy się rytm", „ten wpis jest już
+ * zwinięty") i każde z dwóch ostatnich wyprodukowało błąd w digeście: zakres rytmu czytany
+ * jako „trwa bez przerwy" wypisał zajęcia na dzień, w którym się nie odbywają, a `date_end`
+ * w roli znacznika „przetworzone" zamieniało jedno wydarzenie w kilka, po jednym na przebieg.
+ *
+ * Stąd `date_end` znaczy DOKŁADNIE „trwa bez przerwy do", a ostatni dzień wydarzenia — bez
+ * względu na kształt — liczy `lastDay()` z pipeline/extract/block-cache.ts. `repeat` przychodzi
+ * z drutu (model) i nie przekracza `expandRepeat`; w magazynie jest zawsze puste.
+ */
 export interface EventItem extends ModelEvent {
   /** dopisywane w process-source.ts / fb-events.ts — model o źródle nie wie */
   source_id?: string;
   /** dopisywane po geokodowaniu (Nominatim + cache) */
   geo?: { lat: number; lon: number } | null;
   /**
-   * Terminy serii, rosnąco; brak pola = wydarzenie jednorazowe. Dopisuje foldSeries().
+   * Terminy serii, rosnąco; brak pola = wydarzenie nie jest serią. Dopisuje foldSeries().
    *
    * Jawna LISTA, nie reguła — „Kino letnie w Wirach" to środy i piątki, ale co drugi
    * tydzień, więc rytm rozciągnięty na zakres wymyśliłby dwa nieistniejące seanse.
-   * Niezmiennik: `date_start` to pierwszy element, `date_end` ostatni. Dzięki temu
-   * wszystko, co czyta sam zakres (np. wygasanie cache'u w fb-events.ts), dalej działa.
+   * Niezmiennik: `date_start` to pierwszy element. Ostatniego NIE ma w `date_end` — seria
+   * nie jest zakresem, a duplikowanie go w polu o innym znaczeniu było właśnie tą pomyłką,
+   * którą opisuje nagłówek wyżej.
    */
   dates?: string[];
 }

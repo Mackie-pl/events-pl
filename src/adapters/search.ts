@@ -10,6 +10,7 @@
  */
 import { setTimeout as sleep } from "node:timers/promises";
 
+import { P } from "../config/index.js";
 import type { SearchCall, SearchResult } from "../types/index.js";
 
 import { RATE_LIMIT_MS as BRAVE_RATE, search as braveSearch } from "./brave.js";
@@ -21,15 +22,13 @@ import { search as serperSearch } from "./serper.js";
  * ale dla Warszawy z dzielnicami rząd wielkości to już 200+. Sufit ma zaboleć, zanim zaboli
  * rachunek — u Serpera darmowa pula 2500 zapytań kończy się po kilkunastu pełnych przebiegach.
  */
-const SEARCH_BUDGET = Number(process.env["DISCOVER_MAX_SEARCHES"] ?? 300);
+const SEARCH_BUDGET = (): number => P.DISCOVER_MAX_SEARCHES.get();
 
 /**
  * Dostawca. Domyślnie Serper: Google Programmable Search przestało przyjmować nowych klientów
  * (07.2026), a Brave szczątkowo indeksuje małe polskie instytucje, czyli cel discovery.
  * `google-cse` zostaje dla kont założonych wcześniej.
  */
-const PROVIDER = (process.env["SEARCH_PROVIDER"] ?? "serper").toLowerCase();
-
 const PROVIDERS = {
   serper: { name: "Serper", run: serperSearch, keys: ["SERPER_API_KEY"], throttleMs: 0 },
   google: { name: "Google CSE", run: googleSearch, keys: ["GOOGLE_API_KEY", "GOOGLE_CSE_CX"], throttleMs: 0 },
@@ -37,8 +36,7 @@ const PROVIDERS = {
   brave: { name: "Brave", run: braveSearch, keys: ["BRAVE_API_KEY"], throttleMs: BRAVE_RATE },
 } as const;
 
-const active = (): (typeof PROVIDERS)[keyof typeof PROVIDERS] =>
-  PROVIDERS[PROVIDER as keyof typeof PROVIDERS] ?? PROVIDERS.serper;
+const active = (): (typeof PROVIDERS)[keyof typeof PROVIDERS] => PROVIDERS[P.SEARCH_PROVIDER.get()];
 
 let searchesUsed = 0;
 let searchDisabled: string | null = null;
@@ -48,14 +46,14 @@ let searchesSkipped = 0;
 export const searchProvider = (): string => active().name;
 
 /** Czy w ogóle mamy czym szukać — verifySource pyta o to przed próbą naprawy. */
-export const searchConfigured = (): boolean => active().keys.every((k) => Boolean(process.env[k]));
+export const searchConfigured = (): boolean => active().keys.every((k) => Boolean(P[k].get()));
 
 export async function webSearch(query: string, log: SearchCall[]): Promise<SearchResult[]> {
   const call: SearchCall = { query, results: [], ms: 0 };
   log.push(call);
 
-  if (!searchDisabled && searchesUsed >= SEARCH_BUDGET) {
-    searchDisabled = `budżet ${SEARCH_BUDGET} zapytań wyczerpany (DISCOVER_MAX_SEARCHES)`;
+  if (!searchDisabled && searchesUsed >= SEARCH_BUDGET()) {
+    searchDisabled = `budżet ${SEARCH_BUDGET()} zapytań wyczerpany (DISCOVER_MAX_SEARCHES)`;
   }
   if (searchDisabled) {
     call.skipped = true;

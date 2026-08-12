@@ -16,6 +16,7 @@ import {
   archiveStats,
   beginRun,
 } from "../adapters/supabase-archive.js";
+import { P } from "../config/index.js";
 import { withoutCamps } from "../pipeline/camps.js";
 import { dedupe } from "../pipeline/dedupe.js";
 import { harvestEventUrls, isEventUrl } from "../pipeline/facebook.js";
@@ -341,7 +342,7 @@ async function run(): Promise<void> {
       const first =
         errors.find((e) => e.err.startsWith("Bright Data"))?.err ?? "?";
       // adnotacja GH Actions: bez niej przebieg z samymi błędami BD i tak kończy się zielonym haczykiem
-      if (process.env["GITHUB_ACTIONS"]) {
+      if (P.GITHUB_ACTIONS.get()) {
         console.log(
           `::warning::Bright Data: ${bdUsage.errors} błędów, pierwszy: ${first}`,
         );

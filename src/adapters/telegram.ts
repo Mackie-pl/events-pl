@@ -1,11 +1,12 @@
 /** Wysyłka digestu na Telegrama. Brak tokenu = cicho pomijamy (tryb dry-run). */
+import { P } from "../config/index.js";
 import type { Digest } from "../pipeline/digest/render.js";
 
 import { fetchUrl } from "./http.js";
 
 export async function sendTelegram(d: Digest): Promise<boolean> {
-  const token = process.env["TELEGRAM_BOT_TOKEN"];
-  const chatId = process.env["TELEGRAM_CHAT_ID"];
+  const token = P.TELEGRAM_BOT_TOKEN.get();
+  const chatId = P.TELEGRAM_CHAT_ID.get();
   if (!token || !chatId) return false;
   for (const text of d.tgMessages) {
     const res = await fetchUrl(

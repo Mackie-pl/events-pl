@@ -7,14 +7,14 @@
  */
 import { sendResend } from "../adapters/resend.js";
 import { sendTelegram } from "../adapters/telegram.js";
+import { P } from "../config/index.js";
 import { buildDigest } from "../pipeline/digest/render.js";
 import { todayWarsaw } from "../shared/dates.js";
 import { eventsStore } from "../storage/index.js";
 
 async function main(): Promise<void> {
   const data = await eventsStore.load();
-  const ageEnv = process.env["DIGEST_CHILD_AGE"];
-  const childAge = ageEnv ? Number.parseInt(ageEnv, 10) : null;
+  const childAge = P.DIGEST_CHILD_AGE.get();
   const digest = buildDigest(
     data,
     todayWarsaw(),

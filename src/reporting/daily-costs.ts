@@ -74,7 +74,7 @@ export function buildDailyCosts(report: RunReport, archiveBytes: number): CostEn
     inputs.push({
       category: "storage",
       // obiekty z tego przebiegu zajmują miejsce przez ARCHIVE_RETENTION_DAYS
-      usd: gb * rates.storagePerGbMonth * (ARCHIVE_RETENTION_DAYS / 30),
+      usd: gb * rates.storagePerGbMonth * (ARCHIVE_RETENTION_DAYS() / 30),
       estimated: true,
       units: archiveBytes / 1024 ** 2,
       unit: "MB",

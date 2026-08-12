@@ -9,12 +9,13 @@
  */
 import { setTimeout as sleep } from "node:timers/promises";
 
+import { P } from "../config/index.js";
 import { describeError } from "../shared/errors.js";
 import type { GeoLookup } from "../types/index.js";
 
 import { fetchUrl } from "./http.js";
 
-const OVERPASS_URL = process.env["OVERPASS_URL"] ?? "https://overpass-api.de/api/interpreter";
+
 
 /**
  * Overpass odbija HTTP 406 request bez własnego User-Agenta — ich usage policy wymaga
@@ -84,7 +85,7 @@ async function overpass(
     onAttempt();
     let res: Response | null = null;
     try {
-      res = await fetchUrl(OVERPASS_URL, {
+      res = await fetchUrl(P.OVERPASS_URL.get(), {
         method: "POST",
         headers: OVERPASS_HEADERS,
         body: new URLSearchParams({ data: q }),

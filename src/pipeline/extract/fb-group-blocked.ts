@@ -20,21 +20,16 @@
  * naprawia je wyszukiwarka i dotyczy każdego rodzaju źródła. To znaczy „adres jest, scraper
  * się do niego nie dostaje" — inna diagnoza, inna naprawa, więc inny status.
  *
- * Env:
- *   FB_GROUP_BLOCKED_LIMIT          (opc.) po tylu pobraniach z rzędu pomijamy, domyślnie 3
- *   FB_GROUP_BLOCKED_RECHECK_DAYS   (opc.) co tyle dni jedna sonda, domyślnie 14
+ * Progi (wartości domyślne i pełny opis: src/config/params.ts):
+ *   FB_GROUP_BLOCKED_LIMIT, FB_GROUP_BLOCKED_RECHECK_DAYS
  */
+import { P } from "../../config/index.js";
 import { addDays } from "../../shared/dates.js";
 import { audit } from "../../shared/audit.js";
 import type { FbGroupStats, PipelineState, Source } from "../../types/index.js";
 
-const num = (name: string, fallback: number): number => {
-  const v = Number(process.env[name]);
-  return Number.isFinite(v) && v > 0 ? v : fallback;
-};
-
-export const blockedLimit = (): number => num("FB_GROUP_BLOCKED_LIMIT", 3);
-export const recheckDays = (): number => num("FB_GROUP_BLOCKED_RECHECK_DAYS", 14);
+export const blockedLimit = (): number => P.FB_GROUP_BLOCKED_LIMIT.get();
+export const recheckDays = (): number => P.FB_GROUP_BLOCKED_RECHECK_DAYS.get();
 
 export type BlockedEntry = NonNullable<PipelineState["fbGroupBlocked"]>[string];
 

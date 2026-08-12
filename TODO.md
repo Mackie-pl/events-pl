@@ -207,7 +207,82 @@ i spodziewane — nie mylić z regresem.
 
 ---
 
-## 8. Pułapki zapisane, żeby ich nie powtórzyć
+## 8. Wydarzenia bez godziny — i skąd naprawdę bierze się ten brak
+
+Zmierzone na `events.json` z 2026-08-12: **125 z 321 wydarzeń (38%) nie ma `time_start`.**
+Liczba jest jednak myląca i rozpada się na trzy różne sprawy, z których tylko jedna jest luką:
+
+- **47** to zakresy i serie, gdzie godzina startu bywa bez sensu. Wystawa czynna od lipca do
+  października ma godziny otwarcia, nie godzinę rozpoczęcia — `null` jest tam POPRAWNĄ
+  odpowiedzią, nie brakiem. Ewentualna praca jest tu w renderze (napisać „cały dzień"),
+  nie w ekstrakcji.
+- **78** to wydarzenia jednodniowe, czyli luka właściwa. Rozkład: `posir-poznan` 14,
+  grupy FB ~27 (pięć źródeł), `biblioteka-lubon-www` 5, `okpoznan-wydarzenia` 5.
+- Osobno: godziny **wymyślone**, czyli stan gorszy od braku (patrz 8b).
+
+### 8a. Godzina bywa o jeden klik dalej, ale to NIE jest częsty przypadek
+
+`DO UTRATY TCHU | REPREMIERA` (`ck-zamek`, 12.08) wszedł bez godziny, bo karta na
+`ckzamek.pl` niesie wyłącznie datę — sprawdzone w źródle strony:
+
+```
+|Do utraty tchu | repremiera| |Rekonstrukcja 4K…| |Data| 12.08.2026
+```
+
+Repertuar z godzinami stoi pod linkiem karty, `kinopalacowe.pl/filmy/14738-…`, i ten adres
+NIGDY nie został pobrany: `state.followupsBySource["ck-zamek"]` to `[]` przy 20 blokach.
+Powód jest w prompcie — followupy wolno brać „tylko z tej samej domeny lub oficjalnych",
+a Kino Pałacowe to inna domena, choć jest kinem tego samego CK Zamek. Model nie ma jak tego
+wiedzieć i zastosował regułę poprawnie co do litery.
+
+Asymetria, która jest tu właściwym znaleziskiem: **`source_url` przyjął obcą domenę
+(model rozpoznał stronę wydarzenia), a `followups` tej samej domeny już nie wpuściły.**
+
+**Dlaczego to NIE jest do naprawy teraz.** Zmierzone przed napisaniem czegokolwiek: wydarzeń
+bez godziny, które mają `source_url` na innej domenie niż źródło (pomijając FB), jest w całym
+pliku **5** — a dwa z nich to `docs.google.com` i `forms.gle`, czyli linki do zapisów, nie
+strony wydarzeń. Poluzowanie reguły followupów odzyskałoby **trzy** godziny. `ck-zamek` jest
+rzadkim kształtem, nie wzorcem — a każdy taki followup to pobranie plus wywołanie modelu.
+
+Większą dźwignią jest ścieżka plakatów z grup FB (~27 wydarzeń, i plakat zwykle niesie naraz
+godzinę I miejsce). Pomiar, który ma o tym rozstrzygnąć, już stoi w śladzie —
+patrz `fbPostExtras` w `pipeline/facebook.ts` i `auditFbPostExtras`.
+
+### 8b. `posir-poznan`: co po naprawie godzin z URL-a zostało otwarte
+
+Wymyślone godziny (11:46, 15:18, 15:21, 15:25 — z parametru `dates=` widgetu „dodaj do
+kalendarza") są **załatwione**: uzasadnienie, pomiar i reguła stoją w nagłówku
+`pipeline/extract/calendar-links.ts`, testy w `test/calendar-links.test.ts`. Zasięg zmierzony
+przed poprawką: widget ma 1 z 33 pobieranych źródeł, odpowiedników Outlooka i Yahoo nie ma
+nigdzie.
+
+Otwarte zostają dwie rzeczy z tej samej strony:
+
+- **Eksport ICS przy każdym wierszu** (`title="Format ICS"`) — gotowe pola KIEDY i GDZIE, bez
+  modelu. Uwaga na pokusę, żeby zrobić z tego zamiennik ekstrakcji: **nie jest.** Widać to
+  wprost po tym, co ścieżka maszynowa wpisuje dziś w pola ocenne (`from-capability.ts`):
+  `tags: ["ical:wydarzenie"]`, `age: openAge()`, `family_friendly: "maybe"`. Taksonomii
+  (`dzieci:warsztaty`, `sport:joga`), wieku, rodzinności, `price.free` ani `is_noise` z ICS-a
+  nie da się wyczytać, bo to odczyt prozy, nie pól. ICS ma sens jako UZUPEŁNIENIE tam, gdzie
+  szkielet jest niepewny (godzina, adres) — model dalej musi przeczytać opis.
+  Kontekst: zdolność `rss` tego źródła ma `itemsSeen: 43, datesParsed: 2` i została (słusznie)
+  odrzucona, więc dziś idzie ono modelem, choć wystawia obok dane maszynowe.
+- **„Całodniowe" nie ma jak dojść do ODBIORCY DIGESTU.** Strona pisze `cały dzień` 14 razy,
+  a w naszym modelu danych „nie znamy godziny" i „wydarzenie całodniowe" to ten sam `null`.
+  `pipeline/digest/render.ts` pokazuje wtedy wiersz bez godziny, więc odbiorca nie odróżnia
+  „godziny nie ma" od „nie znaleźliśmy jej". To ta sama sprawa, co 47 zakresów z nagłówka
+  punktu 8, i decyzja jest w `render.ts`, nie w ekstrakcji — chyba że wcześniej dojdzie
+  osobne pole na „całodniowe", a wtedy jest też w schemacie.
+
+Ubocznie ten sam pomiar pokazał, że CMS POSIR-u sypie w te parametry szerzej: dwa wiersze mają
+KONIEC PRZED POCZĄTKIEM (`20260815T193000/20260802T211500`, `20260829T194500/20260816T213000`).
+Godziny są tam przypadkiem poprawne, więc ekstrakcji to nie psuje i reguła ich nie rusza — ale
+gdyby kiedyś trzeba było czytać z tych URL-i DATY, tu jest dowód, że bez sprawdzenia spójności
+nie wolno.
+
+---
+
+## 9. Pułapki zapisane, żeby ich nie powtórzyć
 
 Nie do zrobienia — do NIEzrobienia. Każda wyglądała na oczywiste ulepszenie.
 

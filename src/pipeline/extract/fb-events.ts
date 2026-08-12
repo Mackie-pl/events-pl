@@ -11,14 +11,17 @@ import {
 import { geocode } from "../../adapters/nominatim.js";
 import { resetUsage, snapshotUsage } from "../../adapters/openrouter.js";
 import { archiveRaw, beginSource, sourcePaths } from "../../adapters/supabase-archive.js";
+import { P } from "../../config/index.js";
 import { describeError } from "../../shared/errors.js";
 import type {
   BdUsage, EventItem, PipelineError, PipelineState, SourceRun,
 } from "../../types/index.js";
 import { fbEventToItem } from "../facebook.js";
 
+import { detach, lastDay } from "./block-cache.js";
+
 /** Górny limit rozwiązywanych linków na przebieg — bezpiecznik kosztów Bright Data. */
-const MAX_FB_EVENTS_PER_RUN = Number(process.env["BD_MAX_FB_EVENTS"] ?? 40);
+const MAX_FB_EVENTS_PER_RUN = (): number => P.BD_MAX_FB_EVENTS.get();
 
 const FB_EVENT_CACHE_PREFIX = "fb-event:";
 /** Po tylu dniach rozwiązujemy link ponownie — data/miejsce wydarzenia potrafią się zmienić. */
@@ -34,7 +37,7 @@ function pruneFbCache(cache: FbCache, today: string): void {
   for (const [key, entry] of Object.entries(cache)) {
     if (!key.startsWith(FB_EVENT_CACHE_PREFIX)) continue;
     const stale = entry.events.length
-      ? entry.events.every((ev) => (ev.date_end ?? ev.date_start) < today)
+      ? entry.events.every((ev) => lastDay(ev) < today)
       : Date.now() - Date.parse(entry.at) > FB_EVENT_TTL_MS;
     if (stale) delete cache[key];
   }
@@ -47,7 +50,9 @@ function partitionByCache(
   const toResolve: string[] = [];
   for (const url of urls) {
     const entry = cache[FB_EVENT_CACHE_PREFIX + url];
-    if (entry && Date.now() - Date.parse(entry.at) <= FB_EVENT_TTL_MS) cached.push(...entry.events);
+    if (entry && Date.now() - Date.parse(entry.at) <= FB_EVENT_TTL_MS) {
+      cached.push(...detach(entry.events));
+    }
     else toResolve.push(url);
   }
   return { cached, toResolve };
@@ -92,7 +97,9 @@ async function collectFbEvents(
   for (const url of capped) {
     const id = fbEventId(url);
     const hit = (id ? byId.get(id) : undefined) ?? [];
-    cache[FB_EVENT_CACHE_PREFIX + url] = { hash: url, events: hit, at: new Date().toISOString() };
+    cache[FB_EVENT_CACHE_PREFIX + url] = {
+      hash: url, events: detach(hit), at: new Date().toISOString(),
+    };
   }
   return out;
 }
@@ -143,9 +150,9 @@ export async function resolveFbEvents(
   const events: EventItem[] = [...cached];
   const fromCache = events.length;
 
-  const capped = toResolve.slice(0, MAX_FB_EVENTS_PER_RUN);
+  const capped = toResolve.slice(0, MAX_FB_EVENTS_PER_RUN());
   if (toResolve.length > capped.length) {
-    run.note = `limit ${MAX_FB_EVENTS_PER_RUN}/przebieg — pominięto ${toResolve.length - capped.length} linków`;
+    run.note = `limit ${MAX_FB_EVENTS_PER_RUN()}/przebieg — pominięto ${toResolve.length - capped.length} linków`;
   }
 
   if (capped.length) {

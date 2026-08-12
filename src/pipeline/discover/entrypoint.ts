@@ -15,6 +15,7 @@ import { convert as htmlToText } from "html-to-text";
 
 import { BROWSER_HEADERS, fetchUrl } from "../../adapters/http.js";
 import { MODEL_EXTRACT, chat } from "../../adapters/openrouter.js";
+import { P } from "../../config/index.js";
 import { extractLinks, type PageLink } from "../../shared/links.js";
 import { str, trim } from "../../shared/text.js";
 import { MIN_GROUP, detailGroup, detectPagination, groupByTemplate } from "../../shared/url-template.js";
@@ -223,7 +224,7 @@ const scoreOf = (c: Candidate | undefined): number => c?.score ?? 0;
  * albo remis — dwaj czołowi kandydaci w granicy punktu od siebie.
  */
 function needsModel(measured: readonly Candidate[]): boolean {
-  const mode = (process.env["ENTRYPOINT_LLM"] ?? "always").toLowerCase();
+  const mode = P.ENTRYPOINT_LLM.get();
   if (mode === "never") return false;
   if (mode !== "ambiguous") return true;
   const [best, runner] = measured;

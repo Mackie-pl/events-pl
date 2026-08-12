@@ -9,13 +9,14 @@
  *
  * Limity: 100 zapytań/dzień gratis, dalej $5/1000, twardy sufit 10 000/dzień.
  */
+import { P } from "../config/index.js";
 import { describeError } from "../shared/errors.js";
 import { trim } from "../shared/text.js";
 import type { SearchCall, SearchProviderOutcome } from "../types/index.js";
 
 import { fetchUrl } from "./http.js";
 
-const GOOGLE_URL = process.env["GOOGLE_URL"] ?? "https://www.googleapis.com/customsearch/v1";
+
 const MAX_DESC_CHARS = 300;
 
 /**
@@ -35,8 +36,8 @@ type GoogleHit = { title?: string; link?: string; snippet?: string };
  * zajrzenia do ciała odpowiedzi, a nie tylko do statusu — patrz `readError`.
  */
 export async function search(query: string, call: SearchCall): Promise<SearchProviderOutcome> {
-  const key = process.env["GOOGLE_API_KEY"];
-  const cx = process.env["GOOGLE_CSE_CX"];
+  const key = P.GOOGLE_API_KEY.get();
+  const cx = P.GOOGLE_CSE_CX.get();
   if (!key || !cx) {
     return { results: [], fatal: `brak ${!key ? "GOOGLE_API_KEY" : "GOOGLE_CSE_CX"}` };
   }
@@ -45,7 +46,7 @@ export async function search(query: string, call: SearchCall): Promise<SearchPro
     key, cx, q: query, num: "10", gl: "pl", hl: "pl", lr: "lang_pl", safe: "off",
   });
   try {
-    const res = await fetchUrl(`${GOOGLE_URL}?${params.toString()}`, {}, 20_000, "Google CSE");
+    const res = await fetchUrl(`${P.GOOGLE_URL.get()}?${params.toString()}`, {}, 20_000, "Google CSE");
     const body = await res.text();
     if (!res.ok) return failure(res.status, body, call);
     const json = JSON.parse(body) as { items?: GoogleHit[] } & GoogleError;
