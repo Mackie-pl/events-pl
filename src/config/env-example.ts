@@ -19,6 +19,11 @@ const PREAMBLE = [
   "Wczytywane automatycznie przez npm run daily/digest/discover/probe/panel-server",
   "(node --env-file-if-exists, bez dodatkowych zależności).",
   "Na GH Actions pliku nie ma — tam te same nazwy przychodzą z repo secrets.",
+  "",
+  "PROGI POTOKU MIESZKAJĄ W config.json, nie tutaj. Wpisy poniżej i tak działają — env ma",
+  "pierwszeństwo — ale zmiana w .env albo w sekretach repo nie zostawia śladu nigdzie,",
+  "a ta sama zmiana w config.json ma datę, autora i diff. Env do doraźnego eksperymentu,",
+  "config.json do decyzji. Wartości pokazane niżej to domyślne z rejestru.",
 ];
 
 /** Szerokość, do której dociągamy `NAME=wartość`, zanim dopiszemy komentarz na prawo. */

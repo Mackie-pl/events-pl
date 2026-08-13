@@ -14,6 +14,13 @@
  *   - wyczerpany, a okno z zapasem pokrywa przerwę → schodzimy,
  *   - wyczerpany i okno KRÓTSZE niż przerwa → ucieka nam treść, podnosimy.
  *
+ * JEDNOSTKĄ JEST REKORD, NIE POST. `limit_per_input` ogranicza rekordy i po rekordach liczy
+ * rachunek, a `posts` to nasza własna klasyfikacja tego, co wróciło — rekord bez treści jest
+ * płatny tak samo. Liczenie potrzeby w postach zaniżało limit o stosunek rekordy/posty, a ten
+ * bywa dramatyczny: `wydarzenia-w-luboniu-fb-group` 2026-08-12 oddało 11 postów z 50 rekordów
+ * (22%), więc limit „na 10 postów" kupowałby w praktyce 2. Posty zostają wyłącznie do pomiaru
+ * okna (`spanDays`) — bo tylko one niosą datę.
+ *
  * Sufit `FB_GROUP_LIMIT_MAX` jest domyślnie równy dotychczasowej stałej (50), więc regulator
  * może wydatek wyłącznie ZMNIEJSZYĆ. To nie jest ostrożność na wyrost: pętla, która sama
  * sobie podnosi limit u dostawcy rozliczającego się per-rekord, jest dokładnie tym kształtem
@@ -67,11 +74,11 @@ export function noteFbGroupRate(
   let why: string;
   if (!stats.atLimit) {
     // dostaliśmy wszystko, co grupa ma — tyle właśnie leży, plus zapas
-    next = clamp(stats.posts * (1 + limitMargin()));
-    why = `limit ${used} niewyczerpany (${stats.posts} postów to całość)`;
+    next = clamp(stats.records * (1 + limitMargin()));
+    why = `limit ${used} niewyczerpany (${stats.records} rekordów to całość)`;
   } else if (span >= need) {
     // wyczerpany, ale okno sięga wstecz DALEJ niż trzeba — tyle rekordów starczy na przerwę
-    next = clamp((stats.posts / span) * need);
+    next = clamp((stats.records / span) * need);
     why = `okno ${span} dni pokrywa ${gap}-dniową przerwę z zapasem`;
   } else {
     // wyczerpany, a okno nie sięga do poprzedniego pobrania — coś nam ucieka

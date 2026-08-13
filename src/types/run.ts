@@ -1,5 +1,6 @@
 /** Raport przebiegu daily (runs.json). */
 
+import type { ConfigSnapshot } from "../config/snapshot.js";
 import type { CostEntry } from "./cost.js";
 import type { FetchStrategy } from "./source.js";
 import type { BdUsage, LlmUsage, TaskUsage } from "./usage.js";
@@ -252,4 +253,11 @@ export interface RunReport {
   costs?: CostEntry[];
   /** wartość kanału FB w oknie i werdykt progu; brak = w oknie nie było źródeł FB */
   fbValue?: FbValueRow[];
+  /**
+   * Progi, którymi kierował się TEN przebieg. Brak = raport sprzed wprowadzenia migawki.
+   * Bez tego liczby wyżej są nie do zinterpretowania po fakcie: „wyciszono cztery grupy"
+   * znaczy co innego przy progu $0.10, a co innego przy $0.02, i nic w raporcie tego
+   * nie odróżniało.
+   */
+  config?: ConfigSnapshot;
 }

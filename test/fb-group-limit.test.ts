@@ -45,17 +45,25 @@ describe("fbGroupLimit — punkt wyjścia", () => {
 describe("noteFbGroupRate — regulator pokrycia", () => {
   it("limit niewyczerpany → schodzimy do tego, co realnie leży, plus zapas", () => {
     const s = state();
-    // 6 postów z limitu 50: grupa nie ma więcej, więc 50 to marnotrawstwo
+    // 6 rekordów z limitu 50: grupa nie ma więcej, więc 50 to marnotrawstwo
     noteFbGroupRate("g", stats({ records: 6, posts: 6, atLimit: false, spanDays: 5 }), s, "2026-08-12");
-    assert.equal(s.fbGroupRate?.["g"]?.next, 10, "6 × 1.2 = 7.2, podniesione do podłogi 10");
+    assert.equal(s.fbGroupRate?.["g"]?.next, 8, "6 × 1.2 = 7.2");
   });
 
   it("okno pokrywa przerwę z zapasem → schodzimy poniżej sufitu", () => {
     const s = state();
     s.fbGroupRate = { g: { at: "2026-08-11", next: 50, postsPerDay: 33, spanDays: 4 } };
-    // 50 postów rozłożone na 4 doby przy dobowej przerwie: starczy ~15 na dobę z zapasem
+    // 50 rekordów rozłożone na 4 doby przy dobowej przerwie: starczy ~15 na dobę z zapasem
     noteFbGroupRate("g", stats({ spanDays: 4 }), s, "2026-08-12");
     assert.equal(s.fbGroupRate?.["g"]?.next, 15);
+  });
+
+  it("liczy w rekordach, nie w postach — rekord bez treści też jest płatny", () => {
+    const s = state();
+    // 11 postów z 50 płatnych rekordów (Luboń, 2026-08-12): potrzeba liczona w postach
+    // dałaby limit 4× za niski, bo za pozostałe 39 rekordów i tak zapłacimy
+    noteFbGroupRate("g", stats({ records: 50, posts: 11, errorRows: 39, spanDays: 4 }), s, "2026-08-12");
+    assert.equal(s.fbGroupRate?.["g"]?.next, 15, "50/4 × 1.2, a nie 11/4 × 1.2");
   });
 
   it("okno KRÓTSZE niż przerwa → podnosimy, bo treść ucieka", () => {
@@ -82,7 +90,9 @@ describe("noteFbGroupRate — regulator pokrycia", () => {
 
   it("podłoga trzyma nawet przy grupie, która nic nie publikuje", () => {
     const s = state();
+    // bez podłogi limit zjechałby do 1 i zamroziłby regulator: tempa nie da się zmierzyć
+    // na pobraniu, które nie ma z czego policzyć okna
     noteFbGroupRate("g", stats({ records: 1, posts: 1, atLimit: false, spanDays: 0 }), s, "2026-08-12");
-    assert.equal(s.fbGroupRate?.["g"]?.next, 10);
+    assert.equal(s.fbGroupRate?.["g"]?.next, 5);
   });
 });

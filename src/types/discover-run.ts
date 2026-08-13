@@ -1,5 +1,6 @@
 /** Raport przebiegu discover (discover-runs.json). */
 
+import type { ConfigSnapshot } from "../config/snapshot.js";
 import type { CostEntry } from "./cost.js";
 import type {
   EntryPoint, FetchProbe, FetchStrategy, ReachOutcome, SearchResult, SourceCapability, SourceType,
@@ -253,6 +254,8 @@ export interface DiscoverRunReport {
   archiveEnabled?: boolean;
   /** koszt przebiegu w rozbiciu na kategorie — to samo, co trafiło do costs.json */
   costs?: CostEntry[];
+  /** progi, którymi kierował się ten przebieg (patrz RunReport.config) */
+  config?: ConfigSnapshot;
   /** szczegóły (wyniki search, propozycje) usunięte przy przycinaniu pliku */
   slimmed?: boolean;
   /** rejestr skasowany przed przebiegiem (`--reset`) — z rozliczeniem, co wróciło */

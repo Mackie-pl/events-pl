@@ -1,4 +1,5 @@
 /** Agregaty przebiegu daily + polityka przechowywania runs.json. */
+import { configSnapshot } from "../config/index.js";
 import type { RedactionStats } from "../pipeline/pii.js";
 import { collection } from "../storage/index.js";
 import type { CollectionStore, Retention } from "../storage/index.js";
@@ -38,6 +39,7 @@ export function buildReport(startedAt: string, t0: number, sources: SourceRun[],
   return {
     stage: "daily", startedAt, finishedAt: new Date().toISOString(),
     durationMs: Math.round(performance.now() - t0), totals, sources,
+    config: configSnapshot(),
   };
 }
 

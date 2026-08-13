@@ -34,6 +34,8 @@ export const REUSE_PATH = join(ROOT, "reuse.json");
 /** Plon źródeł: co kosztuje, a nic nie daje. Liczone z runs.json, więc okno jest krótkie. */
 export const YIELD_PATH = join(ROOT, "yield.json");
 
+/** Progi potoku wersjonowane w repo — po to, żeby zmiana progu miała datę i autora. */
+export const CONFIG_PATH = join(ROOT, "config.json");
 /** Generowany z rejestru parametrów (src/config), nie pisany ręcznie. */
 export const ENV_EXAMPLE_PATH = join(ROOT, ".env.example");
 /** Pisany ręcznie, ale z jedną sekcją wstrzykiwaną z tego samego rejestru. */
