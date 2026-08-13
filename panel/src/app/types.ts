@@ -16,11 +16,15 @@ export * from './types-reuse';
 // Plon źródeł (yield.json): co kosztuje, a nic nie daje.
 export * from './types-yield';
 
+// Konfiguracja: rejestr parametrów (config-meta.json) i progi (config.json).
+export * from './types-config';
+
 // Profil źródła z etapu 1: osiągalność, entrypointy, maszynowe wyjścia.
 // Tu tylko `import`, bez `export *` jak wyżej: te typy są osiągalne przez pola `Source`,
 // więc nikt nie importuje ich po nazwie, a ten plik siedzi dokładnie na progu 350 linii kodu.
 export type { EntryPoint, ReachOutcome, ReachStep, SourceCapability } from './types-source';
 
+import type { ConfigSnapshot } from './types-config';
 import type { EntryPoint, ReachOutcome, ReachStep, SourceCapability } from './types-source';
 
 export type FetchStrategy =
@@ -327,6 +331,12 @@ export interface RunReport {
   brightdata?: BdUsage;
   /** koszt przebiegu w rozbiciu na kategorie — kopia wpisów z costs.json */
   costs?: CostEntry[];
+  /**
+   * Progi, którymi kierował się TEN przebieg. Brak = raport sprzed wprowadzenia migawki.
+   * Bez tego liczby wyżej są nie do zinterpretowania po fakcie: „wyciszono cztery grupy"
+   * znaczy co innego przy progu $0.10, a co innego przy $0.02.
+   */
+  config?: ConfigSnapshot;
 }
 
 // ---------------- koszty ----------------

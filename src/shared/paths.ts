@@ -36,6 +36,8 @@ export const YIELD_PATH = join(ROOT, "yield.json");
 
 /** Progi potoku wersjonowane w repo — po to, żeby zmiana progu miała datę i autora. */
 export const CONFIG_PATH = join(ROOT, "config.json");
+/** Rejestr w postaci dla panelu (klasy, opisy, wartości domyślne) — generowany. */
+export const CONFIG_META_PATH = join(ROOT, "config-meta.json");
 /** Generowany z rejestru parametrów (src/config), nie pisany ręcznie. */
 export const ENV_EXAMPLE_PATH = join(ROOT, ".env.example");
 /** Pisany ręcznie, ale z jedną sekcją wstrzykiwaną z tego samego rejestru. */

@@ -3,6 +3,8 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 
 import { BridgeService } from './bridge';
 import type {
+  ConfigFile,
+  ConfigMeta,
   CostLedger,
   DiscoverRunReport,
   EventsFile,
@@ -122,6 +124,23 @@ export class DataService {
   requestYield(): void {
     this.yieldRequested.set(true);
   }
+
+  /**
+   * Rejestr parametrów: jakie pokrętła istnieją i czym są. Mały i potrzebny tylko na własnej
+   * zakładce, ale pobierany od razu — nagłówek pokazuje, ile progów przyszło ze środowiska,
+   * a to informacja, po którą nie chce się klikać.
+   */
+  readonly configMeta = httpResource<ConfigMeta | null>(() => this.file('config-meta.json'), {
+    defaultValue: null,
+  });
+
+  /**
+   * Wartości progów. Osobny plik od rejestru, bo to on jest edytowany ręcznie i commitowany —
+   * rejestr opisuje, ten rozstrzyga. Sekretów tu nie ma i nie będzie: pliki repo są publiczne.
+   */
+  readonly configValues = httpResource<ConfigFile | null>(() => this.file('config.json'), {
+    defaultValue: null,
+  });
 
   /**
    * Ślad decyzyjny. Największy plik w zestawie, a potrzebny tylko wtedy, gdy ktoś schodzi

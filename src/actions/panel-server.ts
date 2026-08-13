@@ -35,8 +35,8 @@ import { fetchUrl } from "../adapters/http.js";
 import { ProbeError, probeSource } from "../pipeline/extract/probe-source.js";
 import { describeError } from "../shared/errors.js";
 import {
-  AUDIT_PATH, COSTS_PATH, DISCOVER_RUNS_PATH, EVENTS_PATH, REUSE_PATH, RUNS_PATH, SOURCES_PATH,
-  YIELD_PATH,
+  AUDIT_PATH, CONFIG_META_PATH, CONFIG_PATH, COSTS_PATH, DISCOVER_RUNS_PATH, EVENTS_PATH,
+  REUSE_PATH, RUNS_PATH, SOURCES_PATH, YIELD_PATH,
 } from "../shared/paths.js";
 import { P } from "../config/index.js";
 
@@ -66,6 +66,9 @@ const LOCAL_FILES: Readonly<Record<string, string>> = {
   "costs.json": COSTS_PATH,
   "reuse.json": REUSE_PATH,
   "yield.json": YIELD_PATH,
+  // konfiguracja: rejestr (czym są pokrętła) i progi (jakie mają wartości)
+  "config.json": CONFIG_PATH,
+  "config-meta.json": CONFIG_META_PATH,
 };
 
 const cors = (origin: string | undefined): Record<string, string> =>
