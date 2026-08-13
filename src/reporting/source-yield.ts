@@ -47,7 +47,12 @@ export interface SourceYield {
   fetchedRuns: number;
   /** wydarzenia oddane przez źródło, sumarycznie przez całe okno (przed dedupe) */
   produced: number;
-  /** różne wydarzenia (klucze) — powtórzenia tego samego dzień po dniu liczą się raz */
+  /**
+   * Różne wydarzenia (klucze). Raz liczy się i to samo wydarzenie powtórzone dzień po dniu
+   * w kolejnych przebiegach, i cała seria — kilkadziesiąt terminów jednego rytmu to jeden
+   * rekord w magazynie, więc i jeden klucz tutaj (nośnikiem jest `EventRef.key`).
+   * Stosunek `produced / distinct` pokazuje, ile z plonu źródła to rozwinięty rytm.
+   */
   distinct: number;
   /** wydarzenia, których NIE dało żadne inne źródło — to jest cała stawka przy usuwaniu */
   exclusive: number;
@@ -171,7 +176,11 @@ function collect(runs: RunReport[]): {
       a.statuses.set(s.status, (a.statuses.get(s.status) ?? 0) + 1);
 
       for (const ref of s.produced ?? []) {
-        const key = eventKey(ref.title, ref.date);
+        // `ref.key` = rekord, którym ten ref ostatecznie został (patrz types/run.ts). Dzięki
+        // niemu kilkadziesiąt terminów jednego rytmu to JEDEN klucz, a nie kilkadziesiąt
+        // osobnych „wydarzeń, których nikt inny nie ma". Brak pola = stary przebieg albo ref,
+        // który niczym się nie stał — wtedy klucz liczy się jak dotąd.
+        const key = ref.key ?? eventKey(ref.title, ref.date);
         a.produced++;
         a.keys.add(key);
         addProducer(producers, key, s.id);

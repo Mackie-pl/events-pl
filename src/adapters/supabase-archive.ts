@@ -272,9 +272,12 @@ export async function archiveRaw(sourceId: string, url: string, text: string, ki
 /**
  * Prompt + odpowiedź modelu. Obrazy (plakaty w base64) zastępujemy metadanymi —
  * archiwum ma służyć debugowaniu, a nie przechowywaniu megabajtów base64.
+ *
+ * Zwraca ścieżkę (jak `archiveRaw`), bo bez niej krok śladu wiedział tylko, ŻE model
+ * był wołany — ścieżka wędruje przez `CallRecorder` do detali kroku i robi z niej link.
  */
-export async function archiveLlmCall(rec: LlmCallRecord): Promise<void> {
-  if (!archiveEnabled()) return;
+export async function archiveLlmCall(rec: LlmCallRecord): Promise<string | null> {
+  if (!archiveEnabled()) return null;
   const user = typeof rec.user === "string"
     ? rec.user
     : rec.user.map((p) =>
@@ -283,10 +286,13 @@ export async function archiveLlmCall(rec: LlmCallRecord): Promise<void> {
           : p,
       );
   const seq = String(++llmSeq).padStart(4, "0");
-  await put(
-    `llm/${day()}/${runId}/${currentSourceId || "_"}/${seq}-${rec.model.replace(/\//g, "_")}.json`,
+  const path =
+    `llm/${day()}/${runId}/${currentSourceId || "_"}/${seq}-${rec.model.replace(/\//g, "_")}.json`;
+  const ok = await put(
+    path,
     JSON.stringify({ ...rec, user, runId, sourceId: currentSourceId || null }, null, 1),
   );
+  return ok ? path : null;
 }
 
 /** Wydarzenia PRZED redakcją PII — pełna wersja do digestu i debugowania. */

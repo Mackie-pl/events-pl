@@ -21,11 +21,15 @@ import type { FbPostExtras } from "../facebook.js";
  * policzone z tego okna jest bez wartości i cały pomysł trzeba porzucić, zanim zacznie
  * sterować wydatkiem.
  */
-export function auditFbGroup(s: FbGroupStats): void {
+export function auditFbGroup(s: FbGroupStats, archive?: string | null): void {
+  // ścieżka surowej migawki idzie do OBU wariantów, ale najbardziej potrzebna jest w tym
+  // pierwszym: „zero postów za N płatnych rekordów" to zdanie, po którym pierwsze pytanie
+  // brzmi „to co on w takim razie oddał", a odpowiedzi nie ma nigdzie poza tym plikiem
+  const where = archive ? { archive } : {};
   if (!s.posts) {
     audit("fb.group",
       `${s.records} płatnych rekordów, ani jednego postu — same wiersze błędu scrapera`,
-      { records: s.records, errorRows: s.errorRows, why: s.blockedWhy ?? null });
+      { records: s.records, errorRows: s.errorRows, why: s.blockedWhy ?? null, ...where });
     return;
   }
   const rate = s.postsPerDay === undefined
@@ -42,6 +46,7 @@ export function auditFbGroup(s: FbGroupStats): void {
     {
       posts: s.posts, records: s.records, newest: s.newest ?? null, oldest: s.oldest ?? null,
       spanDays: s.spanDays ?? null, postsPerDay: s.postsPerDay ?? null, atLimit: s.atLimit,
+      ...where,
     });
 }
 

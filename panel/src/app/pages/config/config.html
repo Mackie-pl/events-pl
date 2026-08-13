@@ -1,0 +1,143 @@
+@if (data.configMeta.error()) {
+  <div class="error-box">
+    <tui-icon icon="@tui.triangle-alert" />
+    Nie udało się wczytać config-meta.json
+    <button tuiButton size="s" appearance="secondary" (click)="data.configMeta.reload()">
+      Ponów
+    </button>
+  </div>
+} @else if (data.configMeta.isLoading() && !groups().length) {
+  <tui-loader size="xl" class="page-loader" />
+} @else {
+  <header tuiTitle class="page-title">
+    <h1>Konfiguracja</h1>
+    <div tuiSubtitle>
+      rejestr z <code>src/config/params.ts</code> · progi z <code>config.json</code> ·
+      {{ tunedCount() }} odbiega od domyślnych
+    </div>
+  </header>
+
+  <!-- Sedno strony jest tutaj, nie w tabeli niżej: tabela mówi, co obowiązuje TERAZ, a raport
+       przebiegu trzeba czytać z tym, co obowiązywało WTEDY. -->
+  <section class="cards">
+    <div class="card" [class.card--warn]="drift().length">
+      <span class="card-label">Zmiany od ostatniego przebiegu</span>
+      <!-- „0 zmian" i „nie ma czego porównać" to dwie różne wiadomości; kreska mówi drugą -->
+      <span class="card-value">{{ snapshotMissing() ? '—' : drift().length }}</span>
+      <span class="card-sub">
+        @if (snapshotMissing()) {
+          ostatni przebieg nie zapisał jeszcze migawki progów
+        } @else if (lastRunAt()) {
+          wobec migawki z {{ dt(lastRunAt()) }}
+        } @else {
+          brak przebiegu do porównania
+        }
+      </span>
+    </div>
+    <div class="card" [class.card--warn]="fromEnv().length">
+      <span class="card-label">Progi ze środowiska</span>
+      <span class="card-value">{{ fromEnv().length }}</span>
+      <span class="card-sub">
+        ustawione sekretem repo w ostatnim przebiegu — jedyne, których nie widać w
+        <code>git log</code>
+      </span>
+    </div>
+  </section>
+
+  @if (drift().length) {
+    <section class="block">
+      <h2>Co się zmieniło od ostatniego przebiegu</h2>
+      <table tuiTable class="table">
+        <thead>
+          <tr tuiThGroup>
+            <th tuiTh>Próg</th>
+            <th tuiTh>Wtedy</th>
+            <th tuiTh>Teraz</th>
+          </tr>
+        </thead>
+        <tbody tuiTbody>
+          @for (d of drift(); track d.name) {
+            <tr tuiTr>
+              <td tuiTd><code>{{ d.name }}</code></td>
+              <td tuiTd class="num was">{{ show(d.then) }}</td>
+              <td tuiTd class="num is">{{ show(d.now) }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      <p class="note">
+        Następny przebieg pojedzie na wartościach z kolumny „Teraz”. Poprzednie raporty niosą
+        własne migawki, więc ich liczby dalej da się czytać.
+      </p>
+    </section>
+  }
+
+  @if (fromEnv().length) {
+    <section class="block">
+      <h2>Progi podane ze środowiska</h2>
+      <p class="note">
+        Te wartości przyszły w ostatnim przebiegu ze zmiennych środowiskowych, nie z pliku —
+        wygrywają z <code>config.json</code> i nie zostawiają śladu w historii repo. Jeśli któraś
+        ma zostać na stałe, jej miejsce jest w pliku.
+      </p>
+      <div class="chips">
+        @for (name of fromEnv(); track name) {
+          <code class="chip">{{ name }}</code>
+        }
+      </div>
+    </section>
+  }
+
+  @if (snapshotMissing()) {
+    <p class="note">
+      Ostatni przebieg jest sprzed wprowadzenia migawki progów — nie ma go z czym porównać.
+      Pojawi się przy najbliższym <code>npm run daily</code>.
+    </p>
+  }
+
+  @for (g of groups(); track g.id) {
+    <section class="block">
+      <h2>{{ g.title }}</h2>
+      <table tuiTable class="table">
+        <thead>
+          <tr tuiThGroup>
+            <th tuiTh>Parametr</th>
+            <th tuiTh>Wartość</th>
+            <th tuiTh>Skąd</th>
+            <th tuiTh>Klasa</th>
+            <th tuiTh>Do czego</th>
+          </tr>
+        </thead>
+        <tbody tuiTbody>
+          @for (r of g.rows; track r.name) {
+            <tr tuiTr [class.tuned]="r.tuned">
+              <td tuiTd><code>{{ r.name }}</code></td>
+              <td tuiTd class="num">
+                {{ show(r.value) }}
+                @if (r.tuned) {
+                  <span class="was-default" [title]="'domyślnie: ' + show(r.def)">
+                    ≠ {{ show(r.def) }}
+                  </span>
+                }
+              </td>
+              <td tuiTd class="muted">{{ r.origin }}</td>
+              <td tuiTd>
+                <span tuiBadge size="s" [appearance]="classBadge[r.cls]">
+                  {{ classLabel[r.cls] }}
+                </span>
+              </td>
+              <td tuiTd class="muted">{{ r.summary }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+  }
+
+  <p class="note footer-note">
+    Panel czyta wyłącznie pliki repo, więc zna wartości <strong>progów</strong>. Sekrety i
+    ustawienia żyją w środowisku — kolumna „Wartość” pokazuje dla nich wartość domyślną, a
+    nadpisanie przez <code>process.env</code> jest stąd niewidoczne. Zmiany robi się w
+    <code>config.json</code> i commitem; ten ekran nic nie zapisuje.
+  </p>
+}

@@ -141,6 +141,22 @@ export interface EventRef {
    * Brak = rekord przeszedł do events.json.
    */
   mergedInto?: string;
+  /**
+   * Klucz rekordu, którym ten ref OSTATECZNIE został — po dedupe i po zwinięciu serii.
+   * Brak = ten ref niczym się nie stał poza sobą samym (klucz liczy się z `title` i `date`).
+   *
+   * Po co, skoro `title` i `date` już tu są: bo rytm rozwija się PRZED dedupe (patrz
+   * pipeline/series.ts), więc jeden post o cotygodniowej zumbie wchodzi do przebiegu jako
+   * kilkadziesiąt rekordów jednodniowych i tyleż refów. Bez tego pola raport plonu liczy
+   * każdy termin jako osobne wydarzenie i wychodzi na to, że wiejska grupa dała 270 rzeczy,
+   * których nikt inny nie ma — zmierzone 2026-08-13: `lubon-fb-group` miał 74 klucze z 5
+   * postów (×14.8), a `dopiewo-tablica-ogloszen-fb` 272 z 20 (×13.6).
+   *
+   * Klucz idzie do KOŃCA łańcucha scaleń, nie o jeden krok. Kopia serii z drugiej grupy
+   * przegrywa najpierw dedupe (na swoim dniu), a dopiero zwycięzca zwija się w rytm —
+   * dwa kroki, po których 111 refów zumby z dwóch grup Lubonia wskazuje jeden rekord.
+   */
+  key?: string;
 }
 
 export interface SourceRun {

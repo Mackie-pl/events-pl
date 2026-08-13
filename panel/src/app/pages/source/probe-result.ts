@@ -45,10 +45,15 @@ export class ProbeResultView {
     this.openCall.update((v) => (v === i ? null : i));
   }
 
+  /**
+   * Jak na stronie źródła — ta sama umowa o kluczach. `archive` odpada bez przycisku:
+   * sonda podmienia recorder na własny, więc jej wywołania nigdzie nie lądują, a prompty
+   * i tak są niżej, w sekcji wywołań modelu.
+   */
   protected detailPairs(step: AuditStep): { k: string; v: string }[] {
     return Object.entries(step.detail ?? {})
-      .filter(([, v]) => v !== null && v !== undefined && v !== '')
-      .map(([k, v]) => ({ k, v: String(v) }));
+      .filter(([k, v]) => k !== 'archive' && v !== null && v !== undefined && v !== '')
+      .map(([k, v]) => ({ k, v: k === 'usd' && typeof v === 'number' ? fmtUsd(v) : String(v) }));
   }
 
   protected json(e: EventItem): string {

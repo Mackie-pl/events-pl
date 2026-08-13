@@ -1,0 +1,131 @@
+.page-title {
+  margin-bottom: 1.25rem;
+}
+
+.page-loader {
+  margin: 4rem auto;
+}
+
+.error-box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: var(--tui-status-negative-pale);
+  color: var(--tui-status-negative);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem;
+  border-radius: 0.9rem;
+  border: 1px solid var(--tui-border-normal);
+  background: var(--tui-background-base-alt);
+
+  /* Wyróżnienie tylko wtedy, gdy jest co wyróżniać: zero zmian to stan normalny,
+     a nie sukces wart podświetlenia. */
+  &--warn {
+    border-color: var(--tui-status-warning);
+    background: var(--tui-status-warning-pale);
+  }
+}
+
+.card-label {
+  font-size: 0.8rem;
+  color: var(--tui-text-secondary);
+}
+
+.card-value {
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.card-sub {
+  font-size: 0.8rem;
+  color: var(--tui-text-secondary);
+}
+
+.block {
+  margin-bottom: 2rem;
+
+  h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+    color: var(--tui-text-secondary);
+  }
+}
+
+.table {
+  width: 100%;
+
+  code {
+    font-size: 0.85rem;
+  }
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* „było → jest" w tabeli zmian: sama para liczb bez kierunku niewiele mówi. */
+.was {
+  color: var(--tui-text-tertiary);
+  text-decoration: line-through;
+}
+
+.is {
+  font-weight: 600;
+}
+
+.muted {
+  color: var(--tui-text-secondary);
+}
+
+/* Wiersz ruszony ręcznie ma się rzucać w oczy — reszta tabeli to tło. */
+.tuned code {
+  font-weight: 600;
+}
+
+.was-default {
+  margin-left: 0.4rem;
+  font-size: 0.75rem;
+  color: var(--tui-text-tertiary);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.chip {
+  padding: 0.15rem 0.5rem;
+  border-radius: 0.4rem;
+  background: var(--tui-status-warning-pale);
+  font-size: 0.85rem;
+}
+
+.note {
+  font-size: 0.85rem;
+  color: var(--tui-text-secondary);
+  margin-top: 0.6rem;
+  max-width: 60rem;
+}
+
+.footer-note {
+  padding-top: 1rem;
+  border-top: 1px solid var(--tui-border-normal);
+}

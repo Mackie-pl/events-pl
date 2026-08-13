@@ -39,7 +39,10 @@ src/actions/discover.ts  ·  --why <id> = skąd to źródło      (metryki + śl
 | `test/` | testy `node:test` (127 przypadków): pii, url/slug/daty, dedupe (+ raport scalania), ślad decyzyjny, sonda (czyszczenie cache pod `--force`, wyłącznik archiwum), facebook, digest, koszty, retencja, podsumowania, walidacja propozycji |
 | `discover-runs.json` | observability etapu 1: każde zapytanie search + wyniki, **każda propozycja modelu wraz z decyzją** (także odrzucenia), geo (Overpass), tokeny/koszt LLM per gmina / źródło / typ zadania (discovery vs weryfikacja); ostatnie 24 przebiegi (szczegóły dla 4 najnowszych) |
 | `runs.json` | observability etapu 2: przebieg źródło po źródle (status, HTTP, followupy, tokeny/koszt per zadanie, rekordy Bright Data, ścieżki archiwum) oraz **`produced` — które konkretnie wydarzenia dało źródło w tym przebiegu**, wraz z przegranymi dedupe (`mergedInto`); **ostatnie 7 dni** (min. 2, maks. 30 przebiegów) |
-| `audit.json` | **ślad decyzyjny** etapu 2: krok po kroku, źródło po źródle — czemu poszło do modelu albo z cache, co ucięto na limicie followupów, które wydarzenie odrzucono i dlaczego, co przegrało scalanie. Zamknięty słownik kroków (`src/types/audit.ts`), notka po polsku + detale. Ta sama retencja co `runs.json` (7 dni), ~46 kB na przebieg. Panel pobiera go **dopiero na stronie źródła** — nie przy wejściu |
+| `audit.json` | **ślad decyzyjny** etapu 2: krok po kroku, źródło po źródle — czemu poszło do modelu albo z cache, co ucięto na limicie followupów, które wydarzenie odrzucono i dlaczego, co przegrało scalanie. Zamknięty słownik kroków (`src/types/audit.ts`), notka po polsku + detale. Kroki `llm` niosą też
+rachunek za to konkretne wywołanie (`usd`, `tokIn`, `tokOut`) i ścieżkę promptu w archiwum
+(`archive`) — koszt per źródło jest w `runs.json`, ale „które z pięciu wywołań kosztowało" widać
+tylko tutaj. Ta sama retencja co `runs.json` (7 dni), ~46 kB na przebieg. Panel pobiera go **dopiero na stronie źródła** — nie przy wejściu |
 | `costs.json` | księga wydatków obu etapów: linia na (przebieg × kategoria) z wolumenem, stawką i najdroższymi pozycjami; 90 dni. Zasila zakładkę **Money** |
 | `eslint.shared.js` | wspólne progi rozmiaru dla potoku i panelu (max 350 linii kodu na plik, 120 znaków na linię) — pilnowane przez `ci.yml` |
 | `template.html` | frontend (wiek dziecka, tagi zagnieżdżone, weekend, mapa OSM); `reporting/render-index.ts` wstrzykuje JSON |
@@ -579,6 +582,16 @@ plik leciałby dwa razy, a użytkownik zdążyłby zobaczyć stan z `main` i mu 
 
 **Podgląd archiwum.** `runs.json` niesie **ścieżki** obiektów (`SourceRun.archive`) — same
 ścieżki nie są wrażliwe, więc wdrożony panel pokazuje listę i informację, że treść jest prywatna.
+Krok `llm` w śladzie niesie ścieżkę SWOJEGO wywołania (`detail.archive`), więc prompt otwiera się
+przyciskiem przy tym kroku, a nie przez zgadywanie, który numer z listy to ten, o który chodzi.
+Tak samo Bright Data: surowa migawka grupy ląduje pod `raw/<dzień>/<id>__bd/` (osobno od
+spłaszczonego tekstu, który idzie do modelu), a paczka wydarzeń FB pod `raw/<dzień>/fb-events/` —
+obie podpięte do swojego kroku śladu. To jedyne miejsce, gdzie widać, co scraper faktycznie oddał
+za opłacone rekordy: wiersze błędu, pola obrazów i miejsc, których spłaszczanie nie bierze.
+
+Redakcja PII **omija** `detail.archive`. Ścieżki `raw/` niosą sha256, a w haszu regularnie trafia
+się dziewięciocyfrowy ciąg z prefiksem komórkowym — redakcja zrobiłaby z niego `[tel]`, czyli
+martwy przycisk, i to tylko dla części źródeł (patrz `NEVER_REDACTED` w `reporting/audit-trail.ts`).
 Most akceptuje tylko prefiksy `raw/`, `llm/`, `events/` (bez `..`), więc nie da się przez niego
 czytać dowolnych obiektów z projektu.
 

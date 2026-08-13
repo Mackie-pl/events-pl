@@ -41,5 +41,10 @@ export const routes: Routes = [
     title: 'Discover run · events-pl',
     loadComponent: () => import('./pages/discover-run/discover-run').then((m) => m.DiscoverRunPage),
   },
+  {
+    path: 'config',
+    title: 'Konfiguracja · events-pl',
+    loadComponent: () => import('./pages/config/config').then((m) => m.ConfigPage),
+  },
   { path: '**', redirectTo: '' },
 ];

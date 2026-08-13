@@ -66,10 +66,20 @@ async function fetchSource(
     const limit = fbGroupLimit(src.id, state, todayIso());
     try {
       const records = await bdCollect(BD_DATASETS.fbGroupPosts, [url], limit);
+      /**
+       * Surowa migawka PRZED spłaszczeniem. Do modelu (i do archiwum jako `raw/`) idzie sam
+       * tekst postów, więc wszystko, czego spłaszczanie nie bierze — pola obrazów, miejsca,
+       * daty, wiersze błędu scrapera — istniało dotąd wyłącznie jako liczba w statystykach.
+       * Osobne id (`__bd`), bo inaczej dwa różne zrzuty tego samego źródła leżą w archiwum
+       * obok siebie i rozróżnia je dopiero otwarcie; ten sam wzór ma już `__followup`.
+       */
+      const bdRaw = await archiveRaw(
+        `${src.id}__bd`, url, JSON.stringify(records, null, 1), "fb_group",
+      );
       // pomiar PRZED spłaszczeniem do tekstu: daty postów są w rekordach, a w tekście dla
       // modelu już tylko jako napis, z którego nikt ich nie policzy
       run.fbGroup = fbGroupStats(records, limit);
-      auditFbGroup(run.fbGroup);
+      auditFbGroup(run.fbGroup, bdRaw);
       // też PRZED spłaszczeniem: obrazy i miejsca giną w nim bezpowrotnie
       auditFbPostExtras(fbPostExtras(records), run.fbGroup.posts);
       return { kind: "html", text: fbGroupPostsToText(records), httpStatus: 200 };

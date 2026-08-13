@@ -1,0 +1,442 @@
+{
+  "groups": [
+    {
+      "id": "llm",
+      "title": "wymagane: ekstrakcja i discovery"
+    },
+    {
+      "id": "search",
+      "title": "discovery / naprawa martwych URL-i"
+    },
+    {
+      "id": "models",
+      "title": "opcjonalnie: ewaluacja innych modeli bez zmian w kodzie"
+    },
+    {
+      "id": "structured",
+      "title": "opcjonalnie: structured outputs (response_format: json_schema)"
+    },
+    {
+      "id": "fb",
+      "title": "opcjonalnie: Facebook przez Bright Data (linki do wydarzeń + otwarte grupy)"
+    },
+    {
+      "id": "pipeline",
+      "title": "potok: sufity i tryby (tokeny, wywołania LLM, punkt wejścia)"
+    },
+    {
+      "id": "archive",
+      "title": "prywatne archiwum treści (Supabase Storage)"
+    },
+    {
+      "id": "costs",
+      "title": "księga kosztów (costs.json)"
+    },
+    {
+      "id": "digest",
+      "title": "digest (Telegram aktywny, e-mail w zapasie)"
+    },
+    {
+      "id": "endpoints",
+      "title": "adresy API — do proxy i mocków w testach, normalnie zostaw puste"
+    },
+    {
+      "id": "ambient",
+      "title": "od środowiska, nie od nas"
+    }
+  ],
+  "params": [
+    {
+      "name": "OPENROUTER_API_KEY",
+      "group": "llm",
+      "cls": "secret",
+      "summary": "klucz do OpenRoutera — bez niego nie ruszy ani ekstrakcja, ani discovery",
+      "def": null
+    },
+    {
+      "name": "SERPER_API_KEY",
+      "group": "search",
+      "cls": "secret",
+      "summary": "klucz Serpera — bez niego discovery i naprawa martwych URL-i nie działają",
+      "def": null
+    },
+    {
+      "name": "SEARCH_PROVIDER",
+      "group": "search",
+      "cls": "setting",
+      "summary": "serper (domyślnie) | google | brave",
+      "def": "serper"
+    },
+    {
+      "name": "GOOGLE_API_KEY",
+      "group": "search",
+      "cls": "secret",
+      "summary": "tylko dla SEARCH_PROVIDER=google (konta sprzed 07.2026)",
+      "def": null
+    },
+    {
+      "name": "GOOGLE_CSE_CX",
+      "group": "search",
+      "cls": "setting",
+      "summary": "id silnika; MUSI mieć włączone „Search the entire web”",
+      "def": null
+    },
+    {
+      "name": "BRAVE_API_KEY",
+      "group": "search",
+      "cls": "secret",
+      "summary": "tylko dla SEARCH_PROVIDER=brave (2000 zapytań/mies. gratis)",
+      "def": null
+    },
+    {
+      "name": "DISCOVER_MAX_SEARCHES",
+      "group": "search",
+      "cls": "tuning",
+      "summary": "sufit zapytań do wyszukiwarki na jeden przebieg discovery",
+      "def": 300
+    },
+    {
+      "name": "MODEL_EXTRACT",
+      "group": "models",
+      "cls": "setting",
+      "summary": "model codziennej ekstrakcji — musi umieć obrazy i JSON po polsku",
+      "def": "anthropic/claude-haiku-4.5"
+    },
+    {
+      "name": "MODEL_DISCOVER",
+      "group": "models",
+      "cls": "setting",
+      "summary": "model miesięcznego discovery — mocniejszy, bo ocenia trafienia wyszukiwarki",
+      "def": "anthropic/claude-sonnet-4.6"
+    },
+    {
+      "name": "STRUCTURED_OUTPUTS",
+      "group": "structured",
+      "cls": "setting",
+      "summary": "`0` wyłącza wymuszony JSON Schema na odpowiedzi modelu",
+      "def": true
+    },
+    {
+      "name": "STRUCTURED_IGNORE_PROVIDERS",
+      "group": "structured",
+      "cls": "setting",
+      "summary": "dostawcy OpenRoutera pomijani na ścieżce ze schematem (po przecinku)",
+      "def": "azure"
+    },
+    {
+      "name": "BRIGHTDATA_API_KEY",
+      "group": "fb",
+      "cls": "secret",
+      "summary": "klucz Bright Data — bez niego cały kanał FB jest pomijany",
+      "def": null
+    },
+    {
+      "name": "BD_MAX_FB_EVENTS",
+      "group": "fb",
+      "cls": "tuning",
+      "summary": "sufit rozwijanych linków do wydarzeń FB na jeden przebieg",
+      "def": 40
+    },
+    {
+      "name": "BD_DATASET_FB_EVENTS",
+      "group": "fb",
+      "cls": "setting",
+      "summary": "id scrapera wydarzeń FB (nadpisanie na wypadek zmian po stronie BD)",
+      "def": "gd_m14sd0to1jz48ppm51"
+    },
+    {
+      "name": "BD_DATASET_FB_GROUP_POSTS",
+      "group": "fb",
+      "cls": "setting",
+      "summary": "id scrapera postów z grup FB",
+      "def": "gd_lz11l67o2cb3r0lkj3"
+    },
+    {
+      "name": "BD_POLL_MS",
+      "group": "fb",
+      "cls": "tuning",
+      "summary": "co ile odpytywać Bright Data o gotowość migawki",
+      "def": 10000
+    },
+    {
+      "name": "BD_TIMEOUT_MS",
+      "group": "fb",
+      "cls": "tuning",
+      "summary": "po tylu ms migawka jest porzucana i anulowana (awaria 2026-08-10)",
+      "def": 480000
+    },
+    {
+      "name": "FB_GROUP_BLOCKED_LIMIT",
+      "group": "fb",
+      "cls": "tuning",
+      "summary": "po tylu płatnych wierszach błędu z rzędu grupa jest pomijana",
+      "def": 3
+    },
+    {
+      "name": "FB_GROUP_BLOCKED_RECHECK_DAYS",
+      "group": "fb",
+      "cls": "tuning",
+      "summary": "co tyle dni jedna sonda do pomijanej grupy — jedyna droga powrotna",
+      "def": 14
+    },
+    {
+      "name": "FB_GROUP_LIMIT_MAX",
+      "group": "fb",
+      "cls": "tuning",
+      "summary": "sufit rekordów na grupę; regulator może zejść niżej, nigdy wyżej",
+      "def": 50
+    },
+    {
+      "name": "FB_GROUP_LIMIT_MIN",
+      "group": "fb",
+      "cls": "tuning",
+      "summary": "podłoga rekordów na grupę",
+      "def": 5
+    },
+    {
+      "name": "FB_GROUP_LIMIT_MARGIN",
+      "group": "fb",
+      "cls": "tuning",
+      "summary": "zapas ponad pokrycie przerwy między pobraniami (0.2 = 20%)",
+      "def": 0.2
+    },
+    {
+      "name": "FB_MAX_USD_PER_EVENT",
+      "group": "fb",
+      "cls": "tuning",
+      "summary": "próg $ za wydarzenie spoza sieci; brak = mechanizm w ogóle nie działa",
+      "def": null
+    },
+    {
+      "name": "FB_YIELD_MIN_RUNS",
+      "group": "fb",
+      "cls": "tuning",
+      "summary": "minimum realnych pobrań, zanim próg zapadnie",
+      "def": 5
+    },
+    {
+      "name": "FB_MUTE_DAYS",
+      "group": "fb",
+      "cls": "tuning",
+      "summary": "na ile dni wycisza, zanim źródło wróci do pomiaru",
+      "def": 30
+    },
+    {
+      "name": "FB_MIN_SOURCES_PER_TOWN",
+      "group": "fb",
+      "cls": "tuning",
+      "summary": "ile grup FB zostaje w gminie mimo progu; 0 wyłącza podłogę",
+      "def": 1
+    },
+    {
+      "name": "EXTRACT_MAX_TOKENS",
+      "group": "pipeline",
+      "cls": "tuning",
+      "summary": "sufit tokenów odpowiedzi przy ekstrakcji wydarzeń",
+      "def": 12000
+    },
+    {
+      "name": "DISCOVER_MAX_TOKENS",
+      "group": "pipeline",
+      "cls": "tuning",
+      "summary": "sufit tokenów odpowiedzi przy ocenie trafień wyszukiwarki",
+      "def": 12000
+    },
+    {
+      "name": "BLOCK_MAX_CALLS",
+      "group": "pipeline",
+      "cls": "tuning",
+      "summary": "sufit wywołań LLM na blokowanie źródeł w przebiegu (0 = nie wołaj)",
+      "def": 80
+    },
+    {
+      "name": "ENTRYPOINT_LLM",
+      "group": "pipeline",
+      "cls": "tuning",
+      "summary": "kiedy pytać model o punkt wejścia gminy: always | ambiguous | never",
+      "def": "always"
+    },
+    {
+      "name": "SUPABASE_URL",
+      "group": "archive",
+      "cls": "setting",
+      "summary": "adres projektu Supabase; brak = archiwum wyłączone, reszta działa",
+      "def": null
+    },
+    {
+      "name": "SUPABASE_SECRET_KEY",
+      "group": "archive",
+      "cls": "secret",
+      "summary": "klucz Secret (sb_secret_…), NIE Publishable — omija RLS",
+      "def": null
+    },
+    {
+      "name": "SUPABASE_SERVICE_ROLE_KEY",
+      "group": "archive",
+      "cls": "secret",
+      "summary": "dawna nazwa tego samego klucza (projekty z JWT eyJ…)",
+      "def": null
+    },
+    {
+      "name": "SUPABASE_BUCKET",
+      "group": "archive",
+      "cls": "setting",
+      "summary": "bucket archiwum treści",
+      "def": "archive"
+    },
+    {
+      "name": "ARCHIVE_RETENTION_DAYS",
+      "group": "archive",
+      "cls": "tuning",
+      "summary": "po tylu dniach obiekty archiwum idą do skasowania",
+      "def": 90
+    },
+    {
+      "name": "ARCHIVE_PORT",
+      "group": "archive",
+      "cls": "setting",
+      "summary": "port lokalnego mostu panelu (npm run panel-server)",
+      "def": 8787
+    },
+    {
+      "name": "COST_MONTHLY_BUDGET_USD",
+      "group": "costs",
+      "cls": "tuning",
+      "summary": "linia odniesienia w panelu (nie limit twardy)",
+      "def": 15
+    },
+    {
+      "name": "COST_RETENTION_DAYS",
+      "group": "costs",
+      "cls": "tuning",
+      "summary": "ile dni kwot trzyma księga (runs.json trzyma 7 dni szczegółów)",
+      "def": 90
+    },
+    {
+      "name": "BD_COST_PER_RECORD",
+      "group": "costs",
+      "cls": "tuning",
+      "summary": "stawka Bright Data za rekord (potwierdź w panelu BD)",
+      "def": 0.0015
+    },
+    {
+      "name": "SEARCH_COST_PER_QUERY",
+      "group": "costs",
+      "cls": "tuning",
+      "summary": "stawka za zapytanie: Serper ~0.001, Google 0.005, Brave 0",
+      "def": 0.001
+    },
+    {
+      "name": "SUPABASE_COST_PER_GB_MONTH",
+      "group": "costs",
+      "cls": "tuning",
+      "summary": "stawka za GB archiwum na miesiąc (darmowy tier ~1 GB)",
+      "def": 0
+    },
+    {
+      "name": "SCRAPE_COST_PER_FETCH",
+      "group": "costs",
+      "cls": "tuning",
+      "summary": "stawka za pobranie strony (GH Actions dla repo publicznego: 0)",
+      "def": 0
+    },
+    {
+      "name": "TELEGRAM_BOT_TOKEN",
+      "group": "digest",
+      "cls": "secret",
+      "summary": "token bota; brak = digest Telegramem wyłączony",
+      "def": null
+    },
+    {
+      "name": "TELEGRAM_CHAT_ID",
+      "group": "digest",
+      "cls": "setting",
+      "summary": "dokąd bot wysyła digest",
+      "def": null
+    },
+    {
+      "name": "DIGEST_CHILD_AGE",
+      "group": "digest",
+      "cls": "setting",
+      "summary": "wiek dziecka; brak = digest bez filtra wiekowego",
+      "def": null
+    },
+    {
+      "name": "RESEND_API_KEY",
+      "group": "digest",
+      "cls": "secret",
+      "summary": "klucz Resend — e-mailowy wariant digestu, w zapasie",
+      "def": null
+    },
+    {
+      "name": "DIGEST_TO",
+      "group": "digest",
+      "cls": "setting",
+      "summary": "adresat e-maila; brak = wariant e-mail wyłączony",
+      "def": null
+    },
+    {
+      "name": "DIGEST_FROM",
+      "group": "digest",
+      "cls": "setting",
+      "summary": "nadawca e-maila",
+      "def": "events-pl <onboarding@resend.dev>"
+    },
+    {
+      "name": "OPENROUTER_URL",
+      "group": "endpoints",
+      "cls": "endpoint",
+      "summary": "adres chat completions",
+      "def": "https://openrouter.ai/api/v1/chat/completions"
+    },
+    {
+      "name": "SERPER_URL",
+      "group": "endpoints",
+      "cls": "endpoint",
+      "summary": "adres wyszukiwarki Serper",
+      "def": "https://google.serper.dev/search"
+    },
+    {
+      "name": "BRAVE_URL",
+      "group": "endpoints",
+      "cls": "endpoint",
+      "summary": "adres wyszukiwarki Brave",
+      "def": "https://api.search.brave.com/res/v1/web/search"
+    },
+    {
+      "name": "GOOGLE_URL",
+      "group": "endpoints",
+      "cls": "endpoint",
+      "summary": "adres Google Programmable Search",
+      "def": "https://www.googleapis.com/customsearch/v1"
+    },
+    {
+      "name": "OVERPASS_URL",
+      "group": "endpoints",
+      "cls": "endpoint",
+      "summary": "adres Overpass (OSM) — do własnej instancji, gdy publiczna dławi",
+      "def": "https://overpass-api.de/api/interpreter"
+    },
+    {
+      "name": "CONFIG_FILE",
+      "group": "pipeline",
+      "cls": "setting",
+      "summary": "`0` ignoruje config.json — przebieg na samych wartościach domyślnych",
+      "def": true
+    },
+    {
+      "name": "GITHUB_ACTIONS",
+      "group": "ambient",
+      "cls": "ambient",
+      "summary": "ustawia runner — po tym poznajemy, że jesteśmy w Actions",
+      "def": null
+    },
+    {
+      "name": "GITHUB_STEP_SUMMARY",
+      "group": "ambient",
+      "cls": "ambient",
+      "summary": "ścieżka pliku job summary; poza Actions nie istnieje",
+      "def": null
+    }
+  ]
+}

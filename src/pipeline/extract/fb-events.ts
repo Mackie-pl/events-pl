@@ -12,6 +12,7 @@ import { geocode } from "../../adapters/nominatim.js";
 import { resetUsage, snapshotUsage } from "../../adapters/openrouter.js";
 import { archiveRaw, beginSource, sourcePaths } from "../../adapters/supabase-archive.js";
 import { P } from "../../config/index.js";
+import { audit } from "../../shared/audit.js";
 import { describeError } from "../../shared/errors.js";
 import type {
   BdUsage, EventItem, PipelineError, PipelineState, SourceRun,
@@ -79,10 +80,16 @@ async function collectFbEvents(
 ): Promise<EventItem[]> {
   const { state, cache } = ctx;
   const records = await bdCollect(BD_DATASETS.fbEvents, capped);
-  await archiveRaw(
+  // migawka lądowała w archiwum od zawsze, ale ścieżkę wyrzucaliśmy — więc ślad mówił „tyle
+  // wydarzeń", a „dlaczego akurat tyle" (rekordy bez daty, bez miejsca, wiersze błędu) dało
+  // się sprawdzić tylko zgadując, który obiekt z listy archiwum to ta paczka
+  const archive = await archiveRaw(
     "fb-events", "https://www.facebook.com/events/ (zbiorczo)",
     JSON.stringify(records, null, 1), "fb_event",
   );
+  audit("fetch",
+    `Bright Data oddał ${records.length} rekordów na ${capped.length} linków`,
+    { records: records.length, links: capped.length, ...(archive ? { archive } : {}) });
   const out: EventItem[] = [];
   const byId = new Map<string, EventItem[]>();
   for (const rec of records) {

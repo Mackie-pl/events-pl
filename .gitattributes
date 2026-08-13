@@ -5,3 +5,5 @@
 # Plik generowany (npm run env:example). Bez wymuszonego LF-a autocrlf robiłby z checkoutu
 # CRLF-y, a generator i tak pisze LF — czyli plik byłby „zmieniony" zaraz po sklonowaniu.
 .env.example text eol=lf
+config.json text eol=lf
+config-meta.json text eol=lf

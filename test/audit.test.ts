@@ -11,7 +11,7 @@ import {
 } from "../src/shared/audit.js";
 import { redactTrail } from "../src/reporting/audit-trail.js";
 import { parseModelJson, resetDroppedInvalid } from "../src/pipeline/extract/extract.js";
-import { newStats } from "../src/pipeline/pii.js";
+import { newStats, redactText } from "../src/pipeline/pii.js";
 import type { SourceTrail } from "../src/types/index.js";
 
 const bySource = (id: string): SourceTrail | undefined => auditTrails().find((t) => t.id === id);
@@ -108,6 +108,20 @@ describe("redakcja śladu", () => {
     assert.ok(!step?.note.includes("601234567"), `komórka w notce: ${step?.note}`);
     assert.ok(!String(step?.detail?.["venue"]).includes("ktos@example.com"), "e-mail w detalu");
     assert.equal(step?.detail?.["hit"], false, "wartości nietekstowe zostają nietknięte");
+  });
+
+  it("nie rusza ścieżki archiwum — hash treści bierze się za komórkę i zabiłby link", () => {
+    // ścieżki `raw/` niosą sha256, a w haszu trafia się dziewięciocyfrowy ciąg z prefiksem
+    // komórkowym: jako treść byłby [tel], czyli martwy przycisk w panelu dla części źródeł
+    const path = "raw/2026-08-13/fb-group-imprezy-poznan__bd/ac601234567defab.json";
+    assert.notEqual(redactText(path), path, "gdyby to była treść, redakcja by ją zjadła");
+
+    beginAuditSource("fb-group-imprezy-poznan");
+    audit("fb.group", "45 płatnych rekordów, ani jednego postu", { records: 45, archive: path });
+
+    const trails = auditTrails();
+    redactTrail(trails, newStats());
+    assert.equal(trails[0]?.steps[0]?.detail?.["archive"], path);
   });
 
   it("zostawia numer stacjonarny — to centrala instytucji, nie osoba", () => {

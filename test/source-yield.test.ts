@@ -74,6 +74,41 @@ describe("buildYield — wyłączność", () => {
     ])], RATES);
     assert.equal(r.sources[0]?.distinct, 2);
   });
+
+  /**
+   * Rytm rozwija się PRZED dedupe, więc jeden post o cotygodniowej zumbie wchodzi do przebiegu
+   * jako kilkadziesiąt rekordów jednodniowych. Bez `EventRef.key` każdy termin liczył się jako
+   * osobne wydarzenie, którego nie ma żadna strona — i wiejska grupa wychodziła na najtańsze
+   * źródło w rejestrze (zmierzone 2026-08-13: `lubon-fb-group` 74 klucze z 5 postów).
+   */
+  it("seria to jedno wydarzenie, nie tyle, ile ma terminów", () => {
+    const seria = ["2026-09-07", "2026-09-14", "2026-09-21"].map((d, i) => ({
+      ...ev("Zumba Fitness", d),
+      // pierwszy termin przeżył, kolejne wsiąkły w niego przy zwijaniu rytmu
+      ...(i === 0 ? {} : { mergedInto: "a", key: "zumbafitness|2026-09-07" }),
+    }));
+    const r = buildYield([run("2026-08-01", [src("a", seria)])], RATES);
+    const a = r.sources[0]!;
+    assert.equal(a.produced, 3, "trzy rekordy naprawdę przeszły przez potok");
+    assert.equal(a.distinct, 1, "ale to jedna zumba, nie trzy");
+    assert.equal(a.exclusive, 1);
+  });
+
+  it("kopia serii z drugiej grupy wskazuje ten sam rekord — obie mają ją współdzieloną", () => {
+    // grupa `b` przegrała dedupe na każdym dniu, a zwycięzca zwinął się potem w rytm:
+    // dwa kroki łańcucha, na końcu jeden rekord
+    const key = "zumbafitness|2026-09-07";
+    const a = [{ ...ev("Zumba Fitness", "2026-09-07") },
+      { ...ev("Zumba Fitness", "2026-09-14"), mergedInto: "a", key }];
+    const b = ["2026-09-07", "2026-09-14"].map((d) => ({
+      ...ev("Zumba Fitness", d), mergedInto: "a", key,
+    }));
+    const r = buildYield([run("2026-08-01", [src("a", a), src("b", b)])], RATES);
+    assert.equal(r.distinctEvents, 1, "w całym oknie to jedno wydarzenie");
+    assert.equal(r.sources.find((s) => s.id === "b")?.distinct, 1);
+    assert.equal(r.sources.find((s) => s.id === "b")?.exclusive, 0, "ma to samo, co `a`");
+    assert.equal(r.sources.find((s) => s.id === "a")?.exclusive, 0);
+  });
 });
 
 describe("buildYield — symulacja zdejmowania", () => {
