@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-12T06:26:15.962Z",
+ "updated": "2026-08-13T06:52:49.347Z",
  "rates": {
   "bdPerRecord": 0.0015,
   "searchPerQuery": 0.001,
@@ -2175,6 +2175,137 @@
    "usd": 0,
    "estimated": true,
    "units": 3.508,
+   "unit": "MB"
+  },
+  {
+   "day": "2026-08-13",
+   "at": "2026-08-13T06:52:49.233Z",
+   "stage": "daily",
+   "run": "2026-08-13T05:30:15.336Z",
+   "category": "llm-extract",
+   "usd": 0.635198,
+   "estimated": false,
+   "units": 51,
+   "unit": "calls",
+   "tokensIn": 324468,
+   "tokensOut": 62146,
+   "top": [
+    {
+     "id": "kultura-poznan",
+     "usd": 0.119263,
+     "units": 6
+    },
+    {
+     "id": "poznan-co-gdzie-kiedy",
+     "usd": 0.098876,
+     "units": 2
+    },
+    {
+     "id": "fb-group-poznan-wydarzenia",
+     "usd": 0.035334,
+     "units": 3
+    },
+    {
+     "id": "fb-group-wydarzenia-w-poznaniu-1",
+     "usd": 0.034122,
+     "units": 1
+    },
+    {
+     "id": "dk-stokrotka",
+     "usd": 0.030599,
+     "units": 5
+    }
+   ]
+  },
+  {
+   "day": "2026-08-13",
+   "at": "2026-08-13T06:52:49.233Z",
+   "stage": "daily",
+   "run": "2026-08-13T05:30:15.336Z",
+   "category": "llm-vision",
+   "usd": 0.012327,
+   "estimated": false,
+   "units": 3,
+   "unit": "calls",
+   "tokensIn": 9857,
+   "tokensOut": 494,
+   "top": [
+    {
+     "id": "gosir-dopiewo-kalendarz",
+     "usd": 0.012327,
+     "units": 3
+    }
+   ]
+  },
+  {
+   "day": "2026-08-13",
+   "at": "2026-08-13T06:52:49.233Z",
+   "stage": "daily",
+   "run": "2026-08-13T05:30:15.336Z",
+   "category": "fb",
+   "usd": 0.666,
+   "estimated": true,
+   "units": 444,
+   "unit": "records",
+   "top": [
+    {
+     "id": "mieszkancy-lubonia-fb-group",
+     "usd": 0.075,
+     "units": 50
+    },
+    {
+     "id": "dopiewo-tablica-ogloszen-fb",
+     "usd": 0.075,
+     "units": 50
+    },
+    {
+     "id": "fb-group-komorniki-ogloszenia",
+     "usd": 0.075,
+     "units": 50
+    },
+    {
+     "id": "fb-group-wydarzenia-w-poznaniu-1",
+     "usd": 0.075,
+     "units": 50
+    },
+    {
+     "id": "fb-group-poznan-wydarzenia",
+     "usd": 0.075,
+     "units": 50
+    }
+   ]
+  },
+  {
+   "day": "2026-08-13",
+   "at": "2026-08-13T06:52:49.233Z",
+   "stage": "daily",
+   "run": "2026-08-13T05:30:15.336Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 76,
+   "unit": "fetches"
+  },
+  {
+   "day": "2026-08-13",
+   "at": "2026-08-13T06:52:49.233Z",
+   "stage": "daily",
+   "run": "2026-08-13T05:30:15.336Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 55,
+   "unit": "lookups"
+  },
+  {
+   "day": "2026-08-13",
+   "at": "2026-08-13T06:52:49.233Z",
+   "stage": "daily",
+   "run": "2026-08-13T05:30:15.336Z",
+   "category": "storage",
+   "usd": 0,
+   "estimated": true,
+   "units": 1.719,
    "unit": "MB"
   }
  ]
