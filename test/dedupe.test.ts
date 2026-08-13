@@ -89,6 +89,42 @@ describe("attachProduced — wydarzenia przypisane do źródła w przebiegu", ()
     assert.equal(pusty.produced, undefined);
   });
 
+  /**
+   * Scalenia się SKŁADAJĄ: kopia serii z drugiej grupy przegrywa najpierw dedupe na swoim
+   * dniu, a dopiero ten zwycięzca zwija się w rytm. Klucz musi iść do końca łańcucha, bo
+   * jeden krok zostawiłby ref wskazujący rekord, którego już nie ma w magazynie — i raport
+   * plonu liczyłby każdy termin osobno (patrz types/run.ts, EventRef.key).
+   */
+  it("klucz idzie do KOŃCA łańcucha scaleń, nie o jeden krok", () => {
+    const grupaA = src("a");
+    const grupaB = src("b");
+    const rytm = event({ title: "Zumba", date_start: "2026-09-07", source_id: "a" });
+    const kolejnyTermin = event({ title: "Zumba", date_start: "2026-09-14", source_id: "a" });
+    const kopiaZGrupyB = event({ title: "Zumba", date_start: "2026-09-14", source_id: "b" });
+
+    attachProduced(
+      new Map([[grupaA, [rytm, kolejnyTermin]], [grupaB, [kopiaZGrupyB]]]),
+      [
+        { loser: kopiaZGrupyB, winner: kolejnyTermin }, // dedupe: ten sam dzień, inne źródło
+        { loser: kolejnyTermin, winner: rytm }, //          zwijanie rytmu: inny dzień, to samo źródło
+      ],
+    );
+
+    const key = "zumba|2026-09-07";
+    assert.equal(grupaA.produced?.[0]?.key, undefined, "rekord, który przeżył, nie stał się niczym innym");
+    assert.equal(grupaA.produced?.[1]?.key, key, "drugi termin wskazuje pierwszy");
+    assert.equal(grupaB.produced?.[0]?.key, key, "kopia z B po DWÓCH krokach też wskazuje pierwszy");
+    assert.equal(grupaB.produced?.[0]?.mergedInto, "a", "a `mergedInto` dalej mówi o kroku pierwszym");
+  });
+
+  it("cykl w danych nie zawiesza raportu", () => {
+    const zrodlo = src("z");
+    const x = event({ title: "X", source_id: "z" });
+    const y = event({ title: "Y", source_id: "z" });
+    attachProduced(new Map([[zrodlo, [x, y]]]), [{ loser: x, winner: y }, { loser: y, winner: x }]);
+    assert.equal(zrodlo.produced?.length, 2, "raport powstaje mimo cyklu");
+  });
+
   it("redaguje tytuły przegranych — one nie przeszły przez redakcję events.json", () => {
     const zrodlo = src("zrodlo");
     // klucz dedupe to 40 znaków znormalizowanego tytułu, więc numer musi wypaść ZA tym progiem,
