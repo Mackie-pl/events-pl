@@ -32,6 +32,11 @@ export type AuditKind =
   | 'pii'
   | 'done';
 
+/**
+ * Klucze o ustalonym znaczeniu, bo panel je formatuje albo linkuje, a nie tylko wypisuje:
+ *   usd / tokIn / tokOut — rachunek za wywołanie modelu (patrz callDetail() w openrouter.ts),
+ *   archive — ścieżka promptu i odpowiedzi w prywatnym archiwum, do odczytu przez most.
+ */
 export type AuditDetail = Record<string, string | number | boolean | null | undefined>;
 
 export interface AuditStep {

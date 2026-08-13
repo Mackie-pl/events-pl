@@ -45,6 +45,25 @@ export class SourcePage {
     this.run()?.sources.find((s) => s.id === this.sourceId()),
   );
 
+  /**
+   * Koszt źródła w rozbiciu na dostawców.
+   *
+   * Kafelek „Cost" pokazywał dotąd wyłącznie `llm.costUsd`, a przy grupie FB to zwykle
+   * MNIEJSZA połowa rachunku: `fb-group-imprezy-poznan` 2026-08-12 to $0.0502 modelu
+   * i $0.0750 Bright Data. Pytanie „co tu właściwie kosztuje" nie dawało się z tej strony
+   * postawić, a od niego zaczyna się każda decyzja o wyciszeniu grupy.
+   *
+   * Stawka idzie z costs.json — tej samej księgi, którą liczy potok, żeby panel nie miał
+   * własnej kopii cennika i nie rozjeżdżał się z rachunkiem po cichu.
+   */
+  protected readonly cost = computed(() => {
+    const s = this.sourceRun();
+    if (!s) return null;
+    const records = s.bd?.records ?? 0;
+    const bd = records * this.data.costs.value().rates.bdPerRecord;
+    return { llm: s.llm.costUsd, bd, records, total: s.llm.costUsd + bd, hasBd: s.bd !== undefined };
+  });
+
   /** Static registry entry from sources.json (type, verified, notes). */
   protected readonly sourceMeta = computed(() =>
     this.data.sources.value()?.sources.find((s) => s.id === this.sourceId()),
@@ -109,11 +128,29 @@ export class SourcePage {
 
   protected readonly stepMeta = STEP_META;
 
-  /** Detale jako pary do wyświetlenia — pomijamy puste, żeby nie robić szumu z null-i. */
+  /**
+   * Detale jako pary do wyświetlenia — pomijamy puste, żeby nie robić szumu z null-i.
+   * `archive` wypada z par, bo ma własny przycisk: jako `archive=llm/2026-08-13/…` byłby
+   * nieklikalnym śmieciem w linijce, która ma się skanować wzrokiem.
+   */
   protected detailPairs(step: AuditStep): { k: string; v: string }[] {
     return Object.entries(step.detail ?? {})
-      .filter(([, v]) => v !== null && v !== undefined && v !== '')
-      .map(([k, v]) => ({ k, v: String(v) }));
+      .filter(([k, v]) => k !== 'archive' && v !== null && v !== undefined && v !== '')
+      .map(([k, v]) => ({ k, v: k === 'usd' && typeof v === 'number' ? fmtUsd(v) : String(v) }));
+  }
+
+  /** Ścieżka tego, co krok odłożył w archiwum; brak = archiwum było wyłączone. */
+  protected stepArchive(step: AuditStep): string | null {
+    const p = step.detail?.['archive'];
+    return typeof p === 'string' && p ? p : null;
+  }
+
+  /**
+   * Co się otworzy pod przyciskiem. Nazwa rzeczy, nie „Show" — przy kroku modelu to prompt
+   * z odpowiedzią, przy Bright Data surowa migawka, a jedno z drugim nie ma nic wspólnego.
+   */
+  protected archiveButton(step: AuditStep): string {
+    return step.step === 'llm' ? 'Prompt + response' : 'Raw records';
   }
 
   /** Ścieżki w prywatnym archiwum; treść pobieralna tylko przez lokalny most. */

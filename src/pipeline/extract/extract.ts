@@ -9,7 +9,9 @@
  */
 import { Value } from "@sinclair/typebox/value";
 
-import { MODEL_EXTRACT, chat, imagePart, wasTruncated } from "../../adapters/openrouter.js";
+import {
+  MODEL_EXTRACT, callDetail, chat, imagePart, wasTruncated,
+} from "../../adapters/openrouter.js";
 import { P } from "../../config/index.js";
 import { audit } from "../../shared/audit.js";
 import { salvageArray } from "../../shared/json-salvage.js";
@@ -146,7 +148,8 @@ export async function extractEvents(text: string, sourceUrl: string): Promise<Ex
   audit("llm", text.length > MAX_INPUT_CHARS
     ? `ekstrakcja z ${sent} znaków (treść ucięta z ${text.length}) → ${result.events.length} wydarzeń`
     : `ekstrakcja z ${sent} znaków → ${result.events.length} wydarzeń`,
-  { model: MODEL_EXTRACT, task: "extract", chars: sent, events: result.events.length, url: sourceUrl });
+  { model: MODEL_EXTRACT, task: "extract", chars: sent, events: result.events.length, url: sourceUrl,
+    ...callDetail() });
   if (result.parse) {
     // osobny krok śladu: „zero wydarzeń" i „zero wydarzeń, bo nie dało się odczytać odpowiedzi"
     // wyglądały dotąd tak samo, a druga diagnoza jest naprawą w kodzie, nie w serwisie
@@ -252,7 +255,7 @@ export async function extractBatch(texts: string[], sourceUrl: string): Promise<
     (orphans ? `, ${orphans} bez poprawnego numeru bloku (odrzucone)` : "") +
     (unsafe.size ? `, ${unsafe.size} bloków bez pewnego wyniku (odpowiedź ucięta)` : ""),
   { model: MODEL_EXTRACT, task: "extract", blocks: texts.length, events: kept,
-    orphans, unsafe: unsafe.size, url: sourceUrl });
+    orphans, unsafe: unsafe.size, url: sourceUrl, ...callDetail() });
   if (parsed.parse) {
     audit("llm", parsed.parse === "truncated"
       ? `odpowiedź ucięta na limicie ${MAX_TOKENS()} tok. — odzyskano ${kept} wydarzeń`
@@ -278,6 +281,7 @@ export async function extractPoster(
   });
   const result = parseModelJson(out, wasTruncated());
   audit("llm", `odczyt plakatu (${img.mediaType}) → ${result.events.length} wydarzeń`,
-    { model: MODEL_EXTRACT, task: "poster", events: result.events.length, url: sourceUrl });
+    { model: MODEL_EXTRACT, task: "poster", events: result.events.length, url: sourceUrl,
+      ...callDetail() });
   return result;
 }

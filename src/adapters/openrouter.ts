@@ -10,7 +10,7 @@ import { fetchUrl } from "./http.js";
 import { P } from "../config/index.js";
 import { audit } from "../shared/audit.js";
 import { describeError } from "../shared/errors.js";
-import type { LlmTask, LlmUsage, TaskUsage } from "../types/index.js";
+import type { AuditDetail, LlmTask, LlmUsage, TaskUsage } from "../types/index.js";
 
 // Wybór modelu zapada raz na proces — te dwie stałe są świadomie czytane przy ładowaniu
 // modułu, żeby nie przerabiać czternastu miejsc użycia na wywołania. Reszta parametrów
@@ -127,12 +127,44 @@ let lastProvider: string | null = null;
  */
 let lastFinish: string | null = null;
 
+/**
+ * Rachunek za ostatnie wywołanie i miejsce, gdzie wylądował jego prompt. Modułowe z tego
+ * samego powodu, co `lastProvider`: `chat()` oddaje sam tekst, a krok śladu emituje wywołujący
+ * (extract.ts), który usage nigdy nie widział. Bez tego ślad mówił „model policzył 25 wydarzeń"
+ * i nie mówił ani ile to kosztowało, ani gdzie przeczytać, o co model był zapytany — czyli
+ * dokładnie te dwie rzeczy, po które schodzi się do śladu, gdy wynik wygląda podejrzanie.
+ */
+let lastUsage: LlmCallRecord["usage"] | null = null;
+let lastArchive: string | null = null;
+
 export const structuredActive = (): boolean => P.STRUCTURED_OUTPUTS.get() && !structuredOff;
 export const structuredRejection = (): string | null => structuredError;
 export const servingProvider = (): string | null => lastProvider;
 export const finishReason = (): string | null => lastFinish;
 /** Czy ostatnia odpowiedź została ucięta na `max_tokens` — a nie skończona przez model. */
 export const wasTruncated = (): boolean => lastFinish === "length";
+
+/**
+ * Rozliczenie ostatniego wywołania w formie detali kroku śladu. Jedna funkcja zamiast
+ * powtórzonych kluczy w każdym miejscu audytującym „llm": rozjazd nazw zamieniłby ślad
+ * w zgadywankę, który klucz gdzie znaczy cenę. Czytaj TUŻ po `chat()`, jak `wasTruncated()`.
+ *
+ * Puste, gdy wywołanie padło (nie ma za co płacić) albo gdy archiwum jest wyłączone —
+ * brak klucza jest tu informacją, nie luką: `usd` bez `archive` znaczy „zapłacone,
+ * ale promptu nikt nie zapisał".
+ */
+export function callDetail(): AuditDetail {
+  return {
+    ...(lastUsage
+      ? {
+          usd: lastUsage.costUsd,
+          tokIn: lastUsage.promptTokens,
+          tokOut: lastUsage.completionTokens,
+        }
+      : {}),
+    ...(lastArchive ? { archive: lastArchive } : {}),
+  };
+}
 
 /** Tylko dla sondy i testów: pozwala spróbować innego schematu w tym samym procesie. */
 export function resetStructured(): void {
@@ -159,8 +191,14 @@ export interface LlmCallRecord {
  * Hook obserwacyjny. llm.ts nie wie nic o archiwum (brak zależności cyklicznej) —
  * daily.ts podpina recorder tylko wtedy, gdy archiwum jest skonfigurowane.
  * Recordery są wywoływane best-effort: ich błąd nie może wywrócić wywołania LLM.
+ *
+ * Zwrócony string = miejsce, w którym recorder odłożył wywołanie (ścieżka w archiwum).
+ * Trafia do `callDetail()`, żeby krok śladu mógł zalinkować prompt zamiast tylko o nim
+ * wspominać. Recorder, który nigdzie nie odkłada (sonda trzyma wywołania w pamięci),
+ * dalej zwraca `void` i nic nie musi wiedzieć o tym polu.
  */
-export type CallRecorder = (rec: LlmCallRecord) => void | Promise<void>;
+export type CallRecorder = (rec: LlmCallRecord) => void | string | null
+  | Promise<void | string | null>;
 
 let recorder: CallRecorder | null = null;
 
@@ -171,7 +209,8 @@ export function setCallRecorder(fn: CallRecorder | null): void {
 async function record(rec: LlmCallRecord): Promise<void> {
   if (!recorder) return;
   try {
-    await recorder(rec);
+    const where = await recorder(rec);
+    if (typeof where === "string") lastArchive = where;
   } catch (e) {
     console.warn(`recorder LLM: ${String(e)}`);
   }
@@ -291,7 +330,10 @@ export async function chat(opts: ChatOptions): Promise<string> {
 
   const t0 = performance.now();
   // zerujemy PRZED wywołaniem: po awarii nie wolno oddać powodu z poprzedniego wywołania
+  // — ani, co gorsza, przykleić do darmowego kroku ceny tego, co płaciliśmy wcześniej
   lastFinish = null;
+  lastUsage = null;
+  lastArchive = null;
   const base = { model: opts.model, task: opts.task, system: opts.system, user: opts.user };
   const ms = (): number => Math.round(performance.now() - t0);
   // nieudane wywołania archiwizujemy tak samo jak udane — to one wymagają debugowania
@@ -329,6 +371,7 @@ export async function chat(opts: ChatOptions): Promise<string> {
     completionTokens: json.usage?.completion_tokens ?? 0,
     costUsd: json.usage?.cost ?? 0,
   };
+  lastUsage = usage;
   tally.calls += 1;
   tally.promptTokens += usage.promptTokens;
   tally.completionTokens += usage.completionTokens;

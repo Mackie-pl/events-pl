@@ -23,11 +23,25 @@ export function redactTrail(trails: SourceTrail[], stats?: RedactionStats): void
     for (const step of trail.steps) {
       step.note = redactText(step.note, stats);
       for (const [k, v] of Object.entries(step.detail ?? {})) {
-        if (typeof v === "string") step.detail![k] = redactText(v, stats);
+        if (typeof v === "string" && !NEVER_REDACTED.has(k)) {
+          step.detail![k] = redactText(v, stats);
+        }
       }
     }
   }
 }
+
+/**
+ * Klucze wyjęte spod redakcji, bo nie pochodzą z pobranej treści, tylko od nas.
+ *
+ * `archive` to ścieżka w naszym składowisku, a ścieżki `raw/` niosą sha256 treści. W haszu
+ * regularnie trafia się dziewięciocyfrowy ciąg cyfr — czyli dokładnie to, co `redactText`
+ * bierze za komórkę i zamienia na [tel]. Nie chroniłoby to niczyich danych (hash ich nie ma),
+ * a zostawiałoby martwy link w panelu — i to tylko dla CZĘŚCI źródeł, zależnie od tego, co
+ * wyszło z hasza. Awaria wybiórcza jest najtrudniejsza do zauważenia, więc lepiej jej nie
+ * wpuszczać: ścieżki są nasze i z definicji nie niosą cudzych danych.
+ */
+const NEVER_REDACTED = new Set(["archive"]);
 
 /**
  * Ta sama polityka, co dla runs.json — celowo co do liczby. Rozjazd oznaczałby przebieg

@@ -115,9 +115,20 @@
           <span>Tokens</span
           ><strong>{{ tok(s.llm.promptTokens) }} / {{ tok(s.llm.completionTokens) }}</strong>
         </div>
-        <div class="fact">
-          <span>Cost</span><strong>{{ usd(s.llm.costUsd) }}</strong>
-        </div>
+        @if (cost(); as c) {
+          <div class="fact">
+            <span>LLM cost</span><strong>{{ usd(c.llm) }}</strong>
+          </div>
+          @if (c.hasBd) {
+            <div class="fact">
+              <span>Bright Data</span
+              ><strong>{{ usd(c.bd) }} <span class="muted">· {{ num(c.records) }} rec.</span></strong>
+            </div>
+            <div class="fact">
+              <span>Cost total</span><strong>{{ usd(c.total) }}</strong>
+            </div>
+          }
+        }
         <div class="fact">
           <span>Time</span><strong>{{ ms(s.ms) }}</strong>
         </div>
@@ -256,6 +267,24 @@
                         <code>{{ d.k }}={{ d.v }}</code>
                       }
                     </span>
+                  }
+                  @if (stepArchive(st); as path) {
+                    @if (bridge.archiveReadable()) {
+                      <button tuiButton size="xs" appearance="flat" (click)="toggleArchive(path)">
+                        {{ openedPath() === path ? 'Hide' : archiveButton(st) }}
+                      </button>
+                    } @else {
+                      <span class="muted hint">
+                        {{ archiveButton(st) }} in the private archive — <code>{{ path }}</code>
+                      </span>
+                    }
+                    @if (openedPath() === path) {
+                      @if (archiveLoading()) {
+                        <tui-loader size="s" />
+                      } @else if (archiveBody(); as body) {
+                        <pre class="raw">{{ body }}</pre>
+                      }
+                    }
                   }
                 </div>
               </li>
