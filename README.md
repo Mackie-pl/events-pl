@@ -36,7 +36,7 @@ src/actions/discover.ts  ·  --why <id> = skąd to źródło      (metryki + śl
 | `src/storage/` | **port składowania** — `DocStore`/`CollectionStore` + implementacja na plikach JSON. Jedyne miejsce znające ścieżki; przejście na bazę to druga implementacja i podmiana wiązań w `storage/index.ts` |
 | `src/shared/` | ścieżki, hash, tekst, daty, URL-e, formatowanie błędów + `audit.ts` — zbieracz śladu decyzyjnego (stan modułowy jak liczniki zużycia; w shared/, bo emitują do niego wszystkie warstwy) |
 | `src/types/` | typy podzielone po dziedzinach + jedyny barrel w repo (`types/index.ts`). `event-schema.ts` wyłamuje się z „tylko typy" świadomie: to schemat TypeBox, z którego bierze się **naraz** typ `EventItem`, blok schematu w prompcie i `response_format` — jedno źródło prawdy zamiast trzech kopii, które się rozjeżdżały |
-| `test/` | testy `node:test` (586 przypadków): pii, url/slug/daty, dedupe (+ raport scalania), ślad decyzyjny, sonda (czyszczenie cache pod `--force`, wyłącznik archiwum), facebook, digest, koszty, retencja, podsumowania, walidacja propozycji |
+| `test/` | testy `node:test` (594 przypadki): pii, url/slug/daty, dedupe (+ raport scalania), ślad decyzyjny, sonda (czyszczenie cache pod `--force`, wyłącznik archiwum), facebook, digest, koszty, retencja, podsumowania, walidacja propozycji |
 | `discover-runs.json` | observability etapu 1: każde zapytanie search + wyniki, **każda propozycja modelu wraz z decyzją** (także odrzucenia), geo (Overpass), tokeny/koszt LLM per gmina / źródło / typ zadania (discovery vs weryfikacja); ostatnie 24 przebiegi (szczegóły dla 4 najnowszych) |
 | `runs.json` | observability etapu 2: przebieg źródło po źródle (status, HTTP, followupy, tokeny/koszt per zadanie, rekordy Bright Data, ścieżki archiwum) oraz **`produced` — które konkretnie wydarzenia dało źródło w tym przebiegu**, wraz z przegranymi dedupe (`mergedInto`); **ostatnie 7 dni** (min. 2, maks. 30 przebiegów) |
 | `audit.json` | **ślad decyzyjny** etapu 2: krok po kroku, źródło po źródle — czemu poszło do modelu albo z cache, co ucięto na limicie followupów, które wydarzenie odrzucono i dlaczego, co przegrało scalanie. Zamknięty słownik kroków (`src/types/audit.ts`), notka po polsku + detale. Kroki `llm` niosą też
@@ -202,6 +202,13 @@ Dwie funkcje (`src/adapters/brightdata.ts` + `src/pipeline/facebook.ts`):
    tekstu i dalej traktowane jak zwykła strona: diff po hashu, cache ekstrakcji, followupy, wiersz
    w raporcie przebiegu. Surowe posty lądują wyłącznie w prywatnym archiwum (`archiveRaw`, id `__bd`),
    nie w repo — to treści z danymi osobowymi. Linki do wydarzeń z postów zasilają pulę z pkt 1.
+
+   **Blok = post.** To jedyne źródło, które przychodzi już podzielone, więc granicy nie zgadujemy:
+   `Fetched.blocks` niesie gotowy podział (`fbGroupPostsToBlocks`), a `segment()` w ogóle się nie
+   odzywa. Podział po akapitach przecinał post między tytuł a datę w 142 z 356 przypadków
+   (2026-08-14) — po zmianie w żadnym, przy tej samej liczbie wywołań modelu. Niezmiennik:
+   `blocks.join()` musi dawać `text` co do znaku, bo z `text` liczy się hash źródła i dowód
+   bezpiecznika. Krok śladu `block` mówi wtedy „podział: posty (N)".
 
    **Udostępnienia (`original_post`).** Pomiar z 2026-08-14 (221 postów, 14 grup): 43% wpisów to
    udostępnienia cudzego ogłoszenia, a termin siedzi WYŁĄCZNIE w oryginale w 31.6% z nich —
