@@ -16,6 +16,7 @@
  * wyłącznie z treści zapisuje się do cache'a raz i nie zmienia zdania jutro.
  */
 import { audit } from "../../shared/audit.js";
+import { urlKey } from "../../shared/url.js";
 import type { EventItem } from "../../types/index.js";
 import { SHARED_LABEL } from "../facebook.js";
 
@@ -54,7 +55,12 @@ const clean = (text: string): string => text.normalize("NFKC").replace(/https?:\
 export const hasDateHint = (text: string): boolean =>
   HINTS.some((re) => re.test(clean(text)));
 
-const normUrl = (url: string): string => url.trim().replace(/\/+$/, "");
+/**
+ * Ta sama normalizacja, co przy wiązaniu oryginału (facebook.ts) i w rejestrze źródeł:
+ * dowód wiąże się adresem, który model PRZEPISAŁ z wiersza „LINK:", więc różnica o `www.`
+ * albo o schemat oznaczałaby dowód nieznaleziony — i wydarzenie skasowane bez powodu.
+ */
+const normUrl = (url: string): string => urlKey(url);
 
 /**
  * Treść pojedynczego postu spod jego `LINK:` — bo tylko ona jest DOWODEM na to konkretne

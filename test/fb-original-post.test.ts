@@ -16,6 +16,7 @@ import { describe, it } from "node:test";
 
 import { hasDateHint, postsByLink } from "../src/pipeline/extract/date-hint.js";
 import { SHARED_LABEL, fbGroupPostsToText, fbOriginal, fbOriginsByPost } from "../src/pipeline/facebook.js";
+import { urlKey } from "../src/shared/url.js";
 
 const POST_URL = "https://www.facebook.com/groups/imprezypoznan/posts/4077491349052603/";
 const ORIG_ID = "UzpfSTEwMDA2MzgyOTU2MTg3MDoxNjI3MjUxMDA5NDEyNTM2OjE2MjcyNTEwMDk0MTI1MzY=";
@@ -83,7 +84,7 @@ describe("fbGroupPostsToText — oryginał doklejany do podpisu", () => {
 
 describe("dowód dla bezpiecznika obejmuje oryginał, ale nie jego nagłówek", () => {
   const posts = postsByLink(fbGroupPostsToText([grecki]));
-  const dowod = posts.get(POST_URL.replace(/\/$/, ""))!;
+  const dowod = posts.get(urlKey(POST_URL))!;
 
   it("termin z oryginału ratuje wydarzenie przed odsiewem", () => {
     assert.equal(hasDateHint(dowod), true);
@@ -97,16 +98,46 @@ describe("dowód dla bezpiecznika obejmuje oryginał, ale nie jego nagłówek", 
     const bezTresci = postsByLink(fbGroupPostsToText([
       { ...grecki, content: "Polecam!", original_post: { ...grecki.original_post, content: "Zapraszamy 🇬🇷" } },
     ]));
-    assert.equal(hasDateHint(bezTresci.get(POST_URL.replace(/\/$/, ""))!), false);
+    assert.equal(hasDateHint(bezTresci.get(urlKey(POST_URL))!), false);
   });
 });
 
+/**
+ * Wiązanie „post → oryginał" pęka CICHO: gdy klucz mapy i klucz wyszukania rozjadą się
+ * o `www.`, końcowy ukośnik albo schemat, `origin` po prostu się nie dopisze. Bez błędu,
+ * bez kroku w śladzie — dedupe po oryginale przestanie działać i nikt tego nie zauważy.
+ * Dlatego oba końce liczy `urlKey` i dlatego stoi tu test, a nie komentarz.
+ */
 describe("fbOriginsByPost — wiązanie wydarzenia z oryginałem", () => {
-  it("mapuje adres postu (bez końcowego ukośnika) na tożsamość oryginału", () => {
+  it("mapuje adres postu na tożsamość oryginału", () => {
     const m = fbOriginsByPost([grecki, wlasny]);
     assert.equal(m.size, 1);
-    assert.deepEqual(m.get(POST_URL.replace(/\/$/, "")), {
+    assert.deepEqual(m.get(urlKey(POST_URL)), {
       key: ORIG_ID, url: "https://www.facebook.com/reel/2155526571657733/",
     });
+  });
+
+  it("adres przepisany przez model trafia w ten sam klucz", () => {
+    const m = fbOriginsByPost([grecki]);
+    // tak model bywa przepisuje „LINK:" do source_url — każda z tych postaci ma znaleźć
+    // oryginał, bo w events.json ląduje to, co napisał model, nie to, co stało w rekordzie
+    for (const variant of [
+      POST_URL,
+      POST_URL.replace(/\/$/, ""),
+      POST_URL.replace("https://", "http://"),
+      POST_URL.replace("www.", ""),
+    ]) {
+      assert.ok(m.get(urlKey(variant)), `nie znalazł oryginału dla „${variant}"`);
+    }
+  });
+
+  /**
+   * GRANICA, świadoma: `urlKey` zachowuje parametry, bo w rejestrze źródeł `?page=2` to
+   * inna strona. Model dokleja `?ref=…` do adresu rzadko (w materiale z 2026-08-14 ani razu),
+   * a rozluźnianie normalizacji dla wszystkich jej użytkowników kosztowałoby więcej.
+   */
+  it("parametr w adresie daje inny klucz — i tak ma zostać", () => {
+    const m = fbOriginsByPost([grecki]);
+    assert.equal(m.get(urlKey(`${POST_URL}?ref=share`)), undefined);
   });
 });

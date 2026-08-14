@@ -162,8 +162,9 @@ async function attachGeo(
     ev.source_id = src.id;
     ev.town ??= src.town;
     // TU, a nie przy ekstrakcji: to jedyna pętla po WSZYSTKICH wydarzeniach źródła — także
-    // tych z cache'a bloków i z followupów, które o rekordach Bright Data nic nie wiedzą
-    const origin = fbOrigins.get(ev.source_url.trim().replace(/\/+$/, ""));
+    // tych z cache'a bloków i z followupów, które o rekordach Bright Data nic nie wiedzą.
+    // `urlKey` po OBU stronach mapy — inaczej rozjazd o `www.` cicho gubi całe wiązanie
+    const origin = fbOrigins.get(urlKey(ev.source_url ?? ""));
     if (origin) ev.origin = origin;
     // geocode ma własny cache po "venue|town", więc wydarzenia z cache nie kosztują zapytań
     if (ev.venue) {

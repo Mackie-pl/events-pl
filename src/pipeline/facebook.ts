@@ -9,6 +9,7 @@
  */
 import type { BdRecord } from "../adapters/brightdata.js";
 import { parseInstant, splitDateTime } from "../shared/dates.js";
+import { urlKey } from "../shared/url.js";
 import type { AgeRange, EventItem, EventOrigin, FbGroupStats, Price } from "../types/index.js";
 
 const EVENT_URL_RE = /(?:https?:\/\/)?(?:[\w-]+\.)?facebook\.com\/events\/(\d+)/gi;
@@ -278,12 +279,14 @@ export function fbOriginal(rec: BdRecord): FbOriginal | null {
   };
 }
 
-/** Adresy postów bez końcowego ukośnika — tym kluczem wiąże się je z `source_url` wydarzenia. */
-const normUrl = (url: string): string => url.trim().replace(/\/+$/, "");
-
 /**
  * Post w grupie → jego oryginał. Mapa powstaje przy spłaszczaniu (jedyny moment, w którym
  * mamy rekordy), a używa jej process-source.ts do dopisania `origin` gotowym wydarzeniom.
+ *
+ * Klucz to `urlKey`, nie sam adres. Po drugiej stronie stoi `source_url` PRZEPISANY przez
+ * model z wiersza „LINK:", a przepisując, potrafi zgubić `www.` albo schemat — i wtedy
+ * dopasowanie nie zachodzi. Cicho: `origin` po prostu się nie dopisuje, nic nie krzyczy.
+ * Ta sama normalizacja co w rejestrze źródeł, żeby były na to jedne reguły, nie trzy kopie.
  */
 export function fbOriginsByPost(records: BdRecord[]): Map<string, EventOrigin> {
   const out = new Map<string, EventOrigin>();
@@ -291,7 +294,7 @@ export function fbOriginsByPost(records: BdRecord[]): Map<string, EventOrigin> {
     if (!postContent(r)) continue;
     const link = pick(r, "url", "post_url", "link", "post_link");
     const orig = fbOriginal(r);
-    if (link && orig) out.set(normUrl(link), { key: orig.key, url: orig.url });
+    if (link && orig) out.set(urlKey(link), { key: orig.key, url: orig.url });
   }
   return out;
 }

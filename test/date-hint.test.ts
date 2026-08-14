@@ -14,6 +14,7 @@ import { strict as assert } from "node:assert";
 import { describe, it } from "node:test";
 
 import { hasDateHint, keepFoundedDates, postsByLink } from "../src/pipeline/extract/date-hint.js";
+import { urlKey } from "../src/shared/url.js";
 import type { EventItem } from "../src/types/index.js";
 
 const base = (): EventItem =>
@@ -76,14 +77,15 @@ describe("postsByLink — dowód wiązany adresem postu", () => {
   it("rozcina tekst na posty i nie miesza treści sąsiadów", () => {
     const posts = postsByLink(text);
     assert.equal(posts.size, 2);
-    const first = posts.get("https://www.facebook.com/groups/imprezypoznan/posts/4087400011395070")!;
+    const first = posts.get(urlKey("https://www.facebook.com/groups/imprezypoznan/posts/4087400011395070/"))!;
     assert.match(first, /Wakacyjne warsztaty/);
     assert.doesNotMatch(first, /Sobota 8 Sierpnia/, "data sąsiada nie może usprawiedliwiać tego postu");
   });
 
   it("nagłówek DATA POSTU nie jest terminem — inaczej każdy post miałby datę", () => {
     const posts = postsByLink(text);
-    assert.equal(hasDateHint(posts.get("https://www.facebook.com/groups/imprezypoznan/posts/4087400011395070")!), false);
+    const klucz = urlKey("https://www.facebook.com/groups/imprezypoznan/posts/4087400011395070/");
+    assert.equal(hasDateHint(posts.get(klucz)!), false);
   });
 });
 
