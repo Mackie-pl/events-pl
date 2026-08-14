@@ -9,7 +9,8 @@
  */
 import type { BdRecord } from "../adapters/brightdata.js";
 import { parseInstant, splitDateTime } from "../shared/dates.js";
-import type { AgeRange, EventItem, FbGroupStats, Price } from "../types/index.js";
+import { urlKey } from "../shared/url.js";
+import type { AgeRange, EventItem, EventOrigin, FbGroupStats, Price } from "../types/index.js";
 
 const EVENT_URL_RE = /(?:https?:\/\/)?(?:[\w-]+\.)?facebook\.com\/events\/(\d+)/gi;
 
@@ -243,7 +244,99 @@ export function fbPostExtras(records: BdRecord[]): FbPostExtras {
   return out;
 }
 
-export function fbGroupPostsToText(records: BdRecord[]): string {
+/**
+ * Nagłówek treści udostępnionego postu.
+ *
+ * Stała, bo ta sama etykieta jest czytana w DWÓCH miejscach: tutaj powstaje, a
+ * `extract/date-hint.ts` wycina ją z dowodu — nagłówek niesie datę PUBLIKACJI oryginału,
+ * i uznanie jej za termin wydarzenia to dokładnie ten błąd, przed którym stoi bezpiecznik.
+ * Rozjazd tych dwóch miejsc byłby niewidoczny: potok dalej działa, tylko przepuszcza wymysły.
+ */
+export const SHARED_LABEL = "UDOSTĘPNIONE OGŁOSZENIE";
+
+export interface FbOriginal extends EventOrigin {
+  author: string | null;
+  date: string | null;
+  content: string;
+}
+
+/**
+ * Oryginał spod udostępnienia. `post_id` jest kluczem pierwszego wyboru, bo przeżywa
+ * zmianę adresu (rozkodowuje się do „S:_I<profil>:<story>:<story>"); adres jest zapasem.
+ */
+export function fbOriginal(rec: BdRecord): FbOriginal | null {
+  const raw = rec["original_post"];
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
+  const op = raw as BdRecord;
+  const key = pick(op, "post_id", "post_url", "url");
+  if (!key) return null;
+  return {
+    key,
+    url: pick(op, "post_url", "url", "link") ?? "",
+    author: pick(op, "user_name", "user_username_raw", "user_url"),
+    date: pick(op, "date", "date_posted", "timestamp"),
+    content: postContent(op) ?? "",
+  };
+}
+
+/**
+ * Post w grupie → jego oryginał. Mapa powstaje przy spłaszczaniu (jedyny moment, w którym
+ * mamy rekordy), a używa jej process-source.ts do dopisania `origin` gotowym wydarzeniom.
+ *
+ * Klucz to `urlKey`, nie sam adres. Po drugiej stronie stoi `source_url` PRZEPISANY przez
+ * model z wiersza „LINK:", a przepisując, potrafi zgubić `www.` albo schemat — i wtedy
+ * dopasowanie nie zachodzi. Cicho: `origin` po prostu się nie dopisuje, nic nie krzyczy.
+ * Ta sama normalizacja co w rejestrze źródeł, żeby były na to jedne reguły, nie trzy kopie.
+ */
+export function fbOriginsByPost(records: BdRecord[]): Map<string, EventOrigin> {
+  const out = new Map<string, EventOrigin>();
+  for (const r of records) {
+    if (!postContent(r)) continue;
+    const link = pick(r, "url", "post_url", "link", "post_link");
+    const orig = fbOriginal(r);
+    if (link && orig) out.set(urlKey(link), { key: orig.key, url: orig.url });
+  }
+  return out;
+}
+
+/**
+ * Treść oryginału DOKŁADANA, nie podstawiana.
+ *
+ * Pomiar mówi, że ogłoszenie jest w oryginale (31.6% udostępnień ma termin wyłącznie tam),
+ * ale wśród 95 udostępnień trafił się oryginał BEZ tekstu — wtedy jedyną treścią jest podpis
+ * udostępniającego. Podmiana kosztowałaby takie wpisy, doklejenie kosztuje tokeny:
+ * +89% znaków, ok. $0.02 dziennie przy rachunku $1.51 za samo FB.
+ *
+ * Nagłówek niesie autora i datę oryginału, żeby model wiedział, czyja to treść — a „dziś"
+ * w udostępnionym ogłoszeniu znaczyło dzień JEGO publikacji, nie dzień udostępnienia.
+ */
+function sharedLines(rec: BdRecord): string[] {
+  const orig = fbOriginal(rec);
+  if (!orig?.content) return [];
+  return [
+    `${SHARED_LABEL} (${orig.author ?? "?"}, ${orig.date ?? "?"}) — to jest właściwe ogłoszenie:`,
+    orig.content,
+  ];
+}
+
+/** Separator postów w spłaszczonym tekście — i zarazem szew, wzdłuż którego idą bloki. */
+const POST_SEPARATOR = "\n\n---\n\n";
+
+/**
+ * Posty jako OSOBNE bloki — po jednym na post.
+ *
+ * Podział na bloki (extract/blocks.ts) powstał dla stron skrobanych, gdzie granicę karty
+ * trzeba zgadywać, bo `html-to-text` zdążył ją zniszczyć. Grupa FB jest jedynym wejściem,
+ * które przychodzi JUŻ podzielone: Bright Data oddaje tablicę postów. Sklejanie jej w napis
+ * i odtwarzanie granic hashem akapitu było więc zgadywaniem odpowiedzi, którą mamy —
+ * i mylącym się dla 125 z 310 postów (2026-08-14), czyli tnącym post między tytuł a datę.
+ *
+ * Post jest przy okazji właściwą jednostką cache'a: jego treść się nie zmienia, więc hash
+ * bloku jest stabilny na zawsze. Zysk widać tam, gdzie okno pobrania w ogóle się pokrywa —
+ * na `fb-group-kultura-komorniki` (6 postów w oknie) 83% wobec 44% przy blokach z akapitów.
+ * Na grupach, które wyczerpują limit w jedną dobę, nie pokrywa się nic i nie pomoże nic.
+ */
+export function fbGroupPostsToBlocks(records: BdRecord[]): string[] {
   const blocks: string[] = [];
   for (const r of records) {
     const content = postContent(r);
@@ -251,9 +344,21 @@ export function fbGroupPostsToText(records: BdRecord[]): string {
     const date = pick(r, "date_posted", "date", "timestamp", "created_time", "post_date");
     const link = pick(r, "url", "post_url", "link", "post_link");
     blocks.push(
-      [date ? `DATA POSTU: ${date}` : null, link ? `LINK: ${link}` : null, content]
-        .filter(Boolean).join("\n"),
+      [
+        date ? `DATA POSTU: ${date}` : null,
+        link ? `LINK: ${link}` : null,
+        content,
+        ...sharedLines(r),
+      ].filter(Boolean).join("\n"),
     );
   }
-  return blocks.join("\n\n---\n\n");
+  return blocks;
 }
+
+/**
+ * Ten sam materiał jako jeden napis. Zostaje, bo liczy się z niego hash treści źródła,
+ * kopia w archiwum i dowód bezpiecznika (`postsByLink`) — trzy rzeczy, które muszą widzieć
+ * DOKŁADNIE to, co widział model. Bloki są sklejeniem tego napisu, nie odwrotnie.
+ */
+export const fbGroupPostsToText = (records: BdRecord[]): string =>
+  fbGroupPostsToBlocks(records).join(POST_SEPARATOR);

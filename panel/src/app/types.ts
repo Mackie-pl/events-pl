@@ -157,6 +157,12 @@ export interface EventItem {
   source_id?: string;
   is_noise: boolean;
   geo?: { lat: number; lon: number } | null;
+  /**
+   * Post z grupy FB bywa UDOSTĘPNIENIEM cudzego ogłoszenia — wtedy `source_url` prowadzi do
+   * repostu, a `origin.url` do oryginału organizatora. Ten sam `origin.key` w dwóch grupach
+   * to jedno wydarzenie i po nim scala je dedupe (`why: "oryginał"`).
+   */
+  origin?: { key: string; url: string };
 }
 
 export interface PipelineError {

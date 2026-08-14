@@ -20,6 +20,8 @@ import { BatchExtractionSchema, EventSchema, ExtractionSchema } from "../../type
 import type { EventItem, ExtractionResult, Followup } from "../../types/index.js";
 import { POSTER_SYSTEM, batchExtractionSystem, extractionSystem } from "../prompts.js";
 
+import { keepFoundedDates } from "./date-hint.js";
+
 const MAX_INPUT_CHARS = 40_000; // ~10k tokenów
 
 /**
@@ -93,6 +95,17 @@ function keepValid(events: unknown): EventItem[] {
 }
 
 /**
+ * Bezpiecznik na zmyśloną datę (date-hint.ts) doliczony do tego samego licznika, co odrzuty
+ * walidacji: dla raportu przebiegu obie ścieżki znaczą to samo — tyle wpisów model oddał,
+ * a potok ich nie przyjął. Rozróżnienie zostaje w śladzie, gdzie widać KTÓRE i dlaczego.
+ */
+function keepFounded(events: EventItem[], text: string): EventItem[] {
+  const kept = keepFoundedDates(events, text);
+  droppedInvalid += events.length - kept.length;
+  return kept;
+}
+
+/**
  * Eksportowane dla testów.
  *
  * `truncated` przychodzi z zewnątrz, bo tylko wywołujący zna `finish_reason` odpowiedzi —
@@ -135,16 +148,19 @@ export function parseModelJson(s: string, truncated = false): ExtractionResult {
 
 export async function extractEvents(text: string, sourceUrl: string): Promise<ExtractionResult> {
   const sent = Math.min(text.length, MAX_INPUT_CHARS);
+  const seen = text.slice(0, MAX_INPUT_CHARS);
   const out = await chat({
     model: MODEL_EXTRACT,
     task: "extract",
     system: extractionSystem(new Date().toISOString().slice(0, 10)),
-    user: `ŹRÓDŁO: ${sourceUrl}\n\n${text.slice(0, MAX_INPUT_CHARS)}`,
+    user: `ŹRÓDŁO: ${sourceUrl}\n\n${seen}`,
     maxTokens: MAX_TOKENS(),
     schema: RESPONSE_SCHEMA,
     temperature: 0,
   });
-  const result = parseModelJson(out, wasTruncated());
+  const parsed = parseModelJson(out, wasTruncated());
+  // dowodem jest TYLKO to, co model zobaczył — nie cały `text`, jeśli ucięliśmy go na limicie
+  const result: ExtractionResult = { ...parsed, events: keepFounded(parsed.events, seen) };
   audit("llm", text.length > MAX_INPUT_CHARS
     ? `ekstrakcja z ${sent} znaków (treść ucięta z ${text.length}) → ${result.events.length} wydarzeń`
     : `ekstrakcja z ${sent} znaków → ${result.events.length} wydarzeń`,
@@ -236,20 +252,28 @@ export function mapBatch(
  * numeru przepadają, bo cache bez przypisania jest gorszy niż jego brak.
  */
 export async function extractBatch(texts: string[], sourceUrl: string): Promise<BatchResult> {
-  const user = withHeaders(texts);
+  const seen = withHeaders(texts).slice(0, MAX_INPUT_CHARS);
   const out = await chat({
     model: MODEL_EXTRACT,
     task: "extract",
     system: batchExtractionSystem(new Date().toISOString().slice(0, 10)),
-    user: `ŹRÓDŁO: ${sourceUrl}\n\n${user.slice(0, MAX_INPUT_CHARS)}`,
+    user: `ŹRÓDŁO: ${sourceUrl}\n\n${seen}`,
     maxTokens: MAX_TOKENS(),
     schema: RESPONSE_SCHEMA_BATCH,
     temperature: 0,
   });
   const truncated = wasTruncated();
   const parsed = parseRaw(out, truncated);
-  const { byBlock, unsafe, kept, orphans } =
+  const { byBlock, unsafe, orphans } =
     mapBatch(parsed.events, parsed.followups ?? [], texts.length, truncated);
+
+  // PRZED zapisem do cache'a (block-source.ts), bo cache trzyma wynik bloku na wiele dni:
+  // wpuszczona tu zmyślona data wracałaby potem bez ani jednego wywołania modelu
+  let kept = 0;
+  for (const slot of byBlock.values()) {
+    slot.events = keepFounded(slot.events, seen);
+    kept += slot.events.length;
+  }
 
   audit("llm", `paczka ${texts.length} bloków → ${kept} wydarzeń` +
     (orphans ? `, ${orphans} bez poprawnego numeru bloku (odrzucone)` : "") +

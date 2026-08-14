@@ -16,7 +16,7 @@ import { audit } from "../../shared/audit.js";
 import { todayIso } from "../../shared/dates.js";
 import type { BlockStats, EventItem, PipelineState } from "../../types/index.js";
 
-import { type Block, segment } from "./blocks.js";
+import { type Block, segment, toBlock } from "./blocks.js";
 import { detach, lookupBlock, storeBlock, touchBlock } from "./block-cache.js";
 import { segmentHtml } from "./dom-blocks.js";
 import { extractBatch } from "./extract.js";
@@ -36,8 +36,12 @@ const MIN_BLOCKS = 2;
 /** Sufit treści w jednej paczce — ten sam, co MAX_INPUT_CHARS przy wywołaniu na całą stronę. */
 const BATCH_CHARS = 40_000;
 
-/** Bloki strony: po DOM-ie, gdy mamy HTML; inaczej po akapitach (PDF, feed, headless bez HTML-a). */
+/** Bloki strony: gotowe od źródła, po DOM-ie, gdy mamy HTML; inaczej po akapitach (PDF, feed, 304). */
 function pageBlocks(fetched: Fetched): { blocks: Block[]; how: string } {
+  // podział DANY przez źródło bije każdy zgadywany — patrz Fetched.blocks
+  if (fetched.blocks?.length) {
+    return { blocks: fetched.blocks.map(toBlock), how: `posty (${fetched.blocks.length})` };
+  }
   if (fetched.kind !== "html" || !fetched.html) {
     return { blocks: segment(fetched.text), how: "akapity" };
   }

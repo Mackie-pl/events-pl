@@ -28,9 +28,27 @@ export type { AgeRange, Followup, Price, SubSlot } from "./event-schema.js";
  * względu na kształt — liczy `lastDay()` z pipeline/extract/block-cache.ts. `repeat` przychodzi
  * z drutu (model) i nie przekracza `expandRepeat`; w magazynie jest zawsze puste.
  */
+/**
+ * Post, którego UDOSTĘPNIENIEM jest wpis z grupy FB (`original_post` u Bright Data).
+ *
+ * Pomiar z 2026-08-14 (221 postów, 14 grup): 43% wpisów to udostępnienia, a termin siedzi
+ * wyłącznie w oryginale w 31.6% z nich — przypadek odwrotny (termin tylko w podpisie
+ * udostępniającego) nie wystąpił ani razu, jeśli nie liczyć oryginałów bez tekstu.
+ * Stąd `key`: dwa wpisy z RÓŻNYCH grup wskazujące ten sam oryginał to na pewno to samo
+ * ogłoszenie — tożsamość pewna, bez modelu i bez heurystyki tytułów.
+ */
+export interface EventOrigin {
+  /** `original_post.post_id` (stabilny), a gdy go nie ma — adres oryginału */
+  key: string;
+  /** adres oryginału: post organizatora, nie repost w grupie */
+  url: string;
+}
+
 export interface EventItem extends ModelEvent {
   /** dopisywane w process-source.ts / fb-events.ts — model o źródle nie wie */
   source_id?: string;
+  /** dopisywane w process-source.ts dla postów-udostępnień z grup FB */
+  origin?: EventOrigin;
   /** dopisywane po geokodowaniu (Nominatim + cache) */
   geo?: { lat: number; lon: number } | null;
   /**
