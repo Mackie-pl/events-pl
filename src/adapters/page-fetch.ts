@@ -98,6 +98,16 @@ export type Fetched = {
    * a wywołujący schodzi wtedy na podział po akapitach.
    */
   html?: string;
+  /**
+   * GOTOWY podział na bloki, gdy źródło zna go lepiej niż segmentacja — dziś wyłącznie
+   * grupy FB, gdzie Bright Data oddaje tablicę postów i granica jest dana, nie zgadywana
+   * (patrz `fbGroupPostsToBlocks`). Ta sama rola co `html` wyżej: niesie strukturę, którą
+   * `text` stracił, wyłącznie na użytek podziału.
+   *
+   * Niezmiennik: `blocks.join()` musi dawać `text` co do znaku — z `text` liczy się hash
+   * źródła i dowód bezpiecznika, więc rozjazd tych dwóch cicho zerwałby cache i ślad.
+   */
+  blocks?: string[];
 };
 
 /**

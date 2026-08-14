@@ -22,7 +22,8 @@ import type {
   EventItem, EventOrigin, PipelineError, PipelineState, Source, SourceRun,
 } from "../../types/index.js";
 import {
-  fbGroupPostsToText, fbGroupStats, fbOriginsByPost, fbPostExtras, harvestEventUrls, isEventUrl,
+  fbGroupPostsToBlocks, fbGroupPostsToText, fbGroupStats, fbOriginsByPost, fbPostExtras,
+  harvestEventUrls, isEventUrl,
 } from "../facebook.js";
 import { expandRepeat } from "../series.js";
 
@@ -93,7 +94,15 @@ async function fetchSource(
       // z oryginałem trzeba adresem postu, który jest tylko tutaj
       fbOrigins = fbOriginsByPost(records);
       auditFbOrigins(fbOrigins.size, run.fbGroup.posts);
-      return { kind: "html", text: fbGroupPostsToText(records), httpStatus: 200 };
+      // bloki DANE, nie zgadywane: granica postu przyszła w rekordzie, a `segment()`
+      // odtwarzałby ją hashem akapitu — myląc się dla 40% postów (patrz fbGroupPostsToBlocks).
+      // Separator zna wyłącznie facebook.ts, więc `text` bierzemy stamtąd, a nie sklejamy tutaj
+      return {
+        kind: "html",
+        text: fbGroupPostsToText(records),
+        blocks: fbGroupPostsToBlocks(records),
+        httpStatus: 200,
+      };
     } catch (e) {
       bdUsage.errors += 1;
       throw e;

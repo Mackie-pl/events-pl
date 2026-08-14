@@ -319,7 +319,24 @@ function sharedLines(rec: BdRecord): string[] {
   ];
 }
 
-export function fbGroupPostsToText(records: BdRecord[]): string {
+/** Separator postów w spłaszczonym tekście — i zarazem szew, wzdłuż którego idą bloki. */
+const POST_SEPARATOR = "\n\n---\n\n";
+
+/**
+ * Posty jako OSOBNE bloki — po jednym na post.
+ *
+ * Podział na bloki (extract/blocks.ts) powstał dla stron skrobanych, gdzie granicę karty
+ * trzeba zgadywać, bo `html-to-text` zdążył ją zniszczyć. Grupa FB jest jedynym wejściem,
+ * które przychodzi JUŻ podzielone: Bright Data oddaje tablicę postów. Sklejanie jej w napis
+ * i odtwarzanie granic hashem akapitu było więc zgadywaniem odpowiedzi, którą mamy —
+ * i mylącym się dla 125 z 310 postów (2026-08-14), czyli tnącym post między tytuł a datę.
+ *
+ * Post jest przy okazji właściwą jednostką cache'a: jego treść się nie zmienia, więc hash
+ * bloku jest stabilny na zawsze. Zysk widać tam, gdzie okno pobrania w ogóle się pokrywa —
+ * na `fb-group-kultura-komorniki` (6 postów w oknie) 83% wobec 44% przy blokach z akapitów.
+ * Na grupach, które wyczerpują limit w jedną dobę, nie pokrywa się nic i nie pomoże nic.
+ */
+export function fbGroupPostsToBlocks(records: BdRecord[]): string[] {
   const blocks: string[] = [];
   for (const r of records) {
     const content = postContent(r);
@@ -335,5 +352,13 @@ export function fbGroupPostsToText(records: BdRecord[]): string {
       ].filter(Boolean).join("\n"),
     );
   }
-  return blocks.join("\n\n---\n\n");
+  return blocks;
 }
+
+/**
+ * Ten sam materiał jako jeden napis. Zostaje, bo liczy się z niego hash treści źródła,
+ * kopia w archiwum i dowód bezpiecznika (`postsByLink`) — trzy rzeczy, które muszą widzieć
+ * DOKŁADNIE to, co widział model. Bloki są sklejeniem tego napisu, nie odwrotnie.
+ */
+export const fbGroupPostsToText = (records: BdRecord[]): string =>
+  fbGroupPostsToBlocks(records).join(POST_SEPARATOR);
