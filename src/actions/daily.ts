@@ -18,7 +18,7 @@ import {
 } from "../adapters/supabase-archive.js";
 import { P } from "../config/index.js";
 import { withoutCamps } from "../pipeline/camps.js";
-import { dedupe } from "../pipeline/dedupe.js";
+import { DEDUPE_WHY, dedupe } from "../pipeline/dedupe.js";
 import { harvestEventUrls, isEventUrl } from "../pipeline/facebook.js";
 import { pruneBlocks } from "../pipeline/extract/block-cache.js";
 import { resolveFbEvents } from "../pipeline/extract/fb-events.js";
@@ -215,7 +215,7 @@ async function run(): Promise<void> {
       d.loser.source_id ?? RUN_SCOPE,
       "dedupe.dropped",
       `„${d.loser.title}" scalone do „${d.winner.title}" ze źródła „${d.winner.source_id ?? "?"}" ` +
-        `(${d.why === "klucz" ? "ten sam tytuł i data" : "tytuł zawarty w tamtym"})`,
+        `(${DEDUPE_WHY[d.why]})`,
       {
         title: d.loser.title,
         date: d.loser.date_start,

@@ -19,10 +19,10 @@ import { describeError } from "../../shared/errors.js";
 import { sha256 } from "../../shared/hash.js";
 import { urlKey } from "../../shared/url.js";
 import type {
-  EventItem, PipelineError, PipelineState, Source, SourceRun,
+  EventItem, EventOrigin, PipelineError, PipelineState, Source, SourceRun,
 } from "../../types/index.js";
 import {
-  fbGroupPostsToText, fbGroupStats, fbPostExtras, harvestEventUrls, isEventUrl,
+  fbGroupPostsToText, fbGroupStats, fbOriginsByPost, fbPostExtras, harvestEventUrls, isEventUrl,
 } from "../facebook.js";
 import { expandRepeat } from "../series.js";
 
@@ -32,7 +32,7 @@ import { fixCalendarDates } from "./calendar-links.js";
 import { capabilitySource } from "./capability-source.js";
 import { entryUrl } from "./entry-url.js";
 import { noteFbGroup } from "./fb-group-blocked.js";
-import { auditFbGroup, auditFbPostExtras } from "./fb-group-trail.js";
+import { auditFbGroup, auditFbOrigins, auditFbPostExtras } from "./fb-group-trail.js";
 import { fbGroupLimit, noteFbGroupRate } from "./fb-group-limit.js";
 import {
   MAX_FOLLOWUPS_PER_SOURCE, followupEvents, processFollowup,
@@ -41,6 +41,12 @@ import { droppedInvalidStats, extractEvents, resetDroppedInvalid } from "./extra
 
 /** Ten sam adres wg reguł rejestru (bez schematu, `www.`, końcowego `/`). */
 const isSameUrl = (a: string, b: string): boolean => urlKey(a) === urlKey(b);
+
+/**
+ * Post w grupie FB → oryginał, którego jest udostępnieniem. Wypełniane przez `fetchSource`,
+ * czytane przy dopisywaniu pól do wydarzeń; puste dla wszystkich innych rodzajów źródeł.
+ */
+let fbOrigins = new Map<string, EventOrigin>();
 
 export function newSourceRun(src: Source, url: string, status: SourceRun["status"]): SourceRun {
   return {
@@ -82,6 +88,11 @@ async function fetchSource(
       auditFbGroup(run.fbGroup, bdRaw);
       // też PRZED spłaszczeniem: obrazy i miejsca giną w nim bezpowrotnie
       auditFbPostExtras(fbPostExtras(records), run.fbGroup.posts);
+      // stan modułowy jak liczniki zużycia — granicę „jednego źródła" wyznacza processSource,
+      // które zeruje mapę na wejściu. Wydarzenia wracają z modelu bez rekordów, a wiązać je
+      // z oryginałem trzeba adresem postu, który jest tylko tutaj
+      fbOrigins = fbOriginsByPost(records);
+      auditFbOrigins(fbOrigins.size, run.fbGroup.posts);
       return { kind: "html", text: fbGroupPostsToText(records), httpStatus: 200 };
     } catch (e) {
       bdUsage.errors += 1;
@@ -150,6 +161,10 @@ async function attachGeo(
   for (const ev of events) {
     ev.source_id = src.id;
     ev.town ??= src.town;
+    // TU, a nie przy ekstrakcji: to jedyna pętla po WSZYSTKICH wydarzeniach źródła — także
+    // tych z cache'a bloków i z followupów, które o rekordach Bright Data nic nie wiedzą
+    const origin = fbOrigins.get(ev.source_url.trim().replace(/\/+$/, ""));
+    if (origin) ev.origin = origin;
     // geocode ma własny cache po "venue|town", więc wydarzenia z cache nie kosztują zapytań
     if (ev.venue) {
       const g = await geocode(ev.venue, ev.town, state.geo);
@@ -171,6 +186,7 @@ export async function processSource(
   const t0 = performance.now();
   resetUsage();
   resetDroppedInvalid();
+  fbOrigins = new Map();
   beginSource(src.id);
   const bdBefore = bdSnapshot();
   const url = src.url.replace("{page}", "1");

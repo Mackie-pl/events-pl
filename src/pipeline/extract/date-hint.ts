@@ -17,6 +17,7 @@
  */
 import { audit } from "../../shared/audit.js";
 import type { EventItem } from "../../types/index.js";
+import { SHARED_LABEL } from "../facebook.js";
 
 /**
  * Cokolwiek, co wyznacza termin — także mgliście („w sobotę", „jutro"). Lista jest CELOWO
@@ -64,11 +65,14 @@ const normUrl = (url: string): string => url.trim().replace(/\/+$/, "");
  * numer bloku nie, więc dowód wiążemy adresem.
  *
  * Wiersze `DATA POSTU:` wypadają: to data PUBLIKACJI, nie termin wydarzenia. Zostawione
- * przepuszczałyby każdy post, bo każdy ma nagłówek z datą ISO.
+ * przepuszczałyby każdy post, bo każdy ma nagłówek z datą ISO. Z tego samego powodu wypada
+ * nagłówek `UDOSTĘPNIONE OGŁOSZENIE (autor, data)` — to data publikacji ORYGINAŁU. Treść pod
+ * nim zostaje i jest pełnoprawnym dowodem: w 31.6% udostępnień termin stoi wyłącznie tam.
  */
 export function postsByLink(text: string): Map<string, string> {
   const clean = text
     .replace(/^DATA POSTU:.*$/gmu, "")
+    .replace(new RegExp(`^${SHARED_LABEL}.*$`, "gmu"), "")
     .replace(/^BLOK \d+:$/gmu, "")
     .replace(/^ŹRÓDŁO:.*$/gmu, "");
   const out = new Map<string, string>();

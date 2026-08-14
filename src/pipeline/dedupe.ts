@@ -8,12 +8,23 @@ export interface DedupeDrop {
   loser: EventItem;
   winner: EventItem;
   /**
-   * Po czym rekordy się zeszły. Ślad ma odpowiadać na „czemu to zniknęło", a te dwie
-   * odpowiedzi znaczą co innego: `klucz` to identyczny tytuł i data (pewne), `zawieranie`
-   * to jeden tytuł zawarty w drugim (heurystyka, którą warto obejrzeć).
+   * Po czym rekordy się zeszły. Ślad ma odpowiadać na „czemu to zniknęło", a te odpowiedzi
+   * znaczą co innego: `klucz` to identyczny tytuł i data (pewne), `oryginał` to dwa
+   * udostępnienia TEGO SAMEGO postu (też pewne, i jako jedyne działa ponad miejscowością),
+   * `zawieranie` to jeden tytuł zawarty w drugim (heurystyka, którą warto obejrzeć).
    */
-  why: "klucz" | "zawieranie";
+  why: "klucz" | "oryginał" | "zawieranie";
 }
+
+/**
+ * Werdykt scalania po polsku — tutaj, bo słownik należy do reguły, nie do miejsca, które
+ * go drukuje. Dopisanie powodu bez zdania w tej mapie nie skompiluje się i to jest cel.
+ */
+export const DEDUPE_WHY: Record<DedupeDrop["why"], string> = {
+  "klucz": "ten sam tytuł i data",
+  "oryginał": "to samo udostępnienie oryginału",
+  "zawieranie": "tytuł zawarty w tamtym",
+};
 
 export interface DedupeResult {
   events: EventItem[];
@@ -132,14 +143,27 @@ const beats = (a: EventItem, b: EventItem): boolean =>
   isSpan(a) === isSpan(b) ? richer(a, b) : isSpan(a);
 
 /**
- * Scalanie po zawieraniu, w kubełkach po MIEJSCOWOŚCI. Miejscowość jest warunkiem
- * KONIECZNYM: „Kino letnie w Wirach" i „Swarzędzkie kino letnie" tego samego dnia to dwa
- * różne wydarzenia trzydzieści kilometrów od siebie.
+ * Scalanie po zawieraniu tytułu, w kubełkach wyznaczonych przez `bucketOf`.
+ *
+ * Kubełek jest parametrem, bo mamy DWA sensowne podziały i oba są tym samym algorytmem:
+ *   - po MIEJSCOWOŚCI — warunek konieczny przy heurystyce tytułów: „Kino letnie w Wirach"
+ *     i „Swarzędzkie kino letnie" tego samego dnia to dwa wydarzenia 30 km od siebie;
+ *   - po ORYGINALE — dwa udostępnienia tego samego postu FB. Tu miejscowość musi wypaść
+ *     z klucza, bo to samo ogłoszenie wisi w grupach różnych gmin i `ev.town` domyka się
+ *     wtedy miastem ŹRÓDŁA (`town ??= src.town`), czyli dwiema różnymi wartościami.
+ *     Tożsamość niesie id oryginału, nie geografia.
+ *
+ * `comparable()` zostaje w obu przebiegach — jeden oryginał potrafi wypisywać kilka wydarzeń
+ * (program, „co się dzieje w tym tygodniu"), a wtedy wspólne id NIE znaczy „ten sam termin".
  *
  * Data wypadła z klucza kubełka i przeniosła się do `comparable()` — inaczej reguła 2
  * (wspólny dzień) nie miałaby jak dopasować rekordów o różnych datach startu.
  */
-function foldContained(events: EventItem[]): DedupeResult {
+function foldBy(
+  events: EventItem[],
+  bucketOf: (ev: EventItem, i: number) => string,
+  why: DedupeDrop["why"],
+): DedupeResult {
   /** `null` = rekord wchłonięty; indeksy zostają na miejscu, żeby kubełki się nie rozjechały */
   const slots: (EventItem | null)[] = [];
   /** slot → slot, który go wchłonął (albo on sam). Rozwija łańcuchy A→B→C. */
@@ -152,8 +176,8 @@ function foldContained(events: EventItem[]): DedupeResult {
     return i;
   };
 
-  for (const ev of events) {
-    const key = norm(ev.town);
+  for (const [i, ev] of events.entries()) {
+    const key = bucketOf(ev, i);
     const bucket = byBucket.get(key) ?? [];
     const hits = bucket.filter((i) => slots[i] !== null && comparable(slots[i]!, ev));
     if (!hits.length) {
@@ -184,10 +208,19 @@ function foldContained(events: EventItem[]): DedupeResult {
 
   return {
     events: slots.filter((ev): ev is EventItem => ev !== null),
-    dropped: losers.map(({ loser, slot }) =>
-      ({ loser, winner: slots[surviving(slot)]!, why: "zawieranie" as const })),
+    dropped: losers.map(({ loser, slot }) => ({ loser, winner: slots[surviving(slot)]!, why })),
   };
 }
+
+/**
+ * Kubełek po oryginale. Wpis bez `origin` dostaje kubełek WŁASNY (`#i`), więc nie ma z czym
+ * się zejść — przebieg po oryginałach nie rusza niczego spoza grup FB.
+ */
+const foldByOrigin = (events: EventItem[]): DedupeResult =>
+  foldBy(events, (ev, i) => ev.origin?.key ?? `#${i}`, "oryginał");
+
+const foldContained = (events: EventItem[]): DedupeResult =>
+  foldBy(events, (ev) => norm(ev.town), "zawieranie");
 
 /** Tania heurystyka; LLM-owy dedupe (DEDUPE_SYSTEM) do podpięcia dla niejednoznacznych par. */
 export function dedupe(events: EventItem[]): DedupeResult {
@@ -216,17 +249,29 @@ export function dedupe(events: EventItem[]): DedupeResult {
   const dropped: DedupeDrop[] = losers.map(({ loser, key }) =>
     ({ loser, winner: seen.get(key)!, why: "klucz" }));
 
-  // drugie przejście dopiero na zwycięzcach pierwszego: po identycznych tytułach zostaje
+  // kolejne przejścia dopiero na zwycięzcach poprzedniego: po identycznych tytułach zostaje
   // mniej rekordów, więc porównań kwadratowych w kubełku jest mniej — a przede wszystkim
-  // heurystyka nie ma szans nadpisać rozstrzygnięcia, które było pewne
-  const loose = foldContained(out);
-  // przegrany pierwszego przejścia mógł wskazywać rekord, który przegrał drugie —
-  // przepinamy go na ostatecznego zwycięzcę, żeby ślad prowadził do rekordu z events.json
-  const finalOf = new Map(loose.dropped.map((d) => [d.loser, d.winner]));
-  for (const d of dropped) {
-    const better = finalOf.get(d.winner);
-    if (better) d.winner = better;
-  }
-  return { events: loose.events, dropped: [...dropped, ...loose.dropped] };
+  // heurystyka nie ma szans nadpisać rozstrzygnięcia, które było pewne.
+  //
+  // ORYGINAŁ przed MIEJSCOWOŚCIĄ, bo jest pewniejszy: wspólne id postu to ta sama treść
+  // udostępniona dwa razy, a zawieranie tytułów to zgadywanie. Gdyby kolejność była odwrotna,
+  // scalanie po miejscowości rozstrzygałoby pary, o których wiemy więcej niż ono.
+  const byOrigin = foldByOrigin(out);
+  const loose = foldContained(byOrigin.events);
+  // Przegrany wcześniejszego przejścia mógł wskazywać rekord, który przegrał późniejsze —
+  // przepinamy go na ostatecznego zwycięzcę, żeby ślad prowadził do rekordu z events.json.
+  // Przepięcie idzie przejście po przejściu: przy trzech przebiegach jedno przepięcie zostawia
+  // wskazanie o krok za krótkie (A→B, B→C, C→D), a to prowadzi do rekordu, którego już nie ma.
+  const rechain = (drops: DedupeDrop[], next: DedupeDrop[]): void => {
+    const finalOf = new Map(next.map((d) => [d.loser, d.winner]));
+    for (const d of drops) {
+      const better = finalOf.get(d.winner);
+      if (better) d.winner = better;
+    }
+  };
+  rechain(dropped, byOrigin.dropped);
+  const earlier = [...dropped, ...byOrigin.dropped];
+  rechain(earlier, loose.dropped);
+  return { events: loose.events, dropped: [...earlier, ...loose.dropped] };
 }
 void DEDUPE_SYSTEM; // podpięcie LLM-dedupe: TODO

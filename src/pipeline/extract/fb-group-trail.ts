@@ -59,6 +59,23 @@ export function auditFbGroup(s: FbGroupStats, archive?: string | null): void {
  * których dziś nie da się zadać danym: KTÓRE pole datasetu niesie obraz i W ILU postach.
  * Dopóki nie znamy odpowiedzi, czytanie plakatów byłoby wydatkiem w nieznanej skali.
  */
+/**
+ * Ile postów źródła to udostępnienia cudzych ogłoszeń.
+ *
+ * Osobny krok, bo od tej liczby zależą dwie rzeczy naraz: ile treści doszło do promptu
+ * (oryginał jest doklejany, nie podstawiany — patrz fbGroupPostsToText) i ile wydarzeń ma
+ * szansę zescalić się z innej grupy po `origin.key`, bez modelu. Grupa, w której udostępnień
+ * jest zero, nie skorzysta z żadnego z tych dwóch — i to widać dopiero tutaj.
+ */
+export function auditFbOrigins(shares: number, posts: number): void {
+  if (!posts) return;
+  audit("fb.group", shares
+    ? `${shares} z ${posts} postów to udostępnienia — treść oryginału idzie do modelu, `
+      + "a jego id wiąże ten sam wpis między grupami"
+    : `żaden z ${posts} postów nie jest udostępnieniem — nie ma oryginału do doczytania`,
+  { shares, posts });
+}
+
 export function auditFbPostExtras(x: FbPostExtras, posts: number): void {
   if (!posts) return; // sama porażka scrapera — auditFbGroup już to powiedział
   const place = x.placeField
