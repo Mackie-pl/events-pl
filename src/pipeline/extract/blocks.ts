@@ -28,6 +28,44 @@ export interface Block {
   chars: number;
 }
 
+/**
+ * Treść widziana OCZAMI CACHE'A: bez tego, co w adresach przesuwa się samo z siebie.
+ *
+ * Powód w liczbach z 2026-08-14 (poznan.pl/mim/events/): blok z menu i kalendarzem ma
+ * 2 664 znaki i ani jednego wydarzenia, a mimo to jedzie do modelu CODZIENNIE. Stoi w nim
+ * `14 [/mim/events/2026-08-14/?sort=new&count=20]` — dzień „dziś" przesuwa się co dobę,
+ * więc hash bloku zmienia się co dobę i cache nie ma jak trafić. Nigdy. To nie jest
+ * przypadek jednego serwisu: kalendarz z podlinkowanymi dniami ma połowa miejskich CMS-ów.
+ *
+ * Maskujemy WYŁĄCZNIE do liczenia hasza — do modelu idzie `Block.text`, czyli treść bez
+ * zmian. Kolizja (dwa różne bloki, jeden klucz) wymagałaby tekstów różniących się TYLKO
+ * datą w adresie: ta sama nazwa, ta sama widoczna data, inny link. Wtedy wynik ekstrakcji
+ * i tak byłby ten sam, bo daty model czyta z treści, nie ze ścieżki.
+ *
+ * Ta sama maska obowiązuje przy wyznaczaniu GRANIC bloków — i to jest tu nieoczywiste.
+ * Bez tego zmiana wewnątrz akapitu przestawia jego `isBoundary`, granica wędruje i blok
+ * z kalendarzem rozpada się na dwa o nowych haszach; maska na samym haszu bloku nie
+ * uratowałaby wtedy niczego. Pomiar na dwóch dniach poznan.pl: blok 2 664 zn. rozpadał się
+ * na 270 + 2 356 zn., oba nieznane cache'owi.
+ */
+export function stableKey(text: string): string {
+  return text.replace(DATE_LINK, "/@@D@@$1");
+}
+
+/**
+ * Adres z datą w ścieżce — RAZEM z doklejonym do niego zapytaniem.
+ *
+ * Zapytanie wchodzi do maski tylko TUTAJ i to jest cała ostrożność tej poprawki: kalendarz
+ * odróżnia dzień „dziś" właśnie zapytaniem (`/2026-08-14/?sort=new&count=20` obok gołych
+ * `/2026-08-13/`), więc maska na samej dacie zostawiłaby wędrujący `?…` i nic by nie dała.
+ * Maskowanie WSZYSTKICH zapytań byłoby już za szerokie: serwis wypisujący wydarzenia jako
+ * `?id=123` miałby wtedy dwie karty o jednym kluczu, gdy różnią się wyłącznie adresem.
+ */
+const DATE_LINK = /\/(?:19|20)\d\d-\d\d-\d\d(\/)?(?:\?[^\s\]]*)?/gu;
+
+/** Hash TREŚCI po masce — klucz cache'a i podstawa granic. Patrz `stableKey`. */
+const keyOf = (text: string): string => sha256(stableKey(text));
+
 export interface SegmentOptions {
   /** twardy sufit; powyżej tniemy nawet bez granicy z treści (patrz niżej — psuje lokalność) */
   maxChars: number;
@@ -66,10 +104,10 @@ export function paragraphs(text: string): string[] {
  * a nie progu rozmiaru; próg kupował ładniejsze bloki za jedyną własność, o którą tu chodzi.
  */
 const isBoundary = (para: string, targetParas: number): boolean =>
-  parseInt(sha256(para).slice(0, 8), 16) % targetParas === 0;
+  parseInt(keyOf(para).slice(0, 8), 16) % targetParas === 0;
 
-/** Blok z gotowego tekstu. Hash liczy się z TREŚCI, więc jest kluczem cache'a. */
-export const toBlock = (text: string): Block => ({ text, hash: sha256(text), chars: text.length });
+/** Blok z gotowego tekstu. Hash liczy się z TREŚCI po masce, więc jest kluczem cache'a. */
+export const toBlock = (text: string): Block => ({ text, hash: keyOf(text), chars: text.length });
 
 const mkBlock = (paras: string[]): Block => toBlock(paras.join("\n\n"));
 

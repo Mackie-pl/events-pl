@@ -27,7 +27,7 @@
  */
 import render from "dom-serializer";
 import { type AnyNode, type Element, Text, hasChildren, isTag } from "domhandler";
-import { textContent } from "domutils";
+import { removeElement, textContent } from "domutils";
 import { parseDocument } from "htmlparser2";
 
 import { toText } from "../../adapters/page-fetch.js";
@@ -148,6 +148,87 @@ function collectCards(node: AnyNode, out: Element[]): void {
 }
 
 /**
+ * ODCHUDZANIE KARTY: to samo powiedziane drugi raz nie niesie treści, a płacimy za nie jak
+ * za treść.
+ *
+ * Pomiar na poznan.pl (2026-08-14, 34 karty): 4 021 z 23 894 znaków kart (16.9%) to wiersz,
+ * który w tej samej karcie już stał. CMS wypuszcza `<img>` osobno dla desktopu i dla mobile
+ * (ten sam `alt`), kategorię osobno dla stanu przed i po kliknięciu (ten sam odnośnik),
+ * a adres wydarzenia niesie w trzech odnośnikach: obrazek, tytuł i „Zobacz szczegóły".
+ *
+ * DWIE OSTROŻNOŚCI, bez których to by szkodziło:
+ *
+ * 1. Odchudzanie chodzi po KARCIE, nigdy po całej stronie. Kategoria „Muzyka" wraca w co
+ *    trzeciej karcie i odsiew liczony globalnie uzależniłby treść karty od jej sąsiadek —
+ *    czyli skasowałby lokalność, dla której cały podział na bloki powstał. Strzeże tego
+ *    `test/prompt-noise.test.ts` na prawdziwej stronie.
+ *
+ * 2. Powtórzony obrazek dostaje PUSTY `alt`, a nie kasowanie węzła, i powtórzony odnośnik
+ *    traci `href`, a nie tekst. Adresy obrazków są jedynym wejściem ścieżki plakatowej
+ *    (followup-plakat), więc wycięcie węzła kupowałoby znaki jej kosztem.
+ */
+/** Wszystkie elementy o danym znaczniku w obrębie karty, w kolejności dokumentu. */
+function descendants(root: Element, tag: string): Element[] {
+  const out: Element[] = [];
+  const walk = (n: AnyNode): void => {
+    if (isTag(n) && n.tagName === tag) out.push(n);
+    if (hasChildren(n)) for (const c of n.children) walk(c);
+  };
+  walk(root);
+  return out;
+}
+
+/** Ten sam `alt` drugi raz to responsywny wariant tego samego obrazka — opis zostaje przy pierwszym. */
+function thinImages(card: Element): number {
+  const alts = new Set<string>();
+  let zdjete = 0;
+  for (const img of descendants(card, "img")) {
+    const alt = (img.attribs["alt"] ?? "").trim();
+    if (!alt) continue;
+    if (alts.has(alt)) {
+      img.attribs["alt"] = "";
+      zdjete += alt.length;
+    } else alts.add(alt);
+  }
+  return zdjete;
+}
+
+/** Ten sam adres w kilku odnośnikach karty — zostaje przy tym, który niesie własny tekst. */
+function thinLinks(card: Element): number {
+  const byHref = new Map<string, Element[]>();
+  for (const a of descendants(card, "a")) {
+    const href = a.attribs["href"];
+    if (href) byHref.set(href, [...(byHref.get(href) ?? []), a]);
+  }
+  let zdjete = 0;
+  for (const [href, group] of byHref) {
+    if (group.length < 2) continue;
+    // adres zostaje przy odnośniku z WŁASNYM tekstem (tytuł karty), a nie przy tym owiniętym
+    // wokół obrazka — model ma go zobaczyć przy nazwie wydarzenia, nie przy opisie plakatu
+    const keep = group.find((a) => textContent(a).trim() !== "") ?? group[0];
+    if (!keep) continue;
+    const kept = textContent(keep).trim();
+    for (const a of group) {
+      if (a === keep) continue;
+      const own = textContent(a).trim();
+      if (own !== "" && own === kept) {
+        // ten sam adres POD TYM SAMYM tekstem — kategoria wypuszczona drugi raz dla stanu
+        // po kliknięciu. Nie niesie ani słowa więcej, więc znika w całości, a nie sam `href`
+        removeElement(a);
+        zdjete += own.length + href.length + 3;
+        continue;
+      }
+      delete a.attribs["href"];
+      zdjete += href.length + 3; // „ [href]" — tyle znika z renderu
+    }
+  }
+  return zdjete;
+}
+
+/** Zwraca ZDJĘTE znaki — potok ma o tym meldować, bo to zmiana treści idącej do modelu. */
+const thinCard = (card: Element): number => thinImages(card) + thinLinks(card);
+
+/**
  * Znacznik wstawiany PRZED i PO każdej karcie, żeby cały dokument dało się wyrenderować
  * JEDEN raz i pociąć wynik.
  *
@@ -176,6 +257,12 @@ export interface DomSegmentation {
   cardHashes: string[];
   /** czy w ogóle znaleziono powtarzalne rodzeństwo */
   detected: boolean;
+  /**
+   * Znaki zdjęte z kart przez `thinCard` — powtórzone opisy obrazków i adresy. Wchodzi do
+   * śladu, bo to JEDYNE miejsce, w którym potok wysyła modelowi coś innego, niż stoi na
+   * stronie; bez liczby w audycie różnica byłaby niewidoczna aż do rachunku.
+   */
+  thinned: number;
   /**
    * Znaczniki zmieniły render, więc wynik ODRZUCONO i zszliśmy na podział po akapitach.
    * Sygnał do obejrzenia strony, nie awaria — patrz `assertSameLines`.
@@ -255,24 +342,28 @@ export function segmentHtml(html: string): DomSegmentation {
   const doc = parseDocument(html);
   prune(doc);
 
-  // render bez znaczników — wzorzec dla samokontroli i wynik ścieżki zapasowej
-  const clean = toText(render(doc));
-
   const cards: Element[] = [];
   for (const c of doc.children) collectCards(c, cards);
   if (!cards.length) {
     // brak listy — dokładnie dzisiejsze zachowanie, bez udawania struktury
-    return { blocks: segment(clean), cards: 0, cardHashes: [], detected: false };
+    return { blocks: segment(toText(render(doc))), cards: 0, cardHashes: [], detected: false, thinned: 0 };
   }
+  // odchudzanie PRZED wzorcem samokontroli: `clean` ma być tą stroną, którą naprawdę
+  // wysyłamy, inaczej porównanie wierszy odrzucałoby każdą stronę z powtórkami w karcie
+  let thinned = 0;
+  for (const el of cards) thinned += thinCard(el);
+
+  // render bez znaczników — wzorzec dla samokontroli i wynik ścieżki zapasowej
+  const clean = toText(render(doc));
 
   for (const el of cards) mark(el);
   const { blocks, cardHashes } = cut(toText(render(doc)));
   const diverged = assertSameLines(clean, blocks);
   if (diverged !== null) {
     return {
-      blocks: segment(clean), cards: 0, cardHashes: [], detected: false,
+      blocks: segment(clean), cards: 0, cardHashes: [], detected: false, thinned,
       perturbed: true, perturbedAt: diverged,
     };
   }
-  return { blocks, cards: cardHashes.length, cardHashes, detected: true };
+  return { blocks, cards: cardHashes.length, cardHashes, detected: true, thinned };
 }

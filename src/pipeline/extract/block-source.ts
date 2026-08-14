@@ -54,7 +54,11 @@ function pageBlocks(fetched: Fetched): { blocks: Block[]; how: string } {
       { perturbed: true, at: seg.perturbedAt ?? null });
     return { blocks: seg.blocks, how: "akapity (DOM odrzucony samokontrolą)" };
   }
-  return { blocks: seg.blocks, how: seg.detected ? `DOM, ${seg.cards} kart` : "akapity (brak listy)" };
+  const odchudzone = seg.thinned ? `, −${seg.thinned} zn. powtórek w kartach` : "";
+  return {
+    blocks: seg.blocks,
+    how: seg.detected ? `DOM, ${seg.cards} kart${odchudzone}` : `akapity (brak listy)${odchudzone}`,
+  };
 }
 
 /** Bloki nieznane cache'owi — dokładnie to, za co dziś zapłacimy. */
