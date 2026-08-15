@@ -696,6 +696,27 @@ npm run lint        # progi rozmiaru + reguły typowane
 npm test            # node:test przez tsx, bez dodatkowych zależności
 ```
 
+**Te same bramki lokalnie** — dwa hooki w `.githooks/`, włączane jednym poleceniem
+(świeży klon ich NIE ma, git nie ufa hookom z repo):
+
+```bash
+git config core.hooksPath .githooks
+```
+
+| hook | co robi | czemu tak |
+|---|---|---|
+| `pre-commit` | typecheck + lint | commit ma być natychmiastowy; testy tu nie wchodzą |
+| `pre-push` | `npm test` (~7 s) | push jest ostatnim momentem, w którym czerwone testy kosztują sekundy |
+
+Pominięcie na jeden raz: `git commit --no-verify` / `git push --no-verify`. Oba hooki
+sprawdzają **katalog roboczy**, nie to, co leci na zdalne — ostatecznym sędzią zostaje CI.
+
+Skąd `pre-push`: commit `27336ad` ruszał wyłącznie `config.json`, rozjechał go z generatorem
+(`config-file.test.ts`) i przeleżał w `main` tydzień. Pre-commit testów nie puszcza, a `ci.yml`
+nie odpalił się ani razu, bo pliku nie było w filtrze `paths` — jest od `1881e00`, razem
+z `config-meta.json`. Na tej liście ma być wszystko, na co patrzą testy, nie tylko to,
+co się kompiluje.
+
 **Twarde (wywracają CI):** 350 linii kodu na plik · 120 znaków na linię · zagnieżdżenie ≤ 4 ·
 ≤ 4 parametry · ≤ 3 zagnieżdżone callbacki. Liczone bez pustych linii i komentarzy — gęsty
 JSDoc w tym repo jest dokumentacją decyzji, nie długiem.

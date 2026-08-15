@@ -1,0 +1,20 @@
+#!/bin/sh
+# Bramka przed pushem: TESTY. Commit ma zostać natychmiastowy (patrz pre-commit — typecheck
+# i lint, bez testów), ale to, co wychodzi z maszyny, ma być zielone.
+#
+# Powód w jednym zdaniu, 2026-08-15: commit 27336ad ruszał wyłącznie config.json, rozjechał go
+# z generatorem i przeleżał w main tydzień — pre-commit testów nie puszcza, a CI nie odpaliło
+# ani razu, bo pliku nie było w filtrze `paths` (jest od 1881e00). Push jest ostatnim momentem,
+# w którym czerwone testy kosztują 7 sekund zamiast tygodnia.
+#
+# Włączenie w świeżym klonie: git config core.hooksPath .githooks
+# Pominięcie na jeden push: git push --no-verify
+#
+# Uwaga jak w pre-commit: sprawdzany jest KATALOG ROBOCZY, nie to, co leci na zdalne.
+# Zielone testy na brudnym drzewie nie dowodzą, że zielony jest sam commit — dowodzi tego CI.
+set -e
+
+echo "pre-push: testy…"
+npm test --silent
+
+echo "pre-push: ok"
