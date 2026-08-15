@@ -5,6 +5,7 @@
  * nie wolno publikować, a bez których nie da się debugować jakości ekstrakcji, lądują tutaj:
  *   raw/    — pobrany tekst strony/PDF-a (wejście modelu, 1:1)
  *   llm/    — prompt + odpowiedź modelu dla każdego wywołania
+ *   blocks/ — rozliczenie podziału na bloki: co weszło, jak pocięte, co poszło do modelu
  *   events/ — wydarzenia PRZED redakcją PII
  *
  * Zasady:
@@ -38,6 +39,8 @@ export interface ArchiveStats {
 const stats: ArchiveStats = { uploaded: 0, failed: 0, bytes: 0, skipped: 0 };
 let runId = "";
 let llmSeq = 0;
+/** Numer podziału w przebiegu — jedno źródło tnie stronę i każdy jej followup osobno. */
+let blockSeq = 0;
 /** Kontekst bieżącego źródła — pozwala przypiąć obiekty archiwum do SourceRun w runs.json. */
 let currentSourceId = "";
 let currentPaths: string[] = [];
@@ -108,6 +111,7 @@ export const archiveEnabled = (): boolean => cfg() !== null;
 export function beginRun(startedAt: string): void {
   runId = startedAt.replace(/[:.]/g, "-");
   llmSeq = 0;
+  blockSeq = 0;
   authBroken = false;
   stats.uploaded = stats.failed = stats.bytes = stats.skipped = 0;
   if (archiveEnabled() && keyLooksPublic(supabaseKey())) {
@@ -291,6 +295,27 @@ export async function archiveLlmCall(rec: LlmCallRecord): Promise<string | null>
   const ok = await put(
     path,
     JSON.stringify({ ...rec, user, runId, sourceId: currentSourceId || null }, null, 1),
+  );
+  return ok ? path : null;
+}
+
+/**
+ * Rozliczenie JEDNEGO podziału na bloki: co weszło, jak pocięte, co z tego poszło do modelu.
+ *
+ * Osobny obiekt od `raw/`, bo odpowiada na inne pytanie. `raw/` mówi, CO potok zobaczył;
+ * to mówi, jak z tego zrobił bloki — czyli jedyną rzecz, której z rachunku nie widać:
+ * strona bez zmian, która i tak kosztuje, ma tu wypisane, który blok się rozjechał i o ile.
+ *
+ * Zwraca ścieżkę jak `archiveLlmCall`, i z tego samego powodu: bez niej krok śladu wiedziałby
+ * tylko, ILE bloków było.
+ */
+export async function archiveBlocks(url: string, payload: object): Promise<string | null> {
+  if (!archiveEnabled()) return null;
+  const seq = String(++blockSeq).padStart(4, "0");
+  const path = `blocks/${day()}/${runId}/${currentSourceId || "_"}/${seq}.json`;
+  const ok = await put(
+    path,
+    JSON.stringify({ runId, sourceId: currentSourceId || null, url, ...payload }, null, 1),
   );
   return ok ? path : null;
 }

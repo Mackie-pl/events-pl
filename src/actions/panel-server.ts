@@ -4,7 +4,8 @@
  *
  *   GET  /file?name=runs.json        oddaje plik z DRZEWA ROBOCZEGO, nie z gałęzi main
  *   GET  /object?path=…              czyta obiekt z prywatnego archiwum (Supabase Storage):
- *                                    zrzuty `raw/`, wywołania `llm/` i przykłady `reuse/`
+ *                                    zrzuty `raw/`, wywołania `llm/`, podziały `blocks/`
+ *                                    i przykłady `reuse/`
  *   POST /probe?source=<id>[&force=1] sprawdza JEDNO źródło tu i teraz, bez zapisu
  *
  * `/file` istnieje, bo panel domyślnie czyta raw.githubusercontent.com — czyli stan
@@ -149,7 +150,7 @@ function routeObject(url: URL, res: ServerResponse, headers: Record<string, stri
   }
   const path = url.searchParams.get("path") ?? "";
   // tylko ścieżki, które sami zapisujemy — bez wycieczek po całym buckecie
-  if (!/^(raw|llm|events|reuse)\/[\w./:-]+$/.test(path) || path.includes("..")) {
+  if (!/^(raw|llm|blocks|events|reuse)\/[\w./:-]+$/.test(path) || path.includes("..")) {
     json(res, 400, { error: "niedozwolona ścieżka" }, headers);
     return;
   }

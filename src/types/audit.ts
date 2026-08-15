@@ -28,6 +28,8 @@ export type AuditKind =
   | "event.dropped"
   /** podział strony na bloki i rozliczenie cache'a: ile z cache, ile do modelu */
   | "block"
+  /** bloki → wydarzenia: co dały świeże, co cache, i gdzie leży rozliczenie blok po bloku */
+  | "block.parsed"
   /** wydarzenia odsiane jako minione — z cache'a bloków albo prosto od modelu */
   | "event.past"
   /** model wskazał podstrony / PDF-y / plakaty do dociągnięcia */

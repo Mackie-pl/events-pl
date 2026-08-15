@@ -18,6 +18,8 @@ export type AuditKind =
   | 'llm'
   | 'event.dropped'
   | 'block'
+  /** bloki → wydarzenia: co dały świeże, co cache (detail.archive = rozliczenie blok po bloku) */
+  | 'block.parsed'
   | 'event.past'
   | 'followup.proposed'
   | 'followup'

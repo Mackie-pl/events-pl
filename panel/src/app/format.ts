@@ -97,6 +97,8 @@ export const STEP_META: Record<
   'event.dropped': { icon: '@tui.trash-2', tone: 'loss' },
   // 'save': krok mówi, ILE bloków nie poszło do modelu — to jest oszczędność, nie zdarzenie
   block: { icon: '@tui.layers', tone: 'save' },
+  // 'plain': domknięcie podziału jest rachunkiem („tyle wyszło"), a nie decyzją o wydatku
+  'block.parsed': { icon: '@tui.table-2', tone: 'plain' },
   // minione wydarzenie to nie strata: ono się odbyło, a serwis pokazuje przyszłość
   'event.past': { icon: '@tui.calendar-off', tone: 'plain' },
   'followup.proposed': { icon: '@tui.list-plus', tone: 'plain' },

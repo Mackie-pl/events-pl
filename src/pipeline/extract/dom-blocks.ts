@@ -99,11 +99,32 @@ const NOT_A_CARD = new Set([
   "br", "img", "input", "button", "option", "code", "abbr", "time",
 ]);
 
-const sized = (el: Element): boolean => {
-  if (NOT_A_CARD.has(el.tagName)) return false;
+/**
+ * Czemu ten element nie jest kartą — pełnym zdaniem, nie `false`.
+ *
+ * Predykat wystarczał do CIĘCIA, ale nie do wytłumaczenia, czemu strona z widoczną listą
+ * wydarzeń poszła podziałem po akapitach. Odpowiedź zawsze była jedna z trzech (nie ten
+ * znacznik, za krótkie, za długie) i zawsze siedziała tutaj — tyle że nigdzie nie wychodziła.
+ */
+function whyNotCard(el: Element): string | null {
+  if (NOT_A_CARD.has(el.tagName)) return `<${el.tagName}> nie renderuje się jako osobny blok`;
   const n = textContent(el).trim().length;
-  return n >= MIN_CARD_CHARS && n <= MAX_CARD_CHARS;
-};
+  if (n < MIN_CARD_CHARS) return `${n} zn. — poniżej progu karty (${MIN_CARD_CHARS})`;
+  if (n > MAX_CARD_CHARS) return `${n} zn. — powyżej progu karty (${MAX_CARD_CHARS})`;
+  return null;
+}
+
+const sized = (el: Element): boolean => whyNotCard(el) === null;
+
+/** Grupa rodzeństwa, która była listą co do liczebności, a odpadła na rozmiarze karty. */
+export interface NearMiss {
+  /** podpis kształtu (`article.event`) — po nim widać, na co patrzeć w HTML-u */
+  sig: string;
+  /** ilu członków miała grupa */
+  n: number;
+  /** powód odrzucenia pierwszego członka, który nie przeszedł */
+  why: string;
+}
 
 /**
  * Największa grupa samokształtnego rodzeństwa w tym elemencie — albo null.
@@ -112,8 +133,12 @@ const sized = (el: Element): boolean => {
  * przypadkowych sąsiadów, ale serwisy bez klas (gołe `<li>`, `<article>`) dają wtedy jedną
  * wielką grupę „bez klas" i to też jest poprawna odpowiedź. Gdy pierwszy nic nie da,
  * pytamy o sam znacznik.
+ *
+ * `misses` zbiera odrzucenia po drodze. Zbieramy je ZAWSZE, a nie tylko przy braku kart:
+ * strona z rozpoznaną listą i drugą, nierozpoznaną, wygląda w rachunku jak strona z jedną
+ * listą — a to jest właśnie ten przypadek, w którym cache traci najwięcej po cichu.
  */
-function cardGroup(el: Element): Element[] | null {
+function cardGroup(el: Element, misses: NearMiss[]): Element[] | null {
   const kids = el.children.filter(isTag);
   if (kids.length < MIN_SIBLINGS) return null;
   for (const sig of [signature, (e: Element): string => e.tagName]) {
@@ -122,28 +147,45 @@ function cardGroup(el: Element): Element[] | null {
       const s = sig(k);
       groups.set(s, [...(groups.get(s) ?? []), k]);
     }
-    const best = [...groups.values()]
-      .filter((g) => g.length >= MIN_SIBLINGS)
-      .sort((a, b) => b.length - a.length)[0];
+    const best = [...groups.entries()]
+      .filter(([, g]) => g.length >= MIN_SIBLINGS)
+      .sort(([, a], [, b]) => b.length - a.length)[0];
+    if (!best) continue;
     // wszystkie muszą się mieścić w rozmiarze karty; jeden przerost znaczy, że to sekcje
     // i właściwa lista siedzi niżej — wtedy `null` posyła obchód głębiej
-    if (best?.every(sized)) return best;
+    const [sigOf, group] = best;
+    if (group.every(sized)) return group;
+    const why = group.map(whyNotCard).find((w) => w !== null);
+    if (why) noteMiss(misses, { sig: sigOf, n: group.length, why });
   }
   return null;
 }
 
+/** Ile odrzuceń wpuszczamy do śladu. Diagnoza, nie log — dłuższa lista niczego nie dodaje. */
+const MAX_MISSES = 5;
+
+/** Ten sam kształt bywa na stronie kilka razy; zostaje najliczniejsze wystąpienie. */
+function noteMiss(misses: NearMiss[], miss: NearMiss): void {
+  const prev = misses.find((m) => m.sig === miss.sig);
+  if (prev) {
+    if (miss.n > prev.n) Object.assign(prev, miss);
+    return;
+  }
+  if (misses.length < MAX_MISSES) misses.push(miss);
+}
+
 /** Karty w kolejności dokumentu. Do wnętrza karty nie schodzimy — jest już jednostką. */
-function collectCards(node: AnyNode, out: Element[]): void {
+function collectCards(node: AnyNode, out: Element[], misses: NearMiss[]): void {
   if (!isTag(node)) return;
-  const group = cardGroup(node);
+  const group = cardGroup(node, misses);
   if (!group) {
-    for (const c of node.children) collectCards(c, out);
+    for (const c of node.children) collectCards(c, out, misses);
     return;
   }
   const inGroup = new Set<AnyNode>(group);
   for (const c of node.children) {
     if (inGroup.has(c)) out.push(c as Element);
-    else collectCards(c, out); // rodzeństwo spoza grupy może samo zawierać listę
+    else collectCards(c, out, misses); // rodzeństwo spoza grupy może samo zawierać listę
   }
 }
 
@@ -274,7 +316,22 @@ export interface DomSegmentation {
    * kształt HTML-a (komórki tabeli), nie ogólna wada metody.
    */
   perturbedAt?: string;
+  /**
+   * Grupy rodzeństwa, które miały liczebność listy, a odpadły na progu rozmiaru karty.
+   * To jedyna odpowiedź na „widzę na tej stronie listę wydarzeń, czemu potok jej nie widzi";
+   * bez niej `detected: false` znaczy naraz „nie ma listy" i „jest, ale nie po naszemu".
+   */
+  nearMiss: NearMiss[];
+  /** Znaki tekstu kart — obok `chars` całości mówi, ile strony w ogóle da się kluczować kartą. */
+  cardChars: number;
 }
+
+/** Puste rozliczenie kart — ścieżki bez podziału po DOM-ie wypełniają nim wynik. */
+const NO_CARDS = (): Pick<DomSegmentation, "cards" | "cardHashes" | "detected" | "cardChars"> =>
+  ({ cards: 0, cardHashes: [], detected: false, cardChars: 0 });
+
+const charsOf = (blocks: Block[], hashes: Set<string>): number =>
+  blocks.filter((b) => hashes.has(b.hash)).reduce((n, b) => n + b.chars, 0);
 
 const visibleLines = (s: string): string[] =>
   s.split("\n").map((l) => l.trim()).filter(Boolean);
@@ -343,10 +400,11 @@ export function segmentHtml(html: string): DomSegmentation {
   prune(doc);
 
   const cards: Element[] = [];
-  for (const c of doc.children) collectCards(c, cards);
+  const nearMiss: NearMiss[] = [];
+  for (const c of doc.children) collectCards(c, cards, nearMiss);
   if (!cards.length) {
     // brak listy — dokładnie dzisiejsze zachowanie, bez udawania struktury
-    return { blocks: segment(toText(render(doc))), cards: 0, cardHashes: [], detected: false, thinned: 0 };
+    return { blocks: segment(toText(render(doc))), ...NO_CARDS(), thinned: 0, nearMiss };
   }
   // odchudzanie PRZED wzorcem samokontroli: `clean` ma być tą stroną, którą naprawdę
   // wysyłamy, inaczej porównanie wierszy odrzucałoby każdą stronę z powtórkami w karcie
@@ -361,9 +419,12 @@ export function segmentHtml(html: string): DomSegmentation {
   const diverged = assertSameLines(clean, blocks);
   if (diverged !== null) {
     return {
-      blocks: segment(clean), cards: 0, cardHashes: [], detected: false, thinned,
+      blocks: segment(clean), ...NO_CARDS(), thinned, nearMiss,
       perturbed: true, perturbedAt: diverged,
     };
   }
-  return { blocks, cards: cardHashes.length, cardHashes, detected: true, thinned };
+  return {
+    blocks, cards: cardHashes.length, cardHashes, detected: true, thinned, nearMiss,
+    cardChars: charsOf(blocks, new Set(cardHashes)),
+  };
 }

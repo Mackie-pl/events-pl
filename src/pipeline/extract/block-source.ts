@@ -18,6 +18,7 @@ import type { BlockStats, EventItem, PipelineState } from "../../types/index.js"
 
 import { type Block, segment, toBlock } from "./blocks.js";
 import { detach, lookupBlock, storeBlock, touchBlock } from "./block-cache.js";
+import { type SplitInfo, auditBlockResult, auditNearMiss, auditSplit } from "./block-trail.js";
 import { segmentHtml } from "./dom-blocks.js";
 import { extractBatch } from "./extract.js";
 
@@ -37,27 +38,36 @@ const MIN_BLOCKS = 2;
 const BATCH_CHARS = 40_000;
 
 /** Bloki strony: gotowe od źródła, po DOM-ie, gdy mamy HTML; inaczej po akapitach (PDF, feed, 304). */
-function pageBlocks(fetched: Fetched): { blocks: Block[]; how: string } {
+function pageBlocks(fetched: Fetched, url: string): { blocks: Block[]; info: SplitInfo } {
   // podział DANY przez źródło bije każdy zgadywany — patrz Fetched.blocks
   if (fetched.blocks?.length) {
-    return { blocks: fetched.blocks.map(toBlock), how: `posty (${fetched.blocks.length})` };
+    return {
+      blocks: fetched.blocks.map(toBlock),
+      info: { how: `posty (${fetched.blocks.length})`, url },
+    };
   }
   if (fetched.kind !== "html" || !fetched.html) {
-    return { blocks: segment(fetched.text), how: "akapity" };
+    return { blocks: segment(fetched.text), info: { how: "akapity", url } };
   }
   const seg = segmentHtml(fetched.html);
+  const info: SplitInfo = { how: "", url, htmlChars: fetched.html.length, dom: seg };
   if (seg.perturbed) {
     // osobny krok śladu, bo to jedyny sygnał, że jakiś kształt HTML-a jest dla podziału
     // za trudny — a każdy taki przypadek dotąd okazywał się jednym konkretnym znacznikiem,
     // nie ogólną wadą metody. Bez `perturbedAt` zostałoby „czasem nie działa".
     audit("block", `podział po DOM-ie odrzucony samokontrolą — ${seg.perturbedAt ?? "brak szczegółu"}`,
       { perturbed: true, at: seg.perturbedAt ?? null });
-    return { blocks: seg.blocks, how: "akapity (DOM odrzucony samokontrolą)" };
+    return { blocks: seg.blocks, info: { ...info, how: "akapity (DOM odrzucony samokontrolą)" } };
   }
+  // grupy rodzeństwa odrzucone na progu rozmiaru — czemu ta strona NIE jest listą kart
+  auditNearMiss(seg);
   const odchudzone = seg.thinned ? `, −${seg.thinned} zn. powtórek w kartach` : "";
   return {
     blocks: seg.blocks,
-    how: seg.detected ? `DOM, ${seg.cards} kart${odchudzone}` : `akapity (brak listy)${odchudzone}`,
+    info: {
+      ...info,
+      how: seg.detected ? `DOM, ${seg.cards} kart${odchudzone}` : `akapity (brak listy)${odchudzone}`,
+    },
   };
 }
 
@@ -125,7 +135,7 @@ export interface BlockOutcome {
 export async function blockSource(
   fetched: Fetched, url: string, state: PipelineState,
 ): Promise<BlockOutcome | null> {
-  const { blocks, how } = pageBlocks(fetched);
+  const { blocks, info } = pageBlocks(fetched, url);
   if (blocks.length < MIN_BLOCKS) return null;
 
   const today = todayIso();
@@ -140,9 +150,7 @@ export async function blockSource(
   const cached = blocks.length - fresh.length;
   // `url` w śladzie, bo tą drogą chodzą teraz także followupy: bez adresu nie da się odróżnić
   // podziału strony źródła od podziału jej podstrony, a to osobne rozliczenia
-  audit("block",
-    `podział: ${how} → ${blocks.length} bloków, ${cached} z cache, ${fresh.length} do modelu`,
-    { blocks: blocks.length, cached, fresh: fresh.length, how, url });
+  auditSplit(info, blocks, fresh);
 
   // PACZKAMI, nie po jednym bloku: prompt systemowy waży ~900 tokenów, więc wywołanie na blok
   // sprowadzało pierwszy przebieg źródła do kilkunastokrotności ceny jednego wywołania na całą
@@ -163,6 +171,10 @@ export async function blockSource(
         : `nie dało się odczytać odpowiedzi modelu (${result.parse})`;
     }
   }
+
+  // PO ekstrakcji, bo dopiero teraz `state` zna wynik świeżych bloków — jeden krok mówi
+  // wtedy naraz, co przyszło z cache'a i za co dziś zapłaciliśmy (patrz block-trail.ts)
+  await auditBlockResult(info, blocks, fresh, state);
 
   return {
     ...unionOf(blocks, state, today),
