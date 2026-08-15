@@ -27,6 +27,7 @@ export type AuditKind =
   /** próg opłacalności kanału FB: koszt za wydarzenie, którego nie dała żadna strona */
   | 'fb.value'
   | 'geo'
+  | 'geo.not-found'
   | 'dedupe.dropped'
   | 'series'
   | 'pii'

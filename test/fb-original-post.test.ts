@@ -15,7 +15,10 @@ import { strict as assert } from "node:assert";
 import { describe, it } from "node:test";
 
 import { hasDateHint, postsByLink } from "../src/pipeline/extract/date-hint.js";
-import { SHARED_LABEL, fbGroupPostsToText, fbOriginal, fbOriginsByPost } from "../src/pipeline/facebook.js";
+import {
+  SHARED_LABEL, fbGroupPostsToBlocks, fbGroupPostsToText, fbOriginal, fbOriginsByPost,
+  fbShareShape, fbShareStats,
+} from "../src/pipeline/facebook.js";
 import { urlKey } from "../src/shared/url.js";
 
 const POST_URL = "https://www.facebook.com/groups/imprezypoznan/posts/4077491349052603/";
@@ -79,6 +82,132 @@ describe("fbGroupPostsToText — oryginał doklejany do podpisu", () => {
   it("oryginał bez treści nie dokłada pustego nagłówka", () => {
     const pusty = fbGroupPostsToText([{ ...wlasny, original_post: { post_id: "x", content: "" } }]);
     assert.doesNotMatch(pusty, new RegExp(SHARED_LABEL));
+  });
+});
+
+/**
+ * Wklejone ogłoszenie: podpis udostępniającego nie jest komentarzem, tylko kopią oryginału.
+ *
+ * Rekordy niżej to okrojone kopie PRAWDZIWYCH postów z 2026-08-14/15 (poznańskie grupy):
+ * raz podpis jest początkiem oryginału (BitterSweet), raz całością bez emoji i śródtytułu
+ * (Galeria Lalek). Pomiar na archiwum 2026-08-15: 42 z 75 udostępnień z treścią oryginału
+ * mówiło to samo dwa razy — 12 959 z 18 777 znaków podpisów.
+ */
+const bitterSweet = {
+  url: "https://www.facebook.com/groups/241900542530749/posts/27756479087312857/",
+  content: "BitterSweet Festiwal na poznańskiej Cytadeli (13-15 sierpnia) – dodatkowa linia nr 30\n"
+    + "Obowiązuje 13.08.2026 - 16.08.2026",
+  date_posted: "2026-08-14T10:00:04.000Z",
+  original_post: {
+    post_id: "orig-bittersweet",
+    post_url: "https://www.facebook.com/plotkarski/posts/1/",
+    user_name: "Magazyn Plotkarski Poznań",
+    date: "2026-08-13T19:45:44.000Z",
+    content: "BitterSweet Festiwal na poznańskiej Cytadeli (13-15 sierpnia) – dodatkowa linia nr 30\n"
+      + "Obowiązuje 13.08.2026 - 16.08.2026\n"
+      + "Linia nr 30 kursuje w godzinach 15:00 – 2:30, co 10 minut.",
+  },
+};
+
+/** Podpis = oryginał, różnica wyłącznie w ozdobnikach i śródtytule nad nim. */
+const galeria = {
+  url: "https://www.facebook.com/groups/241900542530749/posts/27756452287315537/",
+  content: "Zapraszamy na bezpłatne zwiedzanie Galerii Lalek.\n"
+    + "Galeria czynna jest codziennie od 10.00 do 18.00.",
+  date_posted: "2026-08-14T08:00:01.000Z",
+  original_post: {
+    post_id: "orig-galeria",
+    post_url: "https://www.facebook.com/plotkarski/posts/2/",
+    user_name: "Magazyn Plotkarski Poznań",
+    date: "2026-02-26T20:26:56.000Z",
+    content: "TEATR ANIMACJI GALERIA LALEK\n"
+      + "Zapraszamy na bezpłatne zwiedzanie Galerii Lalek.\n"
+      + "🕙Galeria czynna jest codziennie od 10.00 do 18.00.",
+  },
+};
+
+/** Odwrotnie: udostępniający dopisał coś od siebie DO wklejonego ogłoszenia. */
+const zDopiskiem = {
+  url: "https://www.facebook.com/groups/241900542530749/posts/33/",
+  content: "Byliśmy, polecamy!\nKoncert w sobotę 16 sierpnia o 19:00 w parku.",
+  date_posted: "2026-08-14T09:00:00.000Z",
+  original_post: {
+    post_id: "orig-koncert",
+    post_url: "https://www.facebook.com/dk/posts/3/",
+    user_name: "Dom Kultury",
+    date: "2026-08-12T09:00:00.000Z",
+    content: "Koncert w sobotę 16 sierpnia o 19:00 w parku.",
+  },
+};
+
+describe("fbShareShape — która strona postu jest nadzbiorem", () => {
+  it("podpis wklejony z oryginału: zostaje oryginał", () => {
+    assert.equal(fbShareShape(bitterSweet.content, bitterSweet.original_post.content), "sam oryginał");
+  });
+
+  it("ozdobniki i śródtytuł nie robią z kopii osobnej treści", () => {
+    assert.equal(fbShareShape(galeria.content, galeria.original_post.content), "sam oryginał");
+  });
+
+  it("oryginał w całości zawarty w podpisie: zostaje podpis", () => {
+    assert.equal(fbShareShape(zDopiskiem.content, zDopiskiem.original_post.content), "sam podpis");
+  });
+
+  it("własny komentarz udostępniającego to osobna treść", () => {
+    assert.equal(fbShareShape(grecki.content, grecki.original_post.content), "podpis+oryginał");
+  });
+});
+
+describe("fbGroupPostsToBlocks — każda treść raz", () => {
+  it("wklejony podpis nie jedzie do modelu obok oryginału", () => {
+    const blok = fbGroupPostsToBlocks([bitterSweet])[0]!;
+    assert.equal(blok.match(/Obowiązuje 13\.08\.2026/g)?.length, 1);
+    // pełne ogłoszenie zostaje — z niego pochodzą godziny kursowania
+    assert.match(blok, /co 10 minut/);
+    assert.match(blok, new RegExp(SHARED_LABEL));
+  });
+
+  it("gdy oryginał nic nie dokłada, znika razem z nagłówkiem", () => {
+    const blok = fbGroupPostsToBlocks([zDopiskiem])[0]!;
+    assert.equal(blok.match(/Koncert w sobotę 16 sierpnia/g)?.length, 1);
+    assert.match(blok, /Byliśmy, polecamy!/);
+    assert.doesNotMatch(blok, new RegExp(SHARED_LABEL));
+  });
+
+  it("podpis naprawdę własny nadal jedzie razem z oryginałem", () => {
+    const blok = fbGroupPostsToBlocks([grecki])[0]!;
+    assert.match(blok, /Rezerwuj stolik/);
+    assert.match(blok, /21 sierpnia 2026, godz. 19:00/);
+  });
+
+  /**
+   * Odsiew nie może zjeść dowodu na termin — to on trzyma wydarzenie przy życiu
+   * (extract/date-hint.ts). Przy wklejonym podpisie termin zostaje po stronie oryginału.
+   */
+  it("termin przeżywa odsiew po obu stronach", () => {
+    for (const rec of [bitterSweet, galeria, zDopiskiem]) {
+      const dowod = postsByLink(fbGroupPostsToText([rec])).get(urlKey(rec.url))!;
+      assert.equal(hasDateHint(dowod), true, `dowód bez terminu dla ${rec.url}`);
+    }
+  });
+});
+
+describe("fbShareStats — ślad odsiewu", () => {
+  it("liczy strony postu i zaoszczędzone znaki", () => {
+    const s = fbShareStats([bitterSweet, galeria, zDopiskiem, grecki, wlasny]);
+    assert.equal(s.shares, 4);
+    assert.equal(s.onlyOriginal, 2);
+    assert.equal(s.onlyCaption, 1);
+    assert.equal(s.both, 1);
+    assert.equal(
+      s.charsSaved,
+      bitterSweet.content.length + galeria.content.length + zDopiskiem.original_post.content.length,
+    );
+  });
+
+  it("oryginał bez treści nie jest udostępnieniem do porównania", () => {
+    const s = fbShareStats([{ ...wlasny, original_post: { post_id: "x", content: "" } }]);
+    assert.equal(s.shares, 0);
   });
 });
 

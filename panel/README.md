@@ -27,6 +27,23 @@ before that field existed fall back to filtering the latest `events.json`, flagg
 The decision trail comes from `audit.json`, which is **only fetched once you open a source page** —
 it is the largest file in the set and useless on the overview.
 
+## Reading model calls
+
+`src/app/ui/` holds two shared pieces, used by the source page, the probe result and the discover
+run:
+
+- `app-code-view` — text as numbered lines, JSON coloured, **wrap / no-wrap toggle** in the block
+  itself (the choice is shared and remembered). Long lines scroll inside the block, never widen
+  the page.
+- `app-llm-inspector` — a dialog with the model, the bill and tabs: prompt, response, system, raw.
+  The response is parsed back **out of** the archived string and pretty-printed, because that is
+  what every "why did the model do that" question is about. Opened by a step of kind `llm` in the
+  decision trail, by any `llm/…` path in the archive list, and by a probe's model calls (those
+  never touch the archive — the probe has them in memory).
+
+Colouring is a ~40-line tokenizer (`code-lines.ts`), not an editor: Monaco would be ~5 MB added to
+a static page whose job is to *read* a prompt.
+
 ## Commands
 
 ```bash

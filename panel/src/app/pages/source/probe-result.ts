@@ -4,6 +4,9 @@ import { TuiBadge } from '@taiga-ui/kit';
 
 import { STATUS_META, STEP_META, fmtMs, fmtNum, fmtTokens, fmtUsd } from '../../format';
 import type { AuditStep, EventItem, ProbeLlmCall, ProbeResult } from '../../types';
+import { CodeView } from '../../ui/code-view';
+import { llmCallFromProbe } from '../../ui/llm-call';
+import { llmInspector } from '../../ui/llm-inspector';
 
 /**
  * Wynik sondy „sprawdź to źródło teraz" — świeży przebieg JEDNEGO źródła z lokalnego mostu.
@@ -17,7 +20,7 @@ import type { AuditStep, EventItem, ProbeLlmCall, ProbeResult } from '../../type
  */
 @Component({
   selector: 'app-probe-result',
-  imports: [TuiButton, TuiIcon, TuiLink, TuiBadge],
+  imports: [TuiButton, TuiIcon, TuiLink, TuiBadge, CodeView],
   templateUrl: './probe-result.html',
   styleUrl: './probe-result.less',
 })
@@ -33,17 +36,20 @@ export class ProbeResultView {
 
   protected readonly run = computed(() => this.result().run);
 
-  /** Rozwinięty wpis: wydarzenie po indeksie albo wywołanie modelu po indeksie (rozłącznie). */
+  /** Rozwinięte wydarzenie (po indeksie). Wywołania modelu idą do inspektora, nie w linię. */
   protected readonly openEvent = signal<number | null>(null);
-  protected readonly openCall = signal<number | null>(null);
 
   protected toggleEvent(i: number): void {
     this.openEvent.update((v) => (v === i ? null : i));
   }
 
-  protected toggleCall(i: number): void {
-    this.openCall.update((v) => (v === i ? null : i));
-  }
+  /**
+   * Ten sam inspektor, co przy archiwum — tylko bez chodzenia do niego: sonda ma prompt
+   * i odpowiedź w pamięci, bo jej wywołania nigdzie nie lądują.
+   */
+  protected readonly inspect = llmInspector();
+
+  protected readonly asCall = llmCallFromProbe;
 
   /**
    * Jak na stronie źródła — ta sama umowa o kluczach. `archive` odpada bez przycisku:

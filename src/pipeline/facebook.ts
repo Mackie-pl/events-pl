@@ -300,23 +300,88 @@ export function fbOriginsByPost(records: BdRecord[]): Map<string, EventOrigin> {
 }
 
 /**
- * Treść oryginału DOKŁADANA, nie podstawiana.
+ * Ten sam tekst „po literach": NFKC, małe litery, bez niczego poza literami i cyframi.
  *
- * Pomiar mówi, że ogłoszenie jest w oryginale (31.6% udostępnień ma termin wyłącznie tam),
- * ale wśród 95 udostępnień trafił się oryginał BEZ tekstu — wtedy jedyną treścią jest podpis
- * udostępniającego. Podmiana kosztowałaby takie wpisy, doklejenie kosztuje tokeny:
- * +89% znaków, ok. $0.02 dziennie przy rachunku $1.51 za samo FB.
+ * Do PORÓWNANIA dwóch treści, nie do wysyłki — model dostaje oryginalny zapis. Odsiew
+ * ozdobników jest tu warunkiem działania, bo udostępniający wkleja ogłoszenie z własnym
+ * zdobieniem: „🕙Galeria czynna" wobec „Galeria czynna" to dla `===` dwa różne teksty,
+ * a dla czytelnika jeden. Emoji, wcięcia i śródtytuł to typowa różnica między podpisem
+ * a oryginałem — po ich odsianiu zostaje pytanie, o które chodzi: czy padło to samo zdanie.
+ */
+const canonical = (s: string): string =>
+  s.normalize("NFKC").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "");
+
+/** Który z dwóch tekstów udostępnienia niesie coś, czego nie ma w drugim. */
+export type FbShareShape = "podpis+oryginał" | "sam oryginał" | "sam podpis";
+
+/**
+ * Udostępniając, ludzie najczęściej WKLEJAJĄ ogłoszenie, zamiast je komentować — i wtedy
+ * podpis jest kawałkiem oryginału, a blok mówi wszystko dwa razy.
+ *
+ * Zmierzone na żywym archiwum (2026-08-15, 198 postów z 15 grup, 75 udostępnień z treścią
+ * oryginału): 14 podpisów co do znaku równych oryginałowi, 26 zawartych w nim, 2 zawierające
+ * go w sobie — razem 42 z 75 (56%) i 12 959 z 18 777 znaków podpisów, które nie wnoszą nic.
+ * Pozostałe 33 to podpisy naprawdę własne (0 wspólnych linii z oryginałem u 31 z nich), więc
+ * odsiew idzie po ZAWIERANIU, a nie po „jest udostępnieniem".
+ *
+ * Zostaje ta strona, która jest nadzbiorem; przy równości — oryginał, bo nagłówek nad nim
+ * niesie autora i datę PUBLIKACJI, a to od niej zależy, co znaczyło „dziś" w tekście.
+ */
+export function fbShareShape(caption: string, original: string): FbShareShape {
+  const c = canonical(caption), o = canonical(original);
+  if (o.includes(c)) return "sam oryginał"; // identyczne też tędy — nadzbiorem jest oryginał
+  if (c.includes(o)) return "sam podpis";
+  return "podpis+oryginał";
+}
+
+/**
+ * Treść postu i treść oryginału — każda RAZ.
+ *
+ * Oryginał jest dokładany, nie podstawiany: ogłoszenie siedzi w nim (31.6% udostępnień ma
+ * termin wyłącznie tam), ale wśród 95 udostępnień trafił się oryginał BEZ tekstu i wtedy
+ * jedyną treścią jest podpis. Doklejenie kosztuje tokeny (+89% znaków, ok. $0.02 dziennie
+ * przy rachunku $1.51 za samo FB) — więc kopia tego samego zdania kosztuje je bez powodu.
  *
  * Nagłówek niesie autora i datę oryginału, żeby model wiedział, czyja to treść — a „dziś"
  * w udostępnionym ogłoszeniu znaczyło dzień JEGO publikacji, nie dzień udostępnienia.
+ * Znika razem z treścią, którą zapowiada: nagłówek nad niczym byłby gorszy niż jego brak.
  */
-function sharedLines(rec: BdRecord): string[] {
+function postLines(rec: BdRecord, content: string): string[] {
   const orig = fbOriginal(rec);
-  if (!orig?.content) return [];
-  return [
-    `${SHARED_LABEL} (${orig.author ?? "?"}, ${orig.date ?? "?"}) — to jest właściwe ogłoszenie:`,
-    orig.content,
-  ];
+  if (!orig?.content) return [content];
+  const header = `${SHARED_LABEL} (${orig.author ?? "?"}, ${orig.date ?? "?"}) — to jest właściwe ogłoszenie:`;
+  switch (fbShareShape(content, orig.content)) {
+    case "sam oryginał": return [header, orig.content];
+    case "sam podpis": return [content];
+    default: return [content, header, orig.content];
+  }
+}
+
+/** Ile z opłaconej treści udostępnień to kopia drugiej połowy postu — wejście do śladu. */
+export interface FbShareStats {
+  /** posty z oryginałem NIOSĄCYM treść (tylko takie da się porównać) */
+  shares: number;
+  onlyOriginal: number;
+  onlyCaption: number;
+  both: number;
+  /** znaki, które przez odsiew nie pojechały do modelu */
+  charsSaved: number;
+}
+
+export function fbShareStats(records: BdRecord[]): FbShareStats {
+  const out: FbShareStats = { shares: 0, onlyOriginal: 0, onlyCaption: 0, both: 0, charsSaved: 0 };
+  for (const r of records) {
+    const content = postContent(r);
+    const orig = fbOriginal(r);
+    if (!content || !orig?.content) continue;
+    out.shares += 1;
+    switch (fbShareShape(content, orig.content)) {
+      case "sam oryginał": out.onlyOriginal += 1; out.charsSaved += content.length; break;
+      case "sam podpis": out.onlyCaption += 1; out.charsSaved += orig.content.length; break;
+      default: out.both += 1;
+    }
+  }
+  return out;
 }
 
 /** Separator postów w spłaszczonym tekście — i zarazem szew, wzdłuż którego idą bloki. */
@@ -347,8 +412,7 @@ export function fbGroupPostsToBlocks(records: BdRecord[]): string[] {
       [
         date ? `DATA POSTU: ${date}` : null,
         link ? `LINK: ${link}` : null,
-        content,
-        ...sharedLines(r),
+        ...postLines(r, content),
       ].filter(Boolean).join("\n"),
     );
   }

@@ -1,0 +1,92 @@
+@if (loading()) {
+  <p class="muted">Ciągnę {{ context.data.path }} z prywatnego archiwum…</p>
+} @else if (call(); as c) {
+  <div class="head">
+    <strong class="title">{{ title() }}</strong>
+    <code class="model">{{ c.model }}</code>
+    @if (c.ok === false) {
+      <span tuiBadge size="s" appearance="negative">{{ c.err ?? 'failed' }}</span>
+    }
+    @if (c.finish && c.finish !== 'stop') {
+      <span tuiBadge size="s" appearance="warning" title="powód zatrzymania modelu">
+        finish: {{ c.finish }}
+      </span>
+    }
+  </div>
+
+  <section class="facts">
+    @if (c.usage; as u) {
+      <div class="fact">
+        <span>Tokens</span><strong>{{ tok(u.promptTokens) }} → {{ tok(u.completionTokens) }}</strong>
+      </div>
+      <div class="fact">
+        <span>Cost</span><strong>{{ usd(u.costUsd) }}</strong>
+      </div>
+    }
+    @if (c.ms !== undefined) {
+      <div class="fact">
+        <span>Time</span><strong>{{ ms(c.ms) }}</strong>
+      </div>
+    }
+    @if (c.sourceId) {
+      <div class="fact">
+        <span>Source</span><strong>{{ c.sourceId }}</strong>
+      </div>
+    }
+  </section>
+
+  @if (c.path) {
+    <p class="muted path">{{ c.path }}</p>
+  }
+
+  <div class="tabs">
+    @for (t of tabs(); track t) {
+      <button
+        tuiButton
+        size="xs"
+        [appearance]="tab() === t ? 'primary' : 'secondary'"
+        (click)="tab.set(t)"
+      >
+        {{ t }}
+      </button>
+    }
+  </div>
+
+  @switch (tab()) {
+    @case ('prompt') {
+      <app-code-view
+        [text]="c.user"
+        lang="text"
+        label="prompt (user)"
+        maxHeight="min(58vh, 44rem)"
+      />
+    }
+    @case ('system') {
+      <app-code-view [text]="c.system" lang="text" label="system" maxHeight="min(58vh, 44rem)" />
+    }
+    @case ('response') {
+      @if (response().note) {
+        <p class="warn note">{{ response().note }}</p>
+      }
+      <app-code-view
+        [text]="response().text"
+        [lang]="response().lang"
+        label="response"
+        maxHeight="min(58vh, 44rem)"
+      />
+    }
+    @case ('raw') {
+      <app-code-view
+        [text]="c.raw"
+        lang="json"
+        label="raw archive object"
+        maxHeight="min(58vh, 44rem)"
+      />
+    }
+  }
+} @else if (fallback(); as text) {
+  <p class="warn">To nie jest zapis wywołania modelu — pokazuję treść tak, jak leży.</p>
+  <app-code-view [text]="text" lang="json" maxHeight="min(58vh, 44rem)" />
+} @else {
+  <p class="muted">Brak danych wywołania.</p>
+}

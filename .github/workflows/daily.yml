@@ -31,7 +31,7 @@ jobs:
           # Bez tego sekretu FB jest pomijany (tryb zero-cost) — reszta pipeline działa normalnie.
           BRIGHTDATA_API_KEY: ${{ secrets.BRIGHTDATA_API_KEY }}
           # opcjonalna ewaluacja modeli:
-          # MODEL_EXTRACT: anthropic/claude-haiku-4.5
+          MODEL_EXTRACT: openai/gpt-5.6-luna
       - name: Commit results
         run: |
           git config user.name "events-bot"

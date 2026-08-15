@@ -218,6 +218,17 @@ Dwie funkcje (`src/adapters/brightdata.ts` + `src/pipeline/facebook.ts`):
    PUBLIKACJI, więc `extract/date-hint.ts` wycina go z dowodu na termin. Tożsamość oryginału
    (`EventItem.origin`) jest osobnym przejściem dedupe — patrz niżej. Krok śladu: `fb.group`.
 
+   **Każda treść raz.** Udostępniając, ludzie zwykle WKLEJAJĄ ogłoszenie, zamiast je komentować —
+   i wtedy doklejenie oryginału mówi wszystko dwa razy. Pomiar na archiwum 2026-08-15 (198 postów,
+   15 grup, 75 udostępnień z treścią oryginału): 42 podpisy (56%) były zawarte w oryginale albo
+   jego nadzbiorem, 12 959 z 18 777 znaków podpisów nie wnosiło nic; pozostałe 33 podpisy są własne
+   (31 nie ma z oryginałem ani jednej wspólnej linii). Dlatego `fbShareShape` porównuje obie strony
+   postu „po literach" (NFKC, bez emoji i interpunkcji — udostępniający wkleja z własnym zdobieniem)
+   i zostawia tę, która jest nadzbiorem; przy równości oryginał, bo jego nagłówek niesie autora
+   i datę. Odsiew idzie po ZAWIERANIU, nie po „jest udostępnieniem". Efekt na całym dniu: −6.9%
+   znaków do modelu. Krok śladu `fb.group` (`fbShareStats`) liczy oba kierunki osobno — `onlyCaption`
+   rosnące ponad pojedyncze przypadki znaczyłoby, że wycinamy oryginały, czyli stronę z ogłoszeniem.
+
 **Discovery (etap 1)** dokłada zapytania `site:facebook.com/groups {town}` i `{town} grupa facebook
 wydarzenia lokalne`; model triage'u zwraca otwarte grupy jako `fb_group`. Zamknięte grupy /
 kupię-sprzedam są odrzucane.

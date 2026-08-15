@@ -107,6 +107,7 @@ export const STEP_META: Record<
   // 'save': ten krok albo wycisza kosztowne źródło, albo pokazuje, że kanał zarabia na siebie
   'fb.value': { icon: '@tui.scale', tone: 'save' },
   geo: { icon: '@tui.map-pin', tone: 'plain' },
+  'geo.not-found': { icon: '@tui.map-pin', tone: 'loss' },
   'dedupe.dropped': { icon: '@tui.merge', tone: 'loss' },
   // 'save', nie 'loss': zwinięcie serii nic nie usuwa z serwisu, tylko przestaje płacić
   // tokenami i wierszami digestu za dwudziestokrotne powtórzenie tego samego wpisu

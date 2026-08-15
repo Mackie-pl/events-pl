@@ -23,6 +23,12 @@
   &.no-preview {
     grid-template-columns: minmax(0, 1fr);
   }
+
+  // bez tego dziecko siatki rozpycha się do min-content, czyli do najdłuższej linii
+  // promptu — i cała strona jedzie w bok razem z nią
+  .left {
+    min-width: 0;
+  }
 }
 
 .page-title {
@@ -167,8 +173,9 @@
   }
 
   // pełna szerokość pod przyciskiem, nie w linii
-  .raw {
+  .full {
     flex-basis: 100%;
+    min-width: 0;
   }
 }
 
@@ -182,11 +189,17 @@
 
 .step {
   display: grid;
-  grid-template-columns: 1.4rem 3.2rem 1fr;
+  // minmax(0, 1fr), nie 1fr: kolumna treści musi mieć prawo być WĘŻSZA niż to, co w niej
+  // siedzi, inaczej podgląd archiwum rozpycha oś czasu poza szerokość strony
+  grid-template-columns: 1.4rem 3.2rem minmax(0, 1fr);
   align-items: baseline;
   gap: 0.5rem;
   padding: 0.3rem 0 0.3rem 0.7rem;
   font-size: 0.85rem;
+
+  .body {
+    min-width: 0;
+  }
 
   tui-icon {
     font-size: 0.95rem;
@@ -318,16 +331,6 @@
     color: var(--tui-text-secondary);
     font-weight: 500;
   }
-}
-
-.raw {
-  margin-top: 0.5rem;
-  padding: 0.75rem;
-  border-radius: 0.6rem;
-  background: var(--tui-background-neutral-1);
-  overflow-x: auto;
-  font-size: 0.8rem;
-  max-height: 24rem;
 }
 
 .preview {

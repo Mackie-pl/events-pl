@@ -316,7 +316,20 @@
                       <div class="query-block">
                         <div class="query-head"><strong>Private archive</strong></div>
                         @for (path of t.archive; track path) {
-                          <div class="mono">{{ path }}</div>
+                          <div class="mono">
+                            @if (bridge.archiveReadable() && isLlm(path)) {
+                              <button
+                                tuiButton
+                                size="xs"
+                                appearance="flat"
+                                iconStart="@tui.search"
+                                (click)="inspect({ path })"
+                              >
+                                Inspect call
+                              </button>
+                            }
+                            {{ path }}
+                          </div>
                         }
                       </div>
                     }
@@ -679,7 +692,20 @@
                       <div class="query-block">
                         <div class="query-head"><strong>Private archive</strong></div>
                         @for (path of v.archive; track path) {
-                          <div class="mono">{{ path }}</div>
+                          <div class="mono">
+                            @if (bridge.archiveReadable() && isLlm(path)) {
+                              <button
+                                tuiButton
+                                size="xs"
+                                appearance="flat"
+                                iconStart="@tui.search"
+                                (click)="inspect({ path })"
+                              >
+                                Inspect call
+                              </button>
+                            }
+                            {{ path }}
+                          </div>
                         }
                       </div>
                     }

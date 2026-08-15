@@ -1,0 +1,72 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.6rem;
+
+  .title {
+    font-size: 1rem;
+  }
+
+  .model {
+    font-size: 0.75rem;
+    color: var(--tui-text-secondary);
+  }
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.4rem;
+
+  .fact {
+    display: flex;
+    flex-direction: column;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.6rem;
+    background: var(--tui-background-neutral-1);
+    border: 1px solid var(--tui-border-normal);
+    min-width: 0;
+
+    span {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--tui-text-secondary);
+    }
+
+    strong {
+      font-size: 0.95rem;
+      overflow-wrap: anywhere;
+    }
+  }
+}
+
+.path {
+  margin: 0.5rem 0 0;
+  font-size: 0.72rem;
+  font-family: ui-monospace, 'SFMono-Regular', 'Menlo', 'Consolas', monospace;
+  overflow-wrap: anywhere;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin: 0.75rem 0 0.25rem;
+}
+
+.note {
+  margin: 0.4rem 0 0;
+  font-size: 0.8rem;
+}
+
+.warn {
+  color: var(--tui-status-warning);
+}

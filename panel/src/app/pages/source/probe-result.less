@@ -18,14 +18,6 @@ h3 {
   font-size: 0.95rem;
 }
 
-h4 {
-  margin: 0.6rem 0 0.2rem;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--tui-text-secondary);
-}
-
 .hint {
   font-size: 0.78rem;
   font-weight: 400;
@@ -94,23 +86,9 @@ h4 {
 }
 
 /* rozwinięcie idzie pod wiersz, na pełną szerokość — nie doklejone w linii */
-.row {
-  .raw,
-  .call {
-    flex-basis: 100%;
-  }
-}
-
-.raw {
-  margin: 0.3rem 0 0;
-  padding: 0.6rem 0.75rem;
-  border-radius: 0.5rem;
-  background: var(--tui-background-base);
-  border: 1px solid var(--tui-border-normal);
-  overflow: auto;
-  white-space: pre-wrap;
-  font-size: 0.78rem;
-  max-height: 22rem;
+.row .full {
+  flex-basis: 100%;
+  min-width: 0;
 }
 
 /* Ślad decyzyjny — te same reguły co na stronie źródła; komponent ma własny scope, więc
@@ -125,7 +103,7 @@ h4 {
 
 .step {
   display: grid;
-  grid-template-columns: 1.4rem 3.2rem 1fr;
+  grid-template-columns: 1.4rem 3.2rem minmax(0, 1fr);
   align-items: baseline;
   gap: 0.5rem;
   padding: 0.25rem 0 0.25rem 0.7rem;

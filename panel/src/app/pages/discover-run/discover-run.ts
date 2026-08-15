@@ -4,6 +4,7 @@ import { TuiButton, TuiIcon, TuiLink, TuiLoader, TuiTitle } from '@taiga-ui/core
 import { TuiBadge } from '@taiga-ui/kit';
 import { TuiTable } from '@taiga-ui/addon-table';
 
+import { BridgeService } from '../../bridge';
 import { DataService } from '../../data';
 import {
   ALL_DECISIONS,
@@ -25,6 +26,8 @@ import type {
   SourceVerification,
   VerificationOutcome,
 } from '../../types';
+import { isLlmPath } from '../../ui/llm-call';
+import { llmInspector } from '../../ui/llm-inspector';
 import { urlKey } from '../../url';
 
 /**
@@ -66,6 +69,16 @@ export class DiscoverRunPage {
   readonly runId = input.required<string>();
 
   protected readonly data = inject(DataService);
+  protected readonly bridge = inject(BridgeService);
+
+  /**
+   * Ten sam inspektor, co na stronie źródła. Discovery odkłada do archiwum dokładnie te same
+   * obiekty `llm/…`, więc lista ścieżek pod przebiegiem może być klikalna zamiast być
+   * wypisem do ręcznego przepisania.
+   */
+  protected readonly inspect = llmInspector();
+
+  protected readonly isLlm = isLlmPath;
 
   protected readonly ms = fmtMs;
   protected readonly usd = fmtUsd;

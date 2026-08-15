@@ -1,0 +1,38 @@
+<div class="bar">
+  @if (label()) {
+    <span class="label">{{ label() }}</span>
+  }
+  <span class="muted stat">{{ stat() }}</span>
+  <span class="spacer"></span>
+  <button
+    tuiButton
+    size="xs"
+    appearance="flat"
+    [title]="wrap() ? 'Długie linie zjadą poza ekran (przewijanie w bok)' : 'Łam długie linie'"
+    (click)="toggleWrap()"
+  >
+    {{ wrap() ? 'No wrap' : 'Wrap' }}
+  </button>
+  <button tuiButton size="xs" appearance="flat" (click)="copy()">
+    {{ copied() ? 'Copied' : 'Copy' }}
+  </button>
+</div>
+
+<!-- Treść idzie przez [textContent], a nie interpolację: w bloku ze `white-space: pre`
+     każda spacja z SZABLONU byłaby widoczna, a formatter ma prawo je dokładać. -->
+<div class="code" [class.wrap]="wrap()" [style.max-height]="maxHeight()">
+  @for (l of lines(); track l.n) {
+    <span class="ln" [textContent]="l.n"></span>
+    <span class="lc">
+      @for (t of l.tokens; track $index) {
+        <span class="t-{{ t.kind }}" [textContent]="t.text"></span>
+      }
+    </span>
+  }
+</div>
+
+@if (dropped()) {
+  <p class="muted note">
+    {{ dropped() }} dalszych linii nie renderujemy — użyj „Copy”, żeby zobaczyć całość.
+  </p>
+}

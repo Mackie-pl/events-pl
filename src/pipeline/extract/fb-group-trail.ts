@@ -9,7 +9,7 @@
  */
 import { audit } from "../../shared/audit.js";
 import type { FbGroupStats } from "../../types/index.js";
-import type { FbPostExtras } from "../facebook.js";
+import type { FbPostExtras, FbShareStats } from "../facebook.js";
 
 /**
  * Ślad rytmu publikacji grupy.
@@ -74,6 +74,25 @@ export function auditFbOrigins(shares: number, posts: number): void {
       + "a jego id wiąże ten sam wpis między grupami"
     : `żaden z ${posts} postów nie jest udostępnieniem — nie ma oryginału do doczytania`,
   { shares, posts });
+}
+
+/**
+ * Ile treści udostępnień było kopią samej siebie.
+ *
+ * Osobno od `auditFbOrigins`, bo odpowiada na inne pytanie: tamten krok mówi, ILE postów jest
+ * udostępnieniami, ten — ile z nich mówiło to samo dwa razy i ilu znaków nie wysłaliśmy.
+ * Liczba ma pilnować progu, przy którym odsiew zaczyna być podejrzany: `onlyCaption` rosnące
+ * ponad pojedyncze przypadki znaczyłoby, że wycinamy oryginały, a to strona z ogłoszeniem.
+ */
+export function auditFbShares(x: FbShareStats): void {
+  if (!x.shares) return;
+  const cut = x.onlyOriginal + x.onlyCaption;
+  audit("fb.group", cut
+    ? `${cut} z ${x.shares} udostępnień powtarzało własną treść (podpis = wklejone ogłoszenie) — `
+      + `do modelu raz, ${x.charsSaved} znaków mniej`
+    : `${x.shares} udostępnień, każde z własnym podpisem — nie ma czego skracać`,
+  { shares: x.shares, both: x.both, onlyOriginal: x.onlyOriginal, onlyCaption: x.onlyCaption,
+    charsSaved: x.charsSaved });
 }
 
 export function auditFbPostExtras(x: FbPostExtras, posts: number): void {

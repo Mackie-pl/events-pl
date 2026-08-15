@@ -118,7 +118,7 @@
         <span tuiBadge size="s" appearance="warning">noise</span>
       }
       @if (openEvent() === $index) {
-        <pre class="raw">{{ json(e) }}</pre>
+        <app-code-view class="full" [text]="json(e)" lang="json" label="event" />
       }
     </li>
   }
@@ -132,22 +132,18 @@
   <ul class="flat">
     @for (c of r.llm; track $index) {
       <li class="row">
-        <button tuiButton size="xs" appearance="flat" (click)="toggleCall($index)">
-          {{ openCall() === $index ? 'Hide' : 'Show' }}
+        <button
+          tuiButton
+          size="xs"
+          appearance="flat"
+          iconStart="@tui.search"
+          (click)="inspect({ call: asCall(c) })"
+        >
+          Inspect
         </button>
         <span class="muted">{{ callLine(c) }}</span>
         @if (!c.ok) {
           <span tuiBadge size="s" appearance="negative">{{ c.err ?? 'failed' }}</span>
-        }
-        @if (openCall() === $index) {
-          <div class="call">
-            <h4>system</h4>
-            <pre class="raw">{{ c.system }}</pre>
-            <h4>user</h4>
-            <pre class="raw">{{ c.user }}</pre>
-            <h4>response</h4>
-            <pre class="raw">{{ c.response }}</pre>
-          </div>
         }
       </li>
     }

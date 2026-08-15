@@ -28,3 +28,14 @@ table[tuiTable] td,
 table[tuiTable] th {
   white-space: nowrap;
 }
+
+/**
+ * Szerokie okno dla inspektora wywołań modelu (`appearance: 'taiga wide'`). Domyślne 50 rem
+ * to za mało na prompt, w którym linia bywa tabelą godzin — a to jest okno DO CZYTANIA.
+ *
+ * `!important`, bo styl Taigi wstrzykuje się w <head> w czasie działania i wygrywa remis
+ * specyficzności z tym arkuszem, choćby selektor był równie długi.
+ */
+tui-dialog[data-appearance~='wide'] {
+  inline-size: min(84rem, calc(100vw - 5rem)) !important;
+}

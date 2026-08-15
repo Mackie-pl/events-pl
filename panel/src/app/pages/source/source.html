@@ -222,19 +222,29 @@
           <ul>
             @for (p of archivePaths(); track p) {
               <li>
-                @if (bridge.archiveReadable()) {
+                @if (!bridge.archiveReadable()) {
+                  <span class="muted">{{ archiveLabel(p) }}</span>
+                } @else if (isLlm(p)) {
+                  <button
+                    tuiButton
+                    size="xs"
+                    appearance="flat"
+                    iconStart="@tui.search"
+                    (click)="inspect({ path: p })"
+                  >
+                    Inspect call
+                  </button>
+                } @else {
                   <button tuiButton size="xs" appearance="flat" (click)="toggleArchive(p)">
                     {{ openedPath() === p ? 'Hide' : archiveLabel(p) }}
                   </button>
-                } @else {
-                  <span class="muted">{{ archiveLabel(p) }}</span>
                 }
                 <code class="path">{{ p }}</code>
                 @if (openedPath() === p) {
                   @if (archiveLoading()) {
                     <tui-loader size="s" />
                   } @else if (archiveBody(); as body) {
-                    <pre class="raw">{{ body }}</pre>
+                    <app-code-view class="full" [text]="body" lang="json" [label]="p" />
                   }
                 }
               </li>
@@ -269,20 +279,30 @@
                     </span>
                   }
                   @if (stepArchive(st); as path) {
-                    @if (bridge.archiveReadable()) {
-                      <button tuiButton size="xs" appearance="flat" (click)="toggleArchive(path)">
-                        {{ openedPath() === path ? 'Hide' : archiveButton(st) }}
-                      </button>
-                    } @else {
+                    @if (!bridge.archiveReadable()) {
                       <span class="muted hint">
                         {{ archiveButton(st) }} in the private archive — <code>{{ path }}</code>
                       </span>
+                    } @else if (st.step === 'llm') {
+                      <button
+                        tuiButton
+                        size="xs"
+                        appearance="flat"
+                        iconStart="@tui.search"
+                        (click)="inspect({ path })"
+                      >
+                        {{ archiveButton(st) }}
+                      </button>
+                    } @else {
+                      <button tuiButton size="xs" appearance="flat" (click)="toggleArchive(path)">
+                        {{ openedPath() === path ? 'Hide' : archiveButton(st) }}
+                      </button>
                     }
                     @if (openedPath() === path) {
                       @if (archiveLoading()) {
                         <tui-loader size="s" />
                       } @else if (archiveBody(); as body) {
-                        <pre class="raw">{{ body }}</pre>
+                        <app-code-view [text]="body" lang="json" [label]="path" />
                       }
                     }
                   }
@@ -452,7 +472,7 @@
                     {{ showRawJson() ? 'Hide raw JSON' : 'Raw JSON' }}
                   </button>
                   @if (showRawJson()) {
-                    <pre class="raw">{{ json(e) }}</pre>
+                    <app-code-view [text]="json(e)" lang="json" label="events.json record" />
                   }
                 }
               </div>

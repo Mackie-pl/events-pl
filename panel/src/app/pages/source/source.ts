@@ -11,6 +11,10 @@ import {
 } from '../../format';
 import type { AuditStep, EventItem, EventRef, ProbeResult } from '../../types';
 
+import { CodeView } from '../../ui/code-view';
+import { isLlmPath } from '../../ui/llm-call';
+import { llmInspector } from '../../ui/llm-inspector';
+
 import { ProbeResultView } from './probe-result';
 
 const PREVIEW_KEY = 'events-pl-panel:preview';
@@ -19,7 +23,7 @@ const PREVIEW_KEY = 'events-pl-panel:preview';
   selector: 'app-source',
   imports: [
     RouterLink, TuiButton, TuiIcon, TuiLink, TuiLoader, TuiTitle, TuiBadge, TuiChip,
-    ProbeResultView,
+    ProbeResultView, CodeView,
   ],
   templateUrl: './source.html',
   styleUrl: './source.less',
@@ -152,6 +156,15 @@ export class SourcePage {
   protected archiveButton(step: AuditStep): string {
     return step.step === 'llm' ? 'Prompt + response' : 'Raw records';
   }
+
+  /**
+   * Wywołania modelu idą do inspektora, nie do surowego `<pre>`. Obiekt z `llm/` to prompt
+   * na kilkadziesiąt tysięcy znaków W JEDNEJ LINII i odpowiedź zaescapowana w środku —
+   * wylany jak leci, formalnie zawierał wszystko i nie dawał się przeczytać.
+   */
+  protected readonly inspect = llmInspector();
+
+  protected readonly isLlm = isLlmPath;
 
   /** Ścieżki w prywatnym archiwum; treść pobieralna tylko przez lokalny most. */
   protected readonly archivePaths = computed(() => this.sourceRun()?.archive ?? []);

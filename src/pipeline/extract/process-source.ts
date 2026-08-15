@@ -23,7 +23,7 @@ import type {
 } from "../../types/index.js";
 import {
   fbGroupPostsToBlocks, fbGroupPostsToText, fbGroupStats, fbOriginsByPost, fbPostExtras,
-  harvestEventUrls, isEventUrl,
+  fbShareStats, harvestEventUrls, isEventUrl,
 } from "../facebook.js";
 import { expandRepeat } from "../series.js";
 
@@ -33,7 +33,7 @@ import { fixCalendarDates } from "./calendar-links.js";
 import { capabilitySource } from "./capability-source.js";
 import { entryUrl } from "./entry-url.js";
 import { noteFbGroup } from "./fb-group-blocked.js";
-import { auditFbGroup, auditFbOrigins, auditFbPostExtras } from "./fb-group-trail.js";
+import { auditFbGroup, auditFbOrigins, auditFbPostExtras, auditFbShares } from "./fb-group-trail.js";
 import { fbGroupLimit, noteFbGroupRate } from "./fb-group-limit.js";
 import {
   MAX_FOLLOWUPS_PER_SOURCE, followupEvents, processFollowup,
@@ -94,6 +94,9 @@ async function fetchSource(
       // z oryginałem trzeba adresem postu, który jest tylko tutaj
       fbOrigins = fbOriginsByPost(records);
       auditFbOrigins(fbOrigins.size, run.fbGroup.posts);
+      // ile z udostępnień to wklejone ogłoszenie, czyli ta sama treść po obu stronach postu —
+      // liczone na rekordach, bo w spłaszczonym tekście jedna z kopii już nie istnieje
+      auditFbShares(fbShareStats(records));
       // bloki DANE, nie zgadywane: granica postu przyszła w rekordzie, a `segment()`
       // odtwarzałby ją hashem akapitu — myląc się dla 40% postów (patrz fbGroupPostsToBlocks).
       // Separator zna wyłącznie facebook.ts, więc `text` bierzemy stamtąd, a nie sklejamy tutaj
