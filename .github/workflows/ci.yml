@@ -9,9 +9,16 @@ on:
     branches: [main]
     # Bot dopisuje co noc events.json/state.json/runs.json/costs.json/index.html — bez tego
     # filtra każdy taki commit paliłby przebieg CI bez powodu.
+    #
+    # Na liście MUSI być wszystko, na co patrzą testy — nie tylko kod. `config.json` nauczył
+    # tego 2026-08-15: commit 27336ad ruszał WYŁĄCZNIE ten plik, rozjechał go z generatorem
+    # (`config-file.test.ts`) i nie odpalił ani jednego przebiegu CI, bo pliku nie było
+    # w filtrze. Czerwone testy przeleżały w main tydzień, a pre-commit ich nie łapie z założenia.
     paths:
       - "src/**"
       - "test/**"
+      - "config.json"
+      - "config-meta.json"
       - "package.json"
       - "package-lock.json"
       - "tsconfig*.json"
