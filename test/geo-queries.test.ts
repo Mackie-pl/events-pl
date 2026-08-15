@@ -23,6 +23,12 @@ describe("geoQueries — rozbijanie venue na człony", () => {
   it("zdejmuje „ul.” — jedyny prefiks, który psuje Nominatim", () => {
     assert.deepEqual(geoQueries("ul. Śniadeckich 30"), [{ q: "Śniadeckich 30" }]);
     assert.deepEqual(geoQueries("ulica Lutycka 34"), [{ q: "Lutycka 34" }]);
+    // źródła gminne piszą prefiks też bez kropki
+    assert.deepEqual(geoQueries("ul Gromadzka"), [{ q: "Gromadzka" }]);
+    assert.deepEqual(geoQueries("Nad Stawem, ul Gromadzka, Więckowice"),
+      [{ q: "Nad Stawem" }, { q: "Gromadzka" }, { q: "Więckowice" }]);
+    // …a miejscowość sklejona z taką ulicą nadal odchodzi na bok
+    assert.deepEqual(geoQueries("Mosina ul Jana Cybisa 4"), [{ q: "Jana Cybisa 4", town: "Mosina" }]);
   });
 
   it("zostawia prefiksy, na których geokoder trafia", () => {
@@ -97,6 +103,69 @@ describe("geoQueries — rozbijanie venue na człony", () => {
     assert.deepEqual(
       geoQueries("Mosina ul. Jana Cybisa 4 - garaż"),
       [{ q: "Jana Cybisa 4", town: "Mosina" }],
+    );
+  });
+
+  it("dokłada wariant bez przymiotnika od miejscowości", () => {
+    // „Cytadela poznańska" — tak się mówi, ale OSM zna „Park Cytadela" i człon pudłuje
+    assert.deepEqual(
+      geoQueries("Cytadela poznańska", "Poznań"),
+      [{ q: "Cytadela poznańska" }, { q: "Cytadela" }],
+    );
+    assert.deepEqual(
+      geoQueries("Poznańska Cytadela", "Poznań"),
+      [{ q: "Poznańska Cytadela" }, { q: "Cytadela" }],
+    );
+    // pełna forma zostaje pierwsza — gdyby była w OSM, jest celniejsza
+    assert.deepEqual(
+      geoQueries("Katedra poznańska, ul. Ostrów Tumski 17", "Poznań"),
+      [{ q: "Katedra poznańska" }, { q: "Katedra" }, { q: "Ostrów Tumski 17" }],
+    );
+  });
+
+  it("skraca tylko przymiotnik od TEJ miejscowości", () => {
+    // przymiotnik niosący nazwę zostaje — obcięcie zrobiłoby z nazwy co innego
+    assert.deepEqual(geoQueries("Ostrów Tumski", "Poznań"), [{ q: "Ostrów Tumski" }]);
+    assert.deepEqual(geoQueries("Klub żeglarski", "Poznań"), [{ q: "Klub żeglarski" }]);
+    assert.deepEqual(geoQueries("Rynek Jeżycki", "Poznań"), [{ q: "Rynek Jeżycki" }]);
+    // i bez znanej miejscowości nie ma z czym porównać
+    assert.deepEqual(geoQueries("Cytadela poznańska"), [{ q: "Cytadela poznańska" }]);
+  });
+
+  it("nie skraca nazwy do samej głowy", () => {
+    // „Park" bez przymiotnika to generyk — geokoder odpowie pierwszym lepszym parkiem
+    assert.deepEqual(geoQueries("Park poznański", "Poznań"), [{ q: "Park poznański" }]);
+  });
+
+  it("rozkleja dwie nazwy zlepione bez przecinka", () => {
+    // budynek i instytucja jednym ciągiem — jako całość nie trafia w nic, połówki w to samo
+    assert.deepEqual(
+      geoQueries("Akademia Lubrańskiego Muzeum Archidiecezjalne"),
+      [
+        { q: "Akademia Lubrańskiego Muzeum Archidiecezjalne" },
+        { q: "Akademia Lubrańskiego" },
+        { q: "Muzeum Archidiecezjalne" },
+      ],
+    );
+  });
+
+  it("nie bierze głowy nazwy w środku ani na końcu za szew", () => {
+    // podział zostawiłby ogryzek („Wiejski"), na który geokoder ODPOWIADA byle czym
+    for (const name of [
+      "Wiejski Dom Kultury", "Centrum Kultury Zamek", "Dom Kultury Orle Gniazdo",
+      "Muzeum Broni Pancernej", "Hala Arena",
+    ]) assert.deepEqual(geoQueries(name), [{ q: name }], `„${name}" nie ma szwu`);
+  });
+
+  it("nie liczy myślnika jako wyrazu przy szukaniu szwu", () => {
+    // szew przy „Akademia" zostawiłby „AMAkids -"; prawdziwy jest dopiero przy „Centrum"
+    assert.deepEqual(
+      geoQueries("AMAkids - Akademia Rozwoju Intelektualnego - Centrum Edukacji dla Dzieci"),
+      [
+        { q: "AMAkids - Akademia Rozwoju Intelektualnego - Centrum Edukacji dla Dzieci" },
+        { q: "AMAkids - Akademia Rozwoju Intelektualnego" },
+        { q: "Centrum Edukacji dla Dzieci" },
+      ],
     );
   });
 

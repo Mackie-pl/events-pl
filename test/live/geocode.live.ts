@@ -39,6 +39,14 @@ const VENUES: Array<[venue: string, town: string]> = [
 const HARD: Array<[venue: string, town: string]> = [
   ["Mosina ul. Jana Cybisa 4 - garaż", "Poznań"],
   ["Park nad Wartą przy amfiteatrze", "Poznań"],
+  // potoczna nazwa z przymiotnikiem odmiejscowym: OSM zna „Park Cytadela", nie „Cytadelę
+  // poznańską" — a tak właśnie pisze o tym miejscu pół Poznania
+  ["Cytadela poznańska", "Poznań"],
+  ["Cytadela Poznańska", "Poznań"],
+  // dwie nazwy sklejone bez przecinka: budynek i instytucja, która w nim siedzi
+  ["Akademia Lubrańskiego Muzeum Archidiecezjalne", "Poznań"],
+  // „ul" bez kropki: z prefiksem Nominatim nie trafia w nic, bez niego trafia
+  ["ul Śniadeckich 30", "Poznań"],
 ];
 
 describe("geocode — miejsca z auditu „geokoder nie zna tego adresu”", () => {
