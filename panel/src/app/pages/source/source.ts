@@ -151,10 +151,11 @@ export class SourcePage {
 
   /**
    * Co się otworzy pod przyciskiem. Nazwa rzeczy, nie „Show" — przy kroku modelu to prompt
-   * z odpowiedzią, przy Bright Data surowa migawka, a jedno z drugim nie ma nic wspólnego.
+   * z odpowiedzią, przy podziale rozliczenie blok po bloku, przy Bright Data surowa migawka.
    */
   protected archiveButton(step: AuditStep): string {
-    return step.step === 'llm' ? 'Prompt + response' : 'Raw records';
+    if (step.step === 'llm') return 'Prompt + response';
+    return step.step === 'block.parsed' ? 'Blocks in / out' : 'Raw records';
   }
 
   /**

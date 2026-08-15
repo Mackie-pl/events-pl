@@ -507,6 +507,24 @@ ma `hashes`, ale nie ma zapisanych wydarzeń) — jednorazowo ok. pełnej stawki
 Cache jest w publicznym repo, więc trzymane w nim wydarzenia są **po** redakcji PII;
 pełna wersja z dnia ekstrakcji żyje w prywatnym archiwum.
 
+### Co widać z podziału na bloki
+
+Podział jest miejscem, w którym powstaje rachunek: strona wchodzi jako HTML, wychodzi jako
+bloki, a płacimy za te, których cache nie zna. Ślad pokazuje to na trzech poziomach — bo
+pierwsze dwa są publiczne (`audit.json`), a trzeci niesie cudzą treść i zostaje w archiwum:
+
+| gdzie | co mówi |
+|---|---|
+| krok `block` | `podział: DOM, 38 kart → 41 bl. / 28 431 zn.; 39 z cache, 2 do modelu (1 204 zn., 4% treści)` — znaki obok liczby bloków, bo „2 z 41 bloków" brzmi jak nic, a bywa połową strony |
+| krok `block` (drugi wariant) | `bez kart mimo 3 grup rodzeństwa — tniemy po akapitach. div.tile ×5 (18 zn. — poniżej progu karty)`: **czemu** ta strona nie została rozpoznana jako lista. Wcześniej „nie ma listy" i „jest, ale nie po naszemu" wyglądały identycznie |
+| krok `block.parsed` | co z tego wyszło: ile wydarzeń dały świeże bloki, ile cache, ile bloków opłaconych **bez ani jednego** wydarzenia (`silent` — menu, licznik, banner cookies) |
+| `blocks/…` w archiwum | wiersz na blok: hash, rozmiar, karta czy reszta strony, z cache czy do modelu, od kiedy w cache'u, ile wydarzeń dał — plus **treść** tych, za które dziś zapłaciliśmy. Zapisywane tylko wtedy, gdy cokolwiek poszło do modelu |
+
+Ostatni wiersz odpowiada na jedyne pytanie, którego z rachunku nie da się postawić: *ten blok
+kosztuje codziennie — co się w nim właściwie rusza?* Reszta strony stoi już w `raw/`, a dzień
+bez ani jednego świeżego bloku nie zapisuje obiektu w ogóle — archiwum rośnie tylko o dni,
+w których naprawdę coś zapłaciliśmy.
+
 ## Dane osobowe (PII)
 
 Repo jest **publiczne**, a strony instytucji podają numery kontaktowe osób prowadzących zapisy.
@@ -541,6 +559,7 @@ nie da się debugować jakości ekstrakcji, idzie do prywatnego bucketa:
 | `raw/<data>/<source>/<sha256>.json` | pobrany tekst strony/PDF-a 1:1 | „czemu to źródło dało 0 wydarzeń?" — widać, co model dostał (cookie banner? pusta strona?) |
 | `raw/<data>/discover-<gmina>/…` | komplet wyników wyszukiwarki dla gminy | „czemu model przeoczył ten dom kultury?" — czy w ogóle był w wynikach |
 | `llm/<data>/<runId>/<nnnn>-<model>.json` | prompt + odpowiedź + tokeny/koszt/czas | odróżnia „model nie widział" od „model zwrócił zły JSON"; zapisywane **także dla wywołań nieudanych** |
+| `blocks/<data>/<runId>/<source>/<nnnn>.json` | rozliczenie podziału na bloki: wejście (znaki HTML-a i tekstu), rozpoznanie kart (w tym grupy ODRZUCONE — i czemu), wiersz na blok: hash, rozmiar, karta czy reszta strony, z cache czy do modelu, ile wydarzeń dał; **treść tylko tych bloków, za które dziś zapłaciliśmy**. Powstaje **tylko w dniach ze świeżymi blokami** — dzień w pełni z cache'a nie ma czego tłumaczyć | „czemu strona bez zmian znowu kosztowała?" — widać KTÓRY blok się rozjechał i o ile |
 | `events/<data>/<runId>.json` | wydarzenia **przed** redakcją PII | pełne kontakty do digestu; źródło prawdy |
 
 Ścieżka `raw/` zawiera sha256 treści → niezmieniona strona nie zajmuje miejsca drugi raz.
@@ -618,8 +637,8 @@ za opłacone rekordy: wiersze błędu, pola obrazów i miejsc, których spłaszc
 Redakcja PII **omija** `detail.archive`. Ścieżki `raw/` niosą sha256, a w haszu regularnie trafia
 się dziewięciocyfrowy ciąg z prefiksem komórkowym — redakcja zrobiłaby z niego `[tel]`, czyli
 martwy przycisk, i to tylko dla części źródeł (patrz `NEVER_REDACTED` w `reporting/audit-trail.ts`).
-Most akceptuje tylko prefiksy `raw/`, `llm/`, `events/` (bez `..`), więc nie da się przez niego
-czytać dowolnych obiektów z projektu.
+Most akceptuje tylko prefiksy `raw/`, `llm/`, `blocks/`, `events/`, `reuse/` (bez `..`), więc nie da
+się przez niego czytać dowolnych obiektów z projektu.
 
 **Bezpieczeństwo.** CORS przepuszcza **wyłącznie** `localhost`/`127.0.0.1`, a sonda dodatkowo
 sprawdza nagłówek `Origin` i przyjmuje tylko `POST`. To nie jest ta sama ochrona co CORS: CORS
