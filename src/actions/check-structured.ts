@@ -53,17 +53,25 @@ async function attempt(
     schema: { name: "wydarzenia", schema },
   });
   const rejection = api.structuredRejection();
+  // Ustępstwo wypisujemy przy KAŻDYM szczeblu, bo bez tego „PRZYJĘTY" znaczy dwie różne
+  // rzeczy — „schemat przeszedł tak, jak go wysyłamy" albo „przeszedł dopiero, gdy adapter
+  // odpuścił temperaturę" — a to drugie jest właśnie tym, po co się tu schodzi.
+  const dropped = api.temperatureDropped()
+    ? "   ↳ dopiero BEZ `temperature` — model jej nie obsługuje na żadnym endpoincie\n"
+      + `     (${api.temperatureRejection() ?? "?"})\n`
+    : "";
   // Dostawcę wypisujemy ZAWSZE. Bez niego dwa różne wyniki tej samej sondy wyglądają
   // na różnicę w schemacie, a bywają różnicą w routingu — dwa razy pod rząd wyciągnęliśmy
   // z tego zły wniosek, zanim OpenRouter zaczął zdradzać, kto obsłużył request.
   if (rejection) {
     const provider = providerFromError(rejection);
     console.log(`❌ ${label}: ODRZUCONY (dostawca: ${provider})`);
-    console.log(`   ${rejection}\n`);
+    console.log(`${dropped}   ${rejection}\n`);
     return { out: null, provider };
   }
   const provider = api.servingProvider() ?? "?";
-  console.log(`✅ ${label}: PRZYJĘTY (obsłużył: ${provider})\n`);
+  console.log(`✅ ${label}: PRZYJĘTY (obsłużył: ${provider})`);
+  console.log(`${dropped}`);
   return { out, provider };
 }
 
@@ -84,10 +92,21 @@ function verdict(full: boolean, minimal: boolean, noFormat: boolean): string {
     return "Endpoint obsługuje response_format, ale odbija NASZ schemat (i nie chodzi o `format`).\n"
       + "Zawęź go po komunikacie wyżej — najczęściej `anyOf` albo zagnieżdżenie.";
   }
-  return "Żaden endpoint tego modelu nie przyjął schematu. Zostaw STRUCTURED_OUTPUTS wyłączone —\n"
-    + "blok schematu w prompcie robi tę samą robotę, tylko bez gwarancji.\n"
-    + "Jeśli w błędzie widzisz „No endpoints found\", to znaczy, że require_parameters zadziałał:\n"
-    + "OpenRouter nie ma dla tego modelu dostawcy z structured outputs.";
+  return "Żaden endpoint tego modelu nie przyjął schematu.\n\n"
+    + "Jeśli w błędzie widzisz „No endpoints found\", to NIE JEST jeszcze werdykt o schemacie.\n"
+    + "`require_parameters` przepuszcza tylko endpointy obsługujące WSZYSTKIE parametry\n"
+    + "requestu, więc routing wywraca KAŻDY nieobsługiwany parametr z osobna — także taki,\n"
+    + "który ze structured outputs nie ma nic wspólnego. Modele rozumujące (reasoning) nie\n"
+    + "mają np. `temperature` wcale; adapter sam ją wtedy odpuszcza i próbuje ponownie, więc\n"
+    + "jeśli mimo to widzisz ten komunikat, winien jest JESZCZE INNY parametr.\n\n"
+    + "Czym różnią się endpointy (strona modelu pokazuje SUMĘ możliwości wszystkich dostawców,\n"
+    + "czyli obietnicę, której żaden z osobna nie spełnia):\n"
+    + "  curl -s https://openrouter.ai/api/v1/models/<model>/endpoints \\\n"
+    + "    | jq '.data.endpoints[] | {name, supported_parameters}'\n\n"
+    + "Jest tam response_format? Winny jest inny parametr requestu — porównaj listę z tym, co\n"
+    + "wysyła buildBody() w src/adapters/openrouter.ts.\n"
+    + "Nie ma? Zostaw STRUCTURED_OUTPUTS wyłączone — blok schematu w prompcie robi tę samą\n"
+    + "robotę, tylko bez gwarancji.";
 }
 
 async function main(): Promise<void> {

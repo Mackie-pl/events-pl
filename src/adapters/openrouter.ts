@@ -105,6 +105,38 @@ export interface ChatOptions {
 let structuredOff = false;
 
 /**
+ * Model nie przyjmuje `temperature` — do końca procesu wysyłamy request bez niej.
+ * Flaga modułowa i JEDNOKIERUNKOWA z tego samego powodu co `structuredOff`: inaczej
+ * każde źródło płaciłoby własne odbicie od routingu (400/404 nie zużywa tokenów, ale
+ * kosztuje pełny round-trip, a przy kilkudziesięciu wywołaniach to kilkadziesiąt).
+ *
+ * PO CO OSOBNO OD `structuredOff`, skoro objawia się tylko na ścieżce ze schematem.
+ * Bo to NIE JEST odmowa schematu. `require_parameters` przepuszcza wyłącznie endpointy
+ * obsługujące WSZYSTKIE parametry requestu, więc routing wywraca każdy nieobsługiwany
+ * parametr z osobna — także taki, który ze structured outputs nie ma nic wspólnego.
+ * Modele rozumujące (reasoning) nie mają `temperature` wcale: 2026-08-16 cały przebieg
+ * na openai/gpt-5.6-luna poszedł bez schematu, bo pierwsze wywołanie dostało
+ * „404 No endpoints found", a my odczytaliśmy to jako „model nie umie schematu".
+ * Umiał — sześć z siedmiu endpointów deklaruje response_format. Nie umiał temperatury.
+ *
+ * Co endpoint naprawdę obsługuje, mówi tylko rozbicie per endpoint (strona modelu pokazuje
+ * SUMĘ możliwości wszystkich dostawców, czyli obietnicę, której żaden z osobna nie spełnia):
+ *   curl -s https://openrouter.ai/api/v1/models/<model>/endpoints \
+ *     | jq '.data.endpoints[] | {name, supported_parameters}'
+ */
+let temperatureOff = false;
+
+/** Komunikat routingu, który kazał odpuścić `temperature` — dla sondy i śladu. */
+let temperatureError: string | null = null;
+
+/**
+ * Odbicie od routingu, a nie od schematu. OpenRouter mówi to jednym zdaniem i tylko przy
+ * `require_parameters`, więc dopasowanie do komunikatu jest tu jedynym dostępnym sygnałem —
+ * kod HTTP (404) dzieli z „nie ma takiego modelu", którego retry naprawić nie może.
+ */
+const isRoutingRejection = (msg: string): boolean => /no endpoints found/i.test(msg);
+
+/**
  * Komunikat, którym dostawca odbił schemat. Trzymamy go osobno od śladu decyzyjnego:
  * ślad zbiera się per źródło i per przebieg, a sonda (`npm run check:structured`) działa
  * poza przebiegiem i bez niego nie miałaby czego pokazać — czyli mówiłaby „odrzucony"
@@ -139,6 +171,9 @@ let lastArchive: string | null = null;
 
 export const structuredActive = (): boolean => P.STRUCTURED_OUTPUTS.get() && !structuredOff;
 export const structuredRejection = (): string | null => structuredError;
+/** Czy odpuściliśmy `temperature`, żeby routing w ogóle wpuścił request ze schematem. */
+export const temperatureDropped = (): boolean => temperatureOff;
+export const temperatureRejection = (): string | null => temperatureError;
 export const servingProvider = (): string | null => lastProvider;
 export const finishReason = (): string | null => lastFinish;
 /** Czy ostatnia odpowiedź została ucięta na `max_tokens` — a nie skończona przez model. */
@@ -170,6 +205,11 @@ export function callDetail(): AuditDetail {
 export function resetStructured(): void {
   structuredOff = false;
   structuredError = null;
+  // Razem ze schematem, bo sonda schodzi po szczeblach i musi startować z tego samego
+  // miejsca co przebieg — inaczej drugi szczebel leciałby już bez temperatury i porównywał
+  // nieporównywalne, dokładnie tak jak przy różnych dostawcach (patrz check-structured.ts).
+  temperatureOff = false;
+  temperatureError = null;
 }
 
 /** Pełne wejście/wyjście jednego wywołania — do prywatnego archiwum (archive.ts). */
@@ -257,7 +297,6 @@ function buildBody(opts: ChatOptions, withSchema: boolean): string {
   const body: Record<string, unknown> = {
     model: opts.model,
     max_tokens: opts.maxTokens ?? 4000,
-    temperature: opts.temperature ?? 0.2,
     // zwróć koszt (USD) i tokeny w polu usage
     usage: { include: true },
     messages: [
@@ -265,6 +304,11 @@ function buildBody(opts: ChatOptions, withSchema: boolean): string {
       { role: "user", content: opts.user },
     ],
   };
+  // Temperatura jest PREFERENCJĄ, nie warunkiem: bez niej ekstrakcja dalej działa, tylko
+  // mniej powtarzalnie. Przy `require_parameters` przestawała nią być — jeden parametr,
+  // którego model nie zna, kasował wszystkie endpointy i zabierał ze sobą schemat, który
+  // z temperaturą nie ma nic wspólnego. Dlatego odpuszczamy ją, gdy routing tak każe.
+  if (!temperatureOff) body["temperature"] = opts.temperature ?? 0.2;
   if (withSchema && opts.schema) {
     // strict: bez tego dostawca traktuje schemat jak podpowiedź, a nie kontrakt
     body["response_format"] = {
@@ -324,6 +368,48 @@ async function callOnce(
   return json;
 }
 
+/**
+ * Drabinka ustępstw: od najtańszego do najdroższego w skutkach. Kolejność NIE jest dowolna —
+ * `temperature` kosztuje powtarzalność JEDNEGO wywołania, a schemat gwarancję kształtu
+ * odpowiedzi na CAŁY proces (flagi są jednokierunkowe). Do 2026-08-16 drabinki nie było
+ * i pierwsze odbicie oddawało od razu to drugie, żeby nie ruszać pierwszego.
+ *
+ * Rzuca błędem OSTATNIEGO szczebla — wcześniejsze i tak są tylko diagnozą po drodze.
+ */
+async function negotiate(
+  apiKey: string, opts: ChatOptions,
+): Promise<ChatCompletionResponse> {
+  const withSchema = opts.schema !== undefined && structuredActive();
+  try {
+    return await callOnce(apiKey, opts, withSchema);
+  } catch (e) {
+    if (!withSchema) throw e;
+
+    // Szczebel 1: routing odbił request przez PARAMETR, nie przez schemat. Odpuszczamy
+    // temperaturę i próbujemy jeszcze raz ZE SCHEMATEM — o niego cała ta gimnastyka chodzi.
+    if (!temperatureOff && isRoutingRejection(describeError(e))) {
+      temperatureOff = true;
+      temperatureError = describeError(e);
+      audit("llm", `routing odrzucił parametry — dalej bez temperature (${temperatureError})`,
+        { model: opts.model, task: opts.task });
+      try {
+        return await callOnce(apiKey, opts, true);
+      } catch {
+        // schemat dalej nie przechodzi — schodzimy szczebel niżej, już bez niego
+      }
+    }
+
+    // Szczebel 2: schematu nie da się przepchnąć. Nie wywracamy przebiegu z tego powodu —
+    // schemat jest ulepszeniem, a nie warunkiem działania: potok potrafi czytać odpowiedź
+    // bez niego od zawsze. Gasimy flagę i powtarzamy raz, bez schematu.
+    structuredOff = true;
+    structuredError = describeError(e);
+    audit("llm", `model odrzucił structured outputs — dalej bez schematu (${structuredError})`,
+      { model: opts.model, task: opts.task });
+    return await callOnce(apiKey, opts, false);
+  }
+}
+
 export async function chat(opts: ChatOptions): Promise<string> {
   const apiKey = P.OPENROUTER_API_KEY.get();
   if (!apiKey) throw new Error("Brak OPENROUTER_API_KEY");
@@ -340,28 +426,12 @@ export async function chat(opts: ChatOptions): Promise<string> {
   const failed = async (err: string): Promise<void> =>
     record({ ...base, response: "", usage: NO_USAGE, ms: ms(), ok: false, err });
 
-  const withSchema = opts.schema !== undefined && structuredActive();
   let json: ChatCompletionResponse;
   try {
-    json = await callOnce(apiKey, opts, withSchema);
+    json = await negotiate(apiKey, opts);
   } catch (e) {
-    if (!withSchema) {
-      await failed(describeError(e));
-      throw e;
-    }
-    // Model albo dostawca nie przyjmuje response_format. Nie wywracamy przebiegu z tego
-    // powodu: schemat jest ulepszeniem, a nie warunkiem działania — potok potrafi czytać
-    // odpowiedź bez niego od zawsze. Gasimy flagę i powtarzamy raz, bez schematu.
-    structuredOff = true;
-    structuredError = describeError(e);
-    audit("llm", `model odrzucił structured outputs — dalej bez schematu (${structuredError})`,
-      { model: opts.model, task: opts.task });
-    try {
-      json = await callOnce(apiKey, opts, false);
-    } catch (retryErr) {
-      await failed(describeError(retryErr));
-      throw retryErr;
-    }
+    await failed(describeError(e));
+    throw e;
   }
 
   lastProvider = json.provider ?? null;
