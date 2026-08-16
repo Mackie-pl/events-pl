@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-15",
+ "generated": "2026-08-16",
  "events": [
   {
    "title": "Luboński Szlak Architektury Przemysłowej",
@@ -278,75 +278,39 @@
    }
   },
   {
-   "title": "Słowiańskie Harce - Plaża Miejska Luboń",
-   "date_start": "2026-08-15",
+   "title": "Taniec liniowy – Line Dance",
+   "date_start": "2026-09-07",
    "date_end": null,
    "repeat": "",
-   "time_start": "12:00",
-   "time_end": "18:00",
-   "venue": "Plaża Miejska Luboń",
+   "time_start": "19:50",
+   "time_end": null,
+   "venue": "Ośrodek Kultury w Luboniu",
    "town": "Luboń",
    "price": {
-    "free": true,
+    "free": null,
     "amount_pln": null,
     "note": null
    },
-   "age": null,
-   "family_friendly": true,
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": "maybe",
    "tags": [
-    "dzieci:warsztaty",
-    "dzieci:zabawy",
-    "kultura:tańce",
-    "warsztaty:lampiony",
-    "warsztaty:glina",
-    "kultura:ognisko"
+    "taniec",
+    "zajęcia:line dance"
    ],
    "registration": "",
-   "sub_slots": [
-    {
-     "time": "12:00",
-     "label": "warsztaty tworzenia lampionów",
-     "age": null
-    },
-    {
-     "time": "13:00",
-     "label": "joga dla dzieci",
-     "age": null
-    },
-    {
-     "time": "14:00",
-     "label": "zabawy słowiańskie",
-     "age": null
-    },
-    {
-     "time": "15:00",
-     "label": "tańce starodawne",
-     "age": null
-    },
-    {
-     "time": "16:00",
-     "label": "warsztaty lepienia w glinie",
-     "age": null
-    },
-    {
-     "time": "17:00",
-     "label": "plecenie wianków i ognisko",
-     "age": null
-    },
-    {
-     "time": "18:00",
-     "label": "pokaz ognia",
-     "age": null
-    }
-   ],
+   "sub_slots": null,
    "conditional": "",
    "container": "",
-   "source_url": "https://www.facebook.com/groups/119426108184542/posts/27767444056289375/",
+   "source_url": "https://www.facebook.com/groups/15461809069/posts/10164356054689070/",
    "is_noise": false,
-   "source_id": "mieszkancy-lubonia-fb-group",
+   "source_id": "lubon-fb-group",
    "geo": {
-    "lat": 52.3450484,
-    "lon": 16.9032769
+    "lat": 52.3273631,
+    "lon": 16.8787772
    }
   },
   {
@@ -949,103 +913,69 @@
    "source_id": "gosir-dopiewo-kalendarz"
   },
   {
-   "title": "Mini ZOO Mieścisko - Niedziela 16.08",
-   "date_start": "2026-08-16",
+   "title": "Szkolenie motorowodne – patent sternika motorowodnego",
+   "date_start": "2026-08-23",
    "date_end": null,
    "repeat": "",
-   "time_start": "14:00",
-   "time_end": "17:00",
-   "venue": "Podleśna Zagroda - Mini ZOO Mieścisko",
-   "town": "Mieścisko",
+   "time_start": null,
+   "time_end": null,
+   "venue": "Owocowa Plaża",
+   "town": "Zborowo",
    "price": {
     "free": false,
-    "amount_pln": 20,
-    "note": "dzieci do lat 2 - gratis"
+    "amount_pln": 500,
+    "note": "Cena nie obejmuje egzaminu"
    },
    "age": null,
-   "family_friendly": true,
+   "family_friendly": false,
    "tags": [
-    "dzieci:zoo",
-    "zwierzęta"
+    "szkolenie:motorowodne",
+    "sport:wodne"
    ],
-   "registration": "",
+   "registration": "[tel. w źródle]",
    "sub_slots": null,
-   "conditional": "Plany mogą ulec zmianie w zależności od pogody",
+   "conditional": "",
    "container": "",
-   "source_url": "https://www.facebook.com/groups/1020981825093965/posts/2435306980328102/",
+   "source_url": "https://www.facebook.com/groups/1020981825093965/posts/2435736490285151/",
    "is_noise": false,
    "source_id": "dopiewo-tablica-ogloszen-fb",
    "geo": null
   },
   {
-   "title": "Warsztaty wakacyjne Szkoła Umysłu - projektowanie 3D i planszówki",
-   "date_start": "2026-08-17",
-   "date_end": "2026-08-21",
-   "repeat": "",
-   "time_start": "09:00",
-   "time_end": "14:00",
-   "venue": "Szkoła Umysłu, Dąbrówka, ul. Widok 2",
-   "town": "Dąbrówka",
-   "price": {
-    "free": false,
-    "amount_pln": 540,
-    "note": "5 dni; alternatywa: 400 zł za 4 dni (9:30-11:30)"
-   },
-   "age": {
-    "min": 10,
-    "max": null,
-    "label": "od 10 lat"
-   },
-   "family_friendly": true,
-   "tags": [
-    "dzieci:warsztaty",
-    "warsztaty:robotyka",
-    "warsztaty:3D"
-   ],
-   "registration": "[tel. w źródle], [e-mail w źródle], https://szkolaumyslu.pl/polkolonie-i-warsztaty-wakacyjne/#formularz",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://www.facebook.com/groups/1020981825093965/posts/2434869463705187/",
-   "is_noise": false,
-   "source_id": "dopiewo-tablica-ogloszen-fb",
-   "origin": {
-    "key": "UzpfSTEwMDA1NDU3ODAxNDkwMDoxNjE5OTc2OTg5ODMxNTUzOjE2MTk5NzY5ODk4MzE1NTM=",
-    "url": "https://www.facebook.com/szkolaumyslu/posts/pfbid0BKCVULwVjHeAsew1KRGE6KbwdqfAiT8bX71onjE8yQCJLnhYBCRRTjwmNWNve9Ncl"
-   },
-   "geo": {
-    "lat": 52.3753044,
-    "lon": 16.7548022
-   }
-  },
-  {
-   "title": "Sąsiedzkie opowieści - wieczór z historią i fotografią",
-   "date_start": "2026-08-17",
+   "title": "Sensoplastyka",
+   "date_start": "2026-08-21",
    "date_end": null,
    "repeat": "",
-   "time_start": "17:00",
+   "time_start": "09:00",
    "time_end": null,
-   "venue": "Dworzec w Palędziu",
-   "town": "Palędzie",
+   "venue": "Sensoryka Poznań, ul. Akacjowa 9",
+   "town": "Skórzewo",
    "price": {
-    "free": true,
-    "amount_pln": null,
+    "free": false,
+    "amount_pln": 70,
     "note": null
    },
    "age": null,
-   "family_friendly": "maybe",
+   "family_friendly": true,
    "tags": [
-    "kultura:historia",
-    "spotkania"
+    "warsztaty:sensoplastyka",
+    "dzieci:sensoryka"
    ],
-   "registration": "",
+   "registration": "[tel. w źródle]",
    "sub_slots": null,
    "conditional": "",
-   "container": "",
-   "source_url": "https://www.facebook.com/groups/1020981825093965/posts/2434762613715872/",
+   "container": "Sensoplastyczny sierpień",
+   "source_url": "https://www.facebook.com/groups/1020981825093965/posts/2435706016954865/",
    "is_noise": false,
    "source_id": "dopiewo-tablica-ogloszen-fb",
-   "geo": null
+   "origin": {
+    "key": "UzpfSTEwMDA2MzgyODE1MTAzMToxNTY2Njc2NTQ1NDY5OTM2OjE1NjY2NzY1NDU0Njk5MzY=",
+    "url": "https://www.facebook.com/pomyslynazmysly/posts/pfbid0APFRoTjvxRcfsgJaCLerPaFmidok4MNi93KbmjemC4kac1d3pKKbgnEvfMWV1WD1l"
+   },
+   "geo": {
+    "lat": 52.3936797,
+    "lon": 16.7922303
+   }
   },
   {
    "title": "Kino letnie w Wirach - Krudowie 2",
@@ -1484,42 +1414,6 @@
    }
   },
   {
-   "title": "Country Targ",
-   "date_start": "2026-08-15",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "10:00",
-   "time_end": "14:00",
-   "venue": "Pod Gajem 1, Ceradz Kościelny",
-   "town": "Ceradz Kościelny",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": true,
-   "tags": [
-    "targ",
-    "lokalnie"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://www.facebook.com/groups/komornikigrupaogloszeniowa/posts/28291436180543492/",
-   "is_noise": false,
-   "source_id": "fb-group-komorniki-ogloszenia",
-   "origin": {
-    "key": "UzpfSTYxNTUwODExODE5MzAwOjEyMjMwOTI5NDg4MjAyNzA2MDoxMjIzMDkyOTQ4ODIwMjcwNjA=",
-    "url": "https://www.facebook.com/permalink.php?story_fbid=pfbid0m2c6b7UCBwydLLsFdBzJW2FnFsLWRsPcCLM7FCdQNMc23hVr4XnZv2t6pnTYn8Wtl&id=61550811819300"
-   },
-   "geo": {
-    "lat": 52.437675,
-    "lon": 16.5607368
-   }
-  },
-  {
    "title": "Wigilia Miejska w Luboniu",
    "date_start": "2026-12-11",
    "date_end": null,
@@ -1581,37 +1475,6 @@
    "geo": {
     "lat": 52.3274838,
     "lon": 16.8782268
-   }
-  },
-  {
-   "title": "\"Słowiańskie harce\" - wydarzenie w stylu słowiańskim",
-   "date_start": "2026-08-15",
-   "date_end": null,
-   "repeat": "",
-   "time_start": null,
-   "time_end": null,
-   "venue": "Plaża Miejska, ul. Rzeczna",
-   "town": "Luboń",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": true,
-   "tags": [
-    "impreza:plaża"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://lubon.pl/artykul/352/4766/kalendarz-wydarzen-miejskich-w-2026-roku",
-   "is_noise": false,
-   "source_id": "lubon-pl-kalendarz-2026-2",
-   "geo": {
-    "lat": 52.3450484,
-    "lon": 16.9032769
    }
   },
   {
@@ -1771,36 +1634,6 @@
    }
   },
   {
-   "title": "Szeroko na Wąskiej 2026",
-   "date_start": "2026-08-15",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "11:00",
-   "time_end": "17:00",
-   "venue": "Ptasi Park w Mosinie",
-   "town": "Mosina",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": true,
-   "tags": [
-    "sztuka:wystawy",
-    "rękodzieło",
-    "muzyka:koncert"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://www.mosina.pl/wydarzenia/szeroko-na-waskiej-2026-1",
-   "is_noise": false,
-   "source_id": "mosina-pl-wydarzenia",
-   "geo": null
-  },
-  {
    "title": "Pippi Langstrumpf zwiedza świat",
    "date_start": "2026-08-20",
    "date_end": null,
@@ -1925,33 +1758,6 @@
    "geo": null
   },
   {
-   "title": "15 sierpnia - Święto Wojska Polskiego",
-   "date_start": "2026-08-15",
-   "date_end": null,
-   "repeat": "",
-   "time_start": null,
-   "time_end": null,
-   "venue": "",
-   "town": "",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "święto"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://www.mosina.pl/wydarzenia/15-sierpnia-swieto-wojska-polskiego",
-   "is_noise": false,
-   "source_id": "mosina-pl-wydarzenia"
-  },
-  {
    "title": "Koncert \"Klasyka w plenerze\"",
    "date_start": "2026-08-28",
    "date_end": null,
@@ -1977,7 +1783,10 @@
    "source_url": "https://www.mosina.pl/wydarzenia/koncert-klasyka-w-plenerze-1",
    "is_noise": false,
    "source_id": "mosina-pl-wydarzenia",
-   "geo": null
+   "geo": {
+    "lat": 52.246595,
+    "lon": 16.8515563
+   }
   },
   {
    "title": "Wystawa kostiumów w bibliotece",
@@ -2006,6 +1815,65 @@
    "is_noise": false,
    "source_id": "mosina-pl-wydarzenia",
    "geo": null
+  },
+  {
+   "title": "Akcja Lato z Biblioteką",
+   "date_start": "2026-07-01",
+   "date_end": "2026-08-31",
+   "repeat": "",
+   "time_start": null,
+   "time_end": null,
+   "venue": "Mosińska Biblioteka Publiczna, ul. Dworcowa 4",
+   "town": "Mosina",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": 3,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "dzieci:warsztaty",
+    "dzieci:planszówki",
+    "dzieci:łamigłówki",
+    "literatura:spotkania"
+   ],
+   "registration": "61 8 132 332 lub [tel. w źródle]",
+   "sub_slots": [
+    {
+     "time": "",
+     "label": "Moliki w Ptasim Parku – literackie spotkania dla najmłodszych",
+     "age": null
+    },
+    {
+     "time": "",
+     "label": "Twórcze warsztaty plastyczne i sensoryczne",
+     "age": null
+    },
+    {
+     "time": "",
+     "label": "Emocjonujące planszówki i biblioteczne łamigłówki",
+     "age": null
+    },
+    {
+     "time": "",
+     "label": "Egzotyczne podróże (kierunek: Hiszpania!) oraz przygody z Nelą",
+     "age": null
+    }
+   ],
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.bibliotekamosina.pl/dla-dzieci/aktualnosci-dla-dzieci/akcja-lato-z-biblioteka",
+   "is_noise": false,
+   "source_id": "biblioteka-mosina",
+   "geo": {
+    "lat": 52.2422104,
+    "lon": 16.8506104
+   }
   },
   {
    "title": "Wakacyjne wyjazdy",
@@ -2104,259 +1972,46 @@
    "source_id": "osir-mosina-kalendarz"
   },
   {
-   "title": "PARKRUN POZNAŃ, PARKRUN LASEK MARCELIŃSKI, PARKRUN LAS DĘBIŃSKI",
-   "date_start": "2026-08-15",
+   "title": "Rodzinny weekend w Ranczu Kacperkowo",
+   "date_start": "2026-08-16",
    "date_end": null,
    "repeat": "",
-   "time_start": "09:00",
-   "time_end": null,
-   "venue": "Park Cytadela w Poznaniu, Lasek Marceliński w Poznaniu, Las Dębiński w Poznaniu",
-   "town": "Poznań",
+   "time_start": "13:00",
+   "time_end": "17:00",
+   "venue": "Ranczo Kacperkowo",
+   "town": "",
    "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "sport:bieganie"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://www.poznan.pl/mim/events/parkrun-poznan-parkrun-lasek-marcelinski-parkrun-las-debinski,179488.html",
-   "is_noise": false,
-   "source_id": "poznan-co-gdzie-kiedy",
-   "geo": {
-    "lat": 52.4215502,
-    "lon": 16.9345022
-   }
-  },
-  {
-   "title": "ŚWIĘTO WOJSKA POLSKIEGO",
-   "date_start": "2026-08-15",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "10:00",
-   "time_end": null,
-   "venue": "Muzeum Broni Pancernej w Poznaniu, ul. 3. Pułku Lotniczego 4",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "pozostałe",
-    "muzyka:koncert",
-    "konferencje"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://www.poznan.pl/mim/events/swieto-wojska-polskiego,185594.html",
-   "is_noise": false,
-   "source_id": "poznan-co-gdzie-kiedy",
-   "geo": {
-    "lat": 52.4271017,
-    "lon": 16.8481261
-   }
-  },
-  {
-   "title": "ZAWODY TOWARZYSKIE W SKOKACH PRZEZ PRZESZKODY",
-   "date_start": "2026-08-15",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "10:00",
-   "time_end": null,
-   "venue": "Hipodrom Wola, ul, Lutycka 34 w Poznaniu",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "sport:jeździectwo"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://www.poznan.pl/mim/events/zawody-towarzyskie-w-skokach-przez-przeszkody,185670.html",
-   "is_noise": false,
-   "source_id": "poznan-co-gdzie-kiedy",
-   "geo": {
-    "lat": 52.4291969,
-    "lon": 16.8626567
-   }
-  },
-  {
-   "title": "MISTRZOSTWA POLSKI AMATORÓW, MASTERS I CYKLOSPORT W KOLARSTWIE SZOSOWYM W JEŹDZIE INDYWIDUALNEJ NA CZAS",
-   "date_start": "2026-08-15",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "11:00",
-   "time_end": null,
-   "venue": "Tor Poznań, ul. Wyścigowa 3, Przeźmierowo",
-   "town": "Przeźmierowo",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "sport:kolarstwo"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://www.poznan.pl/mim/events/mistrzostwa-polski-amatorow-masters-i-cyklosport-w-kolarstwie-szosowym-w-jezdzie-indywidualnej-na-czas,185674.html",
-   "is_noise": false,
-   "source_id": "poznan-co-gdzie-kiedy",
-   "geo": {
-    "lat": 52.4182408,
-    "lon": 16.8069082
-   }
-  },
-  {
-   "title": "ŚNIADANIE NA TRAWIE - \"NEVER ENDING STORY\"",
-   "date_start": "2026-08-15",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "11:00",
-   "time_end": null,
-   "venue": "Park Wilsona, ul. Śniadeckich 30, Poznań",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "inne"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://www.poznan.pl/mim/events/sniadanie-na-trawie-never-ending-story,184592.html",
-   "is_noise": false,
-   "source_id": "poznan-co-gdzie-kiedy",
-   "geo": {
-    "lat": 52.3970102,
-    "lon": 16.9019475
-   }
-  },
-  {
-   "title": "Górczyn nadaje – koncertowy skwer",
-   "date_start": "2026-08-15",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "15:00",
-   "time_end": null,
-   "venue": "Park Górczyński",
-   "town": "Poznań",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": null
+    "free": false,
+    "amount_pln": 40,
+    "note": "za osobę"
    },
    "age": null,
    "family_friendly": true,
    "tags": [
-    "muzyka:koncert"
+    "dzieci:dmuchańce",
+    "zwierzęta",
+    "jazda:kucyk",
+    "atrakcje:woz_strażacki",
+    "atrakcje:traktor"
    ],
    "registration": "",
-   "sub_slots": null,
+   "sub_slots": [
+    {
+     "time": "13:00",
+     "label": "karmienie zwierząt",
+     "age": null
+    }
+   ],
    "conditional": "",
-   "container": "",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27757590463868386/",
+   "container": "Rodzinny weekend w Ranczu Kacperkowo",
+   "source_url": "https://www.facebook.com/groups/125289747488429/posts/29285424947714855/",
    "is_noise": false,
-   "source_id": "fb-group-wydarzenia-w-poznaniu-1",
+   "source_id": "fb-group-gmina-mosina-aktualnosci",
    "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzY0NjIzODc1NzgwOTQzOjEzNjQ2MjM4NzU3ODA5NDM=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid0poTojFxYeEv9KvN1HfHF1G7a6F9mK61sUEnJz1z56FPcrNJoUHZ1EEgwvY3h8AHil"
+    "key": "UzpfSTEwMDA1MjU2NjExNDMyNToxNjM3NDkyNzg0Njc5NTc2OjE2Mzc0OTI3ODQ2Nzk1NzY=",
+    "url": "https://www.facebook.com/permalink.php?story_fbid=pfbid0zxsSAHuJteohQi35uSrGnsyFMwmZG2QCzjog943PJNiaoxHgVLfzqYCnTgxj47kRl&id=100052566114325"
    },
-   "geo": {
-    "lat": 52.381905,
-    "lon": 16.8779832
-   }
-  },
-  {
-   "title": "SPACER PO TRAKCIE: ŚRÓDMIEŚCIE - Z OKAZJI 20-LECIA TRAKTU",
-   "date_start": "2026-08-15",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "17:00",
-   "time_end": null,
-   "venue": "Start: przy fontannie na placu Wolności",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "pozostałe",
-    "konferencje"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://www.poznan.pl/mim/events/spacer-po-trakcie-srodmiescie-z-okazji-20-lecia-traktu,181427.html",
-   "is_noise": false,
-   "source_id": "poznan-co-gdzie-kiedy",
-   "geo": {
-    "lat": 52.4081225,
-    "lon": 16.9277159
-   }
-  },
-  {
-   "title": "BitterSweet Festival 2026",
-   "date_start": "2026-08-13",
-   "date_end": "2026-08-15",
-   "repeat": "",
-   "time_start": null,
-   "time_end": null,
-   "venue": "",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": {
-    "min": 60,
-    "max": null,
-    "label": "60+"
-   },
-   "family_friendly": "maybe",
-   "tags": [
-    "muzyka:festiwal"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://okpoznan.pl/szczegoly-wydarzenia/80ftpW8nksmkDvB9YixJ_bittersweet-festival-2026",
-   "is_noise": false,
-   "source_id": "okpoznan-wydarzenia"
+   "geo": null
   },
   {
    "title": "MISTRZOSTWA POLSKI MASTERS I CYKLOSPORT W KOLARSTWIE SZOSOWYM W JEŹDZIE DWÓJKAMI NA CZAS",
@@ -2453,21 +2108,25 @@
    }
   },
   {
-   "title": "MALOWANIE CERAMIKI NA FALI",
+   "title": "Malowanie ceramiki na Fali",
    "date_start": "2026-08-16",
    "date_end": null,
    "repeat": "",
    "time_start": "17:00",
-   "time_end": null,
-   "venue": "Klub na Fali, ul. Piastowska 40, Poznań",
+   "time_end": "19:00",
+   "venue": "Klub na Fali, nad Wartą",
    "town": "Poznań",
    "price": {
-    "free": null,
-    "amount_pln": null,
+    "free": false,
+    "amount_pln": 119,
     "note": null
    },
-   "age": null,
-   "family_friendly": "maybe",
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
    "tags": [
     "warsztaty:ceramika"
    ],
@@ -2475,13 +2134,17 @@
    "sub_slots": null,
    "conditional": "",
    "container": "",
-   "source_url": "https://www.poznan.pl/mim/events/malowanie-ceramiki-na-fali,185428.html",
+   "source_url": "https://www.facebook.com/groups/196361441244106/posts/2033559427524289/",
    "is_noise": false,
-   "source_id": "poznan-co-gdzie-kiedy",
+   "source_id": "fb-group-wydarzenia-poznan-3",
    "geo": {
     "lat": 52.3960854,
     "lon": 16.9389145
-   }
+   },
+   "dates": [
+    "2026-08-16",
+    "2026-08-23"
+   ]
   },
   {
    "title": "GÓRA ZYNDRAMA. TAJEMNICZA TWIERDZA SPRZED 3700 LAT - WYSTAWA",
@@ -2702,7 +2365,7 @@
    }
   },
   {
-   "title": "WYSTAWA - SZYMON ROGIŃSKI - OD MROKU DO ŚWITU",
+   "title": "Wystawa - Szymon Rosiński - Od mroku do świtu",
    "date_start": "2026-06-15",
    "date_end": "2026-08-17",
    "repeat": "",
@@ -2724,16 +2387,16 @@
    "sub_slots": null,
    "conditional": "",
    "container": "",
-   "source_url": "https://kultura.poznan.pl/mim/kultura/events/wystawa-szymon-roginski-od-mroku-do-switu,184024.html",
+   "source_url": "https://www.poznan.pl/mim/events/wystawa-szymon-roginski-od-mroku-do-switu,184024.html",
    "is_noise": false,
-   "source_id": "kultura-poznan",
+   "source_id": "poznan-co-gdzie-kiedy",
    "geo": {
     "lat": 52.4072169,
     "lon": 16.9114179
    }
   },
   {
-   "title": "RODZINNE ZWIEDZANIE ZAMKU Z PRZEWODNIKIEM",
+   "title": "Rodzinne zwiedzanie zamku z przewodnikiem",
    "date_start": "2026-08-18",
    "date_end": null,
    "repeat": "",
@@ -2749,18 +2412,51 @@
    "age": null,
    "family_friendly": true,
    "tags": [
-    "zwiedzanie"
+    "dzieci:zwiedzanie",
+    "spacer:przewodnik"
    ],
    "registration": "",
    "sub_slots": null,
    "conditional": "",
    "container": "",
-   "source_url": "https://kultura.poznan.pl/mim/kultura/events/rodzinne-zwiedzanie-zamku-z-przewodnikiem,185095.html",
+   "source_url": "https://www.poznan.pl/mim/events/rodzinne-zwiedzanie-zamku-z-przewodnikiem,185095.html",
    "is_noise": false,
-   "source_id": "kultura-poznan",
+   "source_id": "poznan-co-gdzie-kiedy",
    "geo": {
     "lat": 52.4080415,
     "lon": 16.9184121
+   }
+  },
+  {
+   "title": "Wakacyjne warsztaty z dostępności cyfrowej - aplikacje mobilne",
+   "date_start": "2026-08-18",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "15:00",
+   "time_end": null,
+   "venue": "Pracownia Ekonomii Społecznej Ładne Rzeczy, ul. Święty Marcin 57",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": "maybe",
+   "tags": [
+    "warsztaty:dostępność cyfrowa",
+    "technologie:aplikacje mobilne"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.poznan.pl/mim/events/wakacyjne-warsztaty-z-dostepnosci-cyfrowej-aplikacje-mobilne,185516.html",
+   "is_noise": false,
+   "source_id": "poznan-co-gdzie-kiedy",
+   "geo": {
+    "lat": 52.4066923,
+    "lon": 16.9223982
    }
   },
   {
@@ -2795,7 +2491,39 @@
    }
   },
   {
-   "title": "Z ARCHIWUM KSIĄŻKI DZIECIĘCEJ. FABULARYZOWANY SPACER ŚLADAMI POZNAŃSKICH LEGEND",
+   "title": "10. Lato z Estradą - Rataje - warsztaty taneczne - Logika chodnika",
+   "date_start": "2026-08-18",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "16:40",
+   "time_end": null,
+   "venue": "Park nad Wartą przy amfiteatrze",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": true,
+   "tags": [
+    "warsztaty:taniec",
+    "dzieci"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "10. Lato z Estradą",
+   "source_url": "https://www.poznan.pl/mim/events/10-lato-z-estrada-rataje-warsztaty-taneczne-logika-chodnika,184307.html",
+   "is_noise": false,
+   "source_id": "poznan-co-gdzie-kiedy",
+   "geo": {
+    "lat": 52.3898757,
+    "lon": 16.9401321
+   }
+  },
+  {
+   "title": "Z archiwum książki dziecięcej. Fabularyzowany spacer śladami poznańskich legend",
    "date_start": "2026-08-18",
    "date_end": null,
    "repeat": "",
@@ -2809,24 +2537,26 @@
     "note": null
    },
    "age": null,
-   "family_friendly": "maybe",
+   "family_friendly": true,
    "tags": [
-    "książki:spacer"
+    "dzieci:spacer",
+    "książki:literatura",
+    "spacer:legendy"
    ],
    "registration": "",
    "sub_slots": null,
    "conditional": "",
    "container": "",
-   "source_url": "https://kultura.poznan.pl/mim/kultura/events/z-archiwum-ksiazki-dzieciecej-fabularyzowany-spacer-sladami-poznanskich-legend,185523.html",
+   "source_url": "https://www.poznan.pl/mim/events/z-archiwum-ksiazki-dzieciecej-fabularyzowany-spacer-sladami-poznanskich-legend,185523.html",
    "is_noise": false,
-   "source_id": "kultura-poznan",
+   "source_id": "poznan-co-gdzie-kiedy",
    "geo": {
     "lat": 52.4084386,
     "lon": 16.9286465
    }
   },
   {
-   "title": "ESTRADA W CENTRUM - AALTO-Z MIŁOŚCI DO ARCHITEKTURY - KINO PLENEROWE",
+   "title": "Estrada w Centrum - Aalto-z miłości do architektury - kino plenerowe",
    "date_start": "2026-08-18",
    "date_end": null,
    "repeat": "",
@@ -2847,13 +2577,912 @@
    "registration": "",
    "sub_slots": null,
    "conditional": "",
-   "container": "",
-   "source_url": "https://kultura.poznan.pl/mim/kultura/events/estrada-w-centrum-aalto-z-milosci-do-architektury-kino-plenerowe,184436.html",
+   "container": "Estrada w Centrum",
+   "source_url": "https://www.poznan.pl/mim/events/estrada-w-centrum-aalto-z-milosci-do-architektury-kino-plenerowe,184436.html",
    "is_noise": false,
-   "source_id": "kultura-poznan",
+   "source_id": "poznan-co-gdzie-kiedy",
    "geo": {
     "lat": 52.4081225,
     "lon": 16.9277159
+   }
+  },
+  {
+   "title": "10. LATO Z ESTRADĄ - NOWE WINOGRADY POŁUDNIE - WARSZTATY TANECZNE - LOGIKA CHODNIKA",
+   "date_start": "2026-08-19",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "17:40",
+   "time_end": null,
+   "venue": "Park Władysława Czarneckiego",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": "maybe",
+   "tags": [
+    "teatr:warsztaty",
+    "muzyka:taniec"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "10. LATO Z ESTRADĄ",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/events/10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-taneczne-logika-chodnika,184290.html",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": {
+    "lat": 52.4340947,
+    "lon": 16.9288697
+   }
+  },
+  {
+   "title": "Kronika wypadów miłosnych",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "15:00",
+   "time_end": null,
+   "venue": "Kino Teatr Apollo",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film:seans"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "Wajda: Re-Wizje",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/seances/",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": null
+  },
+  {
+   "title": "Wszyscy moi wrogowie",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "20:20",
+   "time_end": null,
+   "venue": "Charlie Monroe Kino Malta",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.poznan.pl/mim/events/seances/2026-08-16/",
+   "is_noise": false,
+   "source_id": "poznan-co-gdzie-kiedy",
+   "geo": {
+    "lat": 52.4026658,
+    "lon": 16.9318235
+   }
+  },
+  {
+   "title": "Pejzaż w kolorze sepii",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "20:30",
+   "time_end": null,
+   "venue": "Charlie Monroe Kino Malta",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.poznan.pl/mim/events/seances/2026-08-16/",
+   "is_noise": false,
+   "source_id": "poznan-co-gdzie-kiedy",
+   "geo": {
+    "lat": 52.4026658,
+    "lon": 16.9318235
+   }
+  },
+  {
+   "title": "Pucio kocha zwierzaki",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "09:30",
+   "time_end": null,
+   "venue": "Multikino Stary Browar",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": true,
+   "tags": [
+    "film:seans",
+    "dzieci"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/seances/",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": {
+    "lat": 52.402764,
+    "lon": 16.924437
+   }
+  },
+  {
+   "title": "Tylko jedna noc",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "12:35",
+   "time_end": null,
+   "venue": "Multikino Stary Browar",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film:seans"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/seances/",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": {
+    "lat": 52.402764,
+    "lon": 16.924437
+   }
+  },
+  {
+   "title": "Historie równoległe",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "13:00",
+   "time_end": null,
+   "venue": "Kino Pałacowe",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.poznan.pl/mim/events/seances/2026-08-16/",
+   "is_noise": false,
+   "source_id": "poznan-co-gdzie-kiedy",
+   "geo": {
+    "lat": 52.4080805,
+    "lon": 16.9190504
+   }
+  },
+  {
+   "title": "Kuźma",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "20:30",
+   "time_end": null,
+   "venue": "Kino Rialto",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.poznan.pl/mim/events/seances/2026-08-16/",
+   "is_noise": false,
+   "source_id": "poznan-co-gdzie-kiedy",
+   "geo": {
+    "lat": 52.4115188,
+    "lon": 16.9065564
+   }
+  },
+  {
+   "title": "Wystawa na ekranie",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "12:15",
+   "time_end": null,
+   "venue": "Kino Pałacowe",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film",
+    "sztuka"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.poznan.pl/mim/events/seances/2026-08-16/",
+   "is_noise": false,
+   "source_id": "poznan-co-gdzie-kiedy",
+   "geo": {
+    "lat": 52.4080805,
+    "lon": 16.9190504
+   }
+  },
+  {
+   "title": "Do utraty tchu",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "16:00",
+   "time_end": null,
+   "venue": "Kino Pałacowe",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.poznan.pl/mim/events/seances/2026-08-16/",
+   "is_noise": false,
+   "source_id": "poznan-co-gdzie-kiedy",
+   "geo": {
+    "lat": 52.4080805,
+    "lon": 16.9190504
+   }
+  },
+  {
+   "title": "Kandydaci Śmierci",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "15:15",
+   "time_end": null,
+   "venue": "Charlie Monroe Kino Malta",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.poznan.pl/mim/events/seances/2026-08-16/",
+   "is_noise": false,
+   "source_id": "poznan-co-gdzie-kiedy",
+   "geo": {
+    "lat": 52.4026658,
+    "lon": 16.9318235
+   }
+  },
+  {
+   "title": "Absolwent",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "18:00",
+   "time_end": null,
+   "venue": "Kino Pałacowe",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.poznan.pl/mim/events/seances/2026-08-16/",
+   "is_noise": false,
+   "source_id": "poznan-co-gdzie-kiedy",
+   "geo": {
+    "lat": 52.4080805,
+    "lon": 16.9190504
+   }
+  },
+  {
+   "title": "Zaproszenie (2026)",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "18:45",
+   "time_end": null,
+   "venue": "Charlie Monroe Kino Malta",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.poznan.pl/mim/events/seances/2026-08-16/",
+   "is_noise": false,
+   "source_id": "poznan-co-gdzie-kiedy",
+   "geo": {
+    "lat": 52.4026658,
+    "lon": 16.9318235
+   }
+  },
+  {
+   "title": "Seans na życzenie",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "11:00",
+   "time_end": null,
+   "venue": "Charlie Monroe Kino Malta",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film"
+   ],
+   "registration": "[tel. w źródle]",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.poznan.pl/mim/events/seances/2026-08-16/",
+   "is_noise": false,
+   "source_id": "poznan-co-gdzie-kiedy",
+   "geo": {
+    "lat": 52.4026658,
+    "lon": 16.9318235
+   }
+  },
+  {
+   "title": "Głos Hind Rajab",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "15:20",
+   "time_end": null,
+   "venue": "Charlie Monroe Kino Malta",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.poznan.pl/mim/events/seances/2026-08-16/",
+   "is_noise": false,
+   "source_id": "poznan-co-gdzie-kiedy",
+   "geo": {
+    "lat": 52.4026658,
+    "lon": 16.9318235
+   }
+  },
+  {
+   "title": "Ice Cream Man",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "15:30",
+   "time_end": null,
+   "venue": "Charlie Monroe Kino Malta",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.poznan.pl/mim/events/seances/2026-08-16/",
+   "is_noise": false,
+   "source_id": "poznan-co-gdzie-kiedy",
+   "geo": {
+    "lat": 52.4026658,
+    "lon": 16.9318235
+   }
+  },
+  {
+   "title": "Ghost in the shell (1995)",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "16:45",
+   "time_end": null,
+   "venue": "Charlie Monroe Kino Malta",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.poznan.pl/mim/events/seances/2026-08-16/",
+   "is_noise": false,
+   "source_id": "poznan-co-gdzie-kiedy",
+   "geo": {
+    "lat": 52.4026658,
+    "lon": 16.9318235
+   }
+  },
+  {
+   "title": "Pod skórą",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "17:00",
+   "time_end": null,
+   "venue": "Charlie Monroe Kino Malta",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.poznan.pl/mim/events/seances/2026-08-16/",
+   "is_noise": false,
+   "source_id": "poznan-co-gdzie-kiedy",
+   "geo": {
+    "lat": 52.4026658,
+    "lon": 16.9318235
+   }
+  },
+  {
+   "title": "Odzyskany",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "17:10",
+   "time_end": null,
+   "venue": "Charlie Monroe Kino Malta",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.poznan.pl/mim/events/seances/2026-08-16/",
+   "is_noise": false,
+   "source_id": "poznan-co-gdzie-kiedy",
+   "geo": {
+    "lat": 52.4026658,
+    "lon": 16.9318235
+   }
+  },
+  {
+   "title": "O czym sobie nie mówimy",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "18:15",
+   "time_end": null,
+   "venue": "Charlie Monroe Kino Malta",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.poznan.pl/mim/events/seances/2026-08-16/",
+   "is_noise": false,
+   "source_id": "poznan-co-gdzie-kiedy",
+   "geo": {
+    "lat": 52.4026658,
+    "lon": 16.9318235
+   }
+  },
+  {
+   "title": "Takie jest życie",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "18:20",
+   "time_end": null,
+   "venue": "Charlie Monroe Kino Malta",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.poznan.pl/mim/events/seances/2026-08-16/",
+   "is_noise": false,
+   "source_id": "poznan-co-gdzie-kiedy",
+   "geo": {
+    "lat": 52.4026658,
+    "lon": 16.9318235
+   }
+  },
+  {
+   "title": "Ostatnia sesja w Paryżu",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "18:45",
+   "time_end": null,
+   "venue": "Charlie Monroe Kino Malta",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.poznan.pl/mim/events/seances/2026-08-16/",
+   "is_noise": false,
+   "source_id": "poznan-co-gdzie-kiedy",
+   "geo": {
+    "lat": 52.4026658,
+    "lon": 16.9318235
+   }
+  },
+  {
+   "title": "Zagubiona autostrada",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "20:15",
+   "time_end": null,
+   "venue": "Charlie Monroe Kino Malta",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.poznan.pl/mim/events/seances/2026-08-16/",
+   "is_noise": false,
+   "source_id": "poznan-co-gdzie-kiedy",
+   "geo": {
+    "lat": 52.4026658,
+    "lon": 16.9318235
+   }
+  },
+  {
+   "title": "Proces (1962)",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "20:30",
+   "time_end": null,
+   "venue": "Charlie Monroe Kino Malta",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.poznan.pl/mim/events/seances/2026-08-16/",
+   "is_noise": false,
+   "source_id": "poznan-co-gdzie-kiedy",
+   "geo": {
+    "lat": 52.4026658,
+    "lon": 16.9318235
+   }
+  },
+  {
+   "title": "Hamnet",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "16:45",
+   "time_end": null,
+   "venue": "Kino Muza",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.poznan.pl/mim/events/seances/2026-08-16/",
+   "is_noise": false,
+   "source_id": "poznan-co-gdzie-kiedy",
+   "geo": {
+    "lat": 52.4065954,
+    "lon": 16.9265909
+   }
+  },
+  {
+   "title": "Odyseja",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "10:20",
+   "time_end": null,
+   "venue": "Multikino Stary Browar",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film:seans"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/seances/",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": {
+    "lat": 52.402764,
+    "lon": 16.924437
+   }
+  },
+  {
+   "title": "Wrong girls",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "19:15",
+   "time_end": null,
+   "venue": "Kino Muza",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.poznan.pl/mim/events/seances/2026-08-16/",
+   "is_noise": false,
+   "source_id": "poznan-co-gdzie-kiedy",
+   "geo": {
+    "lat": 52.4065954,
+    "lon": 16.9265909
+   }
+  },
+  {
+   "title": "Homo sapiens?",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "21:15",
+   "time_end": null,
+   "venue": "Kino Muza",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.poznan.pl/mim/events/seances/2026-08-16/",
+   "is_noise": false,
+   "source_id": "poznan-co-gdzie-kiedy",
+   "geo": {
+    "lat": 52.4065954,
+    "lon": 16.9265909
+   }
+  },
+  {
+   "title": "WYSTAWA - SZYMON ROGIŃSKI - OD MROKU DO ŚWITU",
+   "date_start": "2026-06-15",
+   "date_end": "2026-08-17",
+   "repeat": "",
+   "time_start": null,
+   "time_end": null,
+   "venue": "Przystań Sztuki, ul. Roosevelta 22",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": "maybe",
+   "tags": [
+    "sztuka:wystawa"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/events/wystawa-szymon-roginski-od-mroku-do-switu,184024.html",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": {
+    "lat": 52.4072169,
+    "lon": 16.9114179
    }
   },
   {
@@ -2919,13 +3548,13 @@
    }
   },
   {
-   "title": "10. LATO Z ESTRADĄ - NOWE WINOGRADY POŁUDNIE - WARSZTATY TANECZNE - LOGIKA CHODNIKA",
+   "title": "ZWIEDZANIE ZAMKU Z PRZEWODNIKIEM",
    "date_start": "2026-08-19",
    "date_end": null,
    "repeat": "",
-   "time_start": "17:40",
+   "time_start": "18:00",
    "time_end": null,
-   "venue": "Park Władysława Czarneckiego",
+   "venue": "Hol Wielki, CK Zamek, ul. Święty Marcin 80/82",
    "town": "Poznań",
    "price": {
     "free": null,
@@ -2935,19 +3564,728 @@
    "age": null,
    "family_friendly": "maybe",
    "tags": [
-    "teatr:warsztaty",
-    "muzyka:taniec"
+    "zwiedzanie"
    ],
    "registration": "",
    "sub_slots": null,
    "conditional": "",
-   "container": "10. LATO Z ESTRADĄ",
-   "source_url": "https://kultura.poznan.pl/mim/kultura/events/10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-taneczne-logika-chodnika,184290.html",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/events/zwiedzanie-zamku-z-przewodnikiem,185092.html",
    "is_noise": false,
    "source_id": "kultura-poznan",
    "geo": {
-    "lat": 52.4340947,
-    "lon": 16.9288697
+    "lat": 52.4080415,
+    "lon": 16.9184121
+   }
+  },
+  {
+   "title": "PLAŻOWY STYL - ZRÓB SOBIE WAKACYJNĄ BRANSOLETKĘ",
+   "date_start": "2026-08-19",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "19:00",
+   "time_end": null,
+   "venue": "Piach i Podróże, os. Piastowskie 106a",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": "maybe",
+   "tags": [
+    "warsztaty:biżuteria"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/events/plazowy-styl-zrob-sobie-wakacyjna-bransoletke,185256.html",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": {
+    "lat": 52.385446,
+    "lon": 16.9380184
+   }
+  },
+  {
+   "title": "DIY: EKOKROSNO",
+   "date_start": "2026-08-20",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "17:00",
+   "time_end": null,
+   "venue": "Domek wałmistrza, ul. Główna 74",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": "maybe",
+   "tags": [
+    "warsztaty:ekologia",
+    "warsztaty: rękodzieło"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/events/diy-ekokrosno,185544.html",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": {
+    "lat": 52.4220407,
+    "lon": 16.9754338
+   }
+  },
+  {
+   "title": "WARSZTATY BAJKOTERAPII",
+   "date_start": "2026-08-20",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "17:00",
+   "time_end": null,
+   "venue": "Sala Fundacji Dom Książki, ul. Gwarna 13a",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": true,
+   "tags": [
+    "warsztaty:bajkoterapia",
+    "książki"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/events/warsztaty-bajkoterapii,185657.html",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": {
+    "lat": 52.4082423,
+    "lon": 16.921129
+   }
+  },
+  {
+   "title": "Koniec ulicy Dębowej",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "12:05",
+   "time_end": null,
+   "venue": "Multikino Stary Browar",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film:seans"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/seances/",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": {
+    "lat": 52.402764,
+    "lon": 16.924437
+   }
+  },
+  {
+   "title": "Pucio",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "12:00",
+   "time_end": null,
+   "venue": "Kino Muza",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": true,
+   "tags": [
+    "film:seans",
+    "dzieci"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "Dzieciaki, do kina!",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/seances/",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": {
+    "lat": 52.4065954,
+    "lon": 16.9265909
+   }
+  },
+  {
+   "title": "Góra mocy",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "12:15",
+   "time_end": null,
+   "venue": "Kino Muza",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": true,
+   "tags": [
+    "film:seans",
+    "dzieci"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "Dzieciaki, do kina!",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/seances/",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": {
+    "lat": 52.4065954,
+    "lon": 16.9265909
+   }
+  },
+  {
+   "title": "Sunny Dancer",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "14:00",
+   "time_end": null,
+   "venue": "Kino Muza",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film:seans"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/seances/",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": {
+    "lat": 52.4065954,
+    "lon": 16.9265909
+   }
+  },
+  {
+   "title": "Ojczyzna",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "16:00",
+   "time_end": null,
+   "venue": "Kino Muza",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film:seans"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/seances/",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": {
+    "lat": 52.4065954,
+    "lon": 16.9265909
+   }
+  },
+  {
+   "title": "Psi patrol i dinozaury",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "09:15",
+   "time_end": null,
+   "venue": "Multikino Stary Browar",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": true,
+   "tags": [
+    "film:seans",
+    "dzieci"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/seances/",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": {
+    "lat": 52.402764,
+    "lon": 16.924437
+   }
+  },
+  {
+   "title": "Spider-Man: Całkiem nowy dzień",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "09:30",
+   "time_end": null,
+   "venue": "Multikino Stary Browar",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film:seans"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/seances/",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": {
+    "lat": 52.402764,
+    "lon": 16.924437
+   }
+  },
+  {
+   "title": "Minionki i straszydła",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "09:30",
+   "time_end": null,
+   "venue": "Multikino Stary Browar",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": true,
+   "tags": [
+    "film:seans",
+    "dzieci"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/seances/",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": {
+    "lat": 52.402764,
+    "lon": 16.924437
+   }
+  },
+  {
+   "title": "National Theatre live",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "15:00",
+   "time_end": null,
+   "venue": "Helios Poznań Dream",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film:seans"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/seances/",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": null
+  },
+  {
+   "title": "Flavia de Luce",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "12:35",
+   "time_end": null,
+   "venue": "Multikino Stary Browar",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film:seans"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/seances/",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": {
+    "lat": 52.402764,
+    "lon": 16.924437
+   }
+  },
+  {
+   "title": "Vaiana (2026)",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "09:30",
+   "time_end": null,
+   "venue": "Multikino Stary Browar",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": true,
+   "tags": [
+    "film:seans",
+    "dzieci"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/seances/",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": {
+    "lat": 52.402764,
+    "lon": 16.924437
+   }
+  },
+  {
+   "title": "Gdzie jest Nemo 3D",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "11:00",
+   "time_end": null,
+   "venue": "Cinema City Poznań - Plaza",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": true,
+   "tags": [
+    "film:seans",
+    "dzieci"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/seances/",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": null
+  },
+  {
+   "title": "Toy Story 5",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "10:10",
+   "time_end": null,
+   "venue": "Multikino Stary Browar",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": true,
+   "tags": [
+    "film:seans",
+    "dzieci"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/seances/",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": {
+    "lat": 52.402764,
+    "lon": 16.924437
+   }
+  },
+  {
+   "title": "Gdzie jest Dory",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "13:30",
+   "time_end": null,
+   "venue": "Cinema City Poznań - Plaza",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": true,
+   "tags": [
+    "film:seans",
+    "dzieci"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/seances/",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": null
+  },
+  {
+   "title": "Wall-E",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "15:50",
+   "time_end": null,
+   "venue": "Cinema City Poznań - Plaza",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": true,
+   "tags": [
+    "film:seans",
+    "dzieci"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/seances/",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": null
+  },
+  {
+   "title": "Piraci z Karaibów: Na krańcu świata",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "19:30",
+   "time_end": null,
+   "venue": "Cinema City Poznań - Plaza",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film:seans"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/seances/",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": null
+  },
+  {
+   "title": "Triumf serca",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "09:05",
+   "time_end": null,
+   "venue": "Multikino Stary Browar",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film:seans"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/seances/",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": {
+    "lat": 52.402764,
+    "lon": 16.924437
+   }
+  },
+  {
+   "title": "Odlot",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "15:00",
+   "time_end": null,
+   "venue": "Multikino Stary Browar",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": true,
+   "tags": [
+    "film:seans",
+    "dzieci"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/seances/",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": {
+    "lat": 52.402764,
+    "lon": 16.924437
+   }
+  },
+  {
+   "title": "Backrooms. Bez wyjścia",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "21:15",
+   "time_end": null,
+   "venue": "Multikino Stary Browar",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film:seans"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/seances/",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": {
+    "lat": 52.402764,
+    "lon": 16.924437
+   }
+  },
+  {
+   "title": "Obsesja",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "22:10",
+   "time_end": null,
+   "venue": "Multikino Stary Browar",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": false,
+   "tags": [
+    "film:seans"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://kultura.poznan.pl/mim/kultura/seances/",
+   "is_noise": false,
+   "source_id": "kultura-poznan",
+   "geo": {
+    "lat": 52.402764,
+    "lon": 16.924437
    }
   },
   {
@@ -3152,36 +4490,7 @@
    "source_id": "ck-zamek"
   },
   {
-   "title": "ZAMEK NIECZYNNY",
-   "date_start": "2026-08-15",
-   "date_end": null,
-   "repeat": "",
-   "time_start": null,
-   "time_end": null,
-   "venue": "Centrum Kultury ZAMEK",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": false,
-   "tags": [],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "http://ckzamek.pl/wydarzenia/14867-zamek-nieczynny/",
-   "is_noise": false,
-   "source_id": "ck-zamek",
-   "geo": {
-    "lat": 52.407776,
-    "lon": 16.9191858
-   }
-  },
-  {
-   "title": "MECZ WIARA LECHA - POLONIA II ŚRODA WIELKOPOLSKA",
+   "title": "Mecz Wiara Lecha - Polonia II Środa Wielkopolska",
    "date_start": "2026-08-16",
    "date_end": null,
    "repeat": "",
@@ -4742,201 +6051,13 @@
    }
   },
   {
-   "title": "BitterSweet Festiwal",
-   "date_start": "2026-08-13",
-   "date_end": "2026-08-15",
-   "repeat": "",
-   "time_start": null,
-   "time_end": null,
-   "venue": "Cytadela poznańska",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": "bilety, karnety i opaski"
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "muzyka:festiwal"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27756479087312857/",
-   "is_noise": false,
-   "source_id": "fb-group-wydarzenia-w-poznaniu-1",
-   "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzY0NTM0MTU5MTIzMjQ4OjEzNjQ1MzQxNTkxMjMyNDg=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid02kBgKd6Szqykifbp58gQ68zhnVqGMNMewhrgujKfifVyYCKwg3RScLnbxtPkQvMBZl"
-   },
-   "geo": null
-  },
-  {
-   "title": "Otwarte Ognisko w Parku",
-   "date_start": "2026-08-21",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "19:00",
-   "time_end": "21:00",
-   "venue": "Grunwaldzki Park Społeczny, ul. Smardzewska 25",
-   "town": "Poznań",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": true,
-   "tags": [
-    "imprezy:ognisko",
-    "społeczność"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27757293647231401/",
-   "is_noise": false,
-   "source_id": "fb-group-wydarzenia-w-poznaniu-1",
-   "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzY0NjA0MDU5MTE2MjU4OjEzNjQ2MDQwNTkxMTYyNTg=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid0Z8HgSp9g8GJ2PN3jcG6AQwvp7uUZoM3qFGbQ6wNdZZYiAzWJZQUAJ7JwTew8PXUfl"
-   },
-   "geo": {
-    "lat": 52.39112,
-    "lon": 16.8621689
-   },
-   "dates": [
-    "2026-08-21",
-    "2026-08-28"
-   ]
-  },
-  {
-   "title": "Darmowe spływy kajakowe - Tuczno-Wronczyn-Tuczno",
-   "date_start": "2026-08-15",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "10:40",
-   "time_end": null,
-   "venue": "Tuczno",
-   "town": "Tuczno",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "sport:kajak"
-   ],
-   "registration": "https://forms.gle/xtxG5yvziDi6dANH8",
-   "sub_slots": [
-    {
-     "time": "10:40",
-     "label": "Rejestracja",
-     "age": null
-    },
-    {
-     "time": "15:00",
-     "label": "Rejestracja",
-     "age": null
-    }
-   ],
-   "conditional": "",
-   "container": "Darmowe spływy kajakowe",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27757624207198345/",
-   "is_noise": false,
-   "source_id": "fb-group-wydarzenia-w-poznaniu-1",
-   "origin": {
-    "key": "UzpfSTEwMDA2Mzc0NTUwMjEzODoxNjU1MjQzMjI5OTQzODQ1OjE2NTUyNDMyMjk5NDM4NDU=",
-    "url": "https://www.facebook.com/sportowyfyrtel/posts/pfbid031tbmbYhANuTvuYUV1P4oTqw1KFmLi7b4XKcVyiD9NJ5FYhRwtyxLfC9sGV4uB7jyl"
-   },
-   "geo": {
-    "lat": 53.194419,
-    "lon": 16.1548235
-   }
-  },
-  {
-   "title": "Darmowe spływy kajakowe - Puszczykowo-Poznań",
-   "date_start": "2026-08-16",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "10:45",
-   "time_end": null,
-   "venue": "Puszczykowo",
-   "town": "Puszczykowo",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "sport:kajak"
-   ],
-   "registration": "https://forms.gle/huzJcnzKVvPKu7Y2A",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "Darmowe spływy kajakowe",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27757624207198345/",
-   "is_noise": false,
-   "source_id": "fb-group-wydarzenia-w-poznaniu-1",
-   "origin": {
-    "key": "UzpfSTEwMDA2Mzc0NTUwMjEzODoxNjU1MjQzMjI5OTQzODQ1OjE2NTUyNDMyMjk5NDM4NDU=",
-    "url": "https://www.facebook.com/sportowyfyrtel/posts/pfbid031tbmbYhANuTvuYUV1P4oTqw1KFmLi7b4XKcVyiD9NJ5FYhRwtyxLfC9sGV4uB7jyl"
-   },
-   "geo": {
-    "lat": 52.277612,
-    "lon": 16.8557214
-   }
-  },
-  {
-   "title": "Darmowe spływy kajakowe - Poznań-Czerwonak",
-   "date_start": "2026-08-16",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "15:30",
-   "time_end": null,
-   "venue": "Poznań",
-   "town": "Poznań",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": true,
-   "tags": [
-    "sport:kajak"
-   ],
-   "registration": "https://forms.gle/i7AjGKR8WhrDL3XR7",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "Darmowe spływy kajakowe",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27757624207198345/",
-   "is_noise": false,
-   "source_id": "fb-group-wydarzenia-w-poznaniu-1",
-   "origin": {
-    "key": "UzpfSTEwMDA2Mzc0NTUwMjEzODoxNjU1MjQzMjI5OTQzODQ1OjE2NTUyNDMyMjk5NDM4NDU=",
-    "url": "https://www.facebook.com/sportowyfyrtel/posts/pfbid031tbmbYhANuTvuYUV1P4oTqw1KFmLi7b4XKcVyiD9NJ5FYhRwtyxLfC9sGV4uB7jyl"
-   },
-   "geo": {
-    "lat": 52.4006632,
-    "lon": 16.9197326
-   }
-  },
-  {
-   "title": "Dni Otwarte Grunwaldzkiego Parku Społecznego",
+   "title": "Bezpłatne porady prawne",
    "date_start": "2026-08-16",
    "date_end": null,
    "repeat": "",
    "time_start": "11:00",
-   "time_end": "19:00",
-   "venue": "Grunwaldzki Park Społeczny, ul. Smardzewska 25",
+   "time_end": null,
+   "venue": "OSP, ul. Rudzka 1",
    "town": "Poznań",
    "price": {
     "free": true,
@@ -4944,840 +6065,368 @@
     "note": null
    },
    "age": null,
-   "family_friendly": true,
+   "family_friendly": "maybe",
    "tags": [
-    "społeczność",
-    "park"
+    "porady:prawne"
    ],
    "registration": "",
    "sub_slots": null,
    "conditional": "",
    "container": "",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27757320973895335/",
+   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27782098024750963/",
    "is_noise": false,
    "source_id": "fb-group-wydarzenia-w-poznaniu-1",
    "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzY0NjA2NDcyNDQ5MzUwOjEzNjQ2MDY0NzI0NDkzNTA=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid09tRBJirL2S3AgSSBZMHnkKpbvcLGN7n4Qdmeay7oH2JvTAvsWAPdsD2iQGPNXUHtl"
+    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzYyNDU1MjI1OTk3ODA4OjEzNjI0NTUyMjU5OTc4MDg=",
+    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid02VFXv2yHXnWrgKKA4F71yELWdMMGwz5jUxFZ9uCBb6uP1JtSrNjtPC47q7pJAZE2bl"
    },
    "geo": {
-    "lat": 52.39112,
-    "lon": 16.8621689
+    "lat": 52.3463263,
+    "lon": 16.8785279
    }
   },
   {
-   "title": "Święta Mokoszy - święta plonów i wody",
-   "date_start": "2026-08-15",
+   "title": "Kino plenerowe: E.T.",
+   "date_start": "2026-08-20",
    "date_end": null,
    "repeat": "",
-   "time_start": "16:00",
+   "time_start": "20:30",
    "time_end": null,
-   "venue": "Skwer Haliny Szwarc, ul. Kościelna, Jeżyce",
+   "venue": "Teren Szkoły Podstawowej nr 71, ul. Przybyszewskiego 37",
    "town": "Poznań",
    "price": {
     "free": true,
     "amount_pln": null,
-    "note": null
+    "note": "wstęp wolny"
    },
    "age": null,
    "family_friendly": true,
    "tags": [
-    "kultura:tradycja",
-    "społeczność"
+    "film:plener"
    ],
    "registration": "",
    "sub_slots": null,
    "conditional": "",
    "container": "Lato na Jeżycach",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27757179847242781/",
+   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27783314064629359/",
    "is_noise": false,
    "source_id": "fb-group-wydarzenia-w-poznaniu-1",
    "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzY0NTk5NDQyNDUwMDUzOjEzNjQ1OTk0NDI0NTAwNTM=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid02tAHwBbWKRNGQdQgabBUzsyDZPVYHYNPNQzRhvdwKthngQZbXzYgMNx7UAfvgMs8Xl"
+    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzY2MjU5Nzk4OTUwNjg0OjEzNjYyNTk3OTg5NTA2ODQ=",
+    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid02mTBFgj2RUhbUY5bbKNCoak9MXniejbPtJkohLpDRwRZjvznC2GFPWSgSKEobFB1al"
    },
    "geo": {
-    "lat": 52.4165027,
-    "lon": 16.9062906
+    "lat": 52.4100298,
+    "lon": 16.8893531
    }
   },
   {
-   "title": "Letnia Scena GZUBA - Żuk, królewski robaczek",
-   "date_start": "2026-08-21",
+   "title": "Festyn sportowo-taneczny – Fajnie, że się ruszasz!",
+   "date_start": "2026-08-22",
    "date_end": null,
    "repeat": "",
-   "time_start": "17:00",
-   "time_end": null,
-   "venue": "Starołęcki Ogród Miejski, ul. Bystra",
+   "time_start": "13:00",
+   "time_end": "20:00",
+   "venue": "Przystań Posnania, ul. Wioślarska 72",
    "town": "Poznań",
    "price": {
     "free": true,
     "amount_pln": null,
-    "note": null
+    "note": "wstęp bezpłatny"
    },
-   "age": null,
+   "age": {
+    "min": null,
+    "max": null,
+    "label": "dzieci, dorośli i seniorzy"
+   },
    "family_friendly": true,
    "tags": [
-    "teatr:spektakl",
-    "warsztaty:sztuka",
-    "dzieci"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "Letnia Scena GZUBA",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27756823627278403/",
-   "is_noise": false,
-   "source_id": "fb-group-wydarzenia-w-poznaniu-1",
-   "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzY0NTcwOTAyNDUyOTA3OjEzNjQ1NzA5MDI0NTI5MDc=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid0EM2WMQRYZudBU1PWRoucJ8vc3YdTYEN3ru3kXU4sNrBqVhaWaff3n2kfqnZrbv33l"
-   },
-   "geo": {
-    "lat": 52.3688064,
-    "lon": 16.9430961
-   }
-  },
-  {
-   "title": "19. urodziny Wydawnictwa Zakamarki",
-   "date_start": "2026-08-30",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "12:00",
-   "time_end": "16:00",
-   "venue": "Teatr Polski w Poznaniu",
-   "town": "Poznań",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "kultura:wydawnictwo"
+    "sport",
+    "sport:badminton",
+    "sport:minigolf",
+    "sport:krokiet",
+    "sport:spikeball",
+    "sport:tenis",
+    "sport:joga",
+    "sport:hip-hop",
+    "taniec",
+    "dzieci:malowanie-twarzy"
    ],
    "registration": "",
    "sub_slots": null,
    "conditional": "",
    "container": "",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27756813203946112/",
+   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27783010711326361/",
    "is_noise": false,
    "source_id": "fb-group-wydarzenia-w-poznaniu-1",
    "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzY0NTc3Njg1Nzg1NTYyOjEzNjQ1Nzc2ODU3ODU1NjI=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid0ZVUY9ND44qQDfxGNVBYGPBn4JniSd1mjRfTAYi9eowNQ7c89NZUfJihpA15MEqswl"
+    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzY2MzMxMjk1NjEwMjAxOjEzNjYzMzEyOTU2MTAyMDE=",
+    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid033djFWTDZtVq6H3Rs2EPS3i7XxApWc4yfjZ4g8hGa1wRW7VmjDsBsfnVzMtY1xJihl"
    },
    "geo": {
-    "lat": 52.4053595,
-    "lon": 16.9222605
+    "lat": 52.4026343,
+    "lon": 16.9473276
    }
   },
   {
-   "title": "Klub Osiedlowy Kopernik - spotkanie o książce Solar",
-   "date_start": "2026-09-30",
+   "title": "Warsztaty tworzenia biżuterii z materiałów z drugiego obiegu",
+   "date_start": "2026-08-19",
    "date_end": null,
    "repeat": "",
-   "time_start": "15:00",
+   "time_start": "18:00",
    "time_end": null,
-   "venue": "Klub Kopernik, ul. Galileusza",
+   "venue": "Ogród Sąsiedzki, ul. Jaworowa 66 (obok Lotto)",
    "town": "Poznań",
    "price": {
     "free": true,
     "amount_pln": null,
-    "note": null
+    "note": "udział bezpłatny"
    },
-   "age": null,
-   "family_friendly": "maybe",
+   "age": {
+    "min": null,
+    "max": null,
+    "label": "dorośli i dzieci z opiekunami"
+   },
+   "family_friendly": true,
    "tags": [
-    "kultura:literatura"
+    "warsztaty:biżuteria",
+    "ekologia:upcykling"
    ],
-   "registration": "",
+   "registration": "SMS do Julii: [tel. w źródle]",
    "sub_slots": null,
    "conditional": "",
    "container": "",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27756580320636067/",
+   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27782971547996944/",
    "is_noise": false,
    "source_id": "fb-group-wydarzenia-w-poznaniu-1",
    "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzY0NTYxNzUyNDUzODIyOjEzNjQ1NjE3NTI0NTM4MjI=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid0kw9PSyjTmcYhKWW14oodGf387toW3pqeJVk7bBxTxk2YzWLBtf8JPz7Jv2qepKvHl"
+    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzY2MzI3OTA4OTQzODczOjEzNjYzMjc5MDg5NDM4NzM=",
+    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid02VWPN6Xvt3bxzvfsviWYBfM47WjABqfUTUmbz4hnN8p4xDUmAzQ5NjBKbFYQ7QPBJl"
    },
    "geo": {
-    "lat": 52.3876136,
-    "lon": 16.8622117
+    "lat": 52.3672591,
+    "lon": 16.9053656
    }
   },
   {
-   "title": "Sztuka sąsiedztwa: Kroniki kobiet - warsztat akwareli",
+   "title": "Kino plenerowe: Nasza Planeta II",
    "date_start": "2026-08-18",
    "date_end": null,
    "repeat": "",
-   "time_start": "18:00",
-   "time_end": "20:00",
-   "venue": "Os. S. Batorego 21 D, Poznań",
-   "town": "Poznań",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "warsztaty:sztuka",
-    "kobiety"
-   ],
-   "registration": "[e-mail w źródle]",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "Sztuka sąsiedztwa: Kroniki kobiet",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27756272497333516/",
-   "is_noise": false,
-   "source_id": "fb-group-wydarzenia-w-poznaniu-1",
-   "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzY0NTMyOTAyNDU2NzA3OjEzNjQ1MzI5MDI0NTY3MDc=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid02Z7CJaoLsFV9X4BuNGXd3mBNrcPkmo2oQjgByGCN6W9FAEm9sdvHa66XYhvui8wBxl"
-   },
-   "geo": {
-    "lat": 52.4006632,
-    "lon": 16.9197326
-   }
-  },
-  {
-   "title": "Sztuka sąsiedztwa: Kroniki kobiet - warsztat barwienia tkanin",
-   "date_start": "2026-08-20",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "18:00",
-   "time_end": "20:00",
-   "venue": "Os. S. Batorego 21 D, Poznań",
-   "town": "Poznań",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "warsztaty:sztuka",
-    "kobiety"
-   ],
-   "registration": "[e-mail w źródle]",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "Sztuka sąsiedztwa: Kroniki kobiet",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27756272497333516/",
-   "is_noise": false,
-   "source_id": "fb-group-wydarzenia-w-poznaniu-1",
-   "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzY0NTMyOTAyNDU2NzA3OjEzNjQ1MzI5MDI0NTY3MDc=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid02Z7CJaoLsFV9X4BuNGXd3mBNrcPkmo2oQjgByGCN6W9FAEm9sdvHa66XYhvui8wBxl"
-   },
-   "geo": {
-    "lat": 52.4006632,
-    "lon": 16.9197326
-   }
-  },
-  {
-   "title": "Sztuka sąsiedztwa: Kroniki kobiet - otwarte studio",
-   "date_start": "2026-08-25",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "18:00",
-   "time_end": "20:00",
-   "venue": "Os. S. Batorego 21 D, Poznań",
-   "town": "Poznań",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "warsztaty:sztuka",
-    "kobiety"
-   ],
-   "registration": "[e-mail w źródle]",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "Sztuka sąsiedztwa: Kroniki kobiet",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27756272497333516/",
-   "is_noise": false,
-   "source_id": "fb-group-wydarzenia-w-poznaniu-1",
-   "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzY0NTMyOTAyNDU2NzA3OjEzNjQ1MzI5MDI0NTY3MDc=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid02Z7CJaoLsFV9X4BuNGXd3mBNrcPkmo2oQjgByGCN6W9FAEm9sdvHa66XYhvui8wBxl"
-   },
-   "geo": {
-    "lat": 52.4006632,
-    "lon": 16.9197326
-   }
-  },
-  {
-   "title": "Wykład połączony z degustacją - Jak mózg, metabolizm i zegar biologiczny wpływają na zdrowie",
-   "date_start": "2026-08-21",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "18:00",
+   "time_start": "20:30",
    "time_end": null,
-   "venue": "ZSO2 Krzesiny",
+   "venue": "Ogród Sąsiedzki, ul. Jaworowa 66 (obok Lotto)",
    "town": "Poznań",
    "price": {
     "free": true,
     "amount_pln": null,
-    "note": null
+    "note": "udział bezpłatny"
    },
    "age": null,
-   "family_friendly": "maybe",
+   "family_friendly": true,
    "tags": [
-    "edukacja:zdrowie",
-    "kobiety"
+    "film:plener",
+    "przyroda"
    ],
-   "registration": "[tel. w źródle]",
+   "registration": "",
    "sub_slots": null,
    "conditional": "",
    "container": "",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27756265730667526/",
+   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27782919901335442/",
    "is_noise": false,
    "source_id": "fb-group-wydarzenia-w-poznaniu-1",
    "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzY0NTM2OTcyNDU2MzAwOjEzNjQ1MzY5NzI0NTYzMDA=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid0pPSHWfv8QBkw6LTG9e4SaJc4s4eKNzjTmfcA9CaUi2jtMR5inGBJjFhqsDLBg1sul"
-   },
-   "geo": null
-  },
-  {
-   "title": "Letnie warsztaty twórcze - warsztat eko-magnesów",
-   "date_start": "2026-08-20",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "16:00",
-   "time_end": "18:00",
-   "venue": "Rynek Łazarski",
-   "town": "Poznań",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": true,
-   "tags": [
-    "warsztaty:rękodzieło",
-    "dzieci"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "Letnie warsztaty twórcze",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27749457048015061/",
-   "is_noise": false,
-   "source_id": "fb-group-wydarzenia-w-poznaniu-1",
-   "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzYyMDYwMjI5MzcwNjQxOjEzNjIwNjAyMjkzNzA2NDE=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid036qPKQWzESNTRYZH758Z1DgVXgqeWDZfp31Y5ffqm1PYnAGA2ZTUMUoeMffrTy1ysl"
+    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzY2MzI1MDQ4OTQ0MTU5OjEzNjYzMjUwNDg5NDQxNTk=",
+    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid024z2vSzG8xdqdJCKjvRwJLP398sfUGxc5eZ78F7XzBLQhCWEuX3NaJBGYg99a21zol"
    },
    "geo": {
-    "lat": 52.39462,
-    "lon": 16.9012835
+    "lat": 52.3672591,
+    "lon": 16.9053656
    }
   },
   {
-   "title": "Letnie warsztaty twórcze - warsztat plecenia",
-   "date_start": "2026-08-26",
+   "title": "Bioblitz – spacer badawczy z przyrodnikiem",
+   "date_start": "2026-08-22",
    "date_end": null,
    "repeat": "",
-   "time_start": "16:00",
-   "time_end": "18:00",
-   "venue": "Rynek Łazarski",
-   "town": "Poznań",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": true,
-   "tags": [
-    "warsztaty:rękodzieło",
-    "dzieci"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "Letnie warsztaty twórcze",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27749457048015061/",
-   "is_noise": false,
-   "source_id": "fb-group-wydarzenia-w-poznaniu-1",
-   "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzYyMDYwMjI5MzcwNjQxOjEzNjIwNjAyMjkzNzA2NDE=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid036qPKQWzESNTRYZH758Z1DgVXgqeWDZfp31Y5ffqm1PYnAGA2ZTUMUoeMffrTy1ysl"
-   },
-   "geo": {
-    "lat": 52.39462,
-    "lon": 16.9012835
-   }
-  },
-  {
-   "title": "Letnie warsztaty twórcze - warsztat plecenia pajączków",
-   "date_start": "2026-08-27",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "16:00",
-   "time_end": "18:00",
-   "venue": "Rynek Łazarski",
-   "town": "Poznań",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": true,
-   "tags": [
-    "warsztaty:rękodzieło",
-    "dzieci"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "Letnie warsztaty twórcze",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27749457048015061/",
-   "is_noise": false,
-   "source_id": "fb-group-wydarzenia-w-poznaniu-1",
-   "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzYyMDYwMjI5MzcwNjQxOjEzNjIwNjAyMjkzNzA2NDE=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid036qPKQWzESNTRYZH758Z1DgVXgqeWDZfp31Y5ffqm1PYnAGA2ZTUMUoeMffrTy1ysl"
-   },
-   "geo": {
-    "lat": 52.39462,
-    "lon": 16.9012835
-   }
-  },
-  {
-   "title": "Kino Plenerowe Strzeszyn - Pokuta",
-   "date_start": "2026-08-20",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "19:00",
+   "time_start": "10:00",
    "time_end": null,
-   "venue": "Teren rekreacyjny ul. Krajenecka 54",
+   "venue": "Park Edukacji Ekologicznej na Strzeszynie, ul. Homera; zbiórka przy pumptracku",
    "town": "Poznań",
    "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": "darmowy popcorn"
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "film:plener"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "Kino Plenerowe Strzeszyn",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27749246534702779/",
-   "is_noise": false,
-   "source_id": "fb-group-wydarzenia-w-poznaniu-1",
-   "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzY0MDQ2MzI5MTcyMDMxOjEzNjQwNDYzMjkxNzIwMzE=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid0323SqbxpuaR1acJc2JauVCsknkMRGEpDSZtaQAxL1cKyiy4HEhVVJBtgbLKwG8hY5l"
-   },
-   "geo": {
-    "lat": 52.4550158,
-    "lon": 16.8500115
-   }
-  },
-  {
-   "title": "Kino Plenerowe Strzeszyn - Jojo Rabbit",
-   "date_start": "2026-08-27",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "19:00",
-   "time_end": null,
-   "venue": "Teren rekreacyjny ul. Krajenecka 54",
-   "town": "Poznań",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": "darmowy popcorn"
-   },
-   "age": null,
-   "family_friendly": true,
-   "tags": [
-    "film:plener"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "Kino Plenerowe Strzeszyn",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27749246534702779/",
-   "is_noise": false,
-   "source_id": "fb-group-wydarzenia-w-poznaniu-1",
-   "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzY0MDQ2MzI5MTcyMDMxOjEzNjQwNDYzMjkxNzIwMzE=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid0323SqbxpuaR1acJc2JauVCsknkMRGEpDSZtaQAxL1cKyiy4HEhVVJBtgbLKwG8hY5l"
-   },
-   "geo": {
-    "lat": 52.4550158,
-    "lon": 16.8500115
-   }
-  },
-  {
-   "title": "MDK nr 1 - Gimnastyka smyka",
-   "date_start": "2026-08-15",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "12:00",
-   "time_end": null,
-   "venue": "Młodzieżowy Dom Kultury Nr 1, ul. Bielniki 10",
-   "town": "Poznań",
-   "price": {
-    "free": true,
+    "free": null,
     "amount_pln": null,
     "note": null
    },
    "age": {
-    "min": 0,
-    "max": 3,
-    "label": null
+    "min": 10,
+    "max": null,
+    "label": "10+"
    },
    "family_friendly": true,
    "tags": [
-    "sport:gimnastyka",
-    "dzieci"
+    "przyroda:spacer",
+    "edukacja:bioróżnorodność"
    ],
-   "registration": "",
+   "registration": "https://docs.google.com/forms/d/e/1FAIpQLSf_R0icsQyVkSmfQ11Tcweb7gemop7nn3sqWruN53mcklSQgg/viewform",
    "sub_slots": null,
-   "conditional": "",
-   "container": "MDK nr 1 - Program sierpniowy",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27749215781372521/",
+   "conditional": "W przypadku skrajnie niekorzystnych warunków termin może ulec zmianie.",
+   "container": "",
+   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27782780818016017/",
    "is_noise": false,
    "source_id": "fb-group-wydarzenia-w-poznaniu-1",
    "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzY0MDQzODQ5MTcyMjc5OjEzNjQwNDM4NDkxNzIyNzk=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid0C6rBV4RHnmGNnY4D4sCR6t9KxQZiQnELGjr88mdL8tVQo2QrzqDqK5fqfqLJiMytl"
+    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzY2MzE1OTA4OTQ1MDczOjEzNjYzMTU5MDg5NDUwNzM=",
+    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid02EULtQENV1pj8gj9GEvqD1iAfebxXrEsHm8mQLt4gHHoNtDHUfp1vivHoeYkirvAvl"
    },
    "geo": {
-    "lat": 52.3937438,
-    "lon": 16.9352344
+    "lat": 52.4451426,
+    "lon": 16.8819498
    }
   },
   {
-   "title": "MDK nr 1 - Klocki konstrukcyjne",
-   "date_start": "2026-08-15",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "15:00",
-   "time_end": null,
-   "venue": "Młodzieżowy Dom Kultury Nr 1, ul. Bielniki 10",
-   "town": "Poznań",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": true,
-   "tags": [
-    "warsztaty:konstruowanie",
-    "dzieci"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "MDK nr 1 - Program sierpniowy",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27749215781372521/",
-   "is_noise": false,
-   "source_id": "fb-group-wydarzenia-w-poznaniu-1",
-   "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzY0MDQzODQ5MTcyMjc5OjEzNjQwNDM4NDkxNzIyNzk=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid0C6rBV4RHnmGNnY4D4sCR6t9KxQZiQnELGjr88mdL8tVQo2QrzqDqK5fqfqLJiMytl"
-   },
-   "geo": {
-    "lat": 52.3937438,
-    "lon": 16.9352344
-   }
-  },
-  {
-   "title": "MDK nr 1 - Koncert mis i gongów",
-   "date_start": "2026-08-15",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "17:00",
-   "time_end": null,
-   "venue": "Młodzieżowy Dom Kultury Nr 1, ul. Bielniki 10",
-   "town": "Poznań",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": true,
-   "tags": [
-    "muzyka:koncert"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "MDK nr 1 - Program sierpniowy",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27749215781372521/",
-   "is_noise": false,
-   "source_id": "fb-group-wydarzenia-w-poznaniu-1",
-   "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzY0MDQzODQ5MTcyMjc5OjEzNjQwNDM4NDkxNzIyNzk=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid0C6rBV4RHnmGNnY4D4sCR6t9KxQZiQnELGjr88mdL8tVQo2QrzqDqK5fqfqLJiMytl"
-   },
-   "geo": {
-    "lat": 52.3937438,
-    "lon": 16.9352344
-   }
-  },
-  {
-   "title": "MDK nr 1 - Bule",
-   "date_start": "2026-08-16",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "12:00",
-   "time_end": null,
-   "venue": "Młodzieżowy Dom Kultury Nr 1, ul. Bielniki 10",
-   "town": "Poznań",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": true,
-   "tags": [
-    "warsztaty:sztuka"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "MDK nr 1 - Program sierpniowy",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27749215781372521/",
-   "is_noise": false,
-   "source_id": "fb-group-wydarzenia-w-poznaniu-1",
-   "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzY0MDQzODQ5MTcyMjc5OjEzNjQwNDM4NDkxNzIyNzk=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid0C6rBV4RHnmGNnY4D4sCR6t9KxQZiQnELGjr88mdL8tVQo2QrzqDqK5fqfqLJiMytl"
-   },
-   "geo": {
-    "lat": 52.3937438,
-    "lon": 16.9352344
-   }
-  },
-  {
-   "title": "MDK nr 1 - Warsztaty roślinne",
-   "date_start": "2026-08-16",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "14:00",
-   "time_end": null,
-   "venue": "Młodzieżowy Dom Kultury Nr 1, ul. Bielniki 10",
-   "town": "Poznań",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": true,
-   "tags": [
-    "warsztaty:przyroda"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "MDK nr 1 - Program sierpniowy",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27749215781372521/",
-   "is_noise": false,
-   "source_id": "fb-group-wydarzenia-w-poznaniu-1",
-   "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzY0MDQzODQ5MTcyMjc5OjEzNjQwNDM4NDkxNzIyNzk=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid0C6rBV4RHnmGNnY4D4sCR6t9KxQZiQnELGjr88mdL8tVQo2QrzqDqK5fqfqLJiMytl"
-   },
-   "geo": {
-    "lat": 52.3937438,
-    "lon": 16.9352344
-   }
-  },
-  {
-   "title": "MDK nr 1 - BINGO Madalingo",
-   "date_start": "2026-08-16",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "16:00",
-   "time_end": null,
-   "venue": "Młodzieżowy Dom Kultury Nr 1, ul. Bielniki 10",
-   "town": "Poznań",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": true,
-   "tags": [
-    "gry:bingo"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "MDK nr 1 - Program sierpniowy",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27749215781372521/",
-   "is_noise": false,
-   "source_id": "fb-group-wydarzenia-w-poznaniu-1",
-   "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzY0MDQzODQ5MTcyMjc5OjEzNjQwNDM4NDkxNzIyNzk=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid0C6rBV4RHnmGNnY4D4sCR6t9KxQZiQnELGjr88mdL8tVQo2QrzqDqK5fqfqLJiMytl"
-   },
-   "geo": {
-    "lat": 52.3937438,
-    "lon": 16.9352344
-   }
-  },
-  {
-   "title": "Letnie Spotkania Festiwalu Literackiego Strzeszyn - Mobilne Planetarium",
-   "date_start": "2026-08-18",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "17:00",
-   "time_end": "19:00",
-   "venue": "Teren rekreacyjny przy ul. Horacego/Owidiusza",
-   "town": "Poznań",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": true,
-   "tags": [
-    "edukacja:astronomia",
-    "dzieci"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "Letnie Spotkania Festiwalu Literackiego Strzeszyn",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27738386105788822/",
-   "is_noise": false,
-   "source_id": "fb-group-wydarzenia-w-poznaniu-1",
-   "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzYzMzY4Nzk5MjM5Nzg0OjEzNjMzNjg3OTkyMzk3ODQ=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid0P1W6dsxbzkog6sE3S2xFH4PwfA1uz4TswBReLuuoXF5yG9EeyJeeDUAPeJAH3VDwl"
-   },
-   "geo": null
-  },
-  {
-   "title": "Letnie Spotkania Festiwalu Literackiego Strzeszyn - Robimy makramy",
-   "date_start": "2026-08-25",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "17:00",
-   "time_end": "19:00",
-   "venue": "Teren rekreacyjny przy ul. Horacego/Owidiusza",
-   "town": "Poznań",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": true,
-   "tags": [
-    "warsztaty:rękodzieło",
-    "dzieci"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "Letnie Spotkania Festiwalu Literackiego Strzeszyn",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27738386105788822/",
-   "is_noise": false,
-   "source_id": "fb-group-wydarzenia-w-poznaniu-1",
-   "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzYzMzY4Nzk5MjM5Nzg0OjEzNjMzNjg3OTkyMzk3ODQ=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid0P1W6dsxbzkog6sE3S2xFH4PwfA1uz4TswBReLuuoXF5yG9EeyJeeDUAPeJAH3VDwl"
-   },
-   "geo": null
-  },
-  {
-   "title": "Chillspot - Międzypokoleniowe Szydełkowanie",
-   "date_start": "2026-08-20",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "16:00",
-   "time_end": null,
-   "venue": "Chillspot, ul. Łukaszewicza 36",
-   "town": "Poznań",
-   "price": {
-    "free": true,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": true,
-   "tags": [
-    "warsztaty:rękodzieło"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "Chillspot - Aktywności",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27738295665797866/",
-   "is_noise": false,
-   "source_id": "fb-group-wydarzenia-w-poznaniu-1",
-   "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzYzMzU5NTE5MjQwNzEyOjEzNjMzNTk1MTkyNDA3MTI=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid09GAEDSH9ooQeJNaia8McoPYoGE5Qsnpwdg13kgA9egk9y16KAf3Sdtb7UpUsGCcVl"
-   },
-   "geo": {
-    "lat": 52.3916166,
-    "lon": 16.9024903
-   }
-  },
-  {
-   "title": "Chillspot - Spotkanie z książką Człowiek w poszukiwaniu sensu",
-   "date_start": "2026-08-24",
+   "title": "Warsztaty jogowe w kierunku regeneracji",
+   "date_start": "2026-08-23",
    "date_end": null,
    "repeat": "",
    "time_start": "18:00",
    "time_end": null,
-   "venue": "Chillspot, ul. Łukaszewicza 36",
-   "town": "Poznań",
+   "venue": "Diament",
+   "town": "",
    "price": {
-    "free": true,
+    "free": null,
     "amount_pln": null,
     "note": null
    },
    "age": null,
    "family_friendly": "maybe",
    "tags": [
-    "kultura:literatura"
+    "warsztaty:joga",
+    "wellness:regeneracja"
    ],
    "registration": "",
    "sub_slots": null,
    "conditional": "",
-   "container": "Chillspot - Aktywności",
-   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27738295665797866/",
+   "container": "",
+   "source_url": "https://www.facebook.com/groups/241900542530749/posts/27724886060472160/",
    "is_noise": false,
    "source_id": "fb-group-wydarzenia-w-poznaniu-1",
    "origin": {
-    "key": "UzpfSTEwMDA2NzAwMDMwNTEyODoxMzYzMzU5NTE5MjQwNzEyOjEzNjMzNTk1MTkyNDA3MTI=",
-    "url": "https://www.facebook.com/magazynplotkarski/posts/pfbid09GAEDSH9ooQeJNaia8McoPYoGE5Qsnpwdg13kgA9egk9y16KAf3Sdtb7UpUsGCcVl"
+    "key": "UzpfSTEwMDAwMDU0MzU3MjA5MjpWSzoxMzU3MTM0ODk5MzAxNDEx",
+    "url": "https://www.facebook.com/events/1352529033095331/?post_id=1357134899301411&view=permalink"
    },
    "geo": {
-    "lat": 52.3916166,
-    "lon": 16.9024903
+    "lat": 50.6061023,
+    "lon": 20.2653749
    }
+  },
+  {
+   "title": "Trening Miejski",
+   "date_start": "2026-08-21",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "18:00",
+   "time_end": null,
+   "venue": "Różne miejscówki",
+   "town": "Kostrzyn Wielkopolski",
+   "price": {
+    "free": false,
+    "amount_pln": 100,
+    "note": "za psa"
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": "maybe",
+   "tags": [
+    "zwierzęta:psy",
+    "szkolenie:psy"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.facebook.com/groups/pozwyd/posts/4459027251019355/",
+   "is_noise": false,
+   "source_id": "fb-group-poznan-wydarzenia",
+   "origin": {
+    "key": "UzpfSTEwMDA4MzY1ODUxMzk5NzoxMDE2NzIwOTQxMTI2NTE0OjEwMTY3MjA5NDExMjY1MTQ=",
+    "url": "https://www.facebook.com/permalink.php?story_fbid=pfbid0t62xiuyGeLw5myzYkfRLL7LHmS5wTFLS54AaEN5NPQ7dEgnoRwb976VZW2rWTfR4l&id=100083658513997"
+   },
+   "geo": null
+  },
+  {
+   "title": "Runmageddon LITE Jaszkowo",
+   "date_start": "2026-08-23",
+   "date_end": null,
+   "repeat": "",
+   "time_start": null,
+   "time_end": null,
+   "venue": "Centrum Hipiki Jaszkowo",
+   "town": "Jaszkowo",
+   "price": {
+    "free": false,
+    "amount_pln": 55,
+    "note": "Dzieci startują bezpłatnie po zapisaniu przez formularz"
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "sport:bieg",
+    "dzieci",
+    "rodzinne"
+   ],
+   "registration": "https://www.runmageddon.pl/wydarzenia/runmageddon-lite-jaszkowo-23-08-2026/szczegoly",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.facebook.com/groups/pozwyd/posts/4458886144366799/",
+   "is_noise": false,
+   "source_id": "fb-group-poznan-wydarzenia",
+   "geo": {
+    "lat": 52.1430585,
+    "lon": 16.9784482
+   }
+  },
+  {
+   "title": "Kot w butach",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "11:00",
+   "time_end": null,
+   "venue": "Park Marii Skłodowskiej-Curie",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": true,
+   "tags": [
+    "teatr",
+    "dzieci",
+    "rodzinne"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "LATO na Wildzie",
+   "source_url": "https://www.facebook.com/groups/pozwyd/posts/4458846007704146/",
+   "is_noise": false,
+   "source_id": "fb-group-poznan-wydarzenia",
+   "geo": null
   },
   {
    "title": "Koncert „Osiecka Królową Piosenki",
@@ -5901,40 +6550,41 @@
    "geo": null
   },
   {
-   "title": "Warsztaty jogowe w kierunku regeneracji",
-   "date_start": "2026-08-23",
-   "date_end": null,
+   "title": "RÓWNONOC FESTIVAL 2026 – OSADA × EDEN – 10-Day Equinox Celebration",
+   "date_start": "2026-09-18",
+   "date_end": "2026-09-27",
    "repeat": "",
-   "time_start": "18:00",
+   "time_start": null,
    "time_end": null,
-   "venue": "Diament",
-   "town": "Poznań",
+   "venue": "Osada, Połajewice 6",
+   "town": "Połajewice",
    "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
+    "free": false,
+    "amount_pln": 280,
+    "note": "Bilety od 280 zł; ceny zależne od rodzaju biletu i terminu zakupu."
    },
-   "age": null,
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
    "family_friendly": "maybe",
    "tags": [
-    "warsztaty:joga",
-    "wellness"
+    "festiwal",
+    "warsztaty",
+    "muzyka",
+    "taniec",
+    "ceremonie",
+    "sauna"
    ],
-   "registration": "",
+   "registration": "https://ekobilet.pl/e/rownonoc-festival-2026-osada-x-eden-10-day-equinox-celebration-628674?evt=628674",
    "sub_slots": null,
    "conditional": "",
    "container": "",
-   "source_url": "https://www.facebook.com/groups/pozwyd/posts/4457560951165985/",
+   "source_url": "https://ekobilet.pl/e/rownonoc-festival-2026-osada-x-eden-10-day-equinox-celebration-628674?evt=628674",
    "is_noise": false,
    "source_id": "fb-group-poznan-wydarzenia",
-   "origin": {
-    "key": "UzpfSTEwMDAwMDU0MzU3MjA5MjpWSzoxMzU3MTM0ODk5MzAxNDEx",
-    "url": "https://www.facebook.com/events/1352529033095331/?post_id=1357134899301411&view=permalink"
-   },
-   "geo": {
-    "lat": 52.4077229,
-    "lon": 16.9210914
-   }
+   "geo": null
   },
   {
    "title": "Robienie kompotów - Przystanek Pireus",
@@ -5973,32 +6623,32 @@
    "time_start": "19:00",
    "time_end": "22:00",
    "venue": "",
-   "town": "Poznań",
+   "town": "",
    "price": {
     "free": false,
     "amount_pln": 100,
-    "note": "Zaliczka 30 zł"
+    "note": "zaliczka 30 zł, bezzwrotna"
    },
    "age": {
-    "min": 18,
+    "min": null,
     "max": null,
-    "label": "dorośli"
+    "label": "kobiety"
    },
    "family_friendly": false,
    "tags": [
-    "warsztaty:rozwój osobisty",
-    "ceremonie:kakao"
+    "spotkanie:krąg kobiet",
+    "wellness:ceremonialne kakao"
    ],
-   "registration": "[e-mail w źródle]",
+   "registration": "[e-mail w źródle]; Messenger",
    "sub_slots": null,
-   "conditional": "Minimalna ilość uczestniczek: 5, maksymalna: 15",
+   "conditional": "",
    "container": "",
    "source_url": "https://www.facebook.com/groups/397203407069688/posts/27473917515638244/",
    "is_noise": false,
    "source_id": "fb-group-wydarzenia-poznan-2",
    "origin": {
     "key": "UzpfSTEwMDA2NzgxMjgwMDAwMDoxMzc4NzA1MzQxMDY2NTQ2OjEzNzg3MDUzNDEwNjY1NDY=",
-    "url": "https://www.facebook.com/Majurta/posts/pfbid02ouhKNjg7KbNMgyyZ3nDf1LRvviJrmEbyYdeCJVFasqpRdYtLA2CREnSXLJ1UfJsTl"
+    "url": "https://www.facebook.com/Majurta/posts/pfbid0kN48Ta3kUWPU7pgzzzQNkGbBu9oqxDTZUAqNaTihsPUMyC1iE5xzS2iz23K6Sqjgl"
    }
   },
   {
@@ -6126,6 +6776,41 @@
    }
   },
   {
+   "title": "Linkin Park Party",
+   "date_start": "2026-09-12",
+   "date_end": null,
+   "repeat": "",
+   "time_start": null,
+   "time_end": null,
+   "venue": "3ecia Strona Baru",
+   "town": "",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": false,
+   "tags": [
+    "muzyka:party"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.facebook.com/groups/186299334869330/posts/3463878923778005/",
+   "is_noise": false,
+   "source_id": "fb-group-allin-poznan",
+   "geo": {
+    "lat": 52.4081604,
+    "lon": 16.9378685
+   }
+  },
+  {
    "title": "Menu sezonowe - Dworek Biesiadny Radzewice",
    "date_start": "2026-08-16",
    "date_end": "2026-08-16",
@@ -6153,7 +6838,7 @@
    "source_id": "fb-group-allin-poznan",
    "origin": {
     "key": "UzpfSTEwMDA0MDI0OTg4NTkwMToxNzM2NzgzODA3NjczMjY1OjE3MzY3ODM4MDc2NzMyNjU=",
-    "url": "https://www.facebook.com/DworekBiesiadny/posts/pfbid0CPfeSGeakuF4sUPJx7nhNBc6PQ8ddTj7MCnnNZ3k4shjPcJDxC8bHZg2js5Y4syRl"
+    "url": "https://www.facebook.com/DworekBiesiadny/posts/pfbid02GF7McwaQcMESizWtuswSv9sSPhRTqXpVYxJNgAB2hLczJJfPCNrkzT9ioKHhxsKfl"
    },
    "geo": {
     "lat": 52.2166812,
@@ -6216,12 +6901,216 @@
    "source_id": "fb-group-allin-poznan",
    "origin": {
     "key": "UzpfSTEwMDA2OTk5NjA1MjE5NzoxMzQ3NDA2MDQ0MjY5MjUxOjEzNDc0MDYwNDQyNjkyNTE=",
-    "url": "https://www.facebook.com/permalink.php?story_fbid=pfbid023ZgvNwYy8Pz9HceE6GUaM8yCy5PVsnwi6atg1GeAKVu2wqXyWFj21VEsr3qhxim7l&id=100069996052197"
+    "url": "https://www.facebook.com/permalink.php?story_fbid=pfbid037R8dZcUnytAN9iqUQEkZqtXouxe2HxjLjBX7xV6FtZehZhCCfyKpjNZTe9HNjQWGl&id=100069996052197"
    },
    "geo": {
     "lat": 52.4007597,
     "lon": 16.9322196
    }
+  },
+  {
+   "title": "Upcyklingowa Przestrzeń Twórcza – warsztaty rękodzieła",
+   "date_start": "2026-08-22",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "15:00",
+   "time_end": null,
+   "venue": "Grunwaldzki Park Społeczny, ul. Smardzewska 25",
+   "town": "Poznań",
+   "price": {
+    "free": true,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": "dla wszystkich"
+   },
+   "family_friendly": true,
+   "tags": [
+    "warsztaty:upcykling",
+    "warsztaty:szycie",
+    "warsztaty:rękodzieło"
+   ],
+   "registration": "SMS/WhatsApp: [tel. w źródle]; https://forms.gle/h3ZKxbQjKo5Gjt95A",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "Upcyklingowa Przestrzeń Twórcza",
+   "source_url": "https://www.facebook.com/groups/196361441244106/posts/2028463758033856/",
+   "is_noise": false,
+   "source_id": "fb-group-wydarzenia-poznan-3",
+   "geo": {
+    "lat": 52.39112,
+    "lon": 16.8621689
+   },
+   "dates": [
+    "2026-08-22",
+    "2026-08-29"
+   ]
+  },
+  {
+   "title": "Wiedeńska Noc: Gala Noworoczna z Grand Étoile Orchestra",
+   "date_start": "2026-10-25",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "19:00",
+   "time_end": null,
+   "venue": "Teatr Muzyczny w Poznaniu",
+   "town": "Poznań",
+   "price": {
+    "free": false,
+    "amount_pln": null,
+    "note": "Bilety dostępne online"
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": false,
+   "tags": [
+    "muzyka:koncert",
+    "muzyka:gala"
+   ],
+   "registration": "https://www.kupbilecik.pl/imprezy/208156/Pozna%C5%84/Wiede%C5%84ska+Noc%3A+Gala+Noworoczna+z+Grand+%C3%89toile+Orchestra/",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.facebook.com/groups/196361441244106/posts/2033533824193516/",
+   "is_noise": false,
+   "source_id": "fb-group-wydarzenia-poznan-3",
+   "geo": {
+    "lat": 52.4022554,
+    "lon": 16.9237047
+   }
+  },
+  {
+   "title": "Czarny / Mikulski – koncert",
+   "date_start": "2026-08-16",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "18:00",
+   "time_end": null,
+   "venue": "Siedlisko Słoneczny Jar, Karolewo 1",
+   "town": "Karolewo",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": false,
+   "tags": [
+    "muzyka:koncert"
+   ],
+   "registration": "https://facebook.com/events/s/czarnymikulski-muzyczna-stodo%C5%82/981377181302173/",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.facebook.com/groups/196361441244106/posts/2034199410793624/",
+   "is_noise": false,
+   "source_id": "fb-group-wydarzenia-poznan-3",
+   "origin": {
+    "key": "UzpfSTYxNTU1MDU5Nzc4NzAyOjEyMjI2NDE4NDI0MjE2ODY1OToxMjIyNjQxODQyNDIxNjg2NTk=",
+    "url": "https://www.facebook.com/Czarny.Mikulski.muzyka/posts/pfbid0i8XotSa9GZJN6ScBJwxLX5F8SYCu3R8TZeHsgdakm5itZopafXZM63Pan2nyxA4Sl"
+   },
+   "geo": null
+  },
+  {
+   "title": "Wakacyjny kurs pływania – dzieci 3–5 lat",
+   "date_start": "2026-08-17",
+   "date_end": null,
+   "repeat": "",
+   "time_start": null,
+   "time_end": null,
+   "venue": "Basen Rataje",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": 3,
+    "max": 5,
+    "label": "z rodzicem w wodzie"
+   },
+   "family_friendly": true,
+   "tags": [
+    "sport:pływanie",
+    "dzieci:nauka pływania"
+   ],
+   "registration": "[tel. w źródle]; [e-mail w źródle]",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "Wakacyjne kursy pływania na Basenie Rataje",
+   "source_url": "https://www.facebook.com/groups/196361441244106/posts/2035356357344596/",
+   "is_noise": false,
+   "source_id": "fb-group-wydarzenia-poznan-3",
+   "geo": {
+    "lat": 52.3928275,
+    "lon": 16.9439416
+   },
+   "dates": [
+    "2026-08-17",
+    "2026-08-18",
+    "2026-08-19",
+    "2026-08-20",
+    "2026-08-21",
+    "2026-08-24",
+    "2026-08-25",
+    "2026-08-26",
+    "2026-08-27",
+    "2026-08-28"
+   ]
+  },
+  {
+   "title": "Wakacje z wolontariatem",
+   "date_start": "2026-08-24",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "10:00",
+   "time_end": "13:00",
+   "venue": "",
+   "town": "",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": 13,
+    "max": null,
+    "label": "od 13. roku życia"
+   },
+   "family_friendly": true,
+   "tags": [
+    "wolontariat",
+    "edukacja:misje",
+    "integracja"
+   ],
+   "registration": "[e-mail w źródle]",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.facebook.com/groups/babacoolpoznan/posts/28090248543999741/",
+   "is_noise": false,
+   "source_id": "fb-group-baba-cool",
+   "origin": {
+    "key": "UzpfSTEwMDA3OTk1MDgxNTA3MjoxMDUxMjgwMjc3NTQ2OTkwOjEwNTEyODAyNzc1NDY5OTA=",
+    "url": "https://www.facebook.com/fundacja.redemptorismissio/posts/pfbid087m4uT3HCYtJd2j53wHnXN9FVQuudugzUcZrkifxd4S6EyRTEtpaGKzMpCtTi8nvl"
+   },
+   "dates": [
+    "2026-08-24",
+    "2026-08-25",
+    "2026-08-26",
+    "2026-08-27"
+   ]
   },
   {
    "title": "Warsztaty artystyczne - decoupage i kamienie wędrujące",
@@ -6252,7 +7141,7 @@
    "source_id": "fb-group-baba-cool",
    "origin": {
     "key": "UzpfSTEwMDA3OTk1MDgxNTA3MjoxMDUxMjgwMjc3NTQ2OTkwOjEwNTEyODAyNzc1NDY5OTA=",
-    "url": "https://www.facebook.com/fundacja.redemptorismissio/posts/pfbid02BfQFpcfe3jAkB87tNgreMc4b3ntcEL1h2sJfnTWGsQVmP23eM4MYT3wq8ccMrs2El"
+    "url": "https://www.facebook.com/fundacja.redemptorismissio/posts/pfbid087m4uT3HCYtJd2j53wHnXN9FVQuudugzUcZrkifxd4S6EyRTEtpaGKzMpCtTi8nvl"
    },
    "geo": {
     "lat": 52.39571,
@@ -6297,168 +7186,8 @@
    ]
   },
   {
-   "title": "Gitary w dłoń!",
-   "date_start": "2026-08-17",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "17:30",
-   "time_end": null,
-   "venue": "",
-   "town": "",
-   "price": {
-    "free": false,
-    "amount_pln": 90,
-    "note": null
-   },
-   "age": {
-    "min": 8,
-    "max": null,
-    "label": "8+"
-   },
-   "family_friendly": true,
-   "tags": [
-    "warsztaty:muzyka",
-    "warsztaty:gitary"
-   ],
-   "registration": "[e-mail w źródle]",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "Brzmi Dobrze - Muzyczne Lato",
-   "source_url": "https://forms.gle/Ktn1QmWtYfBwLZu46",
-   "is_noise": false,
-   "source_id": "fb-group-baba-cool"
-  },
-  {
-   "title": "Pośpiewaj z Nami!",
-   "date_start": "2026-08-18",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "17:30",
-   "time_end": null,
-   "venue": "",
-   "town": "",
-   "price": {
-    "free": false,
-    "amount_pln": 90,
-    "note": null
-   },
-   "age": {
-    "min": 10,
-    "max": null,
-    "label": "10+"
-   },
-   "family_friendly": true,
-   "tags": [
-    "warsztaty:muzyka",
-    "warsztaty:śpiew"
-   ],
-   "registration": "[e-mail w źródle]",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "Brzmi Dobrze - Muzyczne Lato",
-   "source_url": "https://forms.gle/Ktn1QmWtYfBwLZu46",
-   "is_noise": false,
-   "source_id": "fb-group-baba-cool"
-  },
-  {
-   "title": "Wyzwanie Ukulele",
-   "date_start": "2026-08-20",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "17:30",
-   "time_end": null,
-   "venue": "",
-   "town": "",
-   "price": {
-    "free": false,
-    "amount_pln": 90,
-    "note": null
-   },
-   "age": {
-    "min": 8,
-    "max": null,
-    "label": "8+"
-   },
-   "family_friendly": true,
-   "tags": [
-    "warsztaty:muzyka",
-    "warsztaty:ukulele"
-   ],
-   "registration": "[e-mail w źródle]",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "Brzmi Dobrze - Muzyczne Lato",
-   "source_url": "https://forms.gle/Ktn1QmWtYfBwLZu46",
-   "is_noise": false,
-   "source_id": "fb-group-baba-cool"
-  },
-  {
-   "title": "MuzoGordon Wyprawa do Zoo",
-   "date_start": "2026-08-25",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "16:30",
-   "time_end": null,
-   "venue": "",
-   "town": "",
-   "price": {
-    "free": false,
-    "amount_pln": 60,
-    "note": "rodzic i dziecko"
-   },
-   "age": {
-    "min": 0,
-    "max": 3,
-    "label": "0-3"
-   },
-   "family_friendly": true,
-   "tags": [
-    "warsztaty:muzyka",
-    "dzieci:muzyka"
-   ],
-   "registration": "[e-mail w źródle]",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "Brzmi Dobrze - Muzyczne Lato",
-   "source_url": "https://forms.gle/Ktn1QmWtYfBwLZu46",
-   "is_noise": false,
-   "source_id": "fb-group-baba-cool"
-  },
-  {
-   "title": "MuzoSmyki Wyprawa do Zoo",
-   "date_start": "2026-08-25",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "17:30",
-   "time_end": null,
-   "venue": "",
-   "town": "",
-   "price": {
-    "free": false,
-    "amount_pln": 60,
-    "note": "rodzic i dziecko"
-   },
-   "age": {
-    "min": 3,
-    "max": 6,
-    "label": "3-6"
-   },
-   "family_friendly": true,
-   "tags": [
-    "warsztaty:muzyka",
-    "dzieci:muzyka"
-   ],
-   "registration": "[e-mail w źródle]",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "Brzmi Dobrze - Muzyczne Lato",
-   "source_url": "https://forms.gle/Ktn1QmWtYfBwLZu46",
-   "is_noise": false,
-   "source_id": "fb-group-baba-cool"
-  },
-  {
    "title": "Wolsztyn. Historia napędzana parą",
-   "date_start": "2026-08-15",
+   "date_start": "2026-08-16",
    "date_end": null,
    "repeat": "",
    "time_start": null,
@@ -6483,7 +7212,6 @@
    "is_noise": false,
    "source_id": "okpoznan-wydarzenia",
    "dates": [
-    "2026-08-15",
     "2026-08-16",
     "2026-08-17",
     "2026-08-18",
@@ -6601,6 +7329,72 @@
    }
   },
   {
+   "title": "Wolsztyn. Historia napędzana parą",
+   "date_start": "2026-08-03",
+   "date_end": "2026-09-30",
+   "repeat": "",
+   "time_start": null,
+   "time_end": null,
+   "venue": "ul. Franciszka Ratajczaka 44, Poznań",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": "maybe",
+   "tags": [
+    "sztuka:wystawa"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://okpoznan.pl/wydarzenia",
+   "is_noise": false,
+   "source_id": "okpoznan-wydarzenia",
+   "geo": {
+    "lat": 52.408202,
+    "lon": 16.9258418
+   }
+  },
+  {
+   "title": "Międzypokoleniowy projekt \"56/26: Szkice wolności\"",
+   "date_start": "2026-08-13",
+   "date_end": "2026-09-13",
+   "repeat": "",
+   "time_start": null,
+   "time_end": null,
+   "venue": "",
+   "town": "Poznań",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": "60+"
+   },
+   "family_friendly": "maybe",
+   "tags": [
+    "kultura:projekt"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://okpoznan.pl/szczegoly-wydarzenia/uy0nJGoNVdMPjSWN8Cbl_miedzypokoleniowy-projekt-5626-szkice-wolnosci",
+   "is_noise": false,
+   "source_id": "okpoznan-wydarzenia"
+  },
+  {
    "title": "Staromiejskie Koncerty Organowe 2026",
    "date_start": "2026-08-13",
    "date_end": "2026-09-03",
@@ -6634,37 +7428,6 @@
     "lat": 52.4063949,
     "lon": 16.9349898
    }
-  },
-  {
-   "title": "Międzypokoleniowy projekt \"56/26: Szkice wolności\"",
-   "date_start": "2026-08-13",
-   "date_end": "2026-09-13",
-   "repeat": "",
-   "time_start": null,
-   "time_end": null,
-   "venue": "",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": {
-    "min": null,
-    "max": null,
-    "label": "60+"
-   },
-   "family_friendly": "maybe",
-   "tags": [
-    "kultura:projekt"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://okpoznan.pl/szczegoly-wydarzenia/uy0nJGoNVdMPjSWN8Cbl_miedzypokoleniowy-projekt-5626-szkice-wolnosci",
-   "is_noise": false,
-   "source_id": "okpoznan-wydarzenia"
   },
   {
    "title": "Kino na Wolnym",
@@ -6702,242 +7465,44 @@
    }
   },
   {
-   "title": "Kino na Wolnym",
-   "date_start": "2026-08-29",
-   "date_end": null,
-   "repeat": "",
-   "time_start": null,
-   "time_end": null,
-   "venue": "",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "film:plener"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://okpoznan.pl/wydarzenia",
-   "is_noise": false,
-   "source_id": "okpoznan-wydarzenia",
-   "dates": [
-    "2026-08-29",
-    "2026-08-30",
-    "2026-08-31"
-   ]
-  },
-  {
    "title": "20 spacerów na 20 lat Traktu",
    "date_start": "2026-08-15",
-   "date_end": null,
+   "date_end": "2026-09-05",
    "repeat": "",
    "time_start": null,
    "time_end": null,
    "venue": "",
-   "town": "Poznań",
+   "town": "",
    "price": {
     "free": null,
     "amount_pln": null,
     "note": null
    },
-   "age": null,
+   "age": {
+    "min": 60,
+    "max": null,
+    "label": "60+"
+   },
    "family_friendly": "maybe",
    "tags": [
-    "spacery"
+    "spacer"
    ],
    "registration": "",
    "sub_slots": null,
    "conditional": "",
    "container": "",
-   "source_url": "https://okpoznan.pl/wydarzenia",
-   "is_noise": false,
-   "source_id": "okpoznan-wydarzenia",
-   "dates": [
-    "2026-08-15",
-    "2026-08-16",
-    "2026-08-17",
-    "2026-08-18",
-    "2026-08-19",
-    "2026-08-20",
-    "2026-08-21",
-    "2026-08-22",
-    "2026-08-23",
-    "2026-08-24",
-    "2026-08-25",
-    "2026-08-26",
-    "2026-08-27",
-    "2026-08-28",
-    "2026-08-29",
-    "2026-08-30",
-    "2026-08-31"
-   ]
-  },
-  {
-   "title": "Akademia Lubrańskiego | Wstawa Kisling. W sercu Montparnasse'u",
-   "date_start": "2026-08-16",
-   "date_end": null,
-   "repeat": "",
-   "time_start": null,
-   "time_end": null,
-   "venue": "Akademia Lubrańskiego Muzeum Archidiecezjalne",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "sztuka:malarstwo"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://okpoznan.pl/wydarzenia",
-   "is_noise": false,
-   "source_id": "okpoznan-wydarzenia",
-   "geo": null,
-   "dates": [
-    "2026-08-16",
-    "2026-08-17",
-    "2026-08-18",
-    "2026-08-19",
-    "2026-08-20",
-    "2026-08-21",
-    "2026-08-22",
-    "2026-08-23",
-    "2026-08-24",
-    "2026-08-25",
-    "2026-08-26",
-    "2026-08-27",
-    "2026-08-28",
-    "2026-08-29",
-    "2026-08-30",
-    "2026-08-31"
-   ]
-  },
-  {
-   "title": "AMAkids | warsztaty wakacyjne: Architekci Myślenia",
-   "date_start": "2026-08-17",
-   "date_end": null,
-   "repeat": "",
-   "time_start": null,
-   "time_end": null,
-   "venue": "AMAkids - Akademia Rozwoju Intelektualnego - Centrum Edukacji dla Dzieci",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": true,
-   "tags": [
-    "dzieci:warsztaty"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://okpoznan.pl/wydarzenia",
-   "is_noise": false,
-   "source_id": "okpoznan-wydarzenia",
-   "geo": null,
-   "dates": [
-    "2026-08-17",
-    "2026-08-18",
-    "2026-08-19",
-    "2026-08-20",
-    "2026-08-21"
-   ]
-  },
-  {
-   "title": "Plenerowe Pałacowe 2026",
-   "date_start": "2026-08-18",
-   "date_end": null,
-   "repeat": "",
-   "time_start": null,
-   "time_end": null,
-   "venue": "",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "sztuka:malarstwo"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://okpoznan.pl/wydarzenia",
-   "is_noise": false,
-   "source_id": "okpoznan-wydarzenia",
-   "dates": [
-    "2026-08-18",
-    "2026-08-19",
-    "2026-08-20",
-    "2026-08-21",
-    "2026-08-22",
-    "2026-08-23",
-    "2026-08-24",
-    "2026-08-25",
-    "2026-08-26",
-    "2026-08-27",
-    "2026-08-28",
-    "2026-08-29",
-    "2026-08-30",
-    "2026-08-31"
-   ]
-  },
-  {
-   "title": "Warsztaty na wystawie \"Mela i szczun na historycznej ścieżce\" z tłumaczeniem na PJM",
-   "date_start": "2026-08-18",
-   "date_end": null,
-   "repeat": "",
-   "time_start": null,
-   "time_end": null,
-   "venue": "",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": true,
-   "tags": [
-    "warsztaty:edukacja"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://okpoznan.pl/wydarzenia",
+   "source_url": "https://okpoznan.pl/szczegoly-wydarzenia/8tIQtUvDVKDO0rOCmqGg_20-spacerow-na-20-lat-traktu",
    "is_noise": false,
    "source_id": "okpoznan-wydarzenia"
   },
   {
-   "title": "Kino Muza | Senior w Muzie",
-   "date_start": "2026-08-19",
-   "date_end": null,
+   "title": "Akademia Lubrańskiego | Wystawa Kisling. W sercu Montparnasse’u",
+   "date_start": "2026-08-16",
+   "date_end": "2026-08-23",
    "repeat": "",
    "time_start": null,
    "time_end": null,
-   "venue": "Kino Muza",
+   "venue": "Akademia Lubrańskiego, ul. Lubrańskiego 1",
    "town": "Poznań",
    "price": {
     "free": null,
@@ -6949,293 +7514,6 @@
     "max": null,
     "label": "60+"
    },
-   "family_friendly": false,
-   "tags": [
-    "film:kino"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://okpoznan.pl/wydarzenia",
-   "is_noise": false,
-   "source_id": "okpoznan-wydarzenia",
-   "geo": {
-    "lat": 52.4065954,
-    "lon": 16.9265909
-   },
-   "dates": [
-    "2026-08-19",
-    "2026-08-20",
-    "2026-08-21",
-    "2026-08-22",
-    "2026-08-23",
-    "2026-08-24",
-    "2026-08-25",
-    "2026-08-26",
-    "2026-08-27",
-    "2026-08-28",
-    "2026-08-29",
-    "2026-08-30",
-    "2026-08-31"
-   ]
-  },
-  {
-   "title": "Leśni Odkrywcy: misja Morasko - spacer angażujący",
-   "date_start": "2026-08-21",
-   "date_end": null,
-   "repeat": "",
-   "time_start": null,
-   "time_end": null,
-   "venue": "",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": true,
-   "tags": [
-    "dzieci:spacer"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://okpoznan.pl/wydarzenia",
-   "is_noise": false,
-   "source_id": "okpoznan-wydarzenia"
-  },
-  {
-   "title": "Koncerty #NaFalach",
-   "date_start": "2026-08-21",
-   "date_end": null,
-   "repeat": "",
-   "time_start": null,
-   "time_end": null,
-   "venue": "",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "muzyka:koncert"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://okpoznan.pl/wydarzenia",
-   "is_noise": false,
-   "source_id": "okpoznan-wydarzenia",
-   "dates": [
-    "2026-08-21",
-    "2026-08-22",
-    "2026-08-23",
-    "2026-08-24",
-    "2026-08-25",
-    "2026-08-26",
-    "2026-08-27",
-    "2026-08-28",
-    "2026-08-29",
-    "2026-08-30",
-    "2026-08-31"
-   ]
-  },
-  {
-   "title": "Tajemnice lasu–rośliny - warsztaty dla dzieci",
-   "date_start": "2026-08-22",
-   "date_end": null,
-   "repeat": "",
-   "time_start": null,
-   "time_end": null,
-   "venue": "",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": true,
-   "tags": [
-    "warsztaty:przyroda"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://okpoznan.pl/wydarzenia",
-   "is_noise": false,
-   "source_id": "okpoznan-wydarzenia"
-  },
-  {
-   "title": "AMAkids | warsztaty wakacyjne: Olimpiada Mózgu",
-   "date_start": "2026-08-24",
-   "date_end": null,
-   "repeat": "",
-   "time_start": null,
-   "time_end": null,
-   "venue": "AMAkids - Akademia Rozwoju Intelektualnego - Centrum Edukacji dla Dzieci",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": true,
-   "tags": [
-    "dzieci:warsztaty"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://okpoznan.pl/wydarzenia",
-   "is_noise": false,
-   "source_id": "okpoznan-wydarzenia",
-   "geo": null,
-   "dates": [
-    "2026-08-24",
-    "2026-08-25",
-    "2026-08-26",
-    "2026-08-27",
-    "2026-08-28"
-   ]
-  },
-  {
-   "title": "Warsztaty na wystawie \"Mela i szczun na historycznej ścieżce\"",
-   "date_start": "2026-08-25",
-   "date_end": null,
-   "repeat": "",
-   "time_start": null,
-   "time_end": null,
-   "venue": "",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": true,
-   "tags": [
-    "warsztaty:edukacja"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://okpoznan.pl/wydarzenia",
-   "is_noise": false,
-   "source_id": "okpoznan-wydarzenia"
-  },
-  {
-   "title": "Na tropie historii z Kubą i Helenką… - rodzinny spacer angażujący",
-   "date_start": "2026-08-26",
-   "date_end": null,
-   "repeat": "",
-   "time_start": null,
-   "time_end": null,
-   "venue": "",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": true,
-   "tags": [
-    "dzieci:spacer"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://okpoznan.pl/wydarzenia",
-   "is_noise": false,
-   "source_id": "okpoznan-wydarzenia"
-  },
-  {
-   "title": "Klub książki w Muzeum Sienkiewicza: \"Nad Niemnem\" Elizy Orzeszkowej",
-   "date_start": "2026-08-29",
-   "date_end": null,
-   "repeat": "",
-   "time_start": null,
-   "time_end": null,
-   "venue": "Biblioteka Raczyńskich, Muzeum Literackie Henryka Sienkiewicza",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "literatura:klub książki"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://okpoznan.pl/wydarzenia",
-   "is_noise": false,
-   "source_id": "okpoznan-wydarzenia",
-   "geo": {
-    "lat": 52.4084386,
-    "lon": 16.9286465
-   }
-  },
-  {
-   "title": "Dni Twierdzy Poznań 2026",
-   "date_start": "2026-08-29",
-   "date_end": "2026-08-30",
-   "repeat": "",
-   "time_start": null,
-   "time_end": null,
-   "venue": "",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "historia:imprezy"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://okpoznan.pl/wydarzenia",
-   "is_noise": false,
-   "source_id": "okpoznan-wydarzenia"
-  },
-  {
-   "title": "CK ZAMEK | ŚWIAT JAK ZIELNIK. Natura w sztuce od XVII do XXI wieku",
-   "date_start": "2026-09-05",
-   "date_end": "2026-09-06",
-   "repeat": "",
-   "time_start": null,
-   "time_end": null,
-   "venue": "Centrum Kultury Zamek",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
    "family_friendly": "maybe",
    "tags": [
     "sztuka:wystawa"
@@ -7244,130 +7522,13 @@
    "sub_slots": null,
    "conditional": "",
    "container": "",
-   "source_url": "https://okpoznan.pl/wydarzenia",
+   "source_url": "https://okpoznan.pl/szczegoly-wydarzenia/Oalr1IqYZN3ER7sHf0iF_akademia-lubranskiego-wstawa-kisling-w-sercu-montparnasseu",
    "is_noise": false,
    "source_id": "okpoznan-wydarzenia",
    "geo": {
-    "lat": 52.407776,
-    "lon": 16.9191858
+    "lat": 52.4125011,
+    "lon": 16.9469471
    }
-  },
-  {
-   "title": "Wolsztyn. Historia napędzana parą",
-   "date_start": "2026-08-03",
-   "date_end": "2026-09-30",
-   "repeat": "",
-   "time_start": null,
-   "time_end": null,
-   "venue": "ul. Franciszka Ratajczaka 44, Poznań",
-   "town": "Poznań",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": {
-    "min": null,
-    "max": null,
-    "label": null
-   },
-   "family_friendly": "maybe",
-   "tags": [
-    "sztuka:wystawa"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://okpoznan.pl/wydarzenia",
-   "is_noise": false,
-   "source_id": "okpoznan-wydarzenia",
-   "geo": {
-    "lat": 52.408202,
-    "lon": 16.9258418
-   }
-  },
-  {
-   "title": "15 SIERPNIA BOISKA ORLIK BĘDĄ NIECZYNNE",
-   "date_start": "2026-08-15",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "07:00",
-   "time_end": "20:00",
-   "venue": "Boiska Orlik",
-   "town": "Puszczykowo",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": false,
-   "tags": [],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://puszczykowo.pl/wydarzenia/15-sierpnia-boiska-orlik-beda-nieczynne",
-   "is_noise": false,
-   "source_id": "puszczykowo-pl-wydarzenia",
-   "geo": null
-  },
-  {
-   "title": "Święto Wojska Polskiego 2026 – „Polska SAFE – Bezpieczna Polska",
-   "date_start": "2026-08-15",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "12:00",
-   "time_end": "15:30",
-   "venue": "",
-   "town": "Puszczykowo",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "imprezy:patriotyczne"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://puszczykowo.pl/wydarzenia/swieto-wojska-polskiego-2026-polska-safe-bezpieczna-polska",
-   "is_noise": false,
-   "source_id": "puszczykowo-pl-kultura-wydarzenia"
-  },
-  {
-   "title": "W Dworze Skrzynki koncert francuskiego chanson: O miłości, po francusku",
-   "date_start": "2026-08-15",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "19:00",
-   "time_end": "21:00",
-   "venue": "Dwór Skrzynki",
-   "town": "Puszczykowo",
-   "price": {
-    "free": null,
-    "amount_pln": null,
-    "note": null
-   },
-   "age": null,
-   "family_friendly": "maybe",
-   "tags": [
-    "muzyka:koncert",
-    "muzyka:chanson"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://puszczykowo.pl/wydarzenia/w-dworze-skrzynki-koncert-francuskiego-chanson-o-milosci-po-francusku",
-   "is_noise": false,
-   "source_id": "puszczykowo-pl-kultura-wydarzenia",
-   "geo": null
   },
   {
    "title": "SMUKŁA SYLWETKA - BEZPŁATNE ZAJĘCIA W PLNERZE",
@@ -7397,7 +7558,7 @@
    "source_id": "puszczykowo-pl-wydarzenia"
   },
   {
-   "title": "ZDROWY KRĘGOSŁUP – BEZPŁATNE ZAJĘCIA W PLENERZE",
+   "title": "Zdrowy Kręgosłup – bezpłatne zajęcia w plenerze",
    "date_start": "2026-08-17",
    "date_end": null,
    "repeat": "",
@@ -7410,10 +7571,15 @@
     "amount_pln": null,
     "note": null
    },
-   "age": null,
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
    "family_friendly": "maybe",
    "tags": [
-    "sport:fitness"
+    "sport",
+    "zdrowie"
    ],
    "registration": "",
    "sub_slots": null,
@@ -7422,6 +7588,89 @@
    "source_url": "https://puszczykowo.pl/wydarzenia/zdrowy-kregoslup-bezplatne-zajecia-w-plenerze-6",
    "is_noise": false,
    "source_id": "puszczykowo-pl-wydarzenia"
+  },
+  {
+   "title": "Taneczne wtorki w Muzeum Polskiej Motoryzacji w Puszczykowie",
+   "date_start": "2026-08-18",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "17:00",
+   "time_end": "21:00",
+   "venue": "Muzeum Polskiej Motoryzacji w Puszczykowie",
+   "town": "Puszczykowo",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": "maybe",
+   "tags": [
+    "taniec"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://puszczykowo.pl/wydarzenia/taneczne-wtorki-w-muzeum-polskiej-motoryzacji-w-puszczykowie-2",
+   "is_noise": false,
+   "source_id": "puszczykowo-pl-wydarzenia",
+   "geo": null
+  },
+  {
+   "title": "Joga na świeżym powietrzu – bezpłatne zajęcia",
+   "date_start": "2026-08-18",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "18:00",
+   "time_end": "19:00",
+   "venue": "",
+   "town": "Puszczykowo",
+   "price": {
+    "free": true,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": "maybe",
+   "tags": [
+    "sport:joga"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://puszczykowo.pl/wydarzenia/joga-na-swiezym-powietrzu-bezplatne-zajecia-12",
+   "is_noise": false,
+   "source_id": "puszczykowo-pl-wydarzenia"
+  },
+  {
+   "title": "Tai Chi – zajęcia dla początkujących i zaawansowanych",
+   "date_start": "2026-08-19",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "09:00",
+   "time_end": "10:00",
+   "venue": "Przy zegarze",
+   "town": "Puszczykowo",
+   "price": {
+    "free": null,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": null,
+   "family_friendly": "maybe",
+   "tags": [
+    "sport:tai chi"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://puszczykowo.pl/wydarzenia/tai-chi-zajecia-dla-poczatkujacych-i-zaawansowanych-16",
+   "is_noise": false,
+   "source_id": "puszczykowo-pl-wydarzenia",
+   "geo": null
   },
   {
    "title": "KOMISJA EDUKACJI, KULTURY I SPORTU",
@@ -7448,6 +7697,38 @@
    "is_noise": true,
    "source_id": "puszczykowo-pl-wydarzenia",
    "geo": null
+  },
+  {
+   "title": "Smukła Sylwetka - bezpłatne zajęcia w plenerze",
+   "date_start": "2026-08-17",
+   "date_end": null,
+   "repeat": "",
+   "time_start": "18:00",
+   "time_end": "19:00",
+   "venue": "",
+   "town": "Puszczykowo",
+   "price": {
+    "free": true,
+    "amount_pln": null,
+    "note": null
+   },
+   "age": {
+    "min": null,
+    "max": null,
+    "label": null
+   },
+   "family_friendly": "maybe",
+   "tags": [
+    "sport",
+    "zdrowie"
+   ],
+   "registration": "",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://puszczykowo.pl/wydarzenia/smukla-sylwetka-bezplatne-zajecia-w-plnerze-4",
+   "is_noise": false,
+   "source_id": "puszczykowo-pl-wydarzenia"
   },
   {
    "title": "XIV LETNIE KONCERTY ORGANOWE W WIELKOPOLSKIM PARKU NARODOWYM – JENNIFER PASCUAL I EUGENIUSZ WAWRZYNIAK",
@@ -7599,42 +7880,77 @@
    }
   },
   {
-   "title": "Bar VIETTHAI MOSINA otwarty",
-   "date_start": "2026-08-15",
+   "title": "WERNISAŻ WYSTAWY AGATY JAKUBOWSKIEJ W WILLI MIMOZA",
+   "date_start": "2026-09-04",
    "date_end": null,
    "repeat": "",
-   "time_start": "10:00",
-   "time_end": "22:00",
-   "venue": "Bar VIETTHAI MOSINA",
-   "town": "Mosina",
+   "time_start": "18:00",
+   "time_end": "20:00",
+   "venue": "Willa Mimoza",
+   "town": "Puszczykowo",
    "price": {
-    "free": false,
+    "free": null,
     "amount_pln": null,
     "note": null
    },
    "age": null,
-   "family_friendly": true,
+   "family_friendly": "maybe",
    "tags": [
-    "gastronomia:bar",
-    "gastronomia:azjatycka"
+    "sztuka:wernisaż"
    ],
    "registration": "",
    "sub_slots": null,
    "conditional": "",
    "container": "",
-   "source_url": "https://www.facebook.com/groups/659035854121213/posts/28543260428605381/",
+   "source_url": "https://puszczykowo.pl/wydarzenia/wernisaz-wystawy-agaty-jakubowskiej-w-willi-mimoza",
+   "is_noise": false,
+   "source_id": "puszczykowo-pl-kultura-wydarzenia",
+   "geo": {
+    "lat": 52.29304,
+    "lon": 16.8615086
+   }
+  },
+  {
+   "title": "Last minute: apartament nad jeziorem Strykowskim – pobyt we dwoje",
+   "date_start": "2026-08-16",
+   "date_end": "2026-08-19",
+   "repeat": "",
+   "time_start": null,
+   "time_end": null,
+   "venue": "Komfortowy apartament nad jeziorem Strykowskim",
+   "town": "",
+   "price": {
+    "free": false,
+    "amount_pln": 280,
+    "note": "280 zł za dobę, 3 noclegi; cena obniżona z 350 zł za dobę"
+   },
+   "age": null,
+   "family_friendly": "maybe",
+   "tags": [
+    "nocleg",
+    "wypoczynek:jezioro"
+   ],
+   "registration": "[tel. w źródle]",
+   "sub_slots": null,
+   "conditional": "",
+   "container": "",
+   "source_url": "https://www.facebook.com/groups/659035854121213/posts/28551165861148171/",
    "is_noise": false,
    "source_id": "puszczykowo-ogloszenia-fb",
+   "origin": {
+    "key": "UzpfSTYxNTcxODgyMzgyNjQ2OjEyMjE4NzkzNDMxNjcyOTQxMjoxMjIxODc5MzQzMTY3Mjk0MTI=",
+    "url": "https://www.facebook.com/permalink.php?story_fbid=pfbid02dB6AsoDANHxZWQVtpxXaC6TtUxBgZ336USkyRT9ennhgNW471SfAV62hj1HLVBUfl&id=61571882382646"
+   },
    "geo": null
   },
   {
-   "title": "Impreza okolicznościowa - poszukiwanie fotografa",
+   "title": "Weekend z sezonowym menu w Dworku Biesiadnym",
    "date_start": "2026-08-15",
-   "date_end": null,
+   "date_end": "2026-08-16",
    "repeat": "",
-   "time_start": "18:00",
+   "time_start": "12:00",
    "time_end": null,
-   "venue": "",
+   "venue": "Dworek Biesiadny",
    "town": "",
    "price": {
     "free": null,
@@ -7642,138 +7958,29 @@
     "note": null
    },
    "age": null,
-   "family_friendly": false,
-   "tags": [
-    "usługi:fotografia"
-   ],
-   "registration": "",
-   "sub_slots": null,
-   "conditional": "",
-   "container": "",
-   "source_url": "https://www.facebook.com/groups/659035854121213/posts/28536055435992547/",
-   "is_noise": false,
-   "source_id": "puszczykowo-ogloszenia-fb"
-  },
-  {
-   "title": "Piątek w Przystanku - dania dnia",
-   "date_start": "2026-08-15",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "12:00",
-   "time_end": "18:00",
-   "venue": "Przystanek, ul. Armii Poznań 74",
-   "town": "Luboń",
-   "price": {
-    "free": false,
-    "amount_pln": 32,
-    "note": "Zestaw 1: 38 zł, Zestaw 2: 32 zł, Chłodnik litewski: 13 zł"
-   },
-   "age": null,
    "family_friendly": true,
    "tags": [
-    "gastronomia:bar",
-    "gastronomia:polska"
+    "gastronomia:restauracja",
+    "menu:sezonowe"
    ],
    "registration": "[tel. w źródle]",
    "sub_slots": null,
    "conditional": "",
    "container": "",
-   "source_url": "https://www.facebook.com/groups/659035854121213/posts/28535966006001490/",
-   "is_noise": false,
-   "source_id": "puszczykowo-ogloszenia-fb",
-   "geo": {
-    "lat": 52.3385426,
-    "lon": 16.8913886
-   }
-  },
-  {
-   "title": "Trening Umiejętności Społecznych (TUS) dla dzieci i młodzieży - start",
-   "date_start": "2026-10-05",
-   "date_end": null,
-   "repeat": "",
-   "time_start": "16:00",
-   "time_end": "18:00",
-   "venue": "Akcja Integracja, ul. Reja 3 / ul. Wodna 3/3",
-   "town": "Kórnik",
-   "price": {
-    "free": false,
-    "amount_pln": 1300,
-    "note": "Pakiet kompletny: konsultacja, badania przesiewowe, 10 spotkań TUS, 2 konsultacje dla rodziców"
-   },
-   "age": {
-    "min": 5,
-    "max": null,
-    "label": "5+ lat"
-   },
-   "family_friendly": true,
-   "tags": [
-    "warsztaty:psychologia",
-    "dzieci:rozwój",
-    "edukacja:umiejętności społeczne"
-   ],
-   "registration": "[tel. w źródle]",
-   "sub_slots": [
-    {
-     "time": "16:00",
-     "label": "Dzieci przedszkolne (5–6 lat)",
-     "age": {
-      "min": 5,
-      "max": 6,
-      "label": "5–6 lat"
-     }
-    },
-    {
-     "time": "17:00",
-     "label": "Klasy 1–3",
-     "age": {
-      "min": 7,
-      "max": 9,
-      "label": "klasy 1–3"
-     }
-    },
-    {
-     "time": "18:00",
-     "label": "Klasy 4+ (Nastolatki)",
-     "age": {
-      "min": 10,
-      "max": null,
-      "label": "klasy 4+"
-     }
-    }
-   ],
-   "conditional": "",
-   "container": "",
-   "source_url": "https://www.facebook.com/groups/659035854121213/posts/28529204216677669/",
+   "source_url": "https://www.facebook.com/groups/659035854121213/posts/28548823504715740/",
    "is_noise": false,
    "source_id": "puszczykowo-ogloszenia-fb",
    "origin": {
-    "key": "UzpfSTEwMDA2Njk5NzY0MzA1MDoxMzQ3MTM5NTk0MTk1OTQ5OjEzNDcxMzk1OTQxOTU5NDk=",
-    "url": "https://www.facebook.com/permalink.php?story_fbid=pfbid0KkMK46Q3u6W9Lae2qJP4d2Sbb97mDEyWQmT5dXZDjjRoJM93t57aNnrhkfE41dzRl&id=100066997643050"
+    "key": "UzpfSTEwMDA0MDI0OTg4NTkwMToxNzM3ODEyMTk0MjM3MDkzOjE3Mzc4MTIxOTQyMzcwOTM=",
+    "url": "https://www.facebook.com/DworekBiesiadny/posts/pfbid0w3Af1jHDEyeRHh2dzt6rK2CMHD9eJGNcqngVrKYRotVZERVUHfUbzMS5WU4Pey3sl"
    },
    "geo": {
-    "lat": 52.25371,
-    "lon": 17.08277
-   },
-   "dates": [
-    "2026-10-05",
-    "2026-10-12",
-    "2026-10-19",
-    "2026-10-26",
-    "2026-11-02",
-    "2026-11-09",
-    "2026-11-16",
-    "2026-11-23",
-    "2026-11-30",
-    "2026-12-07",
-    "2026-12-14"
-   ]
+    "lat": 52.5785543,
+    "lon": 21.4513296
+   }
   }
  ],
  "errors": [
-  {
-   "id": "biblioteka-mosina",
-   "err": "HTTP 500 https://www.bibliotekamosina.pl/"
-  },
   {
    "id": "mdk2-poznan",
    "followup": "https://mdk2.poznan.pl/images/mdk/rekrutacja_2026_2007/Oferta%20do%20rekrutacji%20otwartej.pdf",
@@ -7788,34 +7995,38 @@
    "id": "mdk2-poznan",
    "followup": "https://mdk2.poznan.pl/images/mdk/rekrutacja_2026_2007/Zasady_rekrutacji_w_roku_szkolnym_2026-2027.pdf",
    "err": "HTTP 404 https://mdk2.poznan.pl/images/mdk/rekrutacja_2026_2007/Zasady_rekrutacji_w_roku_szkolnym_2026-2027.pdf"
+  },
+  {
+   "id": "fb-group-wydarzenia-poznan-3",
+   "followup": "https://facebook.com/events/s/czarnymikulski-muzyczna-stodo%C5%82/981377181302173/",
+   "err": "HTTP 400 https://facebook.com/events/s/czarnymikulski-muzyczna-stodo%C5%82/981377181302173/"
   }
  ],
  "brightdata": {
-  "triggers": 16,
-  "inputs": 16,
-  "polls": 350,
-  "records": 374,
+  "triggers": 15,
+  "inputs": 15,
+  "polls": 215,
+  "records": 421,
   "errors": 0,
   "snapshots": [
-   "sd_mstvf6ng1yyylwmz4a",
-   "sd_mstvkwk51qfmnsv9ll",
-   "sd_mstvs8qhi18x131q1",
-   "sd_mstvysl4l6z2vyi8m",
-   "sd_mstw0lh32de7eo0td3",
-   "sd_mstw3d5q2kxfcp6l7u",
-   "sd_mstw9450pu1ixpcnv",
-   "sd_mstwh39u1hdtd0z1gl",
-   "sd_mstwol1rcuto6rd63",
-   "sd_mstwuwb22p1laqio4f",
-   "sd_mstx16hi1xplae0urx",
-   "sd_mstx7i0v1im6be5fwn",
-   "sd_mstxgabd2chlsnxk8o",
-   "sd_mstxhqma25a6cn7zxd",
-   "sd_mstxkte4u5884deu1",
-   "sd_mstxv7cuuk6fjnd4f"
+   "sd_msvb3p9augs4dpp2i",
+   "sd_msvb50b8m4pqyiy3j",
+   "sd_msvbbg5x2r2iaff0jk",
+   "sd_msvbi6d83ymngx3js",
+   "sd_msvbj5m12r9by13m6l",
+   "sd_msvbn2uz2hirami1pp",
+   "sd_msvbs1il1aekj9pjkv",
+   "sd_msvbyrd92e3zba2ms",
+   "sd_msvc1iqu2ma0gmut78",
+   "sd_msvc47tesxnrxl7jx",
+   "sd_msvc571u1djursof84",
+   "sd_msvc7ervavfipoaqx",
+   "sd_msvc9me72qqkps5dim",
+   "sd_msvcgj3nqj4jrgzw4",
+   "sd_msvcj9s52v48zndo1"
   ],
   "byDataset": {
-   "fbGroupPosts": 374
+   "fbGroupPosts": 421
   }
  }
 }
