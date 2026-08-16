@@ -138,6 +138,15 @@ export const P = defineParams({
     group: "fb", cls: "setting", def: "gd_lz11l67o2cb3r0lkj3",
     summary: "id scrapera postów z grup FB",
   }),
+  BD_DATASET_FB_PAGE_POSTS: optText({
+    group: "fb", cls: "setting",
+    summary: "id scrapera postów z FANPAGE'ÓW — bez niego sonda fanpage'ów nie ruszy",
+    doc: [
+      "Bez domyślnej CELOWO: zgadnięte id u dostawcy per-rekord to albo błąd triggera, albo —",
+      "gorzej — płatny scrape czegoś innego. Id z panelu Bright Data (Facebook → posty strony).",
+      "Czyta je WYŁĄCZNIE `npm run probe-fb-pages`; daily pomija `fetch:\"fb\"` tak czy owak.",
+    ],
+  }),
   BD_POLL_MS: posNum({
     group: "fb", cls: "tuning", def: 10_000,
     summary: "co ile odpytywać Bright Data o gotowość migawki",
@@ -219,6 +228,21 @@ export const P = defineParams({
       "gmina nie straci CAŁEJ obecności na FB przez sam rachunek; ratowane jest zawsze najtańsze",
       "z pozostałych źródeł gminy (werdykt `town-floor`). 0 = wyłącz podłogę.",
     ],
+  }),
+
+  PROBE_FB_PAGE_LIMIT: posNum({
+    group: "fb", cls: "tuning", def: 20,
+    summary: "limit_per_input na jeden fanpage w sondzie `probe-fb-pages`",
+    doc: [
+      "Niżej niż sufit grup (50): fanpage publikuje rzadziej niż tablica ogłoszeń. Przy werdykcie",
+      "„nic nie dało” sprawdź w tabeli `atLimit` — wyczerpany limit znaczy plon ucięty, nie zmierzony.",
+    ],
+  }),
+  // sufit CAŁEJ sondy, liczony przed pierwszym triggerem i sprawdzany po każdym pobraniu —
+  // pętla po źródłach u dostawcy per-rekord to kształt awarii z 2026-08-10 (patrz fb-page.ts)
+  PROBE_FB_MAX_RECORDS: posNum({
+    group: "fb", cls: "tuning", def: 300,
+    summary: "twardy sufit rekordów na CAŁĄ sondę fanpage'ów (~$0.45 przy $0.0015/rekord)",
   }),
 
   // --- pipeline ---

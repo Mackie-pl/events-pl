@@ -30,6 +30,7 @@ import type {
   PipelineError, PipelineState, ProbeLlmCall, ProbeResult, Source, SourceTrail,
 } from "../../types/index.js";
 
+import { FB_PAGE_DATASET_MISSING, fbPageDatasetReady } from "./fb-page.js";
 import { processSource } from "./process-source.js";
 
 /** Błąd sondy, który jest odpowiedzią dla użytkownika, a nie awarią — most mapuje `status` na HTTP. */
@@ -48,7 +49,11 @@ export class ProbeError extends Error {
  */
 function unsupported(src: Source): string | null {
   if (src.fetch === "fb") {
-    return "fanpage FB — osobny dataset Bright Data, poza zakresem daily (i tej sondy)";
+    // fanpage'e zostają poza PRZEBIEGIEM dziennym, ale sonda jest właśnie od tego, żeby
+    // sprawdzić źródło, którego cron nie rusza — pod warunkiem, że jest czym pobrać
+    if (!bdEnabled()) return "fanpage FB wymaga BRIGHTDATA_API_KEY — bez klucza nie ma czym pobrać postów";
+    if (!fbPageDatasetReady()) return FB_PAGE_DATASET_MISSING;
+    return null;
   }
   if (src.fetch === "fb_event") {
     return "link do wydarzenia FB — rozwiązywany zbiorczo dla całego przebiegu, nie per źródło";

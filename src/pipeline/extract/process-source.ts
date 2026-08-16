@@ -33,6 +33,7 @@ import { fixCalendarDates } from "./calendar-links.js";
 import { capabilitySource } from "./capability-source.js";
 import { entryUrl } from "./entry-url.js";
 import { noteFbGroup } from "./fb-group-blocked.js";
+import { fetchFbPage } from "./fb-page.js";
 import { auditFbGroup, auditFbOrigins, auditFbPostExtras, auditFbShares } from "./fb-group-trail.js";
 import { fbGroupLimit, noteFbGroupRate } from "./fb-group-limit.js";
 import {
@@ -64,6 +65,13 @@ async function fetchSource(
   opts: { state: PipelineState; headers: Record<string, string> },
 ): Promise<Fetched> {
   const { state, headers } = opts;
+  if (src.fetch === "fb") {
+    // fanpage: inny dataset niż grupa, wejście wyłącznie przez sondę `probe-fb-pages`
+    // (daily.ts pomija te źródła, zanim tu dojdzie — patrz fb-page.ts)
+    const { fetched, origins } = await fetchFbPage(src, url, run);
+    fbOrigins = origins;
+    return fetched;
+  }
   if (src.fetch === "fb_group") {
     // posty otwartej grupy przez Bright Data (FB blokuje zwykły fetch); BD zawsze zwraca
     // pełną treść — brak 304, diff załatwia standardowe porównanie hashy w processSource.
@@ -258,7 +266,10 @@ export async function processSource(
   run.httpStatus = fetched.httpStatus;
   // dopiero po udanym pobraniu: rzucony fetch (timeout, 401, anulowana migawka) nie jest
   // dowodem NA GRUPĘ, tylko na Bright Data — karanie za niego wyłączałoby zdrowe grupy
-  if (run.fbGroup) {
+  // tylko GRUPY: obie księgi (blokady i regulator limitu) są adresowane id grupy i sterują
+  // przebiegiem dziennym. Fanpage niesie te same statystyki wyłącznie do raportu sondy —
+  // wpuszczenie go tutaj zakładałoby grupom nieistniejące pomiary
+  if (run.fbGroup && src.fetch === "fb_group") {
     noteFbGroup(src.id, run.fbGroup, state, todayIso());
     noteFbGroupRate(src.id, run.fbGroup, state, todayIso());
   }

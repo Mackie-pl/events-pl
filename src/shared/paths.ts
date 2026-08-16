@@ -33,6 +33,8 @@ export const BD_USAGE_LOG = join(ROOT, "brightdata-usage.jsonl");
 export const REUSE_PATH = join(ROOT, "reuse.json");
 /** Plon źródeł: co kosztuje, a nic nie daje. Liczone z runs.json, więc okno jest krótkie. */
 export const YIELD_PATH = join(ROOT, "yield.json");
+/** Wynik sondy fanpage'ów — jednorazowy pomiar, nie produkt przebiegu (patrz probe-fb-pages). */
+export const FB_PAGES_PATH = join(ROOT, "fb-pages.json");
 
 /** Progi potoku wersjonowane w repo — po to, żeby zmiana progu miała datę i autora. */
 export const CONFIG_PATH = join(ROOT, "config.json");

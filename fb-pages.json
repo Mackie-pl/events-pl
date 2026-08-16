@@ -1,0 +1,486 @@
+{
+ "generated": "2026-08-16T17:30:05.445Z",
+ "from": "2026-08-09",
+ "to": "2026-08-16",
+ "budget": {
+  "limitPerPage": 20,
+  "maxRecords": 300,
+  "plannedRecords": 280,
+  "spentRecords": 260,
+  "skippedForBudget": []
+ },
+ "pages": [
+  {
+   "id": "miasto-lubon-fb",
+   "name": "Miasto Luboń",
+   "town": "Luboń",
+   "url": "https://www.facebook.com/MiastoLubon",
+   "bucket": "no-site",
+   "status": "ok",
+   "records": 20,
+   "posts": 20,
+   "atLimit": true,
+   "events": 2,
+   "novel": 2,
+   "alsoInGroups": 0,
+   "bdUsd": 0.03,
+   "llmUsd": 0.0019,
+   "costUsd": 0.0319,
+   "usdPerNovel": 0.0159,
+   "titles": [
+    "8. edycja Konkursu Fotograficznego o Nagrodę Marszałka Województwa Wielkopolskiego – termin nadsyłania prac",
+    "Konkurs Fotograficzny o Nagrodę Marszałka Województwa Wielkopolskiego – termin zgłoszeń"
+   ]
+  },
+  {
+   "id": "losir-lubon-fb",
+   "name": "LOSiR Luboń",
+   "town": "Luboń",
+   "url": "https://www.facebook.com/losir.lubon",
+   "bucket": "no-site",
+   "status": "empty",
+   "records": 0,
+   "posts": 0,
+   "atLimit": false,
+   "events": 0,
+   "novel": 0,
+   "alsoInGroups": 0,
+   "bdUsd": 0,
+   "llmUsd": 0,
+   "costUsd": 0,
+   "titles": []
+  },
+  {
+   "id": "plaza-miejska-lubon-fb",
+   "name": "Plaża Miejska Luboń",
+   "town": "Luboń",
+   "url": "https://www.facebook.com/PlazaMiejskaLubon",
+   "bucket": "no-site",
+   "status": "ok",
+   "records": 20,
+   "posts": 20,
+   "atLimit": true,
+   "events": 3,
+   "novel": 3,
+   "alsoInGroups": 0,
+   "bdUsd": 0.03,
+   "llmUsd": 0.0011,
+   "costUsd": 0.0311,
+   "usdPerNovel": 0.0104,
+   "titles": [
+    "Sztuka na leżaku – tworzenie kolorowych kamieni",
+    "Taniec użytkowy",
+    "Animacje na Plaży Miejskiej"
+   ]
+  },
+  {
+   "id": "nasz-lubon-fb",
+   "name": "Nasz Luboń - Facebook",
+   "town": "Luboń",
+   "url": "https://www.facebook.com/NaszLubon",
+   "bucket": "no-site",
+   "status": "empty",
+   "records": 20,
+   "posts": 20,
+   "atLimit": true,
+   "events": 0,
+   "novel": 0,
+   "alsoInGroups": 0,
+   "bdUsd": 0.03,
+   "llmUsd": 0.0009,
+   "costUsd": 0.0309,
+   "titles": []
+  },
+  {
+   "id": "fb-gmina-mosina",
+   "name": "Gmina Mosina – fanpage FB",
+   "town": "Mosina",
+   "url": "https://www.facebook.com/gminamosina/",
+   "bucket": "no-site",
+   "status": "ok",
+   "records": 20,
+   "posts": 19,
+   "atLimit": true,
+   "events": 8,
+   "novel": 7,
+   "alsoInGroups": 0,
+   "bdUsd": 0.03,
+   "llmUsd": 0.0025,
+   "costUsd": 0.0325,
+   "usdPerNovel": 0.0046,
+   "titles": [
+    "Bezpłatne szkolenie cyfrowe dla seniorów",
+    "Król Parku 2026",
+    "Przedstawienie „Pippi Langstrumpf zwiedza świat”",
+    "Dożynki Rogalinek–Sasinowo 2026 – korowód i atrakcje",
+    "Dożynki Rogalinek–Sasinowo 2026 – uroczysta Msza Święta",
+    "Ścieżka Harpagana – Eliminator",
+    "Dyżur eksperta ZUS",
+    "Wystawa kostiumów Aldony Talarczyk ATAT Costume Art"
+   ]
+  },
+  {
+   "id": "dk-orle-gniazdo-fb",
+   "name": "Dom Kultury Orle Gniazdo – Facebook",
+   "town": "Poznań",
+   "url": "https://www.facebook.com/OrleGniazdo/",
+   "bucket": "no-site",
+   "status": "empty",
+   "records": 20,
+   "posts": 19,
+   "atLimit": true,
+   "events": 0,
+   "novel": 0,
+   "alsoInGroups": 0,
+   "bdUsd": 0.03,
+   "llmUsd": 0.0012,
+   "costUsd": 0.0312,
+   "titles": []
+  },
+  {
+   "id": "cik-poznan-fb",
+   "name": "Centrum Informacji Kulturalnej Poznań – Facebook",
+   "town": "Poznań",
+   "url": "https://www.facebook.com/cikpoznan/",
+   "bucket": "no-site",
+   "status": "ok",
+   "records": 20,
+   "posts": 20,
+   "atLimit": true,
+   "events": 69,
+   "novel": 67,
+   "alsoInGroups": 0,
+   "bdUsd": 0.03,
+   "llmUsd": 0.0126,
+   "costUsd": 0.0426,
+   "usdPerNovel": 0.0006,
+   "titles": [
+    "Otwarty dyżur w Eksperymentalnym Ogrodzie Dziedzictwa",
+    "Wolsztyn. Historia napędzana parą",
+    "Wystawa poświęcona historii ratajskich osiedli",
+    "Staromiejskie Koncerty Organowe 2026",
+    "Grupa MoCarta – Dzieciom",
+    "Grupa MoCarta – ALE KINO!",
+    "TERAPIA DLA PAR – Adria Art",
+    "GOŁO I WESOŁO – Adria Art",
+    "Carmen - Bizet / Melfi",
+    "SŁONECZNI CHŁOPCY – Adria Art",
+    "Wszyscy kłamią, czyli pic na wodę – Adria Art",
+    "Małe TGD – „Wszystkiego najlepszego!\""
+   ]
+  },
+  {
+   "id": "willa-mimoza-fb",
+   "name": "Willa Mimoza Puszczykowo",
+   "town": "Puszczykowo",
+   "url": "https://www.facebook.com/WillaMimozaPuszczykowo",
+   "bucket": "no-site",
+   "status": "ok",
+   "records": 20,
+   "posts": 11,
+   "atLimit": true,
+   "events": 1,
+   "novel": 1,
+   "alsoInGroups": 0,
+   "bdUsd": 0.03,
+   "llmUsd": 0.0011,
+   "costUsd": 0.0311,
+   "usdPerNovel": 0.0311,
+   "titles": [
+    "Wernisaż prac Agaty Jakubowskiej"
+   ]
+  },
+  {
+   "id": "hala-puszczykowo-fb",
+   "name": "Hala widowiskowo-sportowa w Puszczykowie",
+   "town": "Puszczykowo",
+   "url": "https://www.facebook.com/HalaPuszczykowo",
+   "bucket": "no-site",
+   "status": "empty",
+   "records": 20,
+   "posts": 10,
+   "atLimit": true,
+   "events": 0,
+   "novel": 0,
+   "alsoInGroups": 0,
+   "bdUsd": 0.03,
+   "llmUsd": 0.0003,
+   "costUsd": 0.0303,
+   "titles": []
+  },
+  {
+   "id": "puszczykowo-na-sportowo-fb",
+   "name": "Puszczykowo na Sportowo",
+   "town": "Puszczykowo",
+   "url": "https://www.facebook.com/PuszczykowonaSportowo",
+   "bucket": "no-site",
+   "status": "empty",
+   "records": 20,
+   "posts": 19,
+   "atLimit": true,
+   "events": 0,
+   "novel": 0,
+   "alsoInGroups": 0,
+   "bdUsd": 0.03,
+   "llmUsd": 0.0011,
+   "costUsd": 0.0311,
+   "titles": []
+  },
+  {
+   "id": "miasto-puszczykowo-fb",
+   "name": "Miasto Puszczykowo",
+   "town": "Puszczykowo",
+   "url": "https://www.facebook.com/miastopuszczykowo",
+   "bucket": "no-site",
+   "status": "ok",
+   "records": 20,
+   "posts": 20,
+   "atLimit": true,
+   "events": 7,
+   "novel": 7,
+   "alsoInGroups": 1,
+   "bdUsd": 0.03,
+   "llmUsd": 0.0031,
+   "costUsd": 0.0331,
+   "usdPerNovel": 0.0047,
+   "titles": [
+    "Komisja Edukacji, Kultury i Sportu – posiedzenie",
+    "Planowane wyłączenie wody w części Puszczykowa",
+    "„Kwiaty – moje życie” – wystawa Marii Gostylli-Pachuckiej",
+    "Konferencja „Strategia Szlaku Kulinarnego «Smaki Powiatu Poznańskiego» dla rozwoju turystyki kulinarnej”",
+    "V finałowa kolejka Wielkopolskiej Ligi Mölkky 2026",
+    "Finałowa kolejka Grand Prix Polski Mölkky 2026",
+    "Festiwal Podróżniczy ORINOKO NAD WARTĄ"
+   ]
+  },
+  {
+   "id": "fb-gosir-komorniki",
+   "name": "GOSiR Komorniki",
+   "town": "Komorniki",
+   "url": "https://www.facebook.com/gosirkomorniki/",
+   "bucket": "stale-site",
+   "status": "ok",
+   "records": 20,
+   "posts": 20,
+   "atLimit": true,
+   "events": 11,
+   "novel": 11,
+   "alsoInGroups": 0,
+   "bdUsd": 0.03,
+   "llmUsd": 0.0013,
+   "costUsd": 0.0313,
+   "usdPerNovel": 0.0028,
+   "titles": [
+    "Letnia Szkoła Tenisa Ziemnego – turnus 3",
+    "Letnia Szkoła Tenisa Ziemnego – turnus 4",
+    "Warsztaty deskorolkowe"
+   ]
+  },
+  {
+   "id": "fb-biblioteka-komorniki",
+   "name": "Biblioteka Publiczna Gminy Komorniki",
+   "town": "Komorniki",
+   "url": "https://www.facebook.com/BibliotekaKomorniki/",
+   "bucket": "stale-site",
+   "status": "ok",
+   "records": 20,
+   "posts": 19,
+   "atLimit": true,
+   "events": 1,
+   "novel": 1,
+   "alsoInGroups": 0,
+   "bdUsd": 0.03,
+   "llmUsd": 0.0009,
+   "costUsd": 0.0309,
+   "usdPerNovel": 0.0309,
+   "titles": [
+    "Przerwa urlopowa w Bibliotece w Wirach"
+   ]
+  },
+  {
+   "id": "biblioteka-puszczykowo-fb",
+   "name": "Biblioteka Miejska Centrum Animacji Kultury w Puszczykowie",
+   "town": "Puszczykowo",
+   "url": "https://www.facebook.com/BibliotekaPuszczykowo",
+   "bucket": "stale-site",
+   "status": "empty",
+   "records": 20,
+   "posts": 18,
+   "atLimit": true,
+   "events": 0,
+   "novel": 0,
+   "alsoInGroups": 0,
+   "bdUsd": 0.03,
+   "llmUsd": 0.0006,
+   "costUsd": 0.0306,
+   "titles": []
+  }
+ ],
+ "groups": [
+  {
+   "id": "dopiewo-tablica-ogloszen-fb",
+   "town": "Dopiewo",
+   "novel": 278,
+   "costUsd": 0.5342,
+   "usdPerNovel": 0.0019
+  },
+  {
+   "id": "fb-group-wydarzenia-poznan-4",
+   "town": "Poznań",
+   "novel": 72,
+   "costUsd": 0.2955,
+   "usdPerNovel": 0.0041
+  },
+  {
+   "id": "fb-group-wydarzenia-w-poznaniu-1",
+   "town": "Poznań",
+   "novel": 135,
+   "costUsd": 0.5679,
+   "usdPerNovel": 0.0042
+  },
+  {
+   "id": "lubon-fb-group",
+   "town": "Luboń",
+   "novel": 76,
+   "costUsd": 0.3241,
+   "usdPerNovel": 0.0043
+  },
+  {
+   "id": "mieszkancy-lubonia-fb-group",
+   "town": "Luboń",
+   "novel": 111,
+   "costUsd": 0.5238,
+   "usdPerNovel": 0.0047
+  },
+  {
+   "id": "fb-group-allin-poznan",
+   "town": "Poznań",
+   "novel": 83,
+   "costUsd": 0.411,
+   "usdPerNovel": 0.005
+  },
+  {
+   "id": "fb-group-kultura-komorniki",
+   "town": "Komorniki",
+   "novel": 45,
+   "costUsd": 0.2392,
+   "usdPerNovel": 0.0053
+  },
+  {
+   "id": "fb-group-wydarzenia-poznan-2",
+   "town": "Poznań",
+   "novel": 54,
+   "costUsd": 0.3317,
+   "usdPerNovel": 0.0061
+  },
+  {
+   "id": "fb-group-baba-cool",
+   "town": "Poznań",
+   "novel": 57,
+   "costUsd": 0.36,
+   "usdPerNovel": 0.0063
+  },
+  {
+   "id": "puszczykowo-ogloszenia-fb",
+   "town": "Puszczykowo",
+   "novel": 57,
+   "costUsd": 0.5227,
+   "usdPerNovel": 0.0092
+  },
+  {
+   "id": "fb-group-poznan-wydarzenia",
+   "town": "Poznań",
+   "novel": 55,
+   "costUsd": 0.5263,
+   "usdPerNovel": 0.0096
+  },
+  {
+   "id": "fb-group-komorniki-ogloszenia",
+   "town": "Komorniki",
+   "novel": 52,
+   "costUsd": 0.5176,
+   "usdPerNovel": 0.01
+  },
+  {
+   "id": "fb-group-wydarzenia-poznan-3",
+   "town": "Poznań",
+   "novel": 25,
+   "costUsd": 0.3208,
+   "usdPerNovel": 0.0128
+  },
+  {
+   "id": "fb-group-gmina-mosina-aktualnosci",
+   "town": "Mosina",
+   "novel": 19,
+   "costUsd": 0.2958,
+   "usdPerNovel": 0.0156
+  },
+  {
+   "id": "fb-group-imprezy-poznan",
+   "town": "Poznań",
+   "novel": 21,
+   "costUsd": 0.3345,
+   "usdPerNovel": 0.0159
+  },
+  {
+   "id": "fb-group-co-sie-dzieje-mosina",
+   "town": "Mosina",
+   "novel": 13,
+   "costUsd": 0.2754,
+   "usdPerNovel": 0.0212
+  },
+  {
+   "id": "dopiewo-aktywnie-kulturalnie-fb",
+   "town": "Dopiewo",
+   "novel": 7,
+   "costUsd": 0.2554,
+   "usdPerNovel": 0.0365
+  },
+  {
+   "id": "grupa-puszczykowo-fb",
+   "town": "Puszczykowo",
+   "novel": 4,
+   "costUsd": 0.212,
+   "usdPerNovel": 0.053
+  },
+  {
+   "id": "wydarzenia-w-luboniu-fb-group",
+   "town": "Luboń",
+   "novel": 2,
+   "costUsd": 0.1957,
+   "usdPerNovel": 0.0979
+  },
+  {
+   "id": "kocham-puszczykowo-fb",
+   "town": "Puszczykowo",
+   "novel": 1,
+   "costUsd": 0.2018,
+   "usdPerNovel": 0.2018
+  },
+  {
+   "id": "dopiewo-mieszkancy-fb",
+   "town": "Dopiewo",
+   "novel": 0,
+   "costUsd": 0.006
+  },
+  {
+   "id": "dabrowa-dopiewo-fb",
+   "town": "Dopiewo",
+   "novel": 0,
+   "costUsd": 0.006
+  },
+  {
+   "id": "fb-group-mieszkancy-gminy-komorniki",
+   "town": "Komorniki",
+   "novel": 0,
+   "costUsd": 0.006
+  }
+ ],
+ "totals": {
+  "records": 260,
+  "costUsd": 0.4186,
+  "events": 102,
+  "novel": 99,
+  "alsoInGroups": 1
+ }
+}

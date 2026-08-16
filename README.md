@@ -28,7 +28,7 @@ src/actions/discover.ts  ·  --why <id> = skąd to źródło      (metryki + śl
 | plik | rola |
 |---|---|
 | `sources.json` | rejestr źródeł Poznań +15 km (etap 1 wykonany ręcznie 2026-07-20; 46 źródeł, 13 gmin) + `provenance` przy każdym źródle dodanym automatycznie |
-| `src/actions/` | wejścia potoku — `daily`, `discover`, `digest`, `backfill-costs`, `probe` (sprawdzenie jednego źródła na żądanie), `panel-server` (lokalny most panelu). Same main() + orkiestracja, zero logiki dziedzinowej |
+| `src/actions/` | wejścia potoku — `daily`, `discover`, `digest`, `backfill-costs`, `probe` (sprawdzenie jednego źródła na żądanie), `probe-fb-pages` (jednorazowy pomiar fanpage'ów, patrz niżej), `panel-server` (lokalny most panelu). Same main() + orkiestracja, zero logiki dziedzinowej |
 | `src/adapters/` | wyjścia do świata: `openrouter`, `search` (fasada) + `serper`/`google-cse`/`brave`, `overpass`, `nominatim`, `page-fetch`, `brightdata`, `supabase-archive`, `telegram`, `resend`, `http` |
 | `src/pipeline/` | logika dziedzinowa: `discover/` (discovery gmin, walidacja propozycji, `entrypoint`, `capabilities`, `--why`), `verify/` (drabina osiągalności, profil, naprawa URL-i), `extract/` (ekstrakcja, followupy, wydarzenia FB), `digest/`, `dedupe`, `camps` (odsiew półkolonii — turnus z zapisami to nie wydarzenie; jeden filtr przed scalaniem, wspólny dla wszystkich ścieżek), `series` (rytm `repeat` z drutu → terminy, a powtórzenia → jeden wpis z listą `dates`; zwijanie po dedupe, wspólne dla modelu, plakatów, cache'u i kalendarzy), `pii`, `facebook`, `prompts` |
 | `src/shared/` | narzędzia bez zależności: `url-template` (zwijanie adresów do szablonów — serce rozpoznania list), `links`, `dates`, `text`, `url`, `hash`, `audit`, `errors`, `json-schema`, `series` (arytmetyka rytmu + etykieta cyklu — jedna implementacja dla digestu i strony) |
@@ -36,7 +36,7 @@ src/actions/discover.ts  ·  --why <id> = skąd to źródło      (metryki + śl
 | `src/storage/` | **port składowania** — `DocStore`/`CollectionStore` + implementacja na plikach JSON. Jedyne miejsce znające ścieżki; przejście na bazę to druga implementacja i podmiana wiązań w `storage/index.ts` |
 | `src/shared/` | ścieżki, hash, tekst, daty, URL-e, formatowanie błędów + `audit.ts` — zbieracz śladu decyzyjnego (stan modułowy jak liczniki zużycia; w shared/, bo emitują do niego wszystkie warstwy) |
 | `src/types/` | typy podzielone po dziedzinach + jedyny barrel w repo (`types/index.ts`). `event-schema.ts` wyłamuje się z „tylko typy" świadomie: to schemat TypeBox, z którego bierze się **naraz** typ `EventItem`, blok schematu w prompcie i `response_format` — jedno źródło prawdy zamiast trzech kopii, które się rozjeżdżały |
-| `test/` | testy `node:test` (594 przypadki): pii, url/slug/daty, dedupe (+ raport scalania), ślad decyzyjny, sonda (czyszczenie cache pod `--force`, wyłącznik archiwum), facebook, digest, koszty, retencja, podsumowania, walidacja propozycji |
+| `test/` | testy `node:test` (664 przypadki): pii, url/slug/daty, dedupe (+ raport scalania), ślad decyzyjny, sonda (czyszczenie cache pod `--force`, wyłącznik archiwum), dobór i rachunek sondy fanpage'ów, facebook, digest, koszty, retencja, podsumowania, walidacja propozycji |
 | `discover-runs.json` | observability etapu 1: każde zapytanie search + wyniki, **każda propozycja modelu wraz z decyzją** (także odrzucenia), geo (Overpass), tokeny/koszt LLM per gmina / źródło / typ zadania (discovery vs weryfikacja); ostatnie 24 przebiegi (szczegóły dla 4 najnowszych) |
 | `runs.json` | observability etapu 2: przebieg źródło po źródle (status, HTTP, followupy, tokeny/koszt per zadanie, rekordy Bright Data, ścieżki archiwum) oraz **`produced` — które konkretnie wydarzenia dało źródło w tym przebiegu**, wraz z przegranymi dedupe (`mergedInto`); **ostatnie 7 dni** (min. 2, maks. 30 przebiegów) |
 | `audit.json` | **ślad decyzyjny** etapu 2: krok po kroku, źródło po źródle — czemu poszło do modelu albo z cache, co ucięto na limicie followupów, które wydarzenie odrzucono i dlaczego, co przegrało scalanie. Zamknięty słownik kroków (`src/types/audit.ts`), notka po polsku + detale. Kroki `llm` niosą też
@@ -44,6 +44,7 @@ rachunek za to konkretne wywołanie (`usd`, `tokIn`, `tokOut`) i ścieżkę prom
 (`archive`) — koszt per źródło jest w `runs.json`, ale „które z pięciu wywołań kosztowało" widać
 tylko tutaj. Ta sama retencja co `runs.json` (7 dni), ~46 kB na przebieg. Panel pobiera go **dopiero na stronie źródła** — nie przy wejściu |
 | `costs.json` | księga wydatków obu etapów: linia na (przebieg × kategoria) z wolumenem, stawką i najdroższymi pozycjami; 90 dni. Zasila zakładkę **Money** |
+| `fb-pages.json` | wynik sondy `probe-fb-pages` — jednorazowy pomiar, **nie** produkt przebiegu. Powstaje tylko po `--go` i nie wchodzi do `costs.json` (jednorazowy wydatek zafałszowałby średnią dzienną) |
 | `eslint.shared.js` | wspólne progi rozmiaru dla potoku i panelu (max 350 linii kodu na plik, 120 znaków na linię) — pilnowane przez `ci.yml` |
 | `template.html` | frontend (wiek dziecka, tagi zagnieżdżone, weekend, mapa OSM); `reporting/render-index.ts` wstrzykuje JSON |
 | `panel/` | panel observability (Angular 22 + Taiga UI): **Day** (przegląd dnia → source runs → eventy + ślad decyzyjny + iframe podglądu + **Check now**: sonda jednego źródła na żądanie, przy działającym `npm run panel-server`), **Discovery** (proweniencja rejestru → przebiegi discover) i **Money** (wydatki dzień po dniu wg kategorii); deploy na GH Pages pod `/panel/` przez `deploy-pages.yml` (Settings → Pages → Source: GitHub Actions) |
@@ -303,6 +304,38 @@ errors`; pole `brightdata` trafia też do `events.json`. Linia zawiera `snapshot
 triggera) — Bright Data trzyma snapshoty ~30 dni, a ponowne pobranie jest darmowe, więc surowe dane
 każdego przebiegu da się odtworzyć bez płacenia. Koszt ≈ `records × stawka_za_rekord` (potwierdź
 w panelu Bright Data). Przykład analizy: `cat brightdata-usage.jsonl | jq`.
+
+### Sonda fanpage'ów: `npm run probe-fb-pages`
+
+**Pytanie, na które odpowiada.** Kanał FB składa się dziś wyłącznie z GRUP, w tym tablic ogłoszeń,
+i płacimy w nim od POSTU, nie od wydarzenia (2026-08-16: 421 rekordów → 72 wydarzenia). Fanpage'e
+instytucji (`fetch: "fb"`, 25 sztuk w rejestrze) leżą pomijane od pierwszego dnia z powodu czysto
+wykonawczego — „inny dataset Bright Data, poza zakresem daily" — więc **nigdy nie sprawdziliśmy**,
+czy biblioteka albo GOK ogłasza tam rzeczy, których nie ma nigdzie indziej. Sonda to mierzy raz.
+
+```bash
+npm run probe-fb-pages              # plan: kogo i za ile — DARMOWE, nic nie pobiera
+npm run probe-fb-pages -- --go      # wykonanie — PŁATNE (rekordy Bright Data)
+```
+
+**Trzy kubełki** (`src/reporting/fb-page-candidates.ts`) — fanpage paruje się ze stroną własnej
+instytucji po rdzeniach nazw, bo polska odmiana rozjeżdża całe słowa: `covered` (strona działa,
+nie płacimy), `stale-site` (strona jest archiwum), `no-site` (instytucji nie ma w rejestrze poza
+FB). Parowanie jest **celowo ostrożne**: „covered" wymaga tokenu unikalnego w gminie (`gok`,
+`posir`, `zamek`) albo trzech pospolitych, bo błąd jest niesymetryczny — fałszywe „covered"
+znaczy, że goldmine nigdy nie zostanie zmierzony i nikt się o tym nie dowie, a fałszywe „do sondy"
+kosztuje jedno pobranie (~$0.03) i widać je w tabeli jako źródło bez nowych wydarzeń.
+
+**Bezpieczniki.** `--go` jest wymagane (to jedyne miejsce w repo kupujące rekordy w PĘTLI po
+źródłach — kształt awarii z 2026-08-10). `PROBE_FB_MAX_RECORDS` tnie LISTĘ przed pierwszym
+triggerem i jest sprawdzany po każdym pobraniu. `BD_DATASET_FB_PAGE_POSTS` nie ma wartości
+domyślnej: zgadnięte id u dostawcy per-rekord to w najlepszym razie błąd triggera.
+
+**Czego sonda NIE robi.** Nie zapisuje `events.json`, `state.json`, `runs.json` ani `costs.json`
+(idzie przez `probeSource`), i **nie zmienia rachunku za crona** — `daily.ts` pomija `fetch:"fb"`
+niezależnie od tego, czy dataset jest ustawiony. Wynik to `fb-pages.json` + tabela na stdout;
+kolumna `nowe` ma tę samą definicję co `novel` przy grupach (nie dała tego żadna strona), więc
+oba kanały da się zestawić, a `z grup` mówi, ile z tego już kupujemy w grupach.
 
 ## Digest (17:00): Telegram (aktywny) / email (w zapasie)
 
@@ -760,10 +793,10 @@ tego nie widać w historii.
 <!-- Tabela poniżej jest generowana z src/config/params.ts przez `npm run config:docs`.
      Ręczne zmiany przepadną — popraw wpis w rejestrze. -->
 
-Wszystkie 56 parametrów, jakie potok czyta z konfiguracji. Kolumna **klasa** mówi,
+Wszystkie 59 parametrów, jakie potok czyta z konfiguracji. Kolumna **klasa** mówi,
 czym parametr jest i — co ważniejsze — GDZIE mieszka:
 
-- **próg** (24 sztuk) — steruje zachowaniem potoku i stoi w commitowanym `config.json`.
+- **próg** (26 sztuk) — steruje zachowaniem potoku i stoi w commitowanym `config.json`.
   Zmiana progu ma zostawiać ślad: `git log -p config.json` daje datę, autora i wartość przed i po,
   do zestawienia z tym, co w tych dniach robił potok. Każdy przebieg zapisuje w raporcie migawkę
   progów, którymi się kierował (`RunReport.config`), więc stary raport da się czytać bez zgadywania.
@@ -816,6 +849,7 @@ która obowiązuje, gdy nie ustawiono nic. Dłuższe uzasadnienia stoją przy wp
 | `BD_MAX_FB_EVENTS` | `40` | próg | sufit rozwijanych linków do wydarzeń FB na jeden przebieg |
 | `BD_DATASET_FB_EVENTS` | `gd_m14sd0to1jz48ppm51` | ustawienie | id scrapera wydarzeń FB (nadpisanie na wypadek zmian po stronie BD) |
 | `BD_DATASET_FB_GROUP_POSTS` | `gd_lz11l67o2cb3r0lkj3` | ustawienie | id scrapera postów z grup FB |
+| `BD_DATASET_FB_PAGE_POSTS` | brak | ustawienie | id scrapera postów z FANPAGE'ÓW — bez niego sonda fanpage'ów nie ruszy |
 | `BD_POLL_MS` | `10000` | próg | co ile odpytywać Bright Data o gotowość migawki |
 | `BD_TIMEOUT_MS` | `480000` | próg | po tylu ms migawka jest porzucana i anulowana (awaria 2026-08-10) |
 | `FB_GROUP_BLOCKED_LIMIT` | `3` | próg | po tylu płatnych wierszach błędu z rzędu grupa jest pomijana |
@@ -827,6 +861,8 @@ która obowiązuje, gdy nie ustawiono nic. Dłuższe uzasadnienia stoją przy wp
 | `FB_YIELD_MIN_RUNS` | `5` | próg | minimum realnych pobrań, zanim próg zapadnie |
 | `FB_MUTE_DAYS` | `30` | próg | na ile dni wycisza, zanim źródło wróci do pomiaru |
 | `FB_MIN_SOURCES_PER_TOWN` | `1` | próg | ile grup FB zostaje w gminie mimo progu; 0 wyłącza podłogę |
+| `PROBE_FB_PAGE_LIMIT` | `20` | próg | limit_per_input na jeden fanpage w sondzie `probe-fb-pages` |
+| `PROBE_FB_MAX_RECORDS` | `300` | próg | twardy sufit rekordów na CAŁĄ sondę fanpage'ów (~$0.45 przy $0.0015/rekord) |
 
 **potok: sufity i tryby (tokeny, wywołania LLM, punkt wejścia)**
 

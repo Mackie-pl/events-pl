@@ -152,6 +152,13 @@
       "def": "gd_lz11l67o2cb3r0lkj3"
     },
     {
+      "name": "BD_DATASET_FB_PAGE_POSTS",
+      "group": "fb",
+      "cls": "setting",
+      "summary": "id scrapera postów z FANPAGE'ÓW — bez niego sonda fanpage'ów nie ruszy",
+      "def": null
+    },
+    {
       "name": "BD_POLL_MS",
       "group": "fb",
       "cls": "tuning",
@@ -227,6 +234,20 @@
       "cls": "tuning",
       "summary": "ile grup FB zostaje w gminie mimo progu; 0 wyłącza podłogę",
       "def": 1
+    },
+    {
+      "name": "PROBE_FB_PAGE_LIMIT",
+      "group": "fb",
+      "cls": "tuning",
+      "summary": "limit_per_input na jeden fanpage w sondzie `probe-fb-pages`",
+      "def": 20
+    },
+    {
+      "name": "PROBE_FB_MAX_RECORDS",
+      "group": "fb",
+      "cls": "tuning",
+      "summary": "twardy sufit rekordów na CAŁĄ sondę fanpage'ów (~$0.45 przy $0.0015/rekord)",
+      "def": 300
     },
     {
       "name": "EXTRACT_MAX_TOKENS",

@@ -29,6 +29,8 @@ const BASE = "https://api.brightdata.com/datasets/v3";
 export const BD_DATASETS = {
   fbEvents: P.BD_DATASET_FB_EVENTS.get(),
   fbGroupPosts: P.BD_DATASET_FB_GROUP_POSTS.get(),
+  /** `""` = nieustawione. Fanpage'e są poza daily; czyta to wyłącznie sonda `probe-fb-pages`. */
+  fbPagePosts: P.BD_DATASET_FB_PAGE_POSTS.get() ?? "",
 } as const;
 
 export type BdRecord = Record<string, unknown>;
