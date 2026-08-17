@@ -37,10 +37,12 @@ describe("rankLinks", () => {
     // estrada.poznan.pl: /event/<slug> pasuje do wzorca, ale to WPIS, nie lista
     const siblings = ["koncert-a-w-parku", "koncert-b-w-parku", "koncert-c-w-parku", "koncert-d-w-parku"]
       .map((s) => link(`https://x.pl/event/${s}`, "Koncert", false));
-    const ranked = rankLinks([...siblings, link("https://x.pl/repertuar", "Repertuar", true)], "https://x.pl/");
+    // dział-przeciwwaga to „aktualności", a nie „repertuar": to drugie wypadło z GOOD
+    // 2026-08-17, bo premiowało strony, które potok odrzuca jako seanse (repertoire.ts)
+    const ranked = rankLinks([...siblings, link("https://x.pl/aktualnosci", "Aktualności", true)], "https://x.pl/");
     assert.ok(!ranked.some((c) => c.url.startsWith("https://x.pl/event/")),
       "adres z licznym rodzeństwem to wpis, nie dział");
-    assert.equal(ranked[0]?.url, "https://x.pl/repertuar");
+    assert.equal(ranked[0]?.url, "https://x.pl/aktualnosci");
   });
 
   it("archiwum i pliki odpadają mimo pasującego słowa", () => {

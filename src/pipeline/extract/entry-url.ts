@@ -15,6 +15,7 @@
  */
 import { isFbFetch } from "../../shared/url.js";
 import type { EntryPoint, Source } from "../../types/index.js";
+import { repertoireSegment } from "../repertoire.js";
 
 const KIND_RANK: Record<EntryPoint["kind"], number> = { listing: 0, feed: 1, api: 2 };
 
@@ -29,19 +30,35 @@ export interface Entry {
   url: string;
   /** wybrany entrypoint — brak znaczy „wchodzimy korzeniem serwisu" */
   entrypoint?: EntryPoint;
+  /** entrypointy odrzucone jako repertuar — do śladu; brak = nie odrzuciliśmy żadnego */
+  skipped?: { url: string; segment: string }[];
 }
 
 /**
  * Adres wejścia dla tego źródła. Dla FB zawsze `Source.url`: tamta ścieżka idzie przez
  * Bright Data i nie pobiera stron HTTP-em, więc entrypoint tylko by ją rozstroił.
+ *
+ * ENTRYPOINT BYWA PUŁAPKĄ i to nie jest przypadek jednego serwisu. Etap 1 wybiera adres
+ * gęstością listy odnośników, a repertuar kina bije tym pomiarem każdą listę wydarzeń:
+ * `kultura.poznan.pl/mim/kultura/seances/` miało 48 kart szczegółu, `…/events/` mniej.
+ * Odrzucamy tu, a nie w etapie 1, bo etap 2 musi być odporny także na to, co już leży
+ * w rejestrze — a odrzucony entrypoint zostawia źródło na korzeniu serwisu, czyli na tej
+ * właściwej liście. Powód odrzucenia wraca do wywołującego, żeby zapisał go w śladzie:
+ * ta funkcja jest czysta i nie ma prawa sama pisać po audycie.
  */
 export function entryUrl(src: Source): Entry {
   const page = (u: string): string => u.replace("{page}", "1");
   if (isFbFetch(src.fetch)) return { url: page(src.url) };
 
-  const best = (src.entrypoints ?? []).reduce<EntryPoint | null>(
-    (acc, e) => (acc ? better(acc, e) : e), null,
-  );
-  if (!best) return { url: page(src.url) };
-  return { url: page(best.url), entrypoint: best };
+  const skipped: { url: string; segment: string }[] = [];
+  const usable = (src.entrypoints ?? []).filter((e) => {
+    const segment = repertoireSegment(e.url);
+    if (segment) skipped.push({ url: e.url, segment });
+    return segment === null;
+  });
+  const trail = skipped.length ? { skipped } : {};
+
+  const best = usable.reduce<EntryPoint | null>((acc, e) => (acc ? better(acc, e) : e), null);
+  if (!best) return { url: page(src.url), ...trail };
+  return { url: page(best.url), entrypoint: best, ...trail };
 }

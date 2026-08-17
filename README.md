@@ -28,7 +28,7 @@ src/actions/discover.ts  ·  --why <id> = skąd to źródło      (metryki + śl
 | plik | rola |
 |---|---|
 | `sources.json` | rejestr źródeł Poznań +15 km (etap 1 wykonany ręcznie 2026-07-20; 46 źródeł, 13 gmin) + `provenance` przy każdym źródle dodanym automatycznie |
-| `src/actions/` | wejścia potoku — `daily`, `discover`, `digest`, `backfill-costs`, `probe` (sprawdzenie jednego źródła na żądanie), `probe-fb-pages` (jednorazowy pomiar fanpage'ów, patrz niżej), `panel-server` (lokalny most panelu). Same main() + orkiestracja, zero logiki dziedzinowej |
+| `src/actions/` | wejścia potoku — `daily`, `discover`, `digest`, `backfill-costs`, `probe` (sprawdzenie jednego źródła na żądanie), `probe-fb-pages` (jednorazowy pomiar fanpage'ów), `fb-budget-preview` (darmowy podgląd decyzji regulatora budżetu), `panel-server` (lokalny most panelu). Same main() + orkiestracja, zero logiki dziedzinowej |
 | `src/adapters/` | wyjścia do świata: `openrouter`, `search` (fasada) + `serper`/`google-cse`/`brave`, `overpass`, `nominatim`, `page-fetch`, `brightdata`, `supabase-archive`, `telegram`, `resend`, `http` |
 | `src/pipeline/` | logika dziedzinowa: `discover/` (discovery gmin, walidacja propozycji, `entrypoint`, `capabilities`, `--why`), `verify/` (drabina osiągalności, profil, naprawa URL-i), `extract/` (ekstrakcja, followupy, wydarzenia FB), `digest/`, `dedupe`, `camps` (odsiew półkolonii — turnus z zapisami to nie wydarzenie; jeden filtr przed scalaniem, wspólny dla wszystkich ścieżek), `series` (rytm `repeat` z drutu → terminy, a powtórzenia → jeden wpis z listą `dates`; zwijanie po dedupe, wspólne dla modelu, plakatów, cache'u i kalendarzy), `pii`, `facebook`, `prompts` |
 | `src/shared/` | narzędzia bez zależności: `url-template` (zwijanie adresów do szablonów — serce rozpoznania list), `links`, `dates`, `text`, `url`, `hash`, `audit`, `errors`, `json-schema`, `series` (arytmetyka rytmu + etykieta cyklu — jedna implementacja dla digestu i strony) |
@@ -332,10 +332,46 @@ triggerem i jest sprawdzany po każdym pobraniu. `BD_DATASET_FB_PAGE_POSTS` nie 
 domyślnej: zgadnięte id u dostawcy per-rekord to w najlepszym razie błąd triggera.
 
 **Czego sonda NIE robi.** Nie zapisuje `events.json`, `state.json`, `runs.json` ani `costs.json`
-(idzie przez `probeSource`), i **nie zmienia rachunku za crona** — `daily.ts` pomija `fetch:"fb"`
-niezależnie od tego, czy dataset jest ustawiony. Wynik to `fb-pages.json` + tabela na stdout;
-kolumna `nowe` ma tę samą definicję co `novel` przy grupach (nie dała tego żadna strona), więc
-oba kanały da się zestawić, a `z grup` mówi, ile z tego już kupujemy w grupach.
+(idzie przez `probeSource`). Wynik to `fb-pages.json` + tabela na stdout; kolumna `nowe` ma tę
+samą definicję co `novel` przy grupach (nie dała tego żadna strona), więc oba kanały da się
+zestawić, a `z grup` mówi, ile z tego już kupujemy w grupach.
+
+**Wynik pomiaru 2026-08-16** (260 rekordów, $0.42): fanpage'e dają wydarzenia spoza stron po
+**$0.0042** wobec **$0.0062** w grupach, przy gęstości rekord→post ~95% (tablica ogłoszeń: 22%).
+Najlepszy, `cik-poznan-fb`, to $0.0006/wyd. — 3× taniej niż najlepsza grupa. Ale tylko **1 ze 99**
+wydarzeń pokrywa się z tym, co dają grupy: fanpage'e są kanałem ADDYTYWNYM, nie zamiennikiem.
+Dlatego od 2026-08-17 fanpage'e chodzą w `daily` na tych samych prawach co grupy, a o tym, które
+z nich pobieramy, decyduje regulator budżetu (niżej).
+
+### Regulator budżetu kanału FB
+
+**Dlaczego próg cenowy nie wystarczał.** `FB_MAX_USD_PER_EVENT` odpowiada na pytanie „czy TO
+źródło jest tanie", a rachunek przychodzi za SUMĘ. Discovery dokłada źródła monotonicznie, każde
+nowe przechodzi próg, a całość rośnie bez ograniczenia — pomiar 2026-08-17: próg $0.02 przepuszcza
+15 z 24 grup, realny wydatek $17.3/mies. przy budżecie $15, i to JUŻ z ośmioma wyciszonymi.
+Własność perwersyjna: **każde dobre znalezisko pogarszało budżet**, więc czterech najtańszych
+źródeł w całym kanale (fanpage'e, $0.0006–$0.0047) nie dało się przyjąć.
+
+**Jak działa teraz** (`src/pipeline/extract/fb-budget.ts`). Wszystkie źródła FB — grupy i
+fanpage'e, jedna kolejka — ustawiamy rosnąco po zmierzonym `usdPerNovel` i przyjmujemy zachłannie,
+aż wyczerpie się dzienny budżet. Próg przestaje być pokrętłem i staje się **wynikiem**: ceną
+źródła brzegowego. Tanie źródło WYPYCHA droższe, zamiast dokładać się do rachunku.
+
+- **Budżet liczy się z pomiaru**: `COST_MONTHLY_BUDGET_USD` minus to, co realnie zjadła reszta
+  potoku. Potanienie modelu samo oddaje miejsce kanałowi FB (ekstrakcja spadła z ~$0.75 do
+  ~$0.04/dobę po zmianie modelu) — nikt tego nigdzie nie przepisuje.
+- **Pas pomiarowy** (`FB_PROBATION_SHARE`, domyślnie 15%): źródła bez ceny nie mają jak wejść do
+  kolejki, więc mają własny, ograniczony kawałek budżetu, najrzadziej pobierane pierwsze. Bez tego
+  kanał zamarłby na dzisiejszym składzie. Koszt pobrania źródła niepobieranego to SZACUNEK z sufitu
+  limitu — zmierzone zero znaczyłoby „za darmo" i pas przyjąłby wszystkie 25 fanpage'ów naraz.
+- **Podłoga obsady gminy** liczy każde źródło FB, nie tylko grupę — inaczej gmina z żywym
+  fanpage'em instytucji musiałaby i tak utrzymywać płatną tablicę ogłoszeń.
+- `FB_MAX_USD_PER_EVENT` zostaje jako **opcjonalny twardy sufit** („za drogie, choćby się mieściło"),
+  nie jako główna reguła.
+
+```bash
+npm run fb-budget-preview   # co zrobi najbliższy daily — DARMOWE, czyta tylko runs.json
+```
 
 ## Digest (17:00): Telegram (aktywny) / email (w zapasie)
 
@@ -802,10 +838,10 @@ tego nie widać w historii.
 <!-- Tabela poniżej jest generowana z src/config/params.ts przez `npm run config:docs`.
      Ręczne zmiany przepadną — popraw wpis w rejestrze. -->
 
-Wszystkie 60 parametrów, jakie potok czyta z konfiguracji. Kolumna **klasa** mówi,
+Wszystkie 61 parametrów, jakie potok czyta z konfiguracji. Kolumna **klasa** mówi,
 czym parametr jest i — co ważniejsze — GDZIE mieszka:
 
-- **próg** (27 sztuk) — steruje zachowaniem potoku i stoi w commitowanym `config.json`.
+- **próg** (28 sztuk) — steruje zachowaniem potoku i stoi w commitowanym `config.json`.
   Zmiana progu ma zostawiać ślad: `git log -p config.json` daje datę, autora i wartość przed i po,
   do zestawienia z tym, co w tych dniach robił potok. Każdy przebieg zapisuje w raporcie migawkę
   progów, którymi się kierował (`RunReport.config`), więc stary raport da się czytać bez zgadywania.
@@ -872,6 +908,7 @@ która obowiązuje, gdy nie ustawiono nic. Dłuższe uzasadnienia stoją przy wp
 | `FB_MIN_SOURCES_PER_TOWN` | `1` | próg | ile grup FB zostaje w gminie mimo progu; 0 wyłącza podłogę |
 | `PROBE_FB_PAGE_LIMIT` | `20` | próg | limit_per_input na jeden fanpage w sondzie `probe-fb-pages` |
 | `PROBE_FB_MAX_RECORDS` | `300` | próg | twardy sufit rekordów na CAŁĄ sondę fanpage'ów (~$0.45 przy $0.0015/rekord) |
+| `FB_PROBATION_SHARE` | `0.15` | próg | część budżetu FB na POMIAR źródeł jeszcze niezmierzonych (0 = nowe nigdy nie wejdą) |
 
 **potok: sufity i tryby (tokeny, wywołania LLM, punkt wejścia)**
 

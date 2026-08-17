@@ -250,6 +250,13 @@
       "def": 300
     },
     {
+      "name": "FB_PROBATION_SHARE",
+      "group": "fb",
+      "cls": "tuning",
+      "summary": "część budżetu FB na POMIAR źródeł jeszcze niezmierzonych (0 = nowe nigdy nie wejdą)",
+      "def": 0.15
+    },
+    {
       "name": "EXTRACT_MAX_TOKENS",
       "group": "pipeline",
       "cls": "tuning",
@@ -269,6 +276,13 @@
       "cls": "tuning",
       "summary": "sufit wywołań LLM na blokowanie źródeł w przebiegu (0 = nie wołaj)",
       "def": 80
+    },
+    {
+      "name": "REPERTOIRE_URL_SEGMENTS",
+      "group": "pipeline",
+      "cls": "tuning",
+      "summary": "segmenty ścieżki znaczące repertuar — takich adresów nie czytamy (po przecinku)",
+      "def": "seances,seanse,repertuar,repertoire,showtimes,seansy"
     },
     {
       "name": "ENTRYPOINT_LLM",

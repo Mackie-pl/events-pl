@@ -40,7 +40,9 @@ export type BlockedEntry = NonNullable<PipelineState["fbGroupBlocked"]>[string];
 export function blockedSkip(
   src: Source, state: PipelineState, today: string,
 ): BlockedEntry | null {
-  if (src.fetch !== "fb_group") return null;
+  // grupy i fanpage'e jednakowo: obie strategie pobierają posty przez Bright Data, więc obie
+  // mogą oddawać płatny wiersz błędu zamiast treści (profil usunięty, zmieniony adres, login wall)
+  if (src.fetch !== "fb_group" && src.fetch !== "fb") return null;
   const entry = state.fbGroupBlocked?.[src.id];
   if (!entry || entry.runs < blockedLimit()) return null;
   if (today >= addDays(entry.lastTry, recheckDays())) return null;

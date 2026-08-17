@@ -214,6 +214,18 @@ describe("fbPostExtras — co jest w rekordzie, a nie dochodzi do modelu", () =>
     }
   });
 
+  /**
+   * Rekord przynosi edge najbliższy SCRAPEROWI (2026-08-17: piętnaście grup, piętnaście
+   * hostów), a jeden z nich nie routował się z naszej sieci. Adres ma wychodzić z tej
+   * funkcji gotowy do pobrania, bo to ostatnie miejsce znające pochodzenie rekordu.
+   */
+  it("adres obrazu wychodzi z generycznym edge'em, nie z tym od scrapera", () => {
+    const x = fbPostExtras([withImage({
+      attachments: [{ url: "https://scontent-gmp1-1.xx.fbcdn.net/v/t39/p.jpg?oe=6A8864BD" }],
+    })]);
+    assert.equal(x.sampleImage, "https://scontent.xx.fbcdn.net/v/t39/p.jpg?oe=6A8864BD");
+  });
+
   it("liczy POSTY, nie obrazy — post z galerią to nadal jeden post", () => {
     const x = fbPostExtras([withImage({ photos: ["https://a.test/1.jpg", "https://a.test/2.jpg"] })]);
     assert.equal(x.withImage, 1);

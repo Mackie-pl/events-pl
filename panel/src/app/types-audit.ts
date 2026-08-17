@@ -21,6 +21,8 @@ export type AuditKind =
   /** bloki → wydarzenia: co dały świeże, co cache (detail.archive = rozliczenie blok po bloku) */
   | 'block.parsed'
   | 'event.past'
+  /** adres odrzucony PRZED pobraniem, bo stoi pod nim repertuar, a nie wydarzenia */
+  | 'url.skipped'
   | 'followup.proposed'
   | 'followup'
   | 'fb.harvest'
@@ -28,6 +30,8 @@ export type AuditKind =
   | 'fb.group'
   /** próg opłacalności kanału FB: koszt za wydarzenie, którego nie dała żadna strona */
   | 'fb.value'
+  /** regulator budżetu kanału FB: kolejka wartości, linia cięcia i cena źródła brzegowego */
+  | 'fb.budget'
   | 'geo'
   | 'geo.not-found'
   | 'dedupe.dropped'

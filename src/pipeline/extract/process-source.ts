@@ -25,6 +25,7 @@ import {
   fbGroupPostsToBlocks, fbGroupPostsToText, fbGroupStats, fbOriginsByPost, fbPostExtras,
   fbShareStats, harvestEventUrls, isEventUrl,
 } from "../facebook.js";
+import { dropRepertoire, repertoireSegment } from "../repertoire.js";
 import { expandRepeat } from "../series.js";
 
 import { detach, dropPast } from "./block-cache.js";
@@ -43,6 +44,24 @@ import { droppedInvalidStats, extractEvents, resetDroppedInvalid } from "./extra
 
 /** Ten sam adres wg reguł rejestru (bez schematu, `www.`, końcowego `/`). */
 const isSameUrl = (a: string, b: string): boolean => urlKey(a) === urlKey(b);
+
+/**
+ * Adresy do pobrania bez repertuarów. IDEMPOTENTNA i to jest tu warunek, nie ozdoba:
+ * wołamy ją dwa razy — raz na propozycjach modelu (żeby limit MAX_FOLLOWUPS_PER_SOURCE
+ * nie poszedł na adresy, których i tak nie pobierzemy), raz na gotowej liście (żeby złapać
+ * także tę odtworzoną ze `state.followupsBySource` przy niezmienionej stronie). Drugie
+ * wywołanie nie ma już czego odrzucić, więc nie dopisuje drugiej notki do śladu.
+ */
+function fetchable(urls: string[]): string[] {
+  return urls.filter((u) => {
+    const segment = repertoireSegment(u);
+    if (!segment) return true;
+    audit("url.skipped",
+      `„/${segment}/" to repertuar, a nie lista wydarzeń — nie pobieramy tej podstrony`,
+      { url: u, segment });
+    return false;
+  });
+}
 
 /**
  * Post w grupie FB → oryginał, którego jest udostępnieniem. Wypełniane przez `fetchSource`,
@@ -66,8 +85,8 @@ async function fetchSource(
 ): Promise<Fetched> {
   const { state, headers } = opts;
   if (src.fetch === "fb") {
-    // fanpage: inny dataset niż grupa, wejście wyłącznie przez sondę `probe-fb-pages`
-    // (daily.ts pomija te źródła, zanim tu dojdzie — patrz fb-page.ts)
+    // fanpage: inny dataset Bright Data niż grupa, reszta ścieżki identyczna — o tym, czy
+    // w ogóle tu wchodzi, decyduje regulator budżetu (fb-cost-mute.ts), nie ta gałąź
     const { fetched, origins } = await fetchFbPage(src, url, run);
     fbOrigins = origins;
     return fetched;
@@ -163,7 +182,18 @@ function settleDates(events: EventItem[], run: SourceRun): EventItem[] {
       { dropped: past.dropped, kept: past.kept.length });
     run.droppedPast = past.dropped;
   }
-  return past.kept;
+  // Domknięcie reguły o repertuarze, w tym samym przewężeniu, co odsiew minionych i z tego
+  // samego powodu: odrzucanie ADRESÓW działa przed pobraniem, ale seans potrafi przyjść wpisem
+  // z listy głównej podpisanym linkiem do karty seansu — a wtedy nie ma już żadnego adresu
+  // do odrzucenia. Licznik odpowiada, czy takie przecieki w ogóle istnieją.
+  const rep = dropRepertoire(past.kept);
+  if (rep.dropped) {
+    audit("event.dropped",
+      `${rep.dropped} wpisów wskazuje na kartę repertuaru — to seanse, nie wydarzenia`,
+      { dropped: rep.dropped, kept: rep.kept.length });
+    run.droppedRepertoire = rep.dropped;
+  }
+  return rep.kept;
 }
 
 /**
@@ -266,10 +296,10 @@ export async function processSource(
   run.httpStatus = fetched.httpStatus;
   // dopiero po udanym pobraniu: rzucony fetch (timeout, 401, anulowana migawka) nie jest
   // dowodem NA GRUPĘ, tylko na Bright Data — karanie za niego wyłączałoby zdrowe grupy
-  // tylko GRUPY: obie księgi (blokady i regulator limitu) są adresowane id grupy i sterują
-  // przebiegiem dziennym. Fanpage niesie te same statystyki wyłącznie do raportu sondy —
-  // wpuszczenie go tutaj zakładałoby grupom nieistniejące pomiary
-  if (run.fbGroup && src.fetch === "fb_group") {
+  // grupy i fanpage'e jednakowo: obie księgi (blokady i regulator limitu) są adresowane id
+  // źródła, a regulator liczy z POKRYCIA — czy okno sięgnęło wstecz do poprzedniego pobrania.
+  // To pytanie ma sens dla każdego strumienia postów, niezależnie od tego, czyich
+  if (run.fbGroup && (src.fetch === "fb_group" || src.fetch === "fb")) {
     noteFbGroup(src.id, run.fbGroup, state, todayIso());
     noteFbGroupRate(src.id, run.fbGroup, state, todayIso());
   }
@@ -382,7 +412,9 @@ export async function processSource(
       // w bajt taka sama, nie ma po co jej nawet dzielić
       cache[src.id] = { hash, events: detach(pageEvents), at: new Date().toISOString(), ...v };
       state.hashes[src.id] = hash; // legacy, dla zgodności ze starym state.json
-      followupUrls = proposed.slice(0, MAX_FOLLOWUPS_PER_SOURCE);
+      // odsiew PRZED limitem: repertuar w czołówce propozycji zabierałby miejsce podstronie,
+      // którą naprawdę chcemy przeczytać
+      followupUrls = fetchable(proposed).slice(0, MAX_FOLLOWUPS_PER_SOURCE);
       if (proposed.length) {
         // ucięcie ponad limit było dotąd niewidoczne: raport pokazywał tylko to, co pobrano
         audit("followup.proposed", proposed.length > followupUrls.length
@@ -393,6 +425,10 @@ export async function processSource(
       (state.followupsBySource ??= {})[src.id] = followupUrls;
     }
   }
+
+  // lista odtworzona z cache'a (304 / ten sam hash) nie przeszła jeszcze przez odsiew: powstała,
+  // zanim reguła o repertuarze istniała, a przy niezmienionej stronie nic jej nie odświeży
+  followupUrls = fetchable(followupUrls);
 
   // --- wejście z etapu 1 dołącza do followupów ---
   // Etap 1 ustala, GDZIE serwis wypisuje wydarzenia, i do tej pory nikt tego nie czytał:
@@ -405,6 +441,12 @@ export async function processSource(
   // to wybór między nimi byłby zgadywaniem — a suma jest zawsze ≥ każdej ze stron z osobna.
   // Mechanizm followupów robi dokładnie to i ma już cache po hashu, więc powtórka nic nie kosztuje.
   const entry = entryUrl(src);
+  for (const s of entry.skipped ?? []) {
+    audit("url.skipped",
+      `etap 1 wskazał „/${s.segment}/" jako listę wydarzeń — to repertuar, `
+      + "więc wchodzimy korzeniem serwisu",
+      { url: s.url, segment: s.segment });
+  }
   if (entry.entrypoint && !isSameUrl(entry.url, url) && !followupUrls.some((u) => isSameUrl(u, entry.url))) {
     // na początek listy: limit MAX_FOLLOWUPS_PER_SOURCE nie może wypchnąć adresu,
     // o którym WIEMY, że stoją pod nim wydarzenia, na rzecz propozycji modelu

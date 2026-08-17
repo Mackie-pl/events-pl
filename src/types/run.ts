@@ -17,7 +17,7 @@ export type SourceStatus =
   | "ok" | "unchanged" | "error" | "skipped-fb" | "skipped-dead" | "skipped-inactive"
   /** grupa FB, która w kolejnych pobraniach oddawała wyłącznie wiersz błędu (prywatna/usunięta) */
   | "skipped-blocked"
-  /** grupa FB powyżej progu `FB_MAX_USD_PER_EVENT` — wyciszona czasowo, wraca sama */
+  /** źródło FB poza linią budżetu kanału — wyciszone czasowo, wraca samo */
   | "skipped-costly"
   | "empty";
 
@@ -39,14 +39,28 @@ export interface FbValueRow {
   /** takie, których nie dało żadne inne źródło w ogóle (także inna grupa FB) */
   exclusive: number;
   costUsd: number;
-  /** brak = `novel === 0`, czyli koszt za nic nowego (traktowane jak przekroczenie progu) */
+  /** brak = `novel === 0`, czyli koszt za nic nowego (traktowane jak najgorsza możliwa cena) */
   usdPerNovel?: number;
+  /** pozycja w kolejce wartości; brak = źródło jeszcze bez wiarygodnej ceny */
+  rank?: number;
   /**
-   * `town-floor` = przekroczyło próg, ale zostaje, bo gmina straciłaby całą obecność na FB.
-   * Osobno od `keep`, bo to nie jest ta sama wiadomość: źródło JEST za drogie i warto o tym
-   * wiedzieć, tylko cena wycięcia gminy z serwisu jest wyższa niż cena rekordów.
+   * Koszt JEDNEGO pobrania — jednostka, w której regulator wydaje budżet. Dla źródeł nigdy
+   * niepobieranych to SZACUNEK z sufitu limitu, nie pomiar: bez tego rozróżnienia „$0.0000"
+   * w raporcie znaczyłoby raz „za darmo", a raz „nie wiemy" (patrz fb-cost-mute.ts).
    */
-  verdict: "keep" | "muted" | "town-floor" | "too-few-runs" | "no-threshold";
+  usdPerFetch?: number;
+  /** ile budżetu dziennego zjada wszystko do tej pozycji włącznie — czyni linię cięcia sprawdzalną */
+  cumulativeUsd?: number;
+  /**
+   * `town-floor` = poza linią budżetu, ale zostaje, bo gmina straciłaby całą obecność na FB.
+   * Osobno od `keep`, bo to nie jest ta sama wiadomość: źródło NIE mieści się w budżecie
+   * i warto o tym wiedzieć, tylko cena wycięcia gminy z serwisu jest wyższa niż cena rekordów.
+   * `probation` = jeszcze bez ceny, pobierane z pasa pomiarowego, żeby ją zdobyć.
+   * `over-ceiling` = ponad twardym `FB_MAX_USD_PER_EVENT`, niezależnie od budżetu.
+   */
+  verdict:
+    | "keep" | "muted" | "town-floor" | "too-few-runs" | "no-threshold"
+    | "probation" | "over-ceiling";
 }
 
 /**
@@ -218,6 +232,12 @@ export interface SourceRun {
    * czego odsiewać" — znaczy „nic nie wygasło od ostatniego czytania".
    */
   droppedPast?: number;
+  /**
+   * Wydarzenia odsiane jako repertuar (seans kina/teatru pod adresem `…/seances/…`).
+   * Brak NIE znaczy „źródło nie ma kina" — znaczy, że reguła adresowa odcięła repertuar
+   * wcześniej, przed pobraniem. Patrz src/pipeline/repertoire.ts.
+   */
+  droppedRepertoire?: number;
   /**
    * Podział SAMEJ STRONY ŹRÓDŁA. Brak = źródło szło starą drogą (jedno wywołanie na całość)
    * albo w ogóle nie dotknęło modelu. Followupy mają własne rozliczenie w `followups[].blocks`

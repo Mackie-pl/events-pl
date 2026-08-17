@@ -22,6 +22,7 @@ import { MIN_GROUP, detailGroup, detectPagination, groupByTemplate } from "../..
 import type { EntryPoint, Source } from "../../types/index.js";
 import { countFetch } from "../verify/probe.js";
 import { ENTRYPOINT_SYSTEM } from "../prompts.js";
+import { repertoireSegment } from "../repertoire.js";
 
 /** Ile kandydatów pobieramy, żeby zmierzyć je gęstością listy. */
 const MAX_CANDIDATES = 5;
@@ -32,9 +33,13 @@ const SAMPLE_CHARS = 1_200;
  * Ścieżki i teksty kotwic, pod którymi polskie instytucje trzymają wydarzenia.
  * `event` jest tu mimo polskiego kontekstu, bo motywy WordPressa robią `/event/` i `/events/`
  * niezależnie od języka serwisu — estrada.poznan.pl wypisuje tak cały repertuar.
+ *
+ * `repertuar` STĄD WYPADŁ (2026-08-17): premiował dokładnie te strony, które potok odrzuca
+ * jako seanse (patrz src/pipeline/repertoire.ts). Nagradzanie ich tutaj i odrzucanie tam
+ * znaczyłoby, że etap 1 co miesiąc wpisuje do rejestru adres, którego etap 2 nigdy nie pobierze.
  */
 const GOOD =
-  /(wydarzeni|aktualnosc|aktualnoś|kalendar|imprez|repertuar|afisz|program|co-gdzie-kiedy|kultura|event|lato|zima|wiosna|jesien|jesień|wakacj|ferie)/i;
+  /(wydarzeni|aktualnosc|aktualnoś|kalendar|imprez|afisz|program|co-gdzie-kiedy|kultura|event|lato|zima|wiosna|jesien|jesień|wakacj|ferie)/i;
 /** Miejsca, które wyglądają podobnie, a wydarzeń nie wypisują. */
 const BAD = /(archiw|relacj|galeri|przetarg|bip|zamowien|nabor|rodo|polityka|regulamin|cennik|kontakt|\/20\d\d\b|\.pdf$)/i;
 
@@ -265,7 +270,12 @@ export async function resolveEntrypoints(
 ): Promise<EntrypointVerdict> {
   const own = rankLinks(extractLinks(html, rootUrl), rootUrl);
   const home = await homeCandidates(rootUrl);
-  const ranked = mergeCandidates(own, home).slice(0, MAX_CANDIDATES);
+  // repertuar odpada PRZED pomiarem gęstości, bo tym pomiarem wygrywa: `…/seances/` miało
+  // 48 kart szczegółu przeciw mniejszej liczbie na właściwej liście wydarzeń. Odsiew tutaj
+  // oszczędza też pobrania audycji — kandydatów mierzymy najwyżej MAX_CANDIDATES.
+  const ranked = mergeCandidates(own, home)
+    .filter((c) => repertoireSegment(c.url) === null)
+    .slice(0, MAX_CANDIDATES);
   const measured: Candidate[] = [];
   for (const c of ranked) measured.push(await measure(c));
   measured.sort((a, b) => scoreOf(b) - scoreOf(a) || b.hint - a.hint);

@@ -60,6 +60,22 @@ export const STATUS_META: Record<SourceStatus, StatusMeta> = {
   empty: { label: 'empty', appearance: 'warning', icon: '@tui.circle-dashed' },
 };
 
+/**
+ * Werdykty regulatora budżetu FB. Rozróżnienie „nie zmieściło się" (`muted`) od „ponad
+ * sufitem" (`over-ceiling`) i od „jeszcze bez ceny" (`probation`) jest tu całą treścią:
+ * pierwsze wróci samo, gdy zwolni się miejsce, drugie dopiero gdy stanieje, trzecie właśnie
+ * kupuje sobie pomiar. Wspólne „wyciszone" kasowałoby tę różnicę.
+ */
+export const FB_VERDICT_META: Record<string, StatusMeta> = {
+  keep: { label: 'w budżecie', appearance: 'positive', icon: '@tui.check' },
+  'town-floor': { label: 'podłoga gminy', appearance: 'info', icon: '@tui.life-buoy' },
+  probation: { label: 'pas pomiarowy', appearance: 'warning', icon: '@tui.ruler' },
+  muted: { label: 'poza budżetem', appearance: 'neutral', icon: '@tui.banknote' },
+  'over-ceiling': { label: 'ponad sufitem', appearance: 'negative', icon: '@tui.trending-up' },
+  'too-few-runs': { label: 'czeka na pas', appearance: 'neutral', icon: '@tui.hourglass' },
+  'no-threshold': { label: 'poza regulatorem', appearance: 'neutral', icon: '@tui.minus' },
+};
+
 export const ALL_STATUSES: readonly SourceStatus[] = [
   'ok',
   'unchanged',
@@ -101,6 +117,9 @@ export const STEP_META: Record<
   'block.parsed': { icon: '@tui.table-2', tone: 'plain' },
   // minione wydarzenie to nie strata: ono się odbyło, a serwis pokazuje przyszłość
   'event.past': { icon: '@tui.calendar-off', tone: 'plain' },
+  // 'save': odrzucony adres to strona, za której przeczytanie NIE zapłaciliśmy — najtańszy
+  // możliwy wariant tej decyzji, bo zapada przed pobraniem, nie po ekstrakcji
+  'url.skipped': { icon: '@tui.circle-slash', tone: 'save' },
   'followup.proposed': { icon: '@tui.list-plus', tone: 'plain' },
   followup: { icon: '@tui.corner-down-right', tone: 'plain' },
   'fb.harvest': { icon: '@tui.link', tone: 'plain' },
@@ -108,6 +127,8 @@ export const STEP_META: Record<
   'fb.group': { icon: '@tui.activity', tone: 'spend' },
   // 'save': ten krok albo wycisza kosztowne źródło, albo pokazuje, że kanał zarabia na siebie
   'fb.value': { icon: '@tui.scale', tone: 'save' },
+  // 'save': linia budżetu decyduje, co w ogóle pobieramy — to jedyny krok mówiący DLACZEGO tyle
+  'fb.budget': { icon: '@tui.wallet', tone: 'save' },
   geo: { icon: '@tui.map-pin', tone: 'plain' },
   'geo.not-found': { icon: '@tui.map-pin', tone: 'loss' },
   'dedupe.dropped': { icon: '@tui.merge', tone: 'loss' },

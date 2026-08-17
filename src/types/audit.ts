@@ -32,6 +32,8 @@ export type AuditKind =
   | "block.parsed"
   /** wydarzenia odsiane jako minione — z cache'a bloków albo prosto od modelu */
   | "event.past"
+  /** adres odrzucony PRZED pobraniem, bo stoi pod nim repertuar, a nie wydarzenia */
+  | "url.skipped"
   /** model wskazał podstrony / PDF-y / plakaty do dociągnięcia */
   | "followup.proposed"
   /** wynik jednego followupa */
@@ -42,6 +44,8 @@ export type AuditKind =
   | "fb.group"
   /** próg opłacalności kanału FB: koszt za wydarzenie, którego nie dała żadna strona */
   | "fb.value"
+  /** regulator budżetu kanału FB: kolejka wartości, linia cięcia i cena źródła brzegowego */
+  | "fb.budget"
   /** geokodowanie miejsca (Nominatim + cache) */
   | "geo"
   /** rekord przegrał scalanie duplikatów */

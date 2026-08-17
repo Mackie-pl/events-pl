@@ -312,6 +312,8 @@ export interface SourceRun {
   cached?: number;
   /** wydarzenia odrzucone z braku daty startu (atrakcje stałe) */
   droppedInvalid?: number;
+  /** wydarzenia odsiane jako repertuar (seans kina/teatru pod adresem `…/seances/…`) */
+  droppedRepertoire?: number;
   /** ścieżki obiektów w prywatnym archiwum; treść dostępna tylko przez lokalny serwer */
   archive?: string[];
   /** followupy sprawdzone mimo niezmienionej strony źródła */
@@ -352,12 +354,41 @@ export interface RunReport {
   brightdata?: BdUsage;
   /** koszt przebiegu w rozbiciu na kategorie — kopia wpisów z costs.json */
   costs?: CostEntry[];
+  /** kolejka wartości kanału FB i linia budżetu — czym regulator kierował się w TYM przebiegu */
+  fbValue?: FbValueRow[];
   /**
    * Progi, którymi kierował się TEN przebieg. Brak = raport sprzed wprowadzenia migawki.
    * Bez tego liczby wyżej są nie do zinterpretowania po fakcie: „wyciszono cztery grupy"
    * znaczy co innego przy progu $0.10, a co innego przy $0.02.
    */
   config?: ConfigSnapshot;
+}
+
+/**
+ * Rachunek jednego źródła FB w oknie `runs.json` — wiersz kolejki wartości regulatora budżetu.
+ *
+ * Mirror `src/types/run.ts`. Bez tego regulator podejmuje NAJDROŻSZĄ decyzję w potoku (jak
+ * rozdysponować cały budżet kanału) i nie zostawia po sobie nic na ekranie — a wtedy jedyną
+ * odpowiedzią na „czemu ta grupa przestała chodzić" jest czytanie runs.json ręcznie.
+ */
+export interface FbValueRow {
+  id: string;
+  fetchedRuns: number;
+  distinct: number;
+  novel: number;
+  exclusive: number;
+  costUsd: number;
+  /** brak = `novel === 0`, czyli koszt za nic nowego */
+  usdPerNovel?: number;
+  /** pozycja w kolejce wartości; brak = źródło jeszcze bez wiarygodnej ceny */
+  rank?: number;
+  /** ile budżetu zjada wszystko do tej pozycji włącznie */
+  cumulativeUsd?: number;
+  /** koszt jednego pobrania; dla niepobieranych to szacunek z sufitu limitu, nie pomiar */
+  usdPerFetch?: number;
+  verdict:
+    | 'keep' | 'muted' | 'town-floor' | 'too-few-runs' | 'no-threshold'
+    | 'probation' | 'over-ceiling';
 }
 
 // ---------------- koszty ----------------

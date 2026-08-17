@@ -10,7 +10,7 @@ import { describe, it } from "node:test";
 
 import { addDays, dayOfWeek, fmtDayPl } from "../src/shared/dates.js";
 import { slug, str, trim } from "../src/shared/text.js";
-import { host, isFbFetch, normalizeFbGroupUrl, urlKey } from "../src/shared/url.js";
+import { host, isFbFetch, normalizeFbCdnUrl, normalizeFbGroupUrl, urlKey } from "../src/shared/url.js";
 
 describe("urlKey", () => {
   it("skleja warianty tego samego adresu", () => {
@@ -82,6 +82,30 @@ describe("host / normalizeFbGroupUrl / isFbFetch", () => {
       "https://www.facebook.com/groups/poznan123",
     );
     assert.equal(normalizeFbGroupUrl("https://example.pl/a"), "https://example.pl/a");
+  });
+
+  /**
+   * Adresy z przebiegu 2026-08-17 (`audit.json`, krok `fb.group` → `sampleImage`), przycięte.
+   * Wszystkie piętnaście grup oddało INNY edge; `scontent-gmp1-1` (Gimpo) jako jedyny nie
+   * routował się z naszej sieci, a podpis `oh`/`oe` przeszedł na hoście generycznym.
+   */
+  it("edge CDN-u Facebooka schodzi do generycznego, podpis zostaje nietknięty", () => {
+    const oh = "?stp=dst-jpg_tt6&_nc_ohc=K-9Dqb5MB7sQ&oh=00_AQFisOctPRqUeSI2&oe=6A8864BD";
+    for (const edge of ["scontent-gmp1-1.xx", "scontent.fjed5-1.fna", "scontent-cdg6-1.xx"]) {
+      assert.equal(
+        normalizeFbCdnUrl(`https://${edge}.fbcdn.net/v/t39.30808-6/777854197_n.jpg${oh}`),
+        `https://scontent.xx.fbcdn.net/v/t39.30808-6/777854197_n.jpg${oh}`,
+      );
+    }
+  });
+
+  it("cudzych hostów nie rusza, a na śmieciu oddaje wejście bez zmian", () => {
+    for (const u of [
+      "https://video.fjed5-1.fna.fbcdn.net/v/x.mp4", // nie-obrazowy host fbcdn
+      "https://scontent.example.pl/v/plakat.jpg", // scontent, ale nie fbcdn
+      "https://kultura.poznan.pl/plakat.jpg",
+      "nie-url",
+    ]) assert.equal(normalizeFbCdnUrl(u), u);
   });
 
   it("strategie FB są rozpoznane, reszta nie", () => {

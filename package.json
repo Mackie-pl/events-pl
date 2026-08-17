@@ -13,6 +13,7 @@
     "discover": "tsx --env-file-if-exists=.env src/actions/discover.ts",
     "probe": "tsx --env-file-if-exists=.env src/actions/probe.ts",
     "probe-fb-pages": "tsx --env-file-if-exists=.env src/actions/probe-fb-pages.ts",
+    "fb-budget-preview": "tsx --env-file-if-exists=.env src/actions/fb-budget-preview.ts",
     "check:structured": "tsx --env-file-if-exists=.env src/actions/check-structured.ts",
     "config:docs": "tsx src/actions/gen-config-docs.ts",
     "backfill-costs": "tsx --env-file-if-exists=.env src/actions/backfill-costs.ts",

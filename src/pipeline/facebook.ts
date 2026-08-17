@@ -9,7 +9,7 @@
  */
 import type { BdRecord } from "../adapters/brightdata.js";
 import { parseInstant, splitDateTime } from "../shared/dates.js";
-import { urlKey } from "../shared/url.js";
+import { normalizeFbCdnUrl, urlKey } from "../shared/url.js";
 import type { AgeRange, EventItem, EventOrigin, FbGroupStats, Price } from "../types/index.js";
 
 const EVENT_URL_RE = /(?:https?:\/\/)?(?:[\w-]+\.)?facebook\.com\/events\/(\d+)/gi;
@@ -204,11 +204,15 @@ const PLACE_KEYS = ["location", "place", "place_name", "venue", "location_name",
  * URL-e ukryte w wartości pola. Scrapery oddają obrazy raz jako string, raz jako listę
  * stringów, raz jako listę obiektów `{url}` — a nazwy pól bywają różne między wersjami,
  * więc zgadujemy kształt, nie polegamy na jednym.
+ *
+ * Adres wychodzi stąd już z generycznym edge'em CDN-u (`normalizeFbCdnUrl`), bo to jedyne
+ * miejsce, przez które obraz z rekordu wchodzi do potoku — normalizacja postawiona dalej
+ * musiałaby być pamiętana w każdym następnym odbiorcy.
  */
 function urlsIn(value: unknown, depth = 0): string[] {
   if (typeof value === "string") {
     const s = value.trim();
-    return /^https?:\/\//i.test(s) ? [s] : [];
+    return /^https?:\/\//i.test(s) ? [normalizeFbCdnUrl(s)] : [];
   }
   if (depth >= 2) return []; // dalej niż listę obiektów nie schodzimy — to już nie jest pole z URL-em
   if (Array.isArray(value)) return value.flatMap((v) => urlsIn(v, depth + 1));

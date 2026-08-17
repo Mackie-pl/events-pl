@@ -24,12 +24,17 @@ export interface ConfigSnapshot {
 }
 
 /**
- * `get()` oddaje `unknown`; progi to z założenia skalary. Niespodzianka (np. ktoś zrobił z progu
- * listę) ma tu zgasnąć od razu, a nie wylądować w raporcie jako `[object Object]`.
+ * `get()` oddaje `unknown`; do raportu idzie skalar. Niespodzianka (obiekt, funkcja) ma tu
+ * zgasnąć od razu, a nie wylądować w raporcie jako `[object Object]`.
+ *
+ * Lista po przecinku (`csv`) jest wyjątkiem i wraca do postaci, w której STOI W config.json —
+ * czyli jednego stringa. Zapisanie jej tablicą rozjechałoby migawkę z plikiem, a to właśnie
+ * ich porównywalność jest tu jedynym celem (patrz REPERTOIRE_URL_SEGMENTS).
  */
 const scalar = (name: string, v: unknown): ConfigValue => {
   if (v === undefined || v === null) return null;
   if (typeof v === "string" || typeof v === "number" || typeof v === "boolean") return v;
+  if (Array.isArray(v) && v.every((x) => typeof x === "string")) return v.join(",");
   throw new Error(`${name}: próg musi być skalarem, jest ${typeof v}`);
 };
 

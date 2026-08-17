@@ -22,6 +22,8 @@ import { DEDUPE_WHY, dedupe } from "../pipeline/dedupe.js";
 import { harvestEventUrls, isEventUrl } from "../pipeline/facebook.js";
 import { pruneBlocks } from "../pipeline/extract/block-cache.js";
 import { resolveFbEvents } from "../pipeline/extract/fb-events.js";
+import { fbPageDatasetReady } from "../pipeline/extract/fb-page.js";
+import { fbDailyBudget } from "../pipeline/extract/fb-budget.js";
 import { applyFbMutes, mutedSkip } from "../pipeline/extract/fb-cost-mute.js";
 import { blockedSkip, recheckDays } from "../pipeline/extract/fb-group-blocked.js";
 import {
@@ -77,11 +79,13 @@ async function run(): Promise<void> {
 
   for (const src of cfg.sources) {
     beginAuditSource(src.id);
-    if (
-      src.fetch === "fb" ||
-      ((src.fetch === "fb_group" || src.fetch === "fb_event") && !bdEnabled())
-    ) {
-      // fanpage: osobny dataset Bright Data, poza zakresem daily; fb_group/fb_event bez klucza → tryb zero-cost
+    // Fanpage bez ustawionego datasetu jest jak grupa bez klucza — nie ma czym pobrać.
+    // To JEDYNY powód, dla którego fanpage tu nie wchodzi; o tym, czy się opłaca, decyduje
+    // ten sam regulator budżetu co dla grup (fb-cost-mute.ts), a nie strategia pobrania.
+    const fbUnavailable =
+      (src.fetch === "fb" && (!bdEnabled() || !fbPageDatasetReady())) ||
+      ((src.fetch === "fb_group" || src.fetch === "fb_event") && !bdEnabled());
+    if (fbUnavailable) {
       if (bdEnabled() && isEventUrl(src.url))
         for (const u of harvestEventUrls(src.url)) fbEventUrls.add(u);
       sourceRuns.push(
@@ -89,8 +93,8 @@ async function run(): Promise<void> {
       );
       audit(
         "skip",
-        bdEnabled()
-          ? `fanpage FB (fetch:„${src.fetch}") — inny dataset Bright Data, poza zakresem daily`
+        src.fetch === "fb" && bdEnabled()
+          ? `fanpage FB — brak BD_DATASET_FB_PAGE_POSTS, nie ma czym pobrać postów strony`
           : `źródło FB (fetch:„${src.fetch}") bez klucza Bright Data — tryb zero-cost`,
       );
       continue;
@@ -296,14 +300,23 @@ async function run(): Promise<void> {
   // żeby ta sama rozpiska poszła do runs.json, costs.json i na stdout
   report.costs = buildDailyCosts(report, archiveStats().bytes);
 
-  // Próg opłacalności FB. Okno to runs.json RAZEM z bieżącym przebiegiem — inaczej dzisiejszy
+  // Regulator budżetu FB. Okno to runs.json RAZEM z bieżącym przebiegiem — inaczej dzisiejszy
   // koszt wchodziłby do rachunku dopiero jutro, a wyciszenie zawsze spóźniało się o dobę.
   // Musi stać po `attachProduced` (bez `produced` nie ma czego przypisać źródłom) i przed
   // zapisem stanu, bo to on niesie wyciszenia do następnego przebiegu.
+  const yieldReport = buildYield([...(await dailyRunsStore.all()), report], costRates());
+  // Budżet FB = cały budżet miesięczny minus to, co realnie zjada RESZTA potoku. Liczone
+  // z pomiaru, nie z osobnego pokrętła „ile procent na FB": potanienie modelu samo oddaje
+  // miejsce kanałowi FB (ekstrakcja spadła z ~$0.75 do ~$0.04/dobę po zmianie modelu
+  // 2026-08-16), a podrożenie samo je zabiera — bez niczyjej decyzji.
+  const nonFbDaily = yieldReport.sources
+    .filter((s) => s.channel === "web")
+    .reduce((n, s) => n + s.costUsd, 0) / Math.max(1, yieldReport.runs);
   const fbValue = applyFbMutes(
-    buildYield([...(await dailyRunsStore.all()), report], costRates()).sources,
+    yieldReport.sources,
     state,
     todayIso(),
+    fbDailyBudget(P.COST_MONTHLY_BUDGET_USD.get(), nonFbDaily),
   );
   if (fbValue.length) report.fbValue = fbValue;
 

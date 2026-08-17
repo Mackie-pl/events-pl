@@ -49,8 +49,8 @@ export class ProbeError extends Error {
  */
 function unsupported(src: Source): string | null {
   if (src.fetch === "fb") {
-    // fanpage'e zostają poza PRZEBIEGIEM dziennym, ale sonda jest właśnie od tego, żeby
-    // sprawdzić źródło, którego cron nie rusza — pod warunkiem, że jest czym pobrać
+    // fanpage chodzi w daily jak grupa; sonda sprawdza go na żądanie — pod warunkiem,
+    // że w ogóle jest czym pobrać (klucz + id datasetu stron)
     if (!bdEnabled()) return "fanpage FB wymaga BRIGHTDATA_API_KEY — bez klucza nie ma czym pobrać postów";
     if (!fbPageDatasetReady()) return FB_PAGE_DATASET_MISSING;
     return null;

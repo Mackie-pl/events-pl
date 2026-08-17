@@ -248,6 +248,11 @@ Większą dźwignią jest ścieżka plakatów z grup FB (~27 wydarzeń, i plakat
 godzinę I miejsce). Pomiar, który ma o tym rozstrzygnąć, już stoi w śladzie —
 patrz `fbPostExtras` w `pipeline/facebook.ts` i `auditFbPostExtras`.
 
+**Uwaga od 2026-08-17**: gdyby ktoś wrócił do tego pomysłu, niech najpierw przeczyta
+`src/pipeline/repertoire.ts`. Dociąganie stron repertuaru po godzinę idzie dokładnie pod prąd
+regule, która je odcina — i z dobrego powodu: repertuar zmienia się co dobę, więc jego bloki
+nigdy nie trafiają w cache. Trzy odzyskane godziny nie są warte codziennego pobrania.
+
 ### 8b. `posir-poznan`: co po naprawie godzin z URL-a zostało otwarte
 
 Wymyślone godziny (11:46, 15:18, 15:21, 15:25 — z parametru `dates=` widgetu „dodaj do

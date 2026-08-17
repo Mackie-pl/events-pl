@@ -1,15 +1,16 @@
 /**
  * Pobranie postów z FANPAGE'A FB (`fetch: "fb"`) — osobny dataset Bright Data niż grupy.
  *
- * Po co w ogóle: fanpage'e leżą w rejestrze pomijane od pierwszego dnia, z powodem czysto
- * wykonawczym („inny dataset, poza zakresem daily"), więc nigdy nie sprawdziliśmy, czy
- * instytucje ogłaszają się tam rzeczy, których nie ma nigdzie indziej. Dopóki tego nie
- * wiadomo, kanał FB składa się wyłącznie z tablic ogłoszeń — a te płacimy od POSTU, nie
- * od wydarzenia (pomiar 2026-08-16: 421 rekordów na 72 wydarzenia).
+ * Po co w ogóle: fanpage'e leżały w rejestrze pomijane od pierwszego dnia, z powodem czysto
+ * wykonawczym („inny dataset, poza zakresem daily"), więc nikt nigdy nie sprawdził, czy
+ * instytucje ogłaszają tam rzeczy, których nie ma nigdzie indziej. Sonda `probe-fb-pages`
+ * to zmierzyła (2026-08-16, 260 rekordów, $0.42): fanpage'e dają wydarzenia spoza stron po
+ * $0.0042 wobec $0.0062 w grupach, a gęstość rekord→post to ~95% wobec 22% na tablicy
+ * ogłoszeń — bo tablicy płacimy za każdy zgubiony rower.
  *
- * TEN MODUŁ NIE ZMIENIA RACHUNKU ZA CRONA. `daily.ts` pomija `fetch:"fb"` zanim w ogóle
- * dojdzie do `processSource`, niezależnie od tego, czy dataset jest ustawiony. Jedynym
- * wejściem tutaj jest sonda `probe-fb-pages`, która niczego nie zapisuje.
+ * OD 2026-08-17 FANPAGE'E CHODZĄ W DAILY na tych samych prawach co grupy: wchodzą do
+ * kolejki wartości regulatora budżetu (`fb-cost-mute.ts`) i to on decyduje, które z nich
+ * pobieramy. Ten moduł odpowiada wyłącznie za „czym pobrać", nie za „czy warto".
  *
  * Rekordy postów fanpage'a mają tę samą rodzinę pól co posty grup (Bright Data trzyma jeden
  * kształt dla obu scraperów FB), więc spłaszczanie i statystyki idą przez `facebook.ts` bez
