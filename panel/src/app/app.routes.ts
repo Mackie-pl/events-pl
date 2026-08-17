@@ -32,6 +32,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/yield/yield').then((m) => m.YieldPage),
   },
   {
+    path: 'blocks',
+    title: 'Jałowe bloki · events-pl',
+    loadComponent: () => import('./pages/blocks/blocks').then((m) => m.BlocksPage),
+  },
+  {
     path: 'discovery',
     title: 'Discovery · events-pl',
     loadComponent: () => import('./pages/discovery/discovery').then((m) => m.DiscoveryPage),

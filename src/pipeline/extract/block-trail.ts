@@ -113,6 +113,35 @@ interface Row {
 const head = (text: string): string =>
   text.replace(/\s+/g, " ").trim().slice(0, HEAD_CHARS);
 
+/**
+ * Bloki, za które dziś zapłaciliśmy i nie wyszło z nich ani jedno wydarzenie — w ZNAKACH,
+ * nie tylko w sztukach.
+ *
+ * Sama sztuka niczego nie waży: „18 z 19 bez ani jednego" brzmi jak katastrofa, a bywa
+ * osiemnastoma jednolinijkowymi stopkami; odwrotnie, jeden jałowy blok potrafi być połową
+ * strony. Płacimy za znaki, więc jałowość ma być mierzona tym, czym płacimy — inaczej nie
+ * da się powiedzieć, ile z rachunku poszło na treść, z której nic nie wychodzi.
+ *
+ * `leads` odejmuje od tego bloki, które wprawdzie nie dały wydarzenia, ale wskazały podstronę
+ * albo plakat. To nie jest strata, tylko wydatek, którego skutek widać dopiero w followupie —
+ * a bez tego rozróżnienia strona-rozdzielacz (same linki do wydarzeń) wygląda w rachunku
+ * jak najgorsze źródło w rejestrze.
+ */
+interface Waste {
+  silent: number;
+  silentChars: number;
+  silentLeads: number;
+}
+
+function wasteOf(rows: Row[]): Waste {
+  const mute = rows.filter((r) => r.state === "fresh" && !r.events);
+  return {
+    silent: mute.length,
+    silentChars: mute.reduce((n, r) => n + r.chars, 0),
+    silentLeads: mute.filter((r) => r.followups).length,
+  };
+}
+
 /** Co trzeba wiedzieć o bloku poza nim samym — w jednym worku, bo `max-params` to 4. */
 interface Ledger {
   cardHashes: Set<string>;
@@ -154,7 +183,8 @@ export async function auditBlockResult(
     rows.filter((r) => r.state === kind).reduce((n, r) => n + (r[field] ?? 0), 0);
   const fromFresh = sum("fresh", "events");
   const fromCached = sum("cached", "events");
-  const silent = rows.filter((r) => r.state === "fresh" && !r.events).length;
+  const { silent, silentChars, silentLeads } = wasteOf(rows);
+  const freshChars = totalChars(fresh);
 
   // ARCHIWUM TYLKO ZA ŚWIEŻE BLOKI. Dzień bez ani jednego to dzień, w którym rozliczenie
   // niesie same liczby — a te stoją już w notce kroku. Obiekt na źródło na dobę, w którym
@@ -173,12 +203,19 @@ export async function auditBlockResult(
     blocks: rows,
   }) : null;
 
+  // Znaki jałowych bloków stoją W NOTCE, nie tylko w detalach: notka jest jedyną warstwą,
+  // którą da się przeczytać wzrokiem w surowym audit.json, a „ile z tej strony poszło na
+  // darmo" to pytanie, dla którego ten krok w ogóle istnieje.
   audit("block.parsed",
     `${fresh.length} nowych bloków dało ${fromFresh} wydarzeń`
-    + (silent ? ` (${silent} bez ani jednego)` : "")
+    + (silent
+      ? ` (${silent} bez ani jednego: ${num(silentChars)} zn., `
+        + `${pct(silentChars, freshChars)}% świeżej treści`
+        + (silentLeads ? `, z tego ${silentLeads} wskazało followup` : "") + ")"
+      : "")
     + `, ${blocks.length - fresh.length} z cache dało ${fromCached}`,
     {
-      fromFresh, fromCached, silent,
+      fromFresh, fromCached, silent, silentChars, silentLeads, freshChars,
       followups: sum("fresh", "followups") + sum("cached", "followups"),
       ...(archive ? { archive } : {}),
     });

@@ -1,0 +1,275 @@
+@if (data.audit.error()) {
+  <div class="error-box">
+    <tui-icon icon="@tui.triangle-alert" />
+    Nie udało się wczytać audit.json
+    <button tuiButton size="s" appearance="secondary" (click)="data.audit.reload()">Ponów</button>
+  </div>
+} @else if (data.audit.isLoading() && !all().length) {
+  <tui-loader size="xl" class="page-loader" />
+} @else if (!all().length) {
+  <header tuiTitle class="page-title">
+    <h1>Jałowe bloki</h1>
+  </header>
+  <section class="empty">
+    <p>
+      W śladzie nie ma ani jednego przebiegu, w którym coś poszło do modelu ścieżką blokową.
+      Ta strona liczy z <code>audit.json</code> — powstaje przy każdym przebiegu
+      <code>daily</code>, więc albo przebiegu jeszcze nie było, albo wszystko wróciło z cache'a
+      i z wyjść maszynowych. To drugie jest dobrą wiadomością.
+    </p>
+  </section>
+} @else {
+  <header tuiTitle class="page-title">
+    <h1>Jałowe bloki</h1>
+    <div tuiSubtitle>
+      {{ window().from }} … {{ window().to }} · {{ window().runs }} przebiegów w śladzie ·
+      {{ totals().sources }} źródeł, które cokolwiek kupiły
+    </div>
+  </header>
+
+  <!-- Cztery liczby, o które w tym chodzi. Znaki stoją przed sztukami, bo płacimy za znaki:
+       „18 z 19 bloków bez wydarzeń" bywa osiemnastoma stopkami, a bywa połową strony. -->
+  <section class="cards">
+    <div class="card hero">
+      <span class="card-label">Zapłacone za milczące bloki</span>
+      <span class="card-value big">{{ charsKnown() ? '~' + usd(totals().wastedUsd) : '—' }}</span>
+      <span class="card-sub">
+        @if (charsKnown()) {
+          z {{ usd(totals().usd) }} wydanych ścieżką blokową w tym oknie
+          ({{ pct(totals().wastedUsd / (totals().usd || 1)) }}) — szacunek, patrz legenda
+        } @else {
+          {{ usd(totals().usd) }} poszło ścieżką blokową, ale żaden przebieg w oknie nie zmierzył
+          jeszcze znaków jałowych bloków — liczba pojawi się po najbliższym <code>daily</code>
+        }
+      </span>
+    </div>
+    <div class="card">
+      <span class="card-label">Znaki bez wydarzenia</span>
+      <span class="card-value">
+        {{ charsKnown() ? pct(totals().silentChars / (totals().measuredChars || 1)) : '—' }}
+      </span>
+      <span class="card-sub">
+        @if (charsKnown()) {
+          {{ num(totals().silentChars) }} z {{ num(totals().measuredChars) }} znaków objętych
+          pomiarem (do modelu poszło {{ num(totals().freshChars) }})
+        } @else {
+          {{ num(totals().freshChars) }} znaków wysłanych do modelu; ile z nich milczało — jeszcze
+          nie wiadomo
+        }
+      </span>
+    </div>
+    <div class="card">
+      <span class="card-label">Bloki bez wydarzenia</span>
+      <span class="card-value">{{ totals().silent }} / {{ totals().fresh }}</span>
+      <span class="card-sub">
+        @if (charsKnown()) {
+          z tego {{ totals().silentLeads }} wskazało followup — te nie są stratą
+        } @else {
+          sztuki liczą się od zawsze; znaki i tropy dopiero od pomiaru
+        }
+      </span>
+    </div>
+    <div class="card">
+      <span class="card-label">Nic nie znalazły ani razu</span>
+      <span class="card-value">{{ chronic().size }}</span>
+      <span class="card-sub">≥2 przebiegi z blokami, koszt &gt; 0, zero wydarzeń</span>
+    </div>
+  </section>
+
+  @if (totals().unmeasured) {
+    <!-- Nie „0 zn.", tylko jawne „niezmierzone": ślad sprzed pomiaru znaków ma same sztuki,
+         a zero w tej kolumnie wygląda dokładnie jak źródło, któremu nic się nie marnuje. -->
+    <p class="notice">
+      <tui-icon icon="@tui.info" />
+      {{ totals().unmeasured }} z {{ totals().runs }} źródło-przebiegów w oknie jest sprzed pomiaru
+      znaków — ich bloki liczą się do sztuk, ale nie do znaków ani do kwot, i stoją w tabeli jako
+      „—". Znikną same, gdy okno śladu się przewinie.
+    </p>
+  }
+
+  <section class="filters">
+    <span class="filter-label">Sortuj</span>
+    @for (s of sorts; track s.key) {
+      <button
+        tuiButton
+        size="s"
+        [appearance]="sort() === s.key ? 'primary' : 'secondary'"
+        [title]="s.hint"
+        (click)="sort.set(s.key)"
+      >
+        {{ s.label }}
+      </button>
+    }
+    <span class="spacer"></span>
+    <button
+      tuiButton
+      size="s"
+      [appearance]="onlyChronic() ? 'primary' : 'secondary'"
+      (click)="onlyChronic.set(!onlyChronic())"
+    >
+      <tui-icon icon="@tui.filter" />
+      tylko bez ani jednego wydarzenia ({{ chronic().size }})
+    </button>
+  </section>
+
+  <table tuiTable class="tbl">
+    <thead>
+      <tr>
+        <th tuiTh>źródło</th>
+        <th tuiTh class="right">przeb.</th>
+        <th tuiTh class="right">świeże bl.</th>
+        <th tuiTh class="right">jałowe bl.</th>
+        <th tuiTh class="right">świeże zn.</th>
+        <th tuiTh class="right">jałowe zn.</th>
+        <th tuiTh class="right">udział</th>
+        <th tuiTh class="right">tropy</th>
+        <th tuiTh class="right">koszt</th>
+        <th tuiTh class="right">~$ za nic</th>
+      </tr>
+    </thead>
+    <tbody tuiTbody>
+      @for (r of rows(); track r.id) {
+        <tr class="row" [class.open]="opened() === r.id" (click)="toggle(r.id)">
+          <td tuiTd>
+            <tui-icon [icon]="opened() === r.id ? '@tui.chevron-down' : '@tui.chevron-right'" />
+            <code>{{ r.id }}</code>
+            @if (chronic().has(r.id)) {
+              <span
+                tuiBadge
+                appearance="warning"
+                title="Świeża treść co przebieg, a model nie znalazł w niej ani jednego wydarzenia — najpewniej discovery wskazało niewłaściwą podstronę"
+              >
+                nic nie znalazł
+              </span>
+            }
+            @if (r.unmeasured) {
+              <span
+                tuiBadge
+                appearance="neutral"
+                title="Tyle przebiegów tego źródła jest sprzed pomiaru znaków — liczą się do sztuk, nie do kwot"
+              >
+                {{ r.unmeasured }} bez pomiaru
+              </span>
+            }
+          </td>
+          <td tuiTd class="right">{{ r.runs.length }}</td>
+          <td tuiTd class="right">{{ r.fresh }}</td>
+          <td tuiTd class="right">{{ r.silent }}</td>
+          <td tuiTd class="right">{{ num(r.freshChars) }}</td>
+          <td tuiTd class="right" [class.weak]="!known(r)">
+            {{ known(r) ? num(r.silentChars) : '—' }}
+          </td>
+          <td tuiTd class="right" [class.alert]="known(r) && silentShare(r) > 0.8">
+            {{ known(r) ? pct(silentShare(r)) : '—' }}
+          </td>
+          <td tuiTd class="right" [class.weak]="!r.silentLeads">
+            {{ known(r) ? r.silentLeads || '—' : '—' }}
+          </td>
+          <td tuiTd class="right money">{{ usd(r.usd) }}</td>
+          <td tuiTd class="right money" [class.alert]="r.wastedUsd > 0">
+            {{ known(r) ? '~' + usd(r.wastedUsd) : '—' }}
+          </td>
+        </tr>
+        @if (opened() === r.id) {
+          <tr class="detail">
+            <td tuiTd colspan="10">
+              <table class="runs">
+                <thead>
+                  <tr>
+                    <th>dzień</th>
+                    <th class="right">świeże bl.</th>
+                    <th class="right">jałowe bl.</th>
+                    <th class="right">świeże zn.</th>
+                    <th class="right">jałowe zn.</th>
+                    <th class="right">udział</th>
+                    <th class="right">wydarzenia</th>
+                    <th class="right">koszt</th>
+                    <th class="right">~$ za nic</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (w of r.runs; track w.run) {
+                    <tr [class.barren]="!w.events">
+                      <td>
+                        <!-- prosto w ślad tego źródła w tym przebiegu: tam stoją notki
+                             kroków podziału, czyli JEDYNA odpowiedź na „co w tych blokach było" -->
+                        <a tuiLink [routerLink]="['/run', w.run, 'source', r.id]">{{ w.day }}</a>
+                      </td>
+                      <td class="right">{{ w.fresh }}</td>
+                      <td class="right">{{ w.silent }}</td>
+                      <td class="right">{{ num(w.freshChars) }}</td>
+                      <td class="right">{{ w.measured ? num(w.silentChars) : '—' }}</td>
+                      <td class="right">
+                        {{ w.measured ? pct(runShare(w)) : 'niezmierzone' }}
+                      </td>
+                      <td class="right">{{ w.events }}</td>
+                      <td class="right money">{{ usd(w.usd) }}</td>
+                      <td class="right money">
+                        {{ w.measured ? '~' + usd(wasted(w)) : '—' }}
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+
+  <section class="legend">
+    <h2>Jak to czytać</h2>
+    <dl>
+      <dt>jałowy blok</dt>
+      <dd>
+        Fragment strony, który był dla cache'a NOWY (więc poszedł do modelu i za niego
+        zapłaciliśmy), a model nie wyjął z niego ani jednego wydarzenia. Zwykle menu z ruchomą
+        datą, licznik odwiedzin, banner albo stopka — coś, co zmienia się codziennie i nigdy
+        nie jest wydarzeniem.
+      </dd>
+      <dt>udział</dt>
+      <dd>
+        Jałowe znaki do świeżych znaków — liczony wyłącznie na przebiegach objętych pomiarem, więc
+        „—" znaczy „jeszcze nie wiem", a nie „nic się nie marnuje". To jest właściwa miara, nie
+        liczba bloków: osiemnaście milczących stopek waży mniej niż jedna milcząca lista. Udział
+        bliski 100% przy realnym koszcie znaczy, że płacimy za treść, która nigdy nic nie da.
+      </dd>
+      <dt>tropy</dt>
+      <dd>
+        Jałowe bloki, które mimo braku wydarzenia wskazały podstronę albo plakat. To nie jest
+        strata — ich skutek widać dopiero w followupie. Strona-rozdzielacz (same linki do
+        wydarzeń) ma tu tyle samo tropów, co jałowych bloków, i działa dokładnie tak, jak ma.
+      </dd>
+      <dt>~$ za nic</dt>
+      <dd>
+        <strong>Szacunek</strong>, nie kwota od dostawcy — i dlatego wszędzie stoi przy nim
+        <code>~</code>. Jedno wywołanie obsługuje całą paczkę bloków, więc rachunku nie da się
+        rozciąć inaczej niż udziałem treści. Zakłada, że znak kosztuje tyle samo niezależnie od
+        bloku, i pomija stały narzut promptu systemowego, którego nie odzyskałoby wycięcie nawet
+        wszystkich jałowych bloków — czyli zawyża delikatnie, zamiast zaniżać.
+      </dd>
+      <dt>nic nie znalazł</dt>
+      <dd>
+        Źródło, które w tym oknie dostawało świeżą treść w co najmniej dwóch przebiegach i ani
+        razu nie dało wydarzenia. Rzadko znaczy „serwis nic nie ma": strona się rusza (inaczej
+        cache by trafiał), tylko rusza się nie w wydarzeniach. Zwykle discovery wskazało
+        niewłaściwą podstronę.
+      </dd>
+      <dt>a co z zakładkami Plon i Powtarzalność?</dt>
+      <dd>
+        Trzy różne osie tego samego rachunku. <strong>Powtarzalność</strong> mówi, ile treści
+        płacimy DRUGI raz; <strong>Plon</strong> — które ŹRÓDŁA kosztują i nic nie dają; ta
+        strona schodzi piętro niżej i pokazuje, że nawet w źródle z dobrym plonem większość
+        wysłanych znaków bywa milcząca.
+      </dd>
+      <dt>okno</dt>
+      <dd>
+        Tyle przebiegów, ile trzyma <code>audit.json</code> (~8 dni) — krócej niż
+        <code>runs.json</code>, bo ślad jest największym plikiem w repo. Wystarczy: reguły
+        ekstrakcji zmieniają się z dnia na dzień, więc tydzień wstecz i tak nie mówi nic
+        o dzisiejszym kodzie.
+      </dd>
+    </dl>
+  </section>
+}

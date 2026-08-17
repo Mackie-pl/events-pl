@@ -86,6 +86,33 @@ describe("ślad podziału na bloki", () => {
 
     // to jest cała diagnoza „strona się rusza, ale nie w wydarzeniach" — menu, licznik, banner
     assert.equal(detail("block.parsed", "silent"), 1);
+    // sztuki nie wystarczą: płacimy za znaki, więc jałowość musi być mierzona znakami
+    assert.equal(detail("block.parsed", "silentChars"), fresh.chars);
+    assert.equal(detail("block.parsed", "freshChars"), fresh.chars);
+    assert.match(note("block.parsed"), /% świeżej treści/u);
+  });
+
+  /**
+   * Blok, który nie dał wydarzenia, ale wskazał plakat, NIE jest stratą — jego skutek widać
+   * dopiero w followupie. Bez tego rozróżnienia strona-rozdzielacz (same linki do wydarzeń)
+   * wychodzi na najgorsze źródło w rejestrze, choć robi dokładnie to, po co ją dodaliśmy.
+   */
+  it("jałowy blok, który wskazał followup, jest liczony osobno", async () => {
+    const st = state();
+    const bare = toBlock("Stopka: Gminny Ośrodek Kultury, ul. Krótka 1, tel. w zakładce Kontakt.");
+    st.blocks![fresh.hash] = {
+      events: [], followups: ["https://example.test/plakat.jpg"],
+      at: "2026-08-15", seen: "2026-08-15",
+    };
+    st.blocks![bare.hash] = { events: [], followups: [], at: "2026-08-15", seen: "2026-08-15" };
+
+    await auditBlockResult(
+      { how: "akapity", url: "https://example.test/" }, [fresh, bare], [fresh, bare], st,
+    );
+
+    assert.equal(detail("block.parsed", "silent"), 2);
+    assert.equal(detail("block.parsed", "silentLeads"), 1);
+    assert.equal(detail("block.parsed", "silentChars"), fresh.chars + bare.chars);
   });
 
   it("bez archiwum krok nie udaje, że ma co pokazać", async () => {

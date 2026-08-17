@@ -550,13 +550,22 @@ pierwsze dwa są publiczne (`audit.json`), a trzeci niesie cudzą treść i zost
 |---|---|
 | krok `block` | `podział: DOM, 38 kart → 41 bl. / 28 431 zn.; 39 z cache, 2 do modelu (1 204 zn., 4% treści)` — znaki obok liczby bloków, bo „2 z 41 bloków" brzmi jak nic, a bywa połową strony |
 | krok `block` (drugi wariant) | `bez kart mimo 3 grup rodzeństwa — tniemy po akapitach. div.tile ×5 (18 zn. — poniżej progu karty)`: **czemu** ta strona nie została rozpoznana jako lista. Wcześniej „nie ma listy" i „jest, ale nie po naszemu" wyglądały identycznie |
-| krok `block.parsed` | co z tego wyszło: ile wydarzeń dały świeże bloki, ile cache, ile bloków opłaconych **bez ani jednego** wydarzenia (`silent` — menu, licznik, banner cookies) |
+| krok `block.parsed` | co z tego wyszło: ile wydarzeń dały świeże bloki, ile cache, ile bloków opłaconych **bez ani jednego** wydarzenia — i ile te bloki **ważyły** (`silent`, `silentChars`, `silentLeads` względem `freshChars`). Sztuki same nie mówią nic: „18 z 19 bez wydarzenia" bywa osiemnastoma stopkami, a bywa połową strony, a płacimy za znaki. `silentLeads` odejmuje te, które wprawdzie nie dały wydarzenia, ale wskazały followup — one nie są stratą |
 | `blocks/…` w archiwum | wiersz na blok: hash, rozmiar, karta czy reszta strony, z cache czy do modelu, od kiedy w cache'u, ile wydarzeń dał — plus **treść** tych, za które dziś zapłaciliśmy. Zapisywane tylko wtedy, gdy cokolwiek poszło do modelu |
 
 Ostatni wiersz odpowiada na jedyne pytanie, którego z rachunku nie da się postawić: *ten blok
 kosztuje codziennie — co się w nim właściwie rusza?* Reszta strony stoi już w `raw/`, a dzień
 bez ani jednego świeżego bloku nie zapisuje obiektu w ogóle — archiwum rośnie tylko o dni,
 w których naprawdę coś zapłaciliśmy.
+
+Zsumowane po źródłach i po oknie śladu (~8 przebiegów) te dwa kroki dają zakładkę **Blocks**
+w panelu: ile znaków poszło do modelu, ile z nich milczało i ~ile to kosztowało. Trzecia oś
+rachunku obok dwóch, które już były: **Reuse** mówi, ile treści płacimy DRUGI raz, **Yield** —
+które ŹRÓDŁA kosztują i nic nie dają, a **Blocks** schodzi piętro niżej i pokazuje, że nawet
+w źródle z dobrym plonem większość wysłanych znaków bywa milcząca. Kwota jest **szacunkiem**
+(`~`): jedno wywołanie obsługuje całą paczkę bloków, więc rachunku nie da się rozciąć inaczej
+niż udziałem treści. Przebiegi sprzed wprowadzenia `silentChars` mają w tabeli `—`, nie zero —
+zero znaczyłoby „zmierzone i nic się nie marnuje", a to nieprawda.
 
 ## Dane osobowe (PII)
 
@@ -793,10 +802,10 @@ tego nie widać w historii.
 <!-- Tabela poniżej jest generowana z src/config/params.ts przez `npm run config:docs`.
      Ręczne zmiany przepadną — popraw wpis w rejestrze. -->
 
-Wszystkie 59 parametrów, jakie potok czyta z konfiguracji. Kolumna **klasa** mówi,
+Wszystkie 60 parametrów, jakie potok czyta z konfiguracji. Kolumna **klasa** mówi,
 czym parametr jest i — co ważniejsze — GDZIE mieszka:
 
-- **próg** (26 sztuk) — steruje zachowaniem potoku i stoi w commitowanym `config.json`.
+- **próg** (27 sztuk) — steruje zachowaniem potoku i stoi w commitowanym `config.json`.
   Zmiana progu ma zostawiać ślad: `git log -p config.json` daje datę, autora i wartość przed i po,
   do zestawienia z tym, co w tych dniach robił potok. Każdy przebieg zapisuje w raporcie migawkę
   progów, którymi się kierował (`RunReport.config`), więc stary raport da się czytać bez zgadywania.
@@ -871,6 +880,7 @@ która obowiązuje, gdy nie ustawiono nic. Dłuższe uzasadnienia stoją przy wp
 | `EXTRACT_MAX_TOKENS` | `12000` | próg | sufit tokenów odpowiedzi przy ekstrakcji wydarzeń |
 | `DISCOVER_MAX_TOKENS` | `12000` | próg | sufit tokenów odpowiedzi przy ocenie trafień wyszukiwarki |
 | `BLOCK_MAX_CALLS` | `80` | próg | sufit wywołań LLM na blokowanie źródeł w przebiegu (0 = nie wołaj) |
+| `REPERTOIRE_URL_SEGMENTS` | `seances,seanse,repertuar,repertoire,showtimes,seansy` | próg | segmenty ścieżki znaczące repertuar — takich adresów nie czytamy (po przecinku) |
 | `ENTRYPOINT_LLM` | `always` | próg | kiedy pytać model o punkt wejścia gminy: always \| ambiguous \| never |
 | `CONFIG_FILE` | `true` | ustawienie | `0` ignoruje config.json — przebieg na samych wartościach domyślnych |
 
