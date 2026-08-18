@@ -7,6 +7,7 @@ import { TuiTable } from '@taiga-ui/addon-table';
 import { DataService } from '../../data';
 import {
   ALL_STATUSES,
+  FB_VERDICT_META,
   STATUS_META,
   fmtDateTime,
   fmtMs,
@@ -15,7 +16,16 @@ import {
   fmtUsd,
 } from '../../format';
 import { RUN_SCOPE } from '../../types';
-import type { SourceRun, SourceStatus } from '../../types';
+import type { FbValueRow, SourceRun, SourceStatus } from '../../types';
+
+/**
+ * Kolejność werdyktów regulatora budżetu na ekranie: najpierw to, co CHODZI, potem to, co
+ * wypadło. Wewnątrz grupy decyduje pozycja w kolejce wartości, więc linia cięcia jest widoczna
+ * jako miejsce, w którym „w budżecie" przechodzi w „poza budżetem" — bez czytania liczb.
+ */
+const VERDICT_ORDER: readonly string[] = [
+  'keep', 'town-floor', 'probation', 'muted', 'over-ceiling', 'too-few-runs', 'no-threshold',
+];
 
 type SortKey = 'name' | 'town' | 'status' | 'events' | 'chars' | 'costUsd' | 'ms' | 'followups';
 
@@ -51,6 +61,7 @@ export class RunPage {
   protected readonly num = fmtNum;
   protected readonly statusMeta = STATUS_META;
   protected readonly statuses = ALL_STATUSES;
+  protected readonly verdictMeta = FB_VERDICT_META;
 
   protected readonly run = computed(() => this.data.runByStartedAt(this.runId()));
 
@@ -58,6 +69,43 @@ export class RunPage {
     // decyzje spoza pojedynczego źródła (scalanie, redakcja, publikacja) siedzą w audit.json
     this.data.requestAudit();
   }
+
+  /**
+   * Kolejka wartości kanału FB, posortowana tak, jak zapadały decyzje. Pusta dla przebiegów
+   * sprzed regulatora i dla tych bez ani jednego źródła FB.
+   */
+  protected readonly fbQueue = computed<FbValueRow[]>(() =>
+    [...(this.run()?.fbValue ?? [])].sort(
+      (a, b) =>
+        VERDICT_ORDER.indexOf(a.verdict) - VERDICT_ORDER.indexOf(b.verdict) ||
+        (a.rank ?? 9999) - (b.rank ?? 9999) ||
+        a.id.localeCompare(b.id),
+    ),
+  );
+
+  /**
+   * Czy ten przebieg niesie w ogóle kolejkę wartości. Przebiegi sprzed regulatora (do
+   * 2026-08-17) mają werdykty, ale nie mają pozycji ani kosztu pobrania — a wtedy „ostatnie
+   * przyjęte" wychodzi z sortowania alfabetycznego i jest liczbą wziętą z sufitu.
+   * Lepiej powiedzieć „nie wiadomo" niż pokazać wiarygodnie wyglądającą nieprawdę.
+   */
+  protected readonly hasRanking = computed(() =>
+    this.fbQueue().some((r) => r.rank !== undefined),
+  );
+
+  /** Cena źródła BRZEGOWEGO — próg, który wyszedł z budżetu, zamiast być zgadnięty. */
+  protected readonly marginalUsd = computed<number | null>(() => {
+    if (!this.hasRanking()) return null;
+    const kept = this.fbQueue().filter((r) => r.verdict === 'keep');
+    return kept[kept.length - 1]?.usdPerNovel ?? null;
+  });
+
+  /** Ile realnie kosztuje jedno pobranie wszystkiego, co regulator dopuścił. */
+  protected readonly fbSpendPerRun = computed(() =>
+    this.fbQueue()
+      .filter((r) => r.verdict === 'keep' || r.verdict === 'town-floor' || r.verdict === 'probation')
+      .reduce((n, r) => n + (r.usdPerFetch ?? 0), 0),
+  );
 
   /** Kroki zakresu przebiegu — nie należą do żadnego źródła, więc nie ma ich na stronie źródła. */
   protected readonly runSteps = computed(

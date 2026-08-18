@@ -169,3 +169,45 @@
     text-align: right;
   }
 }
+
+// REGULATOR BUDŻETU FB — kolejka wartości i linia cięcia.
+// Wiersze poza budżetem są przygaszone, ale NIE ukryte: „czemu ta grupa przestała chodzić"
+// to najczęstsze pytanie do tej tabeli, więc odpowiedź musi być widoczna bez klikania.
+.fb-budget {
+  margin: 1.5rem 0;
+
+  h2 {
+    font-size: 1rem;
+    margin: 0 0 0.35rem;
+  }
+}
+
+.fb-budget-lead {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  color: var(--tui-text-secondary);
+  line-height: 1.45;
+}
+
+.fb-table {
+  width: 100%;
+
+  .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.fb-row--out {
+  opacity: 0.55;
+}
+
+// `~` przy koszcie znaczy SZACUNEK z sufitu limitu, nie pomiar. Bez tego znaku „$0.0300"
+// przy źródle nigdy niepobieranym wygląda na zmierzone i nikt nie sprawdzi, skąd się wzięło.
+.est {
+  color: var(--tui-text-tertiary);
+
+  &--on {
+    font-weight: 700;
+  }
+}

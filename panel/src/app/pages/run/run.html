@@ -70,6 +70,73 @@
     />
   </div>
 
+  <!-- REGULATOR BUDŻETU FB. Najdroższa decyzja w całym potoku — jak rozdysponować budżet
+       kanału — i do 2026-08-17 jedyny jej ślad leżał w runs.json. Na ekranie widać było
+       wyłącznie skutek („skipped costly"), nigdy powód: która pozycja w kolejce, przy jakiej
+       cenie brzegowej i co ją wypchnęło. -->
+  @if (fbQueue().length) {
+    <section class="fb-budget">
+      <h2>Budżet kanału FB</h2>
+      <p class="fb-budget-lead">
+        @if (hasRanking()) {
+          Kolejka wartości: przyjmujemy od najtańszego, aż wyczerpie się budżet dnia.
+          @if (marginalUsd() !== null) {
+            Cena brzegowa (ostatnie przyjęte): <strong>{{ usd(marginalUsd()!) }}</strong> za wydarzenie,
+            którego nie ma żadna strona.
+          } @else {
+            Nic jeszcze nie ma zmierzonej ceny — kolejka wartości jest pusta.
+          }
+          Pobrania kosztują <strong>{{ usd(fbSpendPerRun()) }}</strong> na przebieg.
+        } @else {
+          Przebieg sprzed regulatora budżetu — są werdykty, nie ma kolejki ani kosztu pobrania.
+          Pozycje i cena brzegowa pojawią się po najbliższym <code>daily</code>.
+        }
+      </p>
+      <div class="table-wrap">
+        <table tuiTable class="fb-table">
+          <thead tuiThead>
+            <tr tuiThGroup>
+              <th tuiTh>Werdykt</th>
+              <th tuiTh>Źródło</th>
+              <th tuiTh class="num">Poz.</th>
+              <th tuiTh class="num">$/pobranie</th>
+              <th tuiTh class="num">Nowe</th>
+              <th tuiTh class="num">$/nowe</th>
+              <th tuiTh class="num">Suma budżetu</th>
+            </tr>
+          </thead>
+          <tbody tuiTbody>
+            @for (row of fbQueue(); track row.id) {
+              <tr tuiTr [class.fb-row--out]="row.verdict === 'muted' || row.verdict === 'over-ceiling'">
+                <td tuiTd>
+                  <span tuiBadge size="s" [appearance]="verdictMeta[row.verdict].appearance">
+                    <tui-icon [icon]="verdictMeta[row.verdict].icon" />
+                    {{ verdictMeta[row.verdict].label }}
+                  </span>
+                </td>
+                <td tuiTd>
+                  <a tuiLink [routerLink]="['/run', runId(), 'source', row.id]">{{ row.id }}</a>
+                </td>
+                <td tuiTd class="num">{{ row.rank ?? '—' }}</td>
+                <td tuiTd class="num">
+                  @if (row.usdPerFetch === undefined) {
+                    —
+                  } @else {
+                    {{ usd(row.usdPerFetch) }}<!--
+                    --><span class="est est--on" title="szacunek z sufitu limitu — źródło nigdy niepobierane">{{ row.fetchedRuns ? '' : '~' }}</span>
+                  }
+                </td>
+                <td tuiTd class="num">{{ row.novel }}</td>
+                <td tuiTd class="num">{{ row.usdPerNovel === undefined ? '—' : usd(row.usdPerNovel) }}</td>
+                <td tuiTd class="num">{{ row.cumulativeUsd === undefined ? '—' : usd(row.cumulativeUsd) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+
   @if (runSteps().length) {
     <section class="run-trail">
       <h2>Run-level decisions</h2>
