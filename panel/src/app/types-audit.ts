@@ -24,6 +24,8 @@ export type AuditKind =
   /** adres odrzucony PRZED pobraniem, bo stoi pod nim repertuar, a nie wydarzenia */
   | 'url.skipped'
   | 'followup.proposed'
+  /** wpis o kształcie strony programu: sonda adresu i werdykt, czy stał pod nim program */
+  | 'container'
   | 'followup'
   | 'fb.harvest'
   /** rytm publikacji grupy FB i werdykt dostępności (płatne rekordy vs. faktyczne posty) */

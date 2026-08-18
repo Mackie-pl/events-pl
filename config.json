@@ -20,6 +20,8 @@
   "DISCOVER_MAX_TOKENS": 12000,
   "BLOCK_MAX_CALLS": 80,
   "REPERTOIRE_URL_SEGMENTS": "seances,seanse,repertuar,repertoire,showtimes,seansy",
+  "CONTAINER_MIN_SPAN_DAYS": 8,
+  "CONTAINER_MAX_PROBES": 3,
   "ENTRYPOINT_LLM": "always",
   "ARCHIVE_RETENTION_DAYS": 90,
   "COST_MONTHLY_BUDGET_USD": 15,

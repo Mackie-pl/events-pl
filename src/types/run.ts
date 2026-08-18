@@ -119,6 +119,26 @@ export interface BlockStats {
   fresh: number;
 }
 
+/**
+ * Rozliczenie sondy kontenerów: ile wpisów miało kształt strony programu, ile adresów
+ * poszło dziś do sondy i co z tego wyszło. Patrz src/pipeline/extract/container.ts.
+ *
+ * `suspects > 0` przy `probed: 0` to osobna, użyteczna wiadomość — podejrzani są, ale nie
+ * mają czego sondować (adres równy stronie źródła, obcy serwis) albo czekają na kolejny
+ * przebieg. Zlanie tego z „sonda nic nie dała" zabrałoby jedyny sygnał, że reguła w ogóle
+ * ma na czym pracować.
+ */
+export interface ContainerStats {
+  suspects: number;
+  probed: number;
+  /** adresy, pod którymi naprawdę stał program (≥2 wydarzenia niebędące parasolami) */
+  resolved: number;
+  /** wydarzenia wniesione przez sondowane adresy */
+  events: number;
+  /** parasole usunięte, bo zastąpił je program spod ich własnego adresu */
+  dropped: number;
+}
+
 export interface FollowupRun {
   url: string;
   kind: "poster" | "page";
@@ -249,6 +269,11 @@ export interface SourceRun {
   blocks?: BlockStats;
   /** followupy sprawdzone mimo niezmienionej strony źródła */
   followupsRechecked?: number;
+  /**
+   * Sonda kontenerów. Brak = źródło nie miało ani jednego wpisu o kształcie strony programu
+   * (albo `CONTAINER_MIN_SPAN_DAYS` jest zerem, czyli reguła wyłączona).
+   */
+  containers?: ContainerStats;
   /** ścieżki obiektów w prywatnym archiwum (raw/ + llm/); brak = archiwum wyłączone */
   archive?: string[];
 }

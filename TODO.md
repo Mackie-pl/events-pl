@@ -301,3 +301,27 @@ Nie do zrobienia — do NIEzrobienia. Każda wyglądała na oczywiste ulepszenie
   CMS trzyma listę wyników w kontenerze z „nav" w klasie — to był ładunek, nie opakowanie.
 - **`<main>`/`<article>` jako punkt startu.** −58% na oklubon.pl, zero albo wynik ujemny wszędzie
   indziej (tagu brak albo obejmuje cały dokument). Za mało przewidywalne na regułę globalną.
+
+---
+
+## 10. `repeat` nie zna rytmów miesięcznych
+
+Zostało otwarte po sondzie kontenerów (README, „Kontenery: karta listingu, pod którą stoi
+program"). Strona `Seniorzy w akcji` wypisuje dwa różne rodzaje rytmu naraz:
+
+```
+Nordic walking — poniedziałki 12:00–13:30, Malta            → repeat: "pn"     ✔
+Zajęcia plastyczne — II wtorek miesiąca, 16:00, Atlantis     → nie ma zapisu   ✘
+Szachy — I środa miesiąca, 11:00, Golęcin                    → nie ma zapisu   ✘
+```
+
+Pole `repeat` przyjmuje wyłącznie `codziennie` albo dni tygodnia po przecinku (`prompts.ts`,
+`REPEAT_NOTE`), więc „II wtorek miesiąca" nie ma się w czym zmieścić. Model odda wtedy albo
+pojedynczy termin, albo rytm tygodniowy — czyli **czterokrotnie za dużo terminów**, a to jest
+gorsze od braku wpisu: fałszu z danych już nikt nie wyprostuje (patrz `expandRepeat`).
+
+Czego brakuje przed zmianą: **ile takich rytmów w ogóle jest**. Na dziś znam jeden przykład
+z jednej strony — to za mało na nowy kształt pola i na `shared/series.ts`. Pomiar powinien
+policzyć w `events.json` wpisy, których tytuł albo `container` niosą „miesiąca" / „co miesiąc",
+a które weszły jako pojedynczy termin. Dopóki liczba nie wyjdzie, sonda kontenerów odzyskuje
+z takiej strony to, co umie (rytmy tygodniowe), i tyle.

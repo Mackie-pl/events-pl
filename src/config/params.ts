@@ -152,6 +152,29 @@ export const P = defineParams({
       "Pusta wartość wyłącza regułę.",
     ],
   }),
+  CONTAINER_MIN_SPAN_DAYS: num({
+    group: "pipeline", cls: "tuning", def: 8, min: 0,
+    summary: "od ilu dni zakres bez rytmu i bez godziny uznajemy za stronę programu (0 = nie sonduj)",
+    doc: [
+      "Wpis rozciągnięty na tyle dni, bez `repeat` i bez godziny startu, jest podejrzany",
+      "o bycie KONTENEREM: kartą listingu prowadzącą do strony z programem, a nie wydarzeniem.",
+      "Próg 8 dni wzięty z pomiaru na events.json 2026-08-18: festiwale i zjazdy mieszczą się",
+      "w 2–7 dniach, a wszystko powyżej to albo program (SIERPIEŃ 2026 W ZAMKU, Akcja Lato",
+      "z Biblioteką), albo wystawa czynna miesiącami. Patrz src/pipeline/extract/container.ts.",
+      "Zero wyłącza sondę — wpisy zostają takie, jakie przyszły od modelu.",
+    ],
+  }),
+  CONTAINER_MAX_PROBES: num({
+    group: "pipeline", cls: "tuning", def: 3, min: 0,
+    summary: "ile stron-programów sondujemy w jednym źródle na przebieg",
+    doc: [
+      "Sufit LICZONY OSOBNO od followupów modelu, bo odpowiada na inne pytanie i nie ma prawa",
+      "wypchnąć adresu, który model wskazał jawnie. Nadwyżka czeka na kolejny przebieg:",
+      "kolejność sondowania stawia adresy nigdy niepobrane przed tymi, które mają już wpis",
+      "w cache'u followupów, więc źródło z sześcioma podejrzanymi przerabia je w dwa przebiegi.",
+      "Ponowna sonda niezmienionej strony nie kosztuje wywołania modelu — sam fetch i hash.",
+    ],
+  }),
   ENTRYPOINT_LLM: oneOf({
     group: "pipeline", cls: "tuning", values: ["always", "ambiguous", "never"], def: "always",
     summary: "kiedy pytać model o punkt wejścia gminy: always | ambiguous | never",

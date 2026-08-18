@@ -17,6 +17,7 @@
  * stronę: w przebiegu 2026-08-12 bloki obsłużyły KAŻDĄ stronę źródła (32 paczki, 340 bloków),
  * a obok stało 20 wywołań na całość po 264 789 znaków — co do jednego followupy.
  */
+import { bdEnabled } from "../../adapters/brightdata.js";
 import {
   type Fetched, type FetchedImage, fetchImageB64, fetchPlain, validators,
 } from "../../adapters/page-fetch.js";
@@ -24,13 +25,16 @@ import { archiveRaw } from "../../adapters/supabase-archive.js";
 import { audit } from "../../shared/audit.js";
 import { describeError } from "../../shared/errors.js";
 import { sha256 } from "../../shared/hash.js";
-import { urlKey } from "../../shared/url.js";
+import { isFbFetch, urlKey } from "../../shared/url.js";
 import type {
-  CachedExtraction, EventItem, FollowupRun, PipelineError, PipelineState, Source,
+  CachedExtraction, EventItem, FollowupRun, PipelineError, PipelineState, Source, SourceRun,
 } from "../../types/index.js";
+
+import { harvestEventUrls, isEventUrl } from "../facebook.js";
 
 import { detach } from "./block-cache.js";
 import { blockSource } from "./block-source.js";
+import { containerStats, dropUmbrellas, planProbes, probeContext } from "./container.js";
 import { extractEvents, extractPoster } from "./extract.js";
 
 export const MAX_FOLLOWUPS_PER_SOURCE = 5;
@@ -68,6 +72,14 @@ export interface FollowupCtx {
    * już w cache'u ekstrakcji i nie dochodzi do modelu w ogóle.
    */
   context?: string | undefined;
+  /**
+   * Zdanie o tym, czym ta PODSTRONA jest — jedzie do ekstrakcji TEKSTU, nie plakatu.
+   * Powstaje wyłącznie w sondzie kontenerów (`probeContext`), bo tylko tam wiemy coś,
+   * czego na stronie nie ma: zakres dat z karty, do której zajęcia z rytmem należą.
+   * Osobne pole od `context`, żeby kontekst plakatu (surowy tekst bloku) nigdy nie trafił
+   * do ekstrakcji strony — tam byłby zaproszeniem do przepisania cudzych wydarzeń.
+   */
+  program?: string | undefined;
 }
 
 /** Pobrana treść followupa albo `null`, gdy `fr` niesie już gotową odpowiedź (304 / błąd). */
@@ -113,6 +125,15 @@ async function pull(
   return { content: sub.text, page: sub, img: null, validators: validatorsOf(sub) };
 }
 
+interface ReadCtx {
+  state: PipelineState;
+  fr: FollowupRun;
+  /** kontekst PLAKATU — surowy tekst bloku, przy którym stała grafika */
+  context?: string;
+  /** kontekst PROGRAMU — zdanie o podstronie; idzie wyłącznie do ekstrakcji tekstu */
+  program?: string;
+}
+
 /**
  * Odczytanie treści followupa. Plakat idzie do modelu wzrokowego, podstrona — ścieżką blokową,
  * a gdy ta odmówi (za mało bloków, przebudowa serwisu), jednym wywołaniem na całość, jak dawniej.
@@ -120,17 +141,15 @@ async function pull(
  * Rozliczenie podziału ląduje w `fr.blocks`, a nie w `SourceRun.blocks`: jedno źródło ma jedną
  * stronę i do pięciu followupów, więc wspólne pole zamazywałoby rozliczenie strony.
  */
-async function read(
-  url: string, got: Pulled, ctx: { state: PipelineState; fr: FollowupRun; context?: string },
-): Promise<EventItem[]> {
-  const { state, fr, context } = ctx;
+async function read(url: string, got: Pulled, ctx: ReadCtx): Promise<EventItem[]> {
+  const { state, fr, context, program } = ctx;
   if (got.img) {
     return (await extractPoster(
       { data: got.img.data, mediaType: got.img.mediaType }, url, context,
     )).events;
   }
-  const viaBlocks = got.page && await blockSource(got.page, url, state);
-  if (!viaBlocks) return (await extractEvents(got.content, url)).events;
+  const viaBlocks = got.page && await blockSource(got.page, url, state, program);
+  if (!viaBlocks) return (await extractEvents(got.content, url, program)).events;
   fr.blocks = viaBlocks.blocks;
   if (viaBlocks.note) fr.note = viaBlocks.note;
   return viaBlocks.events;
@@ -141,7 +160,7 @@ async function read(
  * Treść identyczna — na którykolwiek z trzech sposobów z nagłówka — nie kosztuje wywołania LLM.
  */
 export async function processFollowup(url: string, ctx: FollowupCtx): Promise<FollowupRun> {
-  const { src, state, errors, pageHash, context } = ctx;
+  const { src, state, errors, pageHash, context, program } = ctx;
   const fr: FollowupRun = { url, kind: isPoster(url) ? "poster" : "page", outcome: "ok", events: 0 };
   const cache = (state.extractions ??= {});
   const key = followupKey(url);
@@ -176,7 +195,9 @@ export async function processFollowup(url: string, ctx: FollowupCtx): Promise<Fo
       return fr;
     }
 
-    const added = await read(url, got, { state, fr, ...(context ? { context } : {}) });
+    const added = await read(url, got, {
+      state, fr, ...(context ? { context } : {}), ...(program ? { program } : {}),
+    });
     // cache po haszu CAŁEJ podstrony zostaje obok blokowego — z tego samego powodu, co przy
     // stronie źródła: gdy jutro wróci bajt w bajt taka sama, nie ma po co jej nawet dzielić
     cache[key] = { hash, events: detach(added), at: new Date().toISOString(), ...got.validators };
@@ -191,4 +212,101 @@ export async function processFollowup(url: string, ctx: FollowupCtx): Promise<Fo
     audit("followup", `nieudany: ${err}`, { url });
     return fr;
   }
+}
+
+/** Tyle, ile pętla followupów musi wiedzieć o źródle i o przebiegu, który właśnie rozlicza. */
+export interface FollowupsCtx {
+  src: Source;
+  state: PipelineState;
+  errors: PipelineError[];
+  /** raport źródła — pętla dopisuje do niego `followups` i rozliczenie sondy kontenerów */
+  run: SourceRun;
+  pageHash: string | undefined;
+  /** followup → tekst bloku, przy którym model go wskazał (wejście do odczytu plakatu) */
+  context: Map<string, string>;
+  /** linki facebook.com/events/… do zbiorczego rozwiązania na końcu przebiegu */
+  fbEventUrls: Set<string>;
+}
+
+/**
+ * Pobranie jednego followupa i dołożenie jego wydarzeń; wynik ląduje w `run.followups`.
+ * `program` podaje wyłącznie sonda kontenerów — followupy z propozycji modelu dostają
+ * co najwyżej kontekst plakatu, tak jak dotąd.
+ */
+async function pullOne(
+  url: string, into: EventItem[], ctx: FollowupsCtx, program?: string,
+): Promise<FollowupRun> {
+  const { src, state, errors, run, pageHash, context } = ctx;
+  const blockText = context.get(url);
+  const fr = await processFollowup(url, {
+    src, state, errors, pageHash,
+    ...(blockText ? { context: blockText } : {}),
+    ...(program ? { program } : {}),
+  });
+  run.followups.push(fr);
+  // „same-as-page" NIE wnosi wydarzeń: to te same bajty, co strona, a jej wydarzenia stoją już
+  // w sumie. Dorzucenie ich tutaj byłoby dokładnie tym duplikatem, dla którego ten przypadek
+  // w ogóle wykrywamy.
+  if (fr.outcome === "ok" || fr.outcome === "unchanged") into.push(...followupEvents(url, state));
+  return fr;
+}
+
+/**
+ * SONDA KONTENERÓW — followupy, których nikt nam nie wskazał.
+ *
+ * Adresy biorą się z KSZTAŁTU wydarzeń, które już mamy (patrz container.ts), a nie z propozycji
+ * modelu, więc mają własny sufit: propozycja modelu jest sygnałem z treści i nie ma prawa
+ * przegrać z naszym domysłem. Sonda chodzi też przy NIEZMIENIONEJ stronie — parasol siedzący
+ * w rejestrze od tygodnia ma się rozwiązać sam, bez czekania, aż serwis coś u siebie ruszy.
+ */
+async function probeContainers(collected: EventItem[], taken: string[], ctx: FollowupsCtx):
+Promise<EventItem[]> {
+  const { src, state, run } = ctx;
+  // FB nie chodzi HTTP-em (Bright Data albo nic), więc sonda pod fanpage'em byłaby wyłącznie
+  // pewnym błędem pobrania dopisanym do raportu
+  if (isFbFetch(src.fetch)) return collected;
+  const plan = planProbes(collected, { pageUrl: run.url, state, taken });
+  if (!plan.suspects) return collected;
+
+  const before = collected.length;
+  for (const probe of plan.probes) {
+    audit("container", `„${probe.title}" rozciąga się na ${probe.days} dni bez rytmu i bez godziny `
+      + `— to wygląda na stronę programu, więc czytamy ją z zakresem ${probe.from}–${probe.to}`,
+    { url: probe.url, days: probe.days, title: probe.title });
+    // zakres z karty jedzie RAZEM z treścią: bez niego strona programu opisuje zajęcia samym
+    // rytmem, model nie ma z czego zbudować `date_start` i słusznie nie oddaje ani jednego
+    await pullOne(probe.url, collected, ctx, probeContext(probe));
+  }
+
+  const { kept, dropped } = dropUmbrellas(collected, plan.probes.map((p) => p.url));
+  for (const u of dropped) {
+    audit("container", `„${u.ev.title}" znika — pod jego adresem stoi ${u.children} wydarzeń `
+      + "z konkretnymi terminami, a on sam był tylko parasolem",
+    { url: u.url, children: u.children, title: u.ev.title });
+  }
+  run.containers = containerStats(plan, dropped, collected.length - before);
+  return kept;
+}
+
+/**
+ * Followupy źródła: propozycje modelu i wejście z etapu 1, a za nimi sonda kontenerów.
+ *
+ * Stoi TUTAJ, a nie w process-source.ts, z dwóch powodów naraz: pętla i sonda dzielą całą
+ * obsługę jednego adresu (`pullOne`), a orkiestrator źródła jest na styku limitu rozmiaru
+ * i każda kolejna reguła dopisana w nim wprost zabiera miejsce następnej.
+ */
+export async function runFollowups(
+  urls: string[], pageEvents: EventItem[], ctx: FollowupsCtx,
+): Promise<EventItem[]> {
+  const collected: EventItem[] = [...pageEvents];
+  const taken = urls.slice(0, MAX_FOLLOWUPS_PER_SOURCE);
+  for (const url of taken) {
+    if (isEventUrl(url)) {
+      // wydarzenia FB nie do pobrania HTTP-em — dołączają do zbiorczego rozwiązania przez Bright Data
+      if (bdEnabled()) for (const u of harvestEventUrls(url)) ctx.fbEventUrls.add(u);
+      continue;
+    }
+    await pullOne(url, collected, ctx);
+  }
+  return probeContainers(collected, taken, ctx);
 }

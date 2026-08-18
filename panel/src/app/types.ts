@@ -200,6 +200,18 @@ export interface BlockStats {
   fresh: number;
 }
 
+/**
+ * Rozliczenie sondy kontenerów — mirror ../../../src/types/run.ts.
+ * `suspects > 0` przy `probed: 0` znaczy: podejrzani są, ale czekają na kolejny przebieg.
+ */
+export interface ContainerStats {
+  suspects: number;
+  probed: number;
+  resolved: number;
+  events: number;
+  dropped: number;
+}
+
 export interface FollowupRun {
   url: string;
   kind: 'poster' | 'page';
@@ -339,6 +351,8 @@ export interface SourceRun {
   archive?: string[];
   /** followupy sprawdzone mimo niezmienionej strony źródła */
   followupsRechecked?: number;
+  /** sonda stron-programów; brak = źródło nie miało wpisu o tym kształcie */
+  containers?: ContainerStats;
 }
 
 export interface RunTotals extends LlmUsage {

@@ -23,7 +23,7 @@ import type {
 } from "../../types/index.js";
 import {
   fbGroupPostsToBlocks, fbGroupPostsToText, fbGroupStats, fbImagePosts, fbOriginsByPost,
-  fbPostExtras, fbShareStats, harvestEventUrls, isEventUrl,
+  fbPostExtras, fbShareStats, harvestEventUrls,
 } from "../facebook.js";
 import { dropRepertoire, repertoireSegment } from "../repertoire.js";
 import { expandRepeat } from "../series.js";
@@ -38,9 +38,7 @@ import { fetchFbPage } from "./fb-page.js";
 import { auditFbGroup, auditFbOrigins, auditFbPostExtras, auditFbShares } from "./fb-group-trail.js";
 import { fbGroupLimit, noteFbGroupRate } from "./fb-group-limit.js";
 import { auditFbPosterYield, fbPosterYield } from "./fb-poster-yield.js";
-import {
-  MAX_FOLLOWUPS_PER_SOURCE, followupEvents, processFollowup,
-} from "./followup.js";
+import { MAX_FOLLOWUPS_PER_SOURCE, runFollowups } from "./followup.js";
 import { droppedInvalidStats, extractEvents, resetDroppedInvalid } from "./extract.js";
 
 /** Ten sam adres wg reguł rejestru (bez schematu, `www.`, końcowego `/`). */
@@ -480,24 +478,10 @@ export async function processSource(
   // --- followupy: sprawdzane ZAWSZE, także gdy strona się nie zmieniła ---
   // plakat/PDF potrafi się zmienić pod tym samym URL-em przy nietkniętym tekście strony
   if (!run.changed && followupUrls.length) run.followupsRechecked = followupUrls.length;
-  const collected: EventItem[] = [...pageEvents];
-  for (const fuUrl of followupUrls.slice(0, MAX_FOLLOWUPS_PER_SOURCE)) {
-    if (isEventUrl(fuUrl)) {
-      // wydarzenia FB nie do pobrania HTTP-em — dołączają do zbiorczego rozwiązania przez Bright Data
-      if (bdEnabled()) for (const u of harvestEventUrls(fuUrl)) fbEventUrls.add(u);
-      continue;
-    }
-    const fr = await processFollowup(
-      fuUrl, { src, state, errors, pageHash, context: followupContext.get(fuUrl) },
-    );
-    run.followups.push(fr);
-    // „same-as-page" NIE wnosi wydarzeń: to te same bajty, co strona, a jej wydarzenia
-    // stoją już w `pageEvents`. Dorzucenie ich tutaj byłoby dokładnie tym duplikatem,
-    // dla którego ten przypadek w ogóle wykrywamy.
-    if (fr.outcome === "ok" || fr.outcome === "unchanged") {
-      collected.push(...followupEvents(fuUrl, state));
-    }
-  }
+  // pętla followupów razem z sondą kontenerów siedzi w followup.ts — patrz `runFollowups`
+  const collected = await runFollowups(followupUrls, pageEvents, {
+    src, state, errors, run, pageHash, context: followupContext, fbEventUrls,
+  });
 
   const events = settleDates(collected, run);
 

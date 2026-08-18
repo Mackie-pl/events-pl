@@ -285,6 +285,20 @@
       "def": "seances,seanse,repertuar,repertoire,showtimes,seansy"
     },
     {
+      "name": "CONTAINER_MIN_SPAN_DAYS",
+      "group": "pipeline",
+      "cls": "tuning",
+      "summary": "od ilu dni zakres bez rytmu i bez godziny uznajemy za stronę programu (0 = nie sonduj)",
+      "def": 8
+    },
+    {
+      "name": "CONTAINER_MAX_PROBES",
+      "group": "pipeline",
+      "cls": "tuning",
+      "summary": "ile stron-programów sondujemy w jednym źródle na przebieg",
+      "def": 3
+    },
+    {
       "name": "ENTRYPOINT_LLM",
       "group": "pipeline",
       "cls": "tuning",

@@ -20,7 +20,9 @@ import {
   BatchExtractionSchema, EventSchema, ExtractionSchema, PosterExtractionSchema,
 } from "../../types/event-schema.js";
 import type { EventItem, ExtractionResult, Followup } from "../../types/index.js";
-import { POSTER_SYSTEM, batchExtractionSystem, extractionSystem } from "../prompts.js";
+import {
+  POSTER_SYSTEM, PROGRAM_CONTEXT_RULE, batchExtractionSystem, extractionSystem,
+} from "../prompts.js";
 
 import { keepFoundedDates } from "./date-hint.js";
 
@@ -150,14 +152,24 @@ export function parseModelJson(s: string, truncated = false): ExtractionResult {
   return raw.followups ? { events, followups: raw.followups } : { events };
 }
 
-export async function extractEvents(text: string, sourceUrl: string): Promise<ExtractionResult> {
+/**
+ * Nagłówek wiadomości użytkownika: adres, a pod nim — tylko dla sond kontenerów — zdanie
+ * o tym, czym ta podstrona jest. Bez `program` wychodzi dokładnie to, co wychodziło dotąd,
+ * co do znaku; tokeny za regułę płacimy wyłącznie tam, gdzie jest po co.
+ */
+const userHead = (sourceUrl: string, program?: string): string =>
+  program ? `ŹRÓDŁO: ${sourceUrl}\n\n${PROGRAM_CONTEXT_RULE}\n${program}\n\n` : `ŹRÓDŁO: ${sourceUrl}\n\n`;
+
+export async function extractEvents(
+  text: string, sourceUrl: string, program?: string,
+): Promise<ExtractionResult> {
   const sent = Math.min(text.length, MAX_INPUT_CHARS);
   const seen = text.slice(0, MAX_INPUT_CHARS);
   const out = await chat({
     model: MODEL_EXTRACT,
     task: "extract",
     system: extractionSystem(new Date().toISOString().slice(0, 10)),
-    user: `ŹRÓDŁO: ${sourceUrl}\n\n${seen}`,
+    user: `${userHead(sourceUrl, program)}${seen}`,
     maxTokens: MAX_TOKENS(),
     schema: RESPONSE_SCHEMA,
     temperature: 0,
@@ -255,13 +267,15 @@ export function mapBatch(
  * Jedno wywołanie na WIELE bloków. Zwraca wynik rozpisany po blokach — wpisy bez poprawnego
  * numeru przepadają, bo cache bez przypisania jest gorszy niż jego brak.
  */
-export async function extractBatch(texts: string[], sourceUrl: string): Promise<BatchResult> {
+export async function extractBatch(
+  texts: string[], sourceUrl: string, program?: string,
+): Promise<BatchResult> {
   const seen = withHeaders(texts).slice(0, MAX_INPUT_CHARS);
   const out = await chat({
     model: MODEL_EXTRACT,
     task: "extract",
     system: batchExtractionSystem(new Date().toISOString().slice(0, 10)),
-    user: `ŹRÓDŁO: ${sourceUrl}\n\n${seen}`,
+    user: `${userHead(sourceUrl, program)}${seen}`,
     maxTokens: MAX_TOKENS(),
     schema: RESPONSE_SCHEMA_BATCH,
     temperature: 0,

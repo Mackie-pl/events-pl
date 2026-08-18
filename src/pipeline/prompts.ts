@@ -136,6 +136,34 @@ BEZ DATY = NIE WYDARZENIE. Pomijaj atrakcje stałe i całoroczne (zoo, muzeum, p
 park linowy, basen, „czynne codziennie", oferta stała, cennik biletów) — od tego są mapy,
 nie ten serwis. Jeśli nie da się ustalić konkretnego "date_start", NIE dodawaj wpisu.`;
 
+/**
+ * Zasada czytania KONTEKSTU PROGRAMU — zdania o tym, czym jest właśnie czytana podstrona.
+ *
+ * Jedzie w wiadomości użytkownika, a nie w prompcie systemowym, bo dotyczy wyłącznie sond
+ * kontenerów (`extract/container.ts`): dopisana do systemowego kosztowałaby ~80 tokenów
+ * w KAŻDYM wywołaniu ekstrakcji, w tym w tych czterdziestu dziennie, które żadnego kontekstu
+ * nie dostają.
+ *
+ * Po co w ogóle: strona programu opisuje zajęcia RYTMEM, nie datami — „Zajęcia odbywają się
+ * w poniedziałki nad Maltą w godzinach 12:00 – 13:30" (okpoznan.pl, „Seniorzy w akcji",
+ * sprawdzone 2026-08-18). Daty granicznej nie ma na niej wcale: stoi na KARCIE, z której
+ * przyszliśmy („Lip 27 – Sie 31"). Bez tego zdania model stosuje regułę „bez konkretnego
+ * date_start nie dodawaj wpisu" i słusznie oddaje z takiej strony ZERO zajęć — zmierzone,
+ * pierwsza sonda tej podstrony dała 5 wydarzeń, wszystkie z ramki „INNE WYDARZENIA".
+ *
+ * Kierunek jest asymetryczny, dokładnie jak przy plakacie: kontekst UZUPEŁNIA stronę, nigdy
+ * jej nie zastępuje. Zakres z karty ma wypełnić brakujące granice rytmu i nic ponadto.
+ */
+export const PROGRAM_CONTEXT_RULE = `KONTEKST: poniższe zdanie mówi, czym jest ta podstrona.
+Użyj go WYŁĄCZNIE do uzupełnienia tego, czego na stronie nie ma: gdy wpis podaje RYTM
+(„w poniedziałki", „we wtorki", „w każdą sobotę"), ale nie podaje dat granicznych, weź je
+z kontekstu — "date_start" i "date_end" z podanego zakresu, "repeat" z rytmu ze strony.
+STRONA WYGRYWA z kontekstem zawsze, gdy sama coś datuje — także nagłówkiem sekcji
+(„Zajęcia od września 2026", „w sezonie zimowym"). Wpisu spod takiego nagłówka NIE wciągaj
+w zakres z kontekstu; jeśli nie umiesz ustalić jego terminu, pomiń go.
+Nie twórz wpisów dla wydarzeń, które stoją tylko w kontekście, i nie powielaj samego
+programu jako wydarzenia.`;
+
 export const extractionSystem = (todayIso: string): string =>
   `Wyciągasz wydarzenia lokalne z tekstu strony/PDF-a. Dziś jest ${todayIso}.
 Zwróć WYŁĄCZNIE poprawny JSON: {"events":[...],"followups":[...]}.

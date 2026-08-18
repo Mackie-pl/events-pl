@@ -142,9 +142,14 @@ export interface BlockOutcome {
  * Rozliczenie WRACA, zamiast wpisywać się w `SourceRun`: od czasu, gdy tą samą drogą chodzą
  * followupy (process-source.ts), jedno źródło woła tę funkcję wielokrotnie i zapis w miejscu
  * kazałby ostatniemu followupowi zamazać rozliczenie strony źródła.
+ *
+ * `program` dokłada się do wywołania TYLKO przy sondzie kontenerów (extract/container.ts):
+ * strona programu opisuje zajęcia rytmem, a daty graniczne stoją na karcie, z której
+ * przyszliśmy. Wynik ląduje w cache'u bloków normalnie — kontekst jest stały dla danej
+ * podstrony, więc jutro te same bloki oddadzą te same terminy bez wywołania modelu.
  */
 export async function blockSource(
-  fetched: Fetched, url: string, state: PipelineState,
+  fetched: Fetched, url: string, state: PipelineState, program?: string,
 ): Promise<BlockOutcome | null> {
   const { blocks, info } = pageBlocks(fetched, url);
   if (blocks.length < MIN_BLOCKS) return null;
@@ -169,7 +174,7 @@ export async function blockSource(
   // bloku i po tym numerze wynik wraca na swoje miejsce — przypisanie zostaje, cena spada.
   let note: string | undefined;
   for (const batch of chunk(fresh)) {
-    const result = await extractBatch(batch.map((b) => b.text), url);
+    const result = await extractBatch(batch.map((b) => b.text), url, program);
     for (const [i, b] of batch.entries()) {
       // blok bez pewnego wyniku (ucięta odpowiedź) NIE trafia do cache: zapisany jako
       // „zero wydarzeń" byłby uznany za przeczytany i nigdy nie wróciłby do modelu

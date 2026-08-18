@@ -603,6 +603,79 @@ w źródle z dobrym plonem większość wysłanych znaków bywa milcząca. Kwota
 niż udziałem treści. Przebiegi sprzed wprowadzenia `silentChars` mają w tabeli `—`, nie zero —
 zero znaczyłoby „zmierzone i nic się nie marnuje", a to nieprawda.
 
+### Kontenery: karta listingu, pod którą stoi program
+
+Karta na `okpoznan.pl/wydarzenia` (2026-08-18):
+
+```
+Lip 27 – Sie 31 · 60+ · Seniorzy w akcji | Twój wiek jest Twoim atutem
+  → /szczegoly-wydarzenia/c0ucEPTTWzwrMWBCZpHQ_seniorzy-w-akcji-…
+```
+
+Pod tym odnośnikiem stoi **dziesięć zajęć** z godzinami i miejscami (nordic walking pn 12:00 nad
+Maltą, badminton wt w Hali Wilda, tai chi śr na Grunwaldzie, od września sześć zajęć „Przyjdź
+z wnukami"). Do rejestru weszła z tego jedna linia bez godziny, rozciągnięta na 36 dni.
+
+**Prompt tego nie załatwi.** Reguła „program pod linkiem → followup" istnieje i model jej nie
+złamał: z karty listingu nie da się poznać, że pod odnośnikiem stoi program — niesie ona tytuł,
+zakres dat i wiek, dokładnie tyle samo, co karta zwykłego wydarzenia. Sygnał jest dopiero
+w **kształcie wpisu**, który z niej wyszedł, czyli u nas i za darmo:
+
+> zakres wielu dni **+** brak rytmu **+** brak godziny startu
+
+Każdy człon mówi co innego. Zakres bez rytmu znaczy, że potok nie ma z tego ani jednego
+konkretnego terminu — `occursIn` czyta taki wpis jako „trwa bez przerwy", więc wchodzi do
+**każdego** okna digestu między 27.07 a 31.08. Funkcjonalnie jest to atrakcja stała, czyli to,
+co reguła „BEZ DATY = NIE WYDARZENIE" miała odciąć; reguła patrzy jednak wyłącznie na obecność
+`date_start` i 36-dniowy parasol przez nią przechodzi. Brak godziny to najmocniejszy dowód,
+że nikt nie opisywał pojedynczego wystąpienia.
+
+**Pomiar** (`events.json` 2026-08-18, 234 wydarzenia): zakresów dłuższych niż tydzień bez rytmu
+jest **18** (7.7%), z tego 17 bez godziny. Żaden nie był jednym wydarzeniem — festiwale i zjazdy
+mieszczą się w 2–7 dniach. Powyżej są programy („SIERPIEŃ 2026 W ZAMKU", „SIERPIEŃ W OŚRODKU
+KULTURY", „Akcja Lato z Biblioteką", „LATO W BIBLIOTECE 2026") i wystawy czynne miesiącami.
+
+### Sam fetch nie wystarcza — właściwym ładunkiem sondy jest zakres z karty
+
+Pierwsza wersja sondy pobrała tę podstronę i dała **5 wydarzeń, wszystkie z ramki „INNE
+WYDARZENIA"** na dole strony. Zajęć nie było ani jednego — i model miał rację. Strona opisuje je
+wyłącznie rytmem („Zajęcia odbywają się w poniedziałki nad poznańską Maltą w godzinach
+12:00 – 13:30"), a jedyna data graniczna stoi na **karcie, z której przyszliśmy**. Bez niej
+`repeat` nie ma `date_end` (wymagane), więc reguła „bez konkretnego `date_start` nie dodawaj
+wpisu" zadziałała poprawnie i wyrzuciła cały program.
+
+Dlatego sonda dokłada do wywołania jedno zdanie (`probeContext`) — tak samo asymetrycznie,
+jak kontekst plakatu: uzupełnia to, czego na stronie nie ma, i **nigdy nie wygrywa ze stroną**,
+także gdy strona datuje sekcję nagłówkiem („Zajęcia od września 2026”).
+
+Zmierzone na żywo, dwa przebiegi:
+
+| bez kontekstu | z kontekstem |
+|---|---|
+| 5 wydarzeń, wszystkie z „INNE WYDARZENIA" | 3 zajęcia z rytmem + 0–9 zajęć wrześniowych + te same 5 z ramki |
+| zero zajęć programu | `Nordic walking` 27.07–31.08 `repeat: pn` 12:00 Malta · `Badminton` `repeat: wt` 12:00 Hala Sportowa Wilda · `Tai chi` `repeat: sr` 12:00 Pływalnia Grunwald |
+
+Po `expandRepeat` daje to kilkanaście konkretnych terminów zamiast jednej linii bez godziny.
+Wpisy z ramki „INNE WYDARZENIA" niosą **własne** `source_url`, więc nie liczą się jako dzieci
+kontenera — parasol znika dopiero dzięki zajęciom, nie dzięki rekomendacjom serwisu.
+
+Adres takiego wpisu idzie więc do **sondy** — tym samym mechanizmem followupów, który już jest,
+razem z jego cache'em po haszu treści i ścieżką blokową (`src/pipeline/extract/container.ts`):
+
+- sufit `CONTAINER_MAX_PROBES` liczony **osobno** od followupów modelu — propozycja z treści nie
+  ma prawa przegrać z naszym domysłem; nadwyżka czeka na kolejny przebieg, bo kolejka stawia
+  adresy nigdy niepobrane przed tymi, które mają już wpis w cache'u,
+- sonda chodzi też przy **niezmienionej** stronie: parasol siedzący w rejestrze od tygodnia
+  ma się rozwiązać sam, bez czekania, aż serwis coś u siebie ruszy,
+- gdy spod adresu wróciły **≥2** wydarzenia niebędące parasolami, parasol znika (krok `container`
+  w śladzie mówi, ile ich było); gdy wróciło mniej — wpis zostaje nietknięty, a sonda kosztowała
+  jedno pobranie, którego jutro nawet nie powtórzymy (ten sam hash = wynik z cache'a, zero LLM),
+- rozliczenie idzie do `SourceRun.containers` (`suspects` / `probed` / `resolved` / `events` /
+  `dropped`) — `suspects > 0` przy `probed: 0` znaczy „podejrzani są, ale nie ma czego sondować".
+
+Asymetria, która tę regułę ustawia: fałszywa sonda to jeden fetch, fałszywe przepuszczenie to
+dziesięć zajęć, których nikt nigdy nie zobaczy.
+
 ## Dane osobowe (PII)
 
 Repo jest **publiczne**, a strony instytucji podają numery kontaktowe osób prowadzących zapisy.
@@ -838,10 +911,10 @@ tego nie widać w historii.
 <!-- Tabela poniżej jest generowana z src/config/params.ts przez `npm run config:docs`.
      Ręczne zmiany przepadną — popraw wpis w rejestrze. -->
 
-Wszystkie 61 parametrów, jakie potok czyta z konfiguracji. Kolumna **klasa** mówi,
+Wszystkie 63 parametrów, jakie potok czyta z konfiguracji. Kolumna **klasa** mówi,
 czym parametr jest i — co ważniejsze — GDZIE mieszka:
 
-- **próg** (28 sztuk) — steruje zachowaniem potoku i stoi w commitowanym `config.json`.
+- **próg** (30 sztuk) — steruje zachowaniem potoku i stoi w commitowanym `config.json`.
   Zmiana progu ma zostawiać ślad: `git log -p config.json` daje datę, autora i wartość przed i po,
   do zestawienia z tym, co w tych dniach robił potok. Każdy przebieg zapisuje w raporcie migawkę
   progów, którymi się kierował (`RunReport.config`), więc stary raport da się czytać bez zgadywania.
@@ -918,6 +991,8 @@ która obowiązuje, gdy nie ustawiono nic. Dłuższe uzasadnienia stoją przy wp
 | `DISCOVER_MAX_TOKENS` | `12000` | próg | sufit tokenów odpowiedzi przy ocenie trafień wyszukiwarki |
 | `BLOCK_MAX_CALLS` | `80` | próg | sufit wywołań LLM na blokowanie źródeł w przebiegu (0 = nie wołaj) |
 | `REPERTOIRE_URL_SEGMENTS` | `seances,seanse,repertuar,repertoire,showtimes,seansy` | próg | segmenty ścieżki znaczące repertuar — takich adresów nie czytamy (po przecinku) |
+| `CONTAINER_MIN_SPAN_DAYS` | `8` | próg | od ilu dni zakres bez rytmu i bez godziny uznajemy za stronę programu (0 = nie sonduj) |
+| `CONTAINER_MAX_PROBES` | `3` | próg | ile stron-programów sondujemy w jednym źródle na przebieg |
 | `ENTRYPOINT_LLM` | `always` | próg | kiedy pytać model o punkt wejścia gminy: always \| ambiguous \| never |
 | `CONFIG_FILE` | `true` | ustawienie | `0` ignoruje config.json — przebieg na samych wartościach domyślnych |
 
