@@ -218,6 +218,8 @@ export interface SourceRun {
   bd?: BdUsage;
   /** rytm publikacji grupy FB; brak = źródło nie jest grupą albo pobranie się nie udało */
   fbGroup?: FbGroupStats;
+  /** plon postów z obrazem vs bez; brak = źródło nie jest grupą FB */
+  fbPoster?: FbPosterYield;
   ms: number;
   err?: string;
   /** np. "HTTP 403 → headless fallback ok" */
@@ -296,4 +298,49 @@ export interface RunReport {
    * nie odróżniało.
    */
   config?: ConfigSnapshot;
+}
+
+/**
+ * Ile obraz w poście jest naprawdę wart — mierzone WYNIKIEM ekstrakcji, nie obecnością pola.
+ *
+ * Pomiar powstał po tym, jak `FbPostExtras` policzył 157 z 257 postów z obrazem (2026-08-17)
+ * i wyglądało to na dużą stratę. Cztery obrazy obejrzane ręcznie okazały się zdjęciem remontu,
+ * borówkami, różą ze stocka i grillem — bo `withImage` liczy ZAŁĄCZNIKI, a nie plakaty.
+ * Sama liczba postów z obrazem nie mówi więc nic o tym, co czytanie plakatów by dało.
+ *
+ * Dlatego mierzymy różnicę między dwoma koszykami tych samych postów: z obrazem i bez.
+ * Jeśli posty z obrazem częściej milczą (zero wydarzeń) albo częściej oddają wydarzenie
+ * bez miejsca i godziny, to jest dokładnie ta treść, która stoi na plakacie — i wtedy
+ * wywołanie wizyjne ma co odzyskać. Jeśli oba koszyki wyglądają tak samo, obraz jest
+ * ozdobnikiem i płacilibyśmy za oglądanie zdjęć borówek.
+ *
+ * Koszyk „bez obrazu" jest tu warunkiem sensu, nie dodatkiem: „40% wydarzeń bez miejsca"
+ * bez punktu odniesienia nie odróżnia plakatu od tego, że tak po prostu piszą na FB.
+ */
+export interface FbPosterBucket {
+  /** posty w koszyku (z treścią; wiersze błędu scrapera się nie liczą) */
+  posts: number;
+  /** posty, z których model wyciągnął choć jedno wydarzenie */
+  yielded: number;
+  /** wydarzenia z tych postów (przed dedupe) */
+  events: number;
+  /** …z pustym `venue` */
+  noVenue: number;
+  /** …bez godziny startu */
+  noTime: number;
+}
+
+/**
+ * Dwa koszyki obok siebie + to, czego nie dało się przypisać. Brak pola = źródło nie jest
+ * grupą FB albo pobranie się nie udało.
+ */
+export interface FbPosterYield {
+  withImage: FbPosterBucket;
+  withoutImage: FbPosterBucket;
+  /**
+   * Wydarzenia, których nie dało się przypiąć do żadnego postu — model przepisał „LINK:"
+   * inaczej, albo przyszły z followupu. Zostają OSOBNO, bo wrzucone do któregokolwiek
+   * koszyka po cichu przesunęłyby proporcję, o którą w tym pomiarze chodzi.
+   */
+  unlinked: number;
 }

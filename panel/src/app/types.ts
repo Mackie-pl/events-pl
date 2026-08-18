@@ -260,6 +260,26 @@ export interface FbGroupStats {
 }
 
 /**
+ * Plon postów z obrazem zestawiony z postami bez — mierzy, ile dałoby czytanie plakatów.
+ * Pojedynczy koszyk nic nie znaczy; wartość jest w RÓŻNICY między nimi.
+ */
+export interface FbPosterBucket {
+  posts: number;
+  /** posty, z których wyszło choć jedno wydarzenie — reszta milczy */
+  yielded: number;
+  events: number;
+  noVenue: number;
+  noTime: number;
+}
+
+export interface FbPosterYield {
+  withImage: FbPosterBucket;
+  withoutImage: FbPosterBucket;
+  /** wydarzenia niedopasowane do żadnego postu (przepisany „LINK:", followupy) */
+  unlinked: number;
+}
+
+/**
  * Tożsamość wydarzenia w obrębie przebiegu — pełny rekord jest w events.json (najnowszy dzień)
  * albo w prywatnym archiwum. Panel dokleja szczegóły przez join po `title|date`.
  */
@@ -304,6 +324,7 @@ export interface SourceRun {
   bd?: BdUsage;
   /** rytm publikacji grupy FB; brak = źródło nie jest grupą albo pobranie się nie udało */
   fbGroup?: FbGroupStats;
+  fbPoster?: FbPosterYield;
   ms: number;
   err?: string;
   /** np. "HTTP 403 → headless fallback ok" */

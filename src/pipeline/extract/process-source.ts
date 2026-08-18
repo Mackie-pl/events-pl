@@ -22,8 +22,8 @@ import type {
   EventItem, EventOrigin, PipelineError, PipelineState, Source, SourceRun,
 } from "../../types/index.js";
 import {
-  fbGroupPostsToBlocks, fbGroupPostsToText, fbGroupStats, fbOriginsByPost, fbPostExtras,
-  fbShareStats, harvestEventUrls, isEventUrl,
+  fbGroupPostsToBlocks, fbGroupPostsToText, fbGroupStats, fbImagePosts, fbOriginsByPost,
+  fbPostExtras, fbShareStats, harvestEventUrls, isEventUrl,
 } from "../facebook.js";
 import { dropRepertoire, repertoireSegment } from "../repertoire.js";
 import { expandRepeat } from "../series.js";
@@ -37,6 +37,7 @@ import { noteFbGroup } from "./fb-group-blocked.js";
 import { fetchFbPage } from "./fb-page.js";
 import { auditFbGroup, auditFbOrigins, auditFbPostExtras, auditFbShares } from "./fb-group-trail.js";
 import { fbGroupLimit, noteFbGroupRate } from "./fb-group-limit.js";
+import { auditFbPosterYield, fbPosterYield } from "./fb-poster-yield.js";
 import {
   MAX_FOLLOWUPS_PER_SOURCE, followupEvents, processFollowup,
 } from "./followup.js";
@@ -68,6 +69,14 @@ function fetchable(urls: string[]): string[] {
  * czytane przy dopisywaniu pól do wydarzeń; puste dla wszystkich innych rodzajów źródeł.
  */
 let fbOrigins = new Map<string, EventOrigin>();
+
+/**
+ * Post w grupie FB → ile obrazów niósł rekord. Ta sama granica i ten sam powód co wyżej:
+ * rekordy istnieją tylko w `fetchSource`, a pomiar plakatów powstaje dopiero na końcu,
+ * gdy wiadomo, co model z tych postów wyciągnął. Pusta mapa dla wszystkiego, co nie
+ * jest grupą — i wtedy `auditFbPosterYield` milczy zamiast raportować zera.
+ */
+let fbImages = new Map<string, number>();
 
 export function newSourceRun(src: Source, url: string, status: SourceRun["status"]): SourceRun {
   return {
@@ -121,6 +130,9 @@ async function fetchSource(
       // z oryginałem trzeba adresem postu, który jest tylko tutaj
       fbOrigins = fbOriginsByPost(records);
       auditFbOrigins(fbOrigins.size, run.fbGroup.posts);
+      // przynależność obrazów do POSTÓW (nie sumy — te są wyżej): zestawienie z wydarzeniami
+      // zachodzi po ekstrakcji, a wtedy rekordów już nie ma
+      fbImages = fbImagePosts(records);
       // ile z udostępnień to wklejone ogłoszenie, czyli ta sama treść po obu stronach postu —
       // liczone na rekordach, bo w spłaszczonym tekście jedna z kopii już nie istnieje
       auditFbShares(fbShareStats(records));
@@ -238,6 +250,7 @@ export async function processSource(
   resetUsage();
   resetDroppedInvalid();
   fbOrigins = new Map();
+  fbImages = new Map();
   beginSource(src.id);
   const bdBefore = bdSnapshot();
   const url = src.url.replace("{page}", "1");
@@ -326,6 +339,12 @@ export async function processSource(
   let pageEvents: EventItem[];
   let followupUrls: string[];
   /**
+   * Followup → tekst bloku, przy którym model go wskazał. Pusta, gdy strona się nie zmieniła
+   * (odtwarzamy wtedy same adresy ze `state`) albo gdy ścieżka blokowa odmówiła — i to jest
+   * w porządku: plakat bez kontekstu czyta się tak, jak czytał się dotąd.
+   */
+  let followupContext = new Map<string, string>();
+  /**
    * Hash treści strony źródła — do porównania z followupami (patrz `processFollowup`).
    * Przy 304 bierzemy go z cache'u: treści nie mamy, ale to nadal hash TEJ SAMEJ treści,
    * którą serwer właśnie potwierdził jako niezmienioną.
@@ -394,6 +413,7 @@ export async function processSource(
       if (viaBlocks) {
         pageEvents = viaBlocks.events;
         proposed = viaBlocks.followups;
+        followupContext = viaBlocks.context;
         run.blocks = viaBlocks.blocks;
         if (viaBlocks.note) run.note = viaBlocks.note;
       } else {
@@ -467,7 +487,9 @@ export async function processSource(
       if (bdEnabled()) for (const u of harvestEventUrls(fuUrl)) fbEventUrls.add(u);
       continue;
     }
-    const fr = await processFollowup(fuUrl, { src, state, errors, pageHash });
+    const fr = await processFollowup(
+      fuUrl, { src, state, errors, pageHash, context: followupContext.get(fuUrl) },
+    );
     run.followups.push(fr);
     // „same-as-page" NIE wnosi wydarzeń: to te same bajty, co strona, a jej wydarzenia
     // stoją już w `pageEvents`. Dorzucenie ich tutaj byłoby dokładnie tym duplikatem,
@@ -478,6 +500,13 @@ export async function processSource(
   }
 
   const events = settleDates(collected, run);
+
+  // po scaleniu wszystkich dróg (model, cache bloków, followupy), a przed geokoderem:
+  // pomiar ma widzieć DOKŁADNIE te wydarzenia, które źródło oddaje dalej
+  if (fbImages.size) {
+    run.fbPoster = fbPosterYield(fbImages, events);
+    auditFbPosterYield(run.fbPoster);
+  }
 
   await attachGeo(events, src, state, run);
 

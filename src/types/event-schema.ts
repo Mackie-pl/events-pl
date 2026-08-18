@@ -130,6 +130,22 @@ export const ExtractionSchema = closed({
 });
 
 /**
+ * Wariant dla PLAKATU: te same wydarzenia, ale bez `followups`.
+ *
+ * Pole nie zostało odjęte dla oszczędności — jest tam kilkanaście tokenów. Zostało odjęte,
+ * bo NIKT go nie czytał: `followup.ts` bierze z odczytu plakatu samo `.events` i porzuca
+ * resztę. Wymagane pole, którego wynik ląduje w koszu, to wyłącznie zaproszenie do zmyślenia
+ * adresu — a plakat, na którym stoi URL, i tak wskazuje stronę organizatora, czyli miejsce,
+ * z którego to wydarzenie już do nas przyszło.
+ *
+ * `closed()` z `EventSchema`, a nie ręczna kopia kształtu: trzy rozjechane kopie bloku
+ * schematu są w tym repo pamiątką po tym, jak się kończy powielanie.
+ */
+export const PosterExtractionSchema = closed({
+  events: Type.Array(EventSchema),
+});
+
+/**
  * Wariant dla wywołania ZBIORCZEGO: kilka bloków w jednym zapytaniu, każdy wynik podpisany
  * numerem bloku, z którego pochodzi.
  *

@@ -249,6 +249,30 @@ export function fbPostExtras(records: BdRecord[]): FbPostExtras {
 }
 
 /**
+ * Post → ile obrazów niesie, kluczowane tak samo jak `fbOriginsByPost` (`urlKey` adresu postu).
+ *
+ * Osobno od `fbPostExtras`, bo tamto liczy SUMY dla grupy, a tu potrzebna jest przynależność
+ * pojedynczego postu: dopiero ona pozwala zestawić post z wydarzeniami, które z niego wyszły.
+ * Post bez adresu wypada — nie ma czym go związać z `source_url`, a zgadywanie po treści
+ * dałoby wiązanie, które myli się cicho.
+ */
+export function fbImagePosts(records: BdRecord[]): Map<string, number> {
+  const out = new Map<string, number>();
+  for (const r of records) {
+    if (!postContent(r)) continue;
+    const link = pick(r, "url", "post_url", "link", "post_link");
+    if (!link) continue;
+    let images = 0;
+    for (const key of IMAGE_KEYS) {
+      images = urlsIn(r[key]).length;
+      if (images) break;
+    }
+    out.set(urlKey(link), images);
+  }
+  return out;
+}
+
+/**
  * Nagłówek treści udostępnionego postu.
  *
  * Stała, bo ta sama etykieta jest czytana w DWÓCH miejscach: tutaj powstaje, a

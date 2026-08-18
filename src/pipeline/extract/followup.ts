@@ -60,6 +60,14 @@ export interface FollowupCtx {
    * (304 bez wpisu w cache'u), więc trzecia warstwa odsiewu po prostu milczy.
    */
   pageHash: string | undefined;
+  /**
+   * Tekst bloku, przy którym model wskazał ten odnośnik — dla plakatu uzupełnia rok i adres,
+   * których grafika często nie niesie. `undefined` przy niezmienionej stronie: followupy
+   * odtwarzamy wtedy ze `state`, gdzie leżą same adresy. To świadomie NIE jest powód, żeby
+   * trzymać treść bloków w state.json — plakat pod niezmienioną stroną prawie zawsze siedzi
+   * już w cache'u ekstrakcji i nie dochodzi do modelu w ogóle.
+   */
+  context?: string | undefined;
 }
 
 /** Pobrana treść followupa albo `null`, gdy `fr` niesie już gotową odpowiedź (304 / błąd). */
@@ -113,10 +121,13 @@ async function pull(
  * stronę i do pięciu followupów, więc wspólne pole zamazywałoby rozliczenie strony.
  */
 async function read(
-  url: string, got: Pulled, state: PipelineState, fr: FollowupRun,
+  url: string, got: Pulled, ctx: { state: PipelineState; fr: FollowupRun; context?: string },
 ): Promise<EventItem[]> {
+  const { state, fr, context } = ctx;
   if (got.img) {
-    return (await extractPoster({ data: got.img.data, mediaType: got.img.mediaType }, url)).events;
+    return (await extractPoster(
+      { data: got.img.data, mediaType: got.img.mediaType }, url, context,
+    )).events;
   }
   const viaBlocks = got.page && await blockSource(got.page, url, state);
   if (!viaBlocks) return (await extractEvents(got.content, url)).events;
@@ -130,7 +141,7 @@ async function read(
  * Treść identyczna — na którykolwiek z trzech sposobów z nagłówka — nie kosztuje wywołania LLM.
  */
 export async function processFollowup(url: string, ctx: FollowupCtx): Promise<FollowupRun> {
-  const { src, state, errors, pageHash } = ctx;
+  const { src, state, errors, pageHash, context } = ctx;
   const fr: FollowupRun = { url, kind: isPoster(url) ? "poster" : "page", outcome: "ok", events: 0 };
   const cache = (state.extractions ??= {});
   const key = followupKey(url);
@@ -165,7 +176,7 @@ export async function processFollowup(url: string, ctx: FollowupCtx): Promise<Fo
       return fr;
     }
 
-    const added = await read(url, got, state, fr);
+    const added = await read(url, got, { state, fr, ...(context ? { context } : {}) });
     // cache po haszu CAŁEJ podstrony zostaje obok blokowego — z tego samego powodu, co przy
     // stronie źródła: gdy jutro wróci bajt w bajt taka sama, nie ma po co jej nawet dzielić
     cache[key] = { hash, events: detach(added), at: new Date().toISOString(), ...got.validators };

@@ -173,16 +173,37 @@ ${renderSchemaBlock(BlockEventSchema)}
 ${EXTRACTION_RULES}`;
 
 /**
+ * Zasada czytania KONTEKSTU — tekstu, w którym plakat stał (blok strony albo post FB).
+ *
+ * Kontekst dokłada się do wywołania, bo plakat notorycznie nie niesie roku („sobota, 23
+ * sierpnia") ani miejsca, które autor napisał w podpisie zamiast na grafice. To kilkaset
+ * tokenów obok ~1.7 tys. za sam obraz, więc pytanie brzmi wyłącznie „czy pomaga", nie „czy stać nas".
+ *
+ * Kierunek jest jednak asymetryczny i to jest tu cała reguła: kontekst UZUPEŁNIA plakat,
+ * nigdy go nie zastępuje. Odwrotnie kończy się dokładnie tak, jak „Wieczór Grecki" z datą
+ * przebiegu zamiast 21 sierpnia (patrz extract/date-hint.ts) — z tą różnicą, że tam
+ * bezpiecznik złapał zmyśloną datę po tekście dowodu, a tutaj dowodem są PIKSELE,
+ * których żaden bezpiecznik nie przeczyta. Zły termin z podpisu nie ma się o co zatrzymać.
+ */
+const POSTER_CONTEXT_RULE = `Razem z obrazem możesz dostać KONTEKST — tekst, przy którym plakat stał.
+Kontekst służy WYŁĄCZNIE do uzupełnienia tego, czego na plakacie nie ma (najczęściej rok,
+miasto, adres) i do rozstrzygnięcia niejasności. Wydarzenie ma pochodzić z PLAKATU.
+Jeśli plakat nie podaje terminu, NIE bierz daty z kontekstu — data publikacji postu to nie
+jest data wydarzenia. Nie twórz wpisów dla wydarzeń, które stoją tylko w kontekście.`;
+
+/**
  * Plakat leci do modelu BEZ promptu ekstrakcji (osobne wywołanie, osobny system), więc
  * schemat musi być tutaj. Do 2026-07 go nie było — prompt odsyłał do „tego samego schematu",
  * którego model w tym wywołaniu nigdy nie widział.
  */
 export const POSTER_SYSTEM = `Na obrazie jest plakat wydarzenia (PL). Wyciągnij dane i zwróć WYŁĄCZNIE JSON
-{"events":[...],"followups":[]}. Schemat wydarzenia:
+{"events":[...]}. Schemat wydarzenia:
 ${EVENT_BLOCK}
 
 Zwróć uwagę na: daty, godziny, miejsce, ceny, ograniczenia wiekowe, program wielogodzinny.
 Bez konkretnego "date_start" nie zwracaj wpisu — plakat oferty stałej pomiń.
+
+${POSTER_CONTEXT_RULE}
 
 ${RECURRING_RULE}`;
 

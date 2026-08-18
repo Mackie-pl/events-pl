@@ -101,22 +101,33 @@ export function chunk(blocks: Block[]): Block[][] {
  */
 export function unionOf(
   blocks: Block[], state: PipelineState, today: string,
-): { events: EventItem[]; followups: string[] } {
+): { events: EventItem[]; followups: string[]; context: Map<string, string> } {
   const events: EventItem[] = [];
   const followups: string[] = [];
+  // followup → tekst bloku, w którym model go wskazał. Powstaje TU, bo to jedyne miejsce
+  // znające jedno i drugie naraz: `state.blocks` trzyma odnośniki bez treści, a płaska lista
+  // followupów przypisanie gubi. Plakat czytany bez tego zdania nie wie, którego roku dotyczy.
+  const context = new Map<string, string>();
   for (const b of blocks) {
     touchBlock(state, b.hash, today);
     const entry = state.blocks?.[b.hash];
     if (!entry) continue;
     events.push(...detach(entry.events));
-    for (const f of entry.followups) if (!followups.includes(f)) followups.push(f);
+    for (const f of entry.followups) {
+      if (!followups.includes(f)) followups.push(f);
+      // pierwszy blok wygrywa: ten sam plakat podlinkowany dwa razy ma zwykle sensowny
+      // opis przy pierwszym wystąpieniu, a drugie to „zobacz też"
+      if (!context.has(f)) context.set(f, b.text);
+    }
   }
-  return { events, followups };
+  return { events, followups, context };
 }
 
 export interface BlockOutcome {
   events: EventItem[];
   followups: string[];
+  /** followup → tekst bloku, przy którym stał; wejście do odczytu plakatu z kontekstem */
+  context: Map<string, string>;
   note?: string;
   /** rozliczenie podziału — wywołujący wie, gdzie je zapisać (strona źródła czy followup) */
   blocks: BlockStats;

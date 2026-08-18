@@ -16,7 +16,9 @@ import { P } from "../../config/index.js";
 import { audit } from "../../shared/audit.js";
 import { salvageArray } from "../../shared/json-salvage.js";
 import { fillMissing, toWireSchema } from "../../shared/json-schema.js";
-import { BatchExtractionSchema, EventSchema, ExtractionSchema } from "../../types/event-schema.js";
+import {
+  BatchExtractionSchema, EventSchema, ExtractionSchema, PosterExtractionSchema,
+} from "../../types/event-schema.js";
 import type { EventItem, ExtractionResult, Followup } from "../../types/index.js";
 import { POSTER_SYSTEM, batchExtractionSystem, extractionSystem } from "../prompts.js";
 
@@ -43,6 +45,8 @@ const MAX_TOKENS = (): number => P.EXTRACT_MAX_TOKENS.get();
  * i bez) to dwa zachowania modelu do porównania — na to trzeba evala, nie refaktoru.
  */
 const RESPONSE_SCHEMA = { name: "wydarzenia", schema: toWireSchema(ExtractionSchema) };
+// plakat ma własny kształt odpowiedzi — bez `followups`, których i tak nikt nie czytał
+const POSTER_RESPONSE_SCHEMA = { name: "wydarzenia_plakat", schema: toWireSchema(PosterExtractionSchema) };
 
 /**
  * Ile wydarzeń odrzucono w tym źródle na walidacji. Licznik modułowy, jak w adapterach —
@@ -290,22 +294,44 @@ export async function extractBatch(texts: string[], sourceUrl: string): Promise<
   return { byBlock, unsafe, ...(parsed.parse ? { parse: parsed.parse } : {}) };
 }
 
+/**
+ * Ile znaków kontekstu jedzie z plakatem. Blok strony bywa długi, a płacimy tu za coś,
+ * co ma tylko UZUPEŁNIĆ obraz — 1200 znaków to z grubsza podpis posta albo akapit przy
+ * grafice, czyli miejsce, w którym stoi rok i adres. Więcej zaczyna konkurować z plakatem
+ * o uwagę modelu, a o to w tym wywołaniu nie chodzi.
+ */
+const POSTER_CONTEXT_CHARS = 1200;
+
+/**
+ * Odczyt plakatu. `context` to tekst, przy którym plakat stał (blok strony albo post FB) —
+ * nieobowiązkowy, bo przy niezmienionej stronie followupy odtwarzamy z `state` i wtedy
+ * bloku po prostu nie ma. Ślad mówi, którego wariantu użyto: bez tego różnica w jakości
+ * odczytu między dniami wyglądałaby na kaprys modelu.
+ */
 export async function extractPoster(
   img: { data: string; mediaType: "image/jpeg" | "image/png" },
   sourceUrl: string,
+  context?: string,
 ): Promise<ExtractionResult> {
+  const ctx = context?.trim().slice(0, POSTER_CONTEXT_CHARS);
   const out = await chat({
     model: MODEL_EXTRACT,
     task: "poster",
     system: POSTER_SYSTEM,
-    user: [imagePart(img.data, img.mediaType), { type: "text", text: `ŹRÓDŁO: ${sourceUrl}` }],
+    user: [
+      imagePart(img.data, img.mediaType),
+      { type: "text", text: `ŹRÓDŁO: ${sourceUrl}` },
+      ...(ctx ? [{ type: "text" as const, text: `KONTEKST (tekst przy plakacie):
+${ctx}` }] : []),
+    ],
     maxTokens: 2000,
-    schema: RESPONSE_SCHEMA,
+    schema: POSTER_RESPONSE_SCHEMA,
     temperature: 0,
   });
   const result = parseModelJson(out, wasTruncated());
-  audit("llm", `odczyt plakatu (${img.mediaType}) → ${result.events.length} wydarzeń`,
-    { model: MODEL_EXTRACT, task: "poster", events: result.events.length, url: sourceUrl,
-      ...callDetail() });
+  audit("llm", `odczyt plakatu (${img.mediaType}) ${ctx ? `+ ${ctx.length} zn. kontekstu` : "bez kontekstu"}`
+    + ` → ${result.events.length} wydarzeń`,
+  { model: MODEL_EXTRACT, task: "poster", events: result.events.length, url: sourceUrl,
+    ctxChars: ctx?.length ?? 0, ...callDetail() });
   return result;
 }
