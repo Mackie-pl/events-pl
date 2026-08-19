@@ -126,6 +126,7 @@ const EXTRACTION_RULES = `WYDARZENIA-KONTENERY: jeśli tekst zawiera zbiorczy pr
 z konkretnymi terminami — rozbij na osobne wydarzenia i ustaw "container": nazwa kontenera.
 Jeśli program jest POD LINKIEM (PDF, podstrona, plakat JPG) — NIE zgaduj; dodaj URL do "followups":
 [{"url": str, "reason": "program PDF"|"szczegóły wydarzenia"|"plakat"}]. Maks 5 followupów, tylko z tej samej domeny lub oficjalnych.
+URL przepisz DOKŁADNIE tak, jak stoi w tekście — także względny („/images/…"). NIE doklejaj domeny i niczego nie poprawiaj.
 
 ${RECURRING_RULE}
 

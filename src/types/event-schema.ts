@@ -65,7 +65,9 @@ const AGE_NOTE = '„4+"→min:4; „roczniki 2015-2016"→przelicz na wiek; „
 const TAGS_NOTE = 'zagnieżdżone, np. "dzieci:dmuchańce", "warsztaty:ceramika", "muzyka:koncert", '
   + '"sport:rower", "film:plener"';
 const DATE_NOTE = "wywnioskuj rok z kontekstu; pomiń wydarzenia zakończone przed dzisiejszą datą";
-const NOISE_NOTE = "komisje rady, wybory sołeckie, przetargi, ogłoszenia urzędowe → true";
+const NOISE_NOTE = "wpis, na który nie da się PRZYJŚĆ → true: komisje rady, wybory sołeckie, "
+  + "przetargi, ogłoszenia urzędowe, a także ustalenia przed wydarzeniem (spotkanie "
+  + "organizacyjne, zbiórka dla zapisanych) i same nabory czy zapisy bez terminu imprezy";
 const SLOTS_NOTE = "etapy wydarzenia (np. 12-18 dzieci, 18-22 dorośli)";
 const CONTAINER_NOTE = 'nazwa wydarzenia-kontenera, z którego rozbito wpis; "" gdy samodzielne';
 const REPEAT_NOTE = 'rytm powtórzeń w zakresie date_start–date_end: "codziennie" albo dni tygodnia '

@@ -75,3 +75,33 @@ export function extractLinks(html: string, baseUrl: string): PageLink[] {
   }
   return out;
 }
+
+/**
+ * WSZYSTKIE adresy, które strona naprawdę niesie — `href` kotwic i `src` zasobów, rozwinięte
+ * względem `baseUrl`. Bez odsiewu po hoście, w odróżnieniu od `extractLinks`: to nie jest
+ * materiał do grupowania serwisu, tylko INWENTARZ do sprawdzenia, czy adres podany przez model
+ * w ogóle na tej stronie stał (patrz `pipeline/extract/followup-url.ts`). Odsianie obcych domen
+ * kazałoby uznać za zmyślony każdy poprawnie przepisany plakat z CDN-u.
+ *
+ * `src` jest tu równie ważny jak `href`: followupy-plakaty biorą się z adresów obrazków.
+ */
+export function linkedUrls(html: string, baseUrl: string): string[] {
+  const out: string[] = [];
+  const seen = new Set<string>();
+  for (const m of html.matchAll(/\b(?:href|src)\s*=\s*["']([^"']+)["']/gi)) {
+    const raw = m[1];
+    if (!raw || /^(?:#|javascript:|mailto:|tel:|data:)/i.test(raw)) continue;
+    let url: URL;
+    try {
+      url = new URL(raw.replace(/&amp;/g, "&"), baseUrl);
+    } catch {
+      continue;
+    }
+    url.hash = "";
+    const href = url.toString();
+    if (seen.has(href)) continue;
+    seen.add(href);
+    out.push(href);
+  }
+  return out;
+}

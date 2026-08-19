@@ -36,6 +36,8 @@ export type AuditKind =
   | "url.skipped"
   /** model wskazał podstrony / PDF-y / plakaty do dociągnięcia */
   | "followup.proposed"
+  /** adres followupa skonfrontowany z inwentarzem strony: przyciągnięty do prawdziwego albo odrzucony */
+  | "followup.url"
   /** wpis o kształcie strony programu: sonda adresu i werdykt, czy stał pod nim program */
   | "container"
   /** wynik jednego followupa */

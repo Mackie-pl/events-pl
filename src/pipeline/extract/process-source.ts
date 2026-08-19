@@ -40,6 +40,7 @@ import { fbGroupLimit, noteFbGroupRate } from "./fb-group-limit.js";
 import { auditFbPosterYield, fbPosterYield } from "./fb-poster-yield.js";
 import { MAX_FOLLOWUPS_PER_SOURCE, runFollowups } from "./followup.js";
 import { droppedInvalidStats, extractEvents, resetDroppedInvalid } from "./extract.js";
+import { groundFollowups } from "./followup-url.js";
 
 /** Ten sam adres wg reguł rejestru (bez schematu, `www.`, końcowego `/`). */
 const isSameUrl = (a: string, b: string): boolean => urlKey(a) === urlKey(b);
@@ -431,8 +432,10 @@ export async function processSource(
       cache[src.id] = { hash, events: detach(pageEvents), at: new Date().toISOString(), ...v };
       state.hashes[src.id] = hash; // legacy, dla zgodności ze starym state.json
       // odsiew PRZED limitem: repertuar w czołówce propozycji zabierałby miejsce podstronie,
-      // którą naprawdę chcemy przeczytać
-      followupUrls = fetchable(proposed).slice(0, MAX_FOLLOWUPS_PER_SOURCE);
+      // którą naprawdę chcemy przeczytać. Konfrontacja z inwentarzem strony też jest PRZED
+      // limitem — adres przepisany z błędem nie ma prawa zająć miejsca poprawnemu
+      followupUrls = fetchable(groundFollowups(proposed, url, fetched.html))
+        .slice(0, MAX_FOLLOWUPS_PER_SOURCE);
       if (proposed.length) {
         // ucięcie ponad limit było dotąd niewidoczne: raport pokazywał tylko to, co pobrano
         audit("followup.proposed", proposed.length > followupUrls.length
@@ -445,8 +448,17 @@ export async function processSource(
   }
 
   // lista odtworzona z cache'a (304 / ten sam hash) nie przeszła jeszcze przez odsiew: powstała,
-  // zanim reguła o repertuarze istniała, a przy niezmienionej stronie nic jej nie odświeży
-  followupUrls = fetchable(followupUrls);
+  // zanim reguła o repertuarze istniała, a przy niezmienionej stronie nic jej nie odświeży.
+  // To samo dotyczy inwentarza: adres sklejony przez model przed tą regułą siedzi w stanie
+  // i wraca po 404 w każdym przebiegu, bo 404 nie zmienia hasha strony. Oba wywołania są
+  // idempotentne, więc lista właśnie zbudowana wyżej przechodzi tędy bez ani jednej notki.
+  const healed = fetchable(groundFollowups(followupUrls, url, fetched.html));
+  if (healed.length !== followupUrls.length) {
+    // zapis wprost do stanu, bo inaczej ten sam martwy adres wracałby tu codziennie:
+    // gałąź „strona bez zmian" nie przechodzi przez zapis wyżej
+    (state.followupsBySource ??= {})[src.id] = healed;
+  }
+  followupUrls = healed;
 
   // --- wejście z etapu 1 dołącza do followupów ---
   // Etap 1 ustala, GDZIE serwis wypisuje wydarzenia, i do tej pory nikt tego nie czytał:

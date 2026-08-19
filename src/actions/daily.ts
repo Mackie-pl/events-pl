@@ -17,7 +17,7 @@ import {
   beginRun,
 } from "../adapters/supabase-archive.js";
 import { P } from "../config/index.js";
-import { withoutCamps } from "../pipeline/camps.js";
+import { withoutNonEvents } from "../pipeline/non-events.js";
 import { DEDUPE_WHY, dedupe } from "../pipeline/dedupe.js";
 import { harvestEventUrls, isEventUrl } from "../pipeline/facebook.js";
 import { pruneBlocks } from "../pipeline/extract/block-cache.js";
@@ -76,7 +76,6 @@ async function run(): Promise<void> {
   const producedBy = new Map<SourceRun, EventItem[]>();
   // linki do wydarzeń FB zebrane po drodze (treści stron, followupy, posty grup) — rozwiązywane zbiorczo na końcu
   const fbEventUrls = new Set<string>();
-
   for (const src of cfg.sources) {
     beginAuditSource(src.id);
     // Fanpage bez ustawionego datasetu jest jak grupa bez klucza — nie ma czym pobrać.
@@ -208,9 +207,9 @@ async function run(): Promise<void> {
   // po wszystkich źródłach, nie w trakcie: `seen` bloku ustawia się dopiero przy jego
   // odwiedzeniu, więc przycinanie w środku pętli skasowałoby bloki źródeł jeszcze nietkniętych
   pruneBlocks(state);
-  // przed scalaniem, bo półkolonie potrafią przyjść z dwóch źródeł naraz i wtedy dedupe
+  // przed scalaniem, bo ten sam turnus potrafi przyjść z dwóch źródeł naraz i wtedy dedupe
   // wybierałby zwycięzcę spośród rekordów, z których żaden nie ma prawa się opublikować
-  allEvents = withoutCamps(allEvents);
+  allEvents = withoutNonEvents(allEvents);
   const merged = dedupe(allEvents);
   allEvents = merged.events;
   // przegrany trafia do śladu SWOJEGO źródła — tam go szuka ktoś, kto pyta „czemu to zniknęło?"

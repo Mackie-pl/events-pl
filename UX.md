@@ -40,6 +40,7 @@ Nie ma dokumentu z personą, ale potok ma ją wpisaną w decyzje. Cztery ślady:
 |---|---|
 | digest pokazuje „jutro" i „najbliższy weekend"; w piątek sam weekend | horyzont zainteresowania: 1–3 dni |
 | półkolonie są usuwane z wyników jako „turnus z zapisami, nie wydarzenie do przyjścia" | chodzi o wyjścia, na które można po prostu przyjść |
+| spotkania organizacyjne są usuwane jako „ustalenia przed wydarzeniem, nie samo wydarzenie" | to samo kryterium: liczy się to, na co da się przyjść |
 | wydarzenia oznaczone jako rodzinne idą na górę listy; jest filtr wieku dziecka | odbiorcą jest rodzic |
 | komisje rady, przetargi i wybory sołeckie są odsiewane jako szum | to nie jest serwis obywatelski |
 

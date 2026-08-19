@@ -20,10 +20,19 @@ describe("prompt zbiorczy", () => {
    * Wydzielenie wspólnych reguł do stałej miało być refaktorem bez zmiany treści.
    * Prompt jest wejściem modelu, więc „bez zmiany" znaczy CO DO ZNAKU — inaczej
    * porównywanie jakości sprzed i po przestaje cokolwiek znaczyć.
+   *
+   * Liczba rośnie WYŁĄCZNIE razem ze świadomą zmianą treści promptu, opisaną w commicie:
+   * 3141 → 3308 (2026-08-18) to rozszerzony opis `is_noise` w `types/event-schema.ts` —
+   * zamiast samych spraw urzędowych nazywa kryterium („wpis, na który nie da się PRZYJŚĆ")
+   * i dokłada ustalenia przed wydarzeniem; 3308 → 3432 (2026-08-19) to zdanie „URL przepisz
+   * DOKŁADNIE tak, jak stoi w tekście" — model sklejał domenę ze ścieżką i gubił przy tym
+   * znaki (`mdk2.poznan.pl/images/mdk/…` zamiast `…/images/mdk2/…`, trzy PDF-y, siedem
+   * przebiegów po 404). Podbicie liczby, żeby test zzieleniał po przypadkowej zmianie,
+   * kasuje jedyny powód, dla którego ta asercja tu stoi.
    */
   it("nie zmienił promptu pojedynczego ani o znak", () => {
     const s = extractionSystem("2026-08-07");
-    assert.equal(s.length, 3141, "długość promptu pojedynczego się zmieniła");
+    assert.equal(s.length, 3432, "długość promptu pojedynczego się zmieniła");
     assert.ok(s.startsWith("Wyciągasz wydarzenia lokalne z tekstu strony/PDF-a. Dziś jest 2026-08-07."));
     assert.ok(s.includes("BEZ DATY = NIE WYDARZENIE."));
     assert.ok(!s.includes("BLOK"), "prompt pojedynczy nie ma prawa wspominać o blokach");

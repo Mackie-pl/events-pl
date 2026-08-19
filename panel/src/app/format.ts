@@ -121,6 +121,9 @@ export const STEP_META: Record<
   // możliwy wariant tej decyzji, bo zapada przed pobraniem, nie po ekstrakcji
   'url.skipped': { icon: '@tui.circle-slash', tone: 'save' },
   'followup.proposed': { icon: '@tui.list-plus', tone: 'plain' },
+  // 'save': adres, który nigdzie nie prowadzi, odpada PRZED pobraniem — a odrzucony wracałby
+  // po 404 w każdym przebiegu, bo 404 nie zmienia hasha strony
+  'followup.url': { icon: '@tui.link-2-off', tone: 'save' },
   // 'spend': sonda to pobranie, za które nikt nas nie prosił — ma być widać, że kosztuje,
   // nawet gdy okaże się trafiona i wniesie wydarzenia
   container: { icon: '@tui.package-open', tone: 'spend' },

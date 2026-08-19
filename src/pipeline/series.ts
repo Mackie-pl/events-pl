@@ -3,7 +3,7 @@
  *
  * Dwie funkcje, jeden przepływ — i to jego kolejność jest tu całą treścią decyzji:
  *
- *   ekstrakcja → CACHE → expandRepeat → odsiew minionych → withoutCamps → dedupe
+ *   ekstrakcja → CACHE → expandRepeat → odsiew minionych → withoutNonEvents → dedupe
  *     → foldSeries → publikacja
  *
  * ROZWIJANIE STOI ZA CACHE'M, NIE PRZED. Wynik `expandRepeat` zależy od „dziś", a cache
@@ -21,7 +21,7 @@
  * Że to musi stać w kodzie, a nie w prompcie, widać po danych: wszystkie cztery serie
  * w events.json z 2026-08-03 („ZAJĘCIA STAŁE W ODK BAJKA", „Kino letnie w Wirach",
  * „Zdrowy kręgosłup na trawie", „Wakacyjne wyjazdy") przyszły ścieżkami maszynowymi.
- * Żaden model ich nie widział — dokładnie ten sam argument, co w pipeline/camps.ts.
+ * Żaden model ich nie widział — dokładnie ten sam argument, co w pipeline/non-events.ts.
  *
  * foldSeries stoi PO dedupe, nie przed: dedupe scala to samo wydarzenie w tym samym dniu
  * z różnych źródeł, fold scala to samo wydarzenie w różnych dniach. Odwrotna kolejność

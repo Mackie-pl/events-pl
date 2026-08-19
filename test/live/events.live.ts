@@ -3,14 +3,15 @@
  * przebiegu, a leżeć nie powinno.
  *
  * Na 2026-08-04 leżały tam dwa turnusy półkolonii — jeden ze ścieżki modelu (dopiewo-gosir),
- * drugi z kalendarza `tribe` (dk-pod-lipami). Zgodnie z zasadą tego zestawu nie kasujemy ich
- * ręcznie z pliku: asercja nazywa regułę, `pipeline/camps.ts` ją egzekwuje, a test zzielenieje
- * dopiero po przebiegu `daily` na tym kodzie.
+ * drugi z kalendarza `tribe` (dk-pod-lipami); na 2026-08-18 doszło „Spotkanie organizacyjne
+ * dotyczące wyjazdu do Rewala" z grupy FB. Zgodnie z zasadą tego zestawu nie kasujemy ich
+ * ręcznie z pliku: asercja nazywa regułę, `pipeline/non-events.ts` ją egzekwuje, a test
+ * zzielenieje dopiero po przebiegu `daily` na tym kodzie.
  */
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { isCamp } from "../../src/pipeline/camps.js";
+import { isNonEvent, nonEventRule } from "../../src/pipeline/non-events.js";
 import { foldSeries } from "../../src/pipeline/series.js";
 
 import { eventsFile, report } from "./helpers.js";
@@ -18,16 +19,17 @@ import { eventsFile, report } from "./helpers.js";
 const events = eventsFile()?.events ?? [];
 
 describe("events.json — co nie ma prawa być wydarzeniem", () => {
-  it("nie zawiera półkolonii", { skip: !events.length }, () => {
+  it("nie zawiera wpisów, na które nie da się przyjść", { skip: !events.length }, () => {
     const offenders = events
-      .filter(isCamp)
-      .map((ev) => `${ev.source_id ?? "?"}: „${ev.title}" (${ev.date_start})`);
+      .filter(isNonEvent)
+      .map((ev) => `${ev.source_id ?? "?"}: „${ev.title}" (${nonEventRule(ev)?.why})`);
 
     assert.equal(offenders.length, 0, report(
-      "turnus półkolonii opublikowany jako wydarzenie",
+      "nie-wydarzenie opublikowane jako wydarzenie",
       offenders,
-      "`withoutCamps()` odsiewa je w `daily.ts` tuż przed dedupe — rekord w pliku znaczy albo " +
-      "przebieg sprzed tej zmiany, albo pisownię, której nie łapie wzorzec w `pipeline/camps.ts`.",
+      "`withoutNonEvents()` odsiewa je w `daily.ts` tuż przed dedupe — rekord w pliku znaczy " +
+      "albo przebieg sprzed tej zmiany, albo pisownię, której nie łapie żaden wzorzec " +
+      "w `pipeline/non-events.ts`.",
     ));
   });
 
