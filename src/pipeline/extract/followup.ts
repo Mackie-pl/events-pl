@@ -26,6 +26,7 @@ import { audit } from "../../shared/audit.js";
 import { describeError } from "../../shared/errors.js";
 import { sha256 } from "../../shared/hash.js";
 import { isFbFetch, urlKey } from "../../shared/url.js";
+import { todayIso } from "../../shared/dates.js";
 import type {
   CachedExtraction, EventItem, FollowupRun, PipelineError, PipelineState, Source, SourceRun,
 } from "../../types/index.js";
@@ -36,8 +37,7 @@ import { detach } from "./block-cache.js";
 import { blockSource } from "./block-source.js";
 import { containerStats, dropUmbrellas, planProbes, probeContext } from "./container.js";
 import { extractEvents, extractPoster } from "./extract.js";
-
-export const MAX_FOLLOWUPS_PER_SOURCE = 5;
+import { followupsPerSource, rememberSameAsPage } from "./followup-queue.js";
 
 /**
  * Klucz followupa w `state.extractions` — ZNORMALIZOWANY, nie surowy adres.
@@ -139,7 +139,7 @@ interface ReadCtx {
  * a gdy ta odmówi (za mało bloków, przebudowa serwisu), jednym wywołaniem na całość, jak dawniej.
  *
  * Rozliczenie podziału ląduje w `fr.blocks`, a nie w `SourceRun.blocks`: jedno źródło ma jedną
- * stronę i do pięciu followupów, więc wspólne pole zamazywałoby rozliczenie strony.
+ * stronę i kilka followupów, więc wspólne pole zamazywałoby rozliczenie strony.
  */
 async function read(url: string, got: Pulled, ctx: ReadCtx): Promise<EventItem[]> {
   const { state, fr, context, program } = ctx;
@@ -189,6 +189,9 @@ export async function processFollowup(url: string, ctx: FollowupCtx): Promise<Fo
     // Wpis z cache'a KASUJEMY: trzymał drugą kopię wydarzeń strony i to on je tam wnosił.
     if (pageHash !== undefined && hash === pageHash) {
       delete cache[key];
+      // werdykt ZAPAMIĘTANY: wykryć go da się dopiero tutaj, czyli po zużyciu slotu, więc bez
+      // zapisu ten sam adres jadłby limit tego źródła w każdym kolejnym przebiegu
+      rememberSameAsPage(url, src.id, state, todayIso());
       fr.outcome = "same-as-page";
       audit("followup",
         "treść identyczna ze stroną źródła — pomijamy, jej wydarzenia już są w sumie", { url });
@@ -299,7 +302,7 @@ export async function runFollowups(
   urls: string[], pageEvents: EventItem[], ctx: FollowupsCtx,
 ): Promise<EventItem[]> {
   const collected: EventItem[] = [...pageEvents];
-  const taken = urls.slice(0, MAX_FOLLOWUPS_PER_SOURCE);
+  const taken = urls.slice(0, followupsPerSource());
   for (const url of taken) {
     if (isEventUrl(url)) {
       // wydarzenia FB nie do pobrania HTTP-em — dołączają do zbiorczego rozwiązania przez Bright Data

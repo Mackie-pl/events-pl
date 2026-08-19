@@ -33,23 +33,20 @@ import { detach, dropPast } from "./block-cache.js";
 import { blockSource } from "./block-source.js";
 import { fixCalendarDates } from "./calendar-links.js";
 import { capabilitySource } from "./capability-source.js";
-import { entryUrl } from "./entry-url.js";
 import { noteFbGroup } from "./fb-group-blocked.js";
 import { fetchFbPage } from "./fb-page.js";
 import { auditFbGroup, auditFbOrigins, auditFbPostExtras, auditFbShares } from "./fb-group-trail.js";
 import { fbGroupLimit, noteFbGroupRate } from "./fb-group-limit.js";
 import { auditFbPosterYield, fbPosterYield } from "./fb-poster-yield.js";
 import { readFbPosters } from "./fb-posters.js";
-import { MAX_FOLLOWUPS_PER_SOURCE, runFollowups } from "./followup.js";
+import { runFollowups } from "./followup.js";
 import { droppedInvalidStats, extractEvents, resetDroppedInvalid } from "./extract.js";
+import { attachEntrypoint, queueFollowups } from "./followup-queue.js";
 import { groundFollowups } from "./followup-url.js";
-
-/** Ten sam adres wg reguł rejestru (bez schematu, `www.`, końcowego `/`). */
-const isSameUrl = (a: string, b: string): boolean => urlKey(a) === urlKey(b);
 
 /**
  * Adresy do pobrania bez repertuarów. IDEMPOTENTNA i to jest tu warunek, nie ozdoba:
- * wołamy ją dwa razy — raz na propozycjach modelu (żeby limit MAX_FOLLOWUPS_PER_SOURCE
+ * wołamy ją dwa razy — raz na propozycjach modelu (żeby limit followupów na źródło
  * nie poszedł na adresy, których i tak nie pobierzemy), raz na gotowej liście (żeby złapać
  * także tę odtworzoną ze `state.followupsBySource` przy niezmienionej stronie). Drugie
  * wywołanie nie ma już czego odrzucić, więc nie dopisuje drugiej notki do śladu.
@@ -445,14 +442,15 @@ export async function processSource(
       // odsiew PRZED limitem: repertuar w czołówce propozycji zabierałby miejsce podstronie,
       // którą naprawdę chcemy przeczytać. Konfrontacja z inwentarzem strony też jest PRZED
       // limitem — adres przepisany z błędem nie ma prawa zająć miejsca poprawnemu
-      followupUrls = fetchable(groundFollowups(proposed, url, fetched.html))
-        .slice(0, MAX_FOLLOWUPS_PER_SOURCE);
+      // BEZ przycięcia do limitu: stan trzyma wszystko, co model wskazał, a o tym, co się
+      // w limicie mieści, decyduje `queueFollowups` niżej — i decyduje na nowo w każdym
+      // przebiegu. Inaczej adres wypchnięty raz znikałby ze stanu na zawsze, choćby to on
+      // niósł miejsce i godzinę (tak zginęła podstrona „Pippi…", patrz followup-queue.ts).
+      followupUrls = fetchable(groundFollowups(proposed, url, fetched.html));
       if (proposed.length) {
-        // ucięcie ponad limit było dotąd niewidoczne: raport pokazywał tylko to, co pobrano
-        audit("followup.proposed", proposed.length > followupUrls.length
-          ? `model wskazał ${proposed.length} odnośników — bierzemy ${followupUrls.length}, limit na źródło`
-          : `model wskazał ${followupUrls.length} odnośników do dociągnięcia`,
-        { proposed: proposed.length, taken: followupUrls.length });
+        audit("followup.proposed",
+          `model wskazał ${followupUrls.length} odnośników do dociągnięcia`,
+          { proposed: proposed.length, grounded: followupUrls.length });
       }
       (state.followupsBySource ??= {})[src.id] = followupUrls;
     }
@@ -471,32 +469,14 @@ export async function processSource(
   }
   followupUrls = healed;
 
-  // --- wejście z etapu 1 dołącza do followupów ---
-  // Etap 1 ustala, GDZIE serwis wypisuje wydarzenia, i do tej pory nikt tego nie czytał:
-  // 26 z 41 pobieranych źródeł wchodziło korzeniem serwisu, a nie listą imprez.
-  //
-  // Wejście dokłada się do korzenia, a nie go zastępuje — bo pomiar (2026-08-01, sam fetch,
-  // bez modelu) pokazał, że wymiana bywa STRATĄ: lubon.pl ma na stronie głównej 6 różnych dat,
-  // a na `/artykuly/350/wydarzenia` zero; kultura.poznan.pl odpowiednio 5 i zero. Odwrotnie
-  // niż w komorniki.pl (1 na korzeniu, 11 pod kalendarzem). Skoro raz jedno, raz drugie,
-  // to wybór między nimi byłby zgadywaniem — a suma jest zawsze ≥ każdej ze stron z osobna.
-  // Mechanizm followupów robi dokładnie to i ma już cache po hashu, więc powtórka nic nie kosztuje.
-  const entry = entryUrl(src);
-  for (const s of entry.skipped ?? []) {
-    audit("url.skipped",
-      `etap 1 wskazał „/${s.segment}/" jako listę wydarzeń — to repertuar, `
-      + "więc wchodzimy korzeniem serwisu",
-      { url: s.url, segment: s.segment });
-  }
-  if (entry.entrypoint && !isSameUrl(entry.url, url) && !followupUrls.some((u) => isSameUrl(u, entry.url))) {
-    // na początek listy: limit MAX_FOLLOWUPS_PER_SOURCE nie może wypchnąć adresu,
-    // o którym WIEMY, że stoją pod nim wydarzenia, na rzecz propozycji modelu
-    followupUrls = [entry.url, ...followupUrls].slice(0, MAX_FOLLOWUPS_PER_SOURCE);
-    audit("followup.proposed",
-      `wejście z etapu 1 (${entry.entrypoint.kind}, ×${entry.entrypoint.detailCount ?? "?"} odnośników) ` +
-      "dołącza do followupów",
-      { url: entry.url, via: entry.entrypoint.via, confidence: entry.entrypoint.confidence });
-  }
+  // KOLEJKA: co z tego naprawdę pobieramy. Deficyt (brak miejsca / godziny) idzie przodem,
+  // adresy znane jako ta sama strona nie zajmują slotu — patrz followup-queue.ts.
+  followupUrls = queueFollowups(followupUrls, {
+    srcId: src.id, state, events: pageEvents, today: todayIso(),
+  });
+
+  // wejście z etapu 1 dokłada się do kolejki — patrz `attachEntrypoint`
+  followupUrls = attachEntrypoint(followupUrls, { src, state, pageUrl: url, today: todayIso() });
 
   // --- followupy: sprawdzane ZAWSZE, także gdy strona się nie zmieniła ---
   // plakat/PDF potrafi się zmienić pod tym samym URL-em przy nietkniętym tekście strony

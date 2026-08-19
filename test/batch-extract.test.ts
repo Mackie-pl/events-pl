@@ -10,6 +10,7 @@ import { describe, it } from "node:test";
 import { Value } from "@sinclair/typebox/value";
 
 import { fillMissing } from "../src/shared/json-schema.js";
+import type { Block } from "../src/pipeline/extract/blocks.js";
 import { chunk } from "../src/pipeline/extract/block-source.js";
 import { mapBatch, withHeaders } from "../src/pipeline/extract/extract.js";
 import { batchExtractionSystem, extractionSystem } from "../src/pipeline/prompts.js";
@@ -27,12 +28,18 @@ describe("prompt zbiorczy", () => {
    * i dokłada ustalenia przed wydarzeniem; 3308 → 3432 (2026-08-19) to zdanie „URL przepisz
    * DOKŁADNIE tak, jak stoi w tekście" — model sklejał domenę ze ścieżką i gubił przy tym
    * znaki (`mdk2.poznan.pl/images/mdk/…` zamiast `…/images/mdk2/…`, trzy PDF-y, siedem
-   * przebiegów po 404). Podbicie liczby, żeby test zzieleniał po przypadkowej zmianie,
+   * przebiegów po 404); 3432 → 3530 (2026-08-19) to dwie zmiany naraz przy kolejce followupów:
+   * sufit „Maks N" bierze się teraz z `FOLLOWUPS_PER_SOURCE` (domyślnie 7, patrz
+   * `pipeline/extract/followup-queue.ts`) i doszło zdanie o pierwszeństwie wpisów bez miejsca
+   * albo bez godziny — bo to one są jedynym powodem, żeby w ogóle gdzieś wchodzić.
+   * UWAGA: od tej zmiany długość zależy od PARAMETRU. Wartość trzycyfrowa przesunie ją o znak
+   * i to jest w porządku — asercja pilnuje treści promptu przy domyślnej konfiguracji.
+   * Podbicie liczby, żeby test zzieleniał po przypadkowej zmianie,
    * kasuje jedyny powód, dla którego ta asercja tu stoi.
    */
   it("nie zmienił promptu pojedynczego ani o znak", () => {
     const s = extractionSystem("2026-08-07");
-    assert.equal(s.length, 3432, "długość promptu pojedynczego się zmieniła");
+    assert.equal(s.length, 3530, "długość promptu pojedynczego się zmieniła");
     assert.ok(s.startsWith("Wyciągasz wydarzenia lokalne z tekstu strony/PDF-a. Dziś jest 2026-08-07."));
     assert.ok(s.includes("BEZ DATY = NIE WYDARZENIE."));
     assert.ok(!s.includes("BLOK"), "prompt pojedynczy nie ma prawa wspominać o blokach");
@@ -118,7 +125,9 @@ describe("nagłówki paczki", () => {
 });
 
 describe("dzielenie na paczki", () => {
-  const block = (chars: number, hash: string) => ({ hash, text: "x".repeat(chars), chars });
+  // `cut` jest tu obojętne — paczkowanie patrzy na znaki; atrapa ma opisywać kształt, nie zachowanie
+  const block = (chars: number, hash: string): Block =>
+    ({ hash, text: "x".repeat(chars), chars, cut: "content" });
 
   it("mieści całą stronę w jednej paczce — to jest cała oszczędność zasiewu", () => {
     const blocks = Array.from({ length: 40 }, (_, i) => block(600, `h${i}`));

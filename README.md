@@ -584,6 +584,36 @@ Obca domena przechodzi zawsze — inwentarz nie jest dla niej wyrocznią. Sprawd
 idempotentne i dlatego **leczy stan**: lista odtworzona z `followupsBySource` przechodzi przez
 nie w każdym przebiegu, w którym strona odda HTML.
 
+**Kolejka followupów: deficyt przed kompletem.** Adresów bywa więcej niż slotów
+(`FOLLOWUPS_PER_SOURCE`, dziś 7), a do 2026-08-19 o tym, które się mieszczą, decydowała
+kolejność, w jakiej model wypisał odnośniki — czyli przypadek. Zmierzone na
+`mosina-pl-wydarzenia` (przebieg 2026-08-19): pięć wskazanych podstron, wejście z etapu 1
+doklejone na początek wypchnęło piątą, a była nią `…/pippi-langstrumpf-zwiedza-swiat` —
+jedyny wpis tego źródła **bez miejsca i bez godziny**. Pobrane zamiast niej dwa „Zebranie
+Wiejskie Sołectwa…" miały świetlicę i termin już na karcie listingu i dały 12 linii
+`dedupe.dropped`, wszystkie ze sobą samymi. Trzy sloty z pięciu poszły na powtórzenie tego,
+co potok już wiedział.
+
+Od tej zmiany kolejka pyta, **czego brakuje**: adres, pod którym stoi wpis bez `venue` albo
+bez `time_start`, idzie przed adresem wpisu kompletnego (`pipeline/extract/followup-queue.ts`).
+Sygnał liczymy z wydarzeń **strony źródła**, nie z sumy po followupach — inaczej wpis
+uzupełniony wczoraj spadałby dziś na koniec kolejki i wydarzenia migotałyby z przebiegu na
+przebieg. Sort jest stabilny, więc przy równym deficycie zostaje kolejność modelu. W rejestrze
+z 2026-08-19 (205 wydarzeń) bez miejsca było 37 wpisów, bez godziny 62, bez obu 17.
+
+**Adres identyczny ze stroną źródła nie zajmuje slotu.** `same-as-page` (warstwa 3 wyżej) potok
+wykrywał od dawna, ale **dopiero po pobraniu** — czyli po wydaniu limitu. `mosina.pl/wydarzenia`
+i `…?page=1` to bajt w bajt te same 406 940 bajtów i wracały tak w każdym przebiegu od
+2026-08-13 (stale 2 takie followupy dziennie, każdy kosztem jednej niedoczytanej podstrony).
+Werdykt ląduje więc w `state.sameAsPage` (source.id → adres → dzień) i **wygasa** po
+`FOLLOWUP_SAME_PAGE_RECHECK_DAYS`: serwis może kiedyś rozdzielić paginację i nikt nam tego
+nie zgłosi. Ta sama pamięć wstrzymuje doklejenie wejścia z etapu 1, gdy to ono jest tą stroną.
+
+Sufit followupów jedzie **z tego samego parametru do promptu i do przycięcia kolejki**. Wcześniej
+były dwa: kod ciął do 5, a prompt prosił o „maks 5" — i model trzymał się promptu co do sztuki
+(mosina 5 propozycji z 9 kart, okpoznan 5 z 16). Przy dwóch pokrętłach na jedną wielkość działa
+mniejsze z nich, więc podniesienie samego limitu w kodzie nie dawało ani jednego adresu więcej.
+
 ⚠️ Pierwszy przebieg po tej zmianie **przeekstrahuje wszystkie źródła raz** (stary `state.json`
 ma `hashes`, ale nie ma zapisanych wydarzeń) — jednorazowo ok. pełnej stawki z tabeli kosztów.
 
@@ -601,12 +631,34 @@ pierwsze dwa są publiczne (`audit.json`), a trzeci niesie cudzą treść i zost
 | krok `block` | `podział: DOM, 38 kart → 41 bl. / 28 431 zn.; 39 z cache, 2 do modelu (1 204 zn., 4% treści)` — znaki obok liczby bloków, bo „2 z 41 bloków" brzmi jak nic, a bywa połową strony |
 | krok `block` (drugi wariant) | `bez kart mimo 3 grup rodzeństwa — tniemy po akapitach. div.tile ×5 (18 zn. — poniżej progu karty)`: **czemu** ta strona nie została rozpoznana jako lista. Wcześniej „nie ma listy" i „jest, ale nie po naszemu" wyglądały identycznie |
 | krok `block.parsed` | co z tego wyszło: ile wydarzeń dały świeże bloki, ile cache, ile bloków opłaconych **bez ani jednego** wydarzenia — i ile te bloki **ważyły** (`silent`, `silentChars`, `silentLeads` względem `freshChars`). Sztuki same nie mówią nic: „18 z 19 bez wydarzenia" bywa osiemnastoma stopkami, a bywa połową strony, a płacimy za znaki. `silentLeads` odejmuje te, które wprawdzie nie dały wydarzenia, ale wskazały followup — one nie są stratą |
-| `blocks/…` w archiwum | wiersz na blok: hash, rozmiar, karta czy reszta strony, z cache czy do modelu, od kiedy w cache'u, ile wydarzeń dał — plus **treść** tych, za które dziś zapłaciliśmy. Zapisywane tylko wtedy, gdy cokolwiek poszło do modelu |
+| `blocks/…` w archiwum | wiersz na blok: hash, rozmiar, karta czy reszta strony, **czemu granica wypadła tutaj** (`cut`), z cache czy do modelu, od kiedy w cache'u, ile wydarzeń dał — i **treść każdego** bloku. Zapisywane przy każdym podziale, także w pełni z cache'a |
 
 Ostatni wiersz odpowiada na jedyne pytanie, którego z rachunku nie da się postawić: *ten blok
-kosztuje codziennie — co się w nim właściwie rusza?* Reszta strony stoi już w `raw/`, a dzień
-bez ani jednego świeżego bloku nie zapisuje obiektu w ogóle — archiwum rośnie tylko o dni,
-w których naprawdę coś zapłaciliśmy.
+kosztuje codziennie — co się w nim właściwie rusza?*
+
+Dwie rzeczy z tego wiersza zmieniły się 2026-08-19, obie po tym, jak diagnoza jednego bloku
+(lista filtrów `okpoznan.pl`, patrz niżej) wymagała odtworzenia podziału osobnym skryptem:
+
+- **treść każdego bloku, nie tylko świeżego.** `raw/` trzyma tekst strony BEZ granic, a to
+  granice są przedmiotem pytania — przy podziale po DOM-ie nie da się ich nawet odtworzyć,
+  bo fragmenty renderują się w kontekście. Kosztuje +196 kB/dobę (461 → 657 kB), ~18 MB na
+  `ARCHIVE_RETENTION_DAYS=90`.
+- **także dzień w pełni z cache'a.** To jedyny dzień, w którym widać stronę w stanie
+  ustalonym: sam chrom i karty, które przeżyły. Kosztuje ~13–16 kB/dobę, bo cache treści
+  całej strony ucina segmentację wcześniej i takich podziałów wypada 2 na dobę.
+
+`cut` mówi, CO postawiło granicę: `card` (krawędź karty z DOM-u), `post` (granica dana przez
+źródło — post grupy FB), `content` (hash akapitu, jedyna granica odporna na przesunięcia),
+`ceiling` (twardy sufit 4 000 zn. — **jedyna** zależna od pozycji, więc psuje lokalność
+cache'a i ma się odzywać rzadko), `end` (koniec ciętego kawałka). Bez tego pola nie dało się
+odróżnić „zmieniła się strona" od „przesunęła się nasza granica".
+
+**Podgląd podziału w panelu** (`Block split` przy kroku `podział:` w śladzie źródła, wymaga
+`npm run panel-server`): pasek całej strony z szerokością segmentu proporcjonalną do znaków,
+pod nim blok po bloku z etykietami `karta`/`reszta`, `cut`, `z cache`/`do modelu` i liczbą
+wydarzeń, z filtrami **Karty / Reszta / Do modelu / Jałowe** i pełną treścią po rozwinięciu.
+Rozliczenia sprzed 2026-08-19 też się otwierają — bloki z cache'a mają w nich sam nagłówek
+(oznaczone `urwane`) i nie mają `cut`, więc podgląd go nie pokazuje, zamiast zgadywać.
 
 Zsumowane po źródłach i po oknie śladu (~8 przebiegów) te dwa kroki dają zakładkę **Blocks**
 w panelu: ile znaków poszło do modelu, ile z nich milczało i ~ile to kosztowało. Trzecia oś
@@ -925,10 +977,10 @@ tego nie widać w historii.
 <!-- Tabela poniżej jest generowana z src/config/params.ts przez `npm run config:docs`.
      Ręczne zmiany przepadną — popraw wpis w rejestrze. -->
 
-Wszystkie 64 parametrów, jakie potok czyta z konfiguracji. Kolumna **klasa** mówi,
+Wszystkie 66 parametrów, jakie potok czyta z konfiguracji. Kolumna **klasa** mówi,
 czym parametr jest i — co ważniejsze — GDZIE mieszka:
 
-- **próg** (31 sztuk) — steruje zachowaniem potoku i stoi w commitowanym `config.json`.
+- **próg** (33 sztuk) — steruje zachowaniem potoku i stoi w commitowanym `config.json`.
   Zmiana progu ma zostawiać ślad: `git log -p config.json` daje datę, autora i wartość przed i po,
   do zestawienia z tym, co w tych dniach robił potok. Każdy przebieg zapisuje w raporcie migawkę
   progów, którymi się kierował (`RunReport.config`), więc stary raport da się czytać bez zgadywania.
@@ -1006,6 +1058,8 @@ która obowiązuje, gdy nie ustawiono nic. Dłuższe uzasadnienia stoją przy wp
 | `DISCOVER_MAX_TOKENS` | `12000` | próg | sufit tokenów odpowiedzi przy ocenie trafień wyszukiwarki |
 | `BLOCK_MAX_CALLS` | `80` | próg | sufit wywołań LLM na blokowanie źródeł w przebiegu (0 = nie wołaj) |
 | `REPERTOIRE_URL_SEGMENTS` | `seances,seanse,repertuar,repertoire,showtimes,seansy` | próg | segmenty ścieżki znaczące repertuar — takich adresów nie czytamy (po przecinku) |
+| `FOLLOWUPS_PER_SOURCE` | `7` | próg | ile podstron / PDF-ów / plakatów dociągamy przy jednym źródle (0 = wcale) |
+| `FOLLOWUP_SAME_PAGE_RECHECK_DAYS` | `30` | próg | po ilu dniach followup identyczny ze stroną źródła wraca do kolejki (0 = pyta zawsze) |
 | `CONTAINER_MIN_SPAN_DAYS` | `8` | próg | od ilu dni zakres bez rytmu i bez godziny uznajemy za stronę programu (0 = nie sonduj) |
 | `CONTAINER_MAX_PROBES` | `3` | próg | ile stron-programów sondujemy w jednym źródle na przebieg |
 | `ENTRYPOINT_LLM` | `always` | próg | kiedy pytać model o punkt wejścia gminy: always \| ambiguous \| never |

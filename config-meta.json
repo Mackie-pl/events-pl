@@ -292,6 +292,20 @@
       "def": "seances,seanse,repertuar,repertoire,showtimes,seansy"
     },
     {
+      "name": "FOLLOWUPS_PER_SOURCE",
+      "group": "pipeline",
+      "cls": "tuning",
+      "summary": "ile podstron / PDF-ów / plakatów dociągamy przy jednym źródle (0 = wcale)",
+      "def": 7
+    },
+    {
+      "name": "FOLLOWUP_SAME_PAGE_RECHECK_DAYS",
+      "group": "pipeline",
+      "cls": "tuning",
+      "summary": "po ilu dniach followup identyczny ze stroną źródła wraca do kolejki (0 = pyta zawsze)",
+      "def": 30
+    },
+    {
       "name": "CONTAINER_MIN_SPAN_DAYS",
       "group": "pipeline",
       "cls": "tuning",

@@ -10,6 +10,7 @@
  * Schemat opisuje kształt jednego rekordu i tego się trzyma; wciskanie w niego reguł
  * przekrojowych skończyłoby się opisami pól, których model nie ma jak zastosować.
  */
+import { P } from "../config/index.js";
 import { renderSchemaBlock } from "../shared/json-schema.js";
 import { BlockEventSchema, EventSchema } from "../types/event-schema.js";
 
@@ -117,15 +118,21 @@ Zwróć WYŁĄCZNIE JSON: {"url":"https://..."} albo {"url":null}, gdy żaden wy
 /**
  * Reguły ekstrakcji — WSPÓLNE dla wywołania na jedną treść i na paczkę bloków.
  *
- * Stoją w osobnej stałej, bo prompt zbiorczy różni się tylko nagłówkiem i schematem;
+ * Stoją w osobnej FUNKCJI, bo prompt zbiorczy różni się tylko nagłówkiem i schematem;
  * gdyby reguły były w obu przepisane, rozjechałyby się dokładnie tak, jak rozjechały się
- * kiedyś trzy kopie bloku schematu. `test/prompts.test.ts` pilnuje, że wersja pojedyncza
- * po tym wydzieleniu jest CO DO ZNAKU tym samym promptem, co przedtem.
+ * kiedyś trzy kopie bloku schematu.
+ *
+ * SUFIT FOLLOWUPÓW jest tu, a nie liczbą wpisaną w tekst, bo to ON był prawdziwym limitem.
+ * Kod ciął listę do `MAX_FOLLOWUPS_PER_SOURCE = 5`, prompt prosił o „maks 5" — i model
+ * trzymał się promptu co do sztuki (mosina 5 z 9 kart, okpoznan 5 z 16, przebieg 2026-08-19).
+ * Podnoszenie samego limitu w kodzie nie dawało więc ani jednego adresu więcej: dwa pokrętła
+ * na jedną wielkość znaczą, że działa mniejsze z nich.
  */
-const EXTRACTION_RULES = `WYDARZENIA-KONTENERY: jeśli tekst zawiera zbiorczy program (repertuar, "Akcja Lato", festiwal wielodniowy)
+const extractionRules = (): string => `WYDARZENIA-KONTENERY: jeśli tekst zawiera zbiorczy program (repertuar, "Akcja Lato", festiwal wielodniowy)
 z konkretnymi terminami — rozbij na osobne wydarzenia i ustaw "container": nazwa kontenera.
 Jeśli program jest POD LINKIEM (PDF, podstrona, plakat JPG) — NIE zgaduj; dodaj URL do "followups":
-[{"url": str, "reason": "program PDF"|"szczegóły wydarzenia"|"plakat"}]. Maks 5 followupów, tylko z tej samej domeny lub oficjalnych.
+[{"url": str, "reason": "program PDF"|"szczegóły wydarzenia"|"plakat"}]. Maks ${P.FOLLOWUPS_PER_SOURCE.get()} followupów, tylko z tej samej domeny lub oficjalnych.
+Pierwszeństwo mają wpisy, przy których NIE MA miejsca albo godziny — po to właśnie tam wchodzimy.
 URL przepisz DOKŁADNIE tak, jak stoi w tekście — także względny („/images/…"). NIE doklejaj domeny i niczego nie poprawiaj.
 
 ${RECURRING_RULE}
@@ -172,7 +179,7 @@ Zwróć WYŁĄCZNIE poprawny JSON: {"events":[...],"followups":[...]}.
 Schemat wydarzenia:
 ${EVENT_BLOCK}
 
-${EXTRACTION_RULES}`;
+${extractionRules()}`;
 
 /**
  * Prompt ZBIOROWY: kilka fragmentów tej samej strony w jednym wywołaniu.
@@ -199,7 +206,7 @@ do innego bloku — po tym numerze wynik wraca na swoje miejsce.
 Schemat wydarzenia:
 ${renderSchemaBlock(BlockEventSchema)}
 
-${EXTRACTION_RULES}`;
+${extractionRules()}`;
 
 /**
  * Zasada czytania KONTEKSTU — tekstu, w którym plakat stał (blok strony albo post FB).

@@ -34,7 +34,7 @@ export type AuditKind =
   | "event.past"
   /** adres odrzucony PRZED pobraniem, bo stoi pod nim repertuar, a nie wydarzenia */
   | "url.skipped"
-  /** model wskazał podstrony / PDF-y / plakaty do dociągnięcia */
+  /** kolejka followupów: co model wskazał, co odsiał limit i co przestawił deficyt danych */
   | "followup.proposed"
   /** adres followupa skonfrontowany z inwentarzem strony: przyciągnięty do prawdziwego albo odrzucony */
   | "followup.url"

@@ -70,6 +70,16 @@ export interface PipelineState {
    */
   followupsBySource?: Record<string, string[]>;
   /**
+   * Followupy, które okazały się TĄ SAMĄ treścią co strona źródła: source.id → urlKey → dzień
+   * potwierdzenia (YYYY-MM-DD). Bez tej pamięci taki adres zjadał slot w kolejce w każdym
+   * przebiegu — wykryć go da się dopiero po pobraniu, a wtedy limit jest już wydany.
+   *
+   * Wpis wygasa po `FOLLOWUP_SAME_PAGE_RECHECK_DAYS` liczonych przy ODCZYCIE, nie zapisanych
+   * jako data końcowa: zmiana progu ma działać od razu, a nie od następnego potwierdzenia.
+   * Patrz `pipeline/extract/followup-queue.ts`.
+   */
+  sameAsPage?: Record<string, Record<string, string>>;
+  /**
    * Linki facebook.com/events/… ostatnio wyłuskane z treści danego źródła — analogicznie
    * do followupsBySource: przy 304 nie mamy tekstu, a rozwiązane wydarzenia FB nie mogą
    * przez to znikać z serwisu.
