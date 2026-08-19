@@ -30,7 +30,7 @@ src/actions/discover.ts  ·  --why <id> = skąd to źródło      (metryki + śl
 | `sources.json` | rejestr źródeł Poznań +15 km (etap 1 wykonany ręcznie 2026-07-20; 46 źródeł, 13 gmin) + `provenance` przy każdym źródle dodanym automatycznie |
 | `src/actions/` | wejścia potoku — `daily`, `discover`, `digest`, `backfill-costs`, `probe` (sprawdzenie jednego źródła na żądanie), `probe-fb-pages` (jednorazowy pomiar fanpage'ów), `fb-budget-preview` (darmowy podgląd decyzji regulatora budżetu), `panel-server` (lokalny most panelu). Same main() + orkiestracja, zero logiki dziedzinowej |
 | `src/adapters/` | wyjścia do świata: `openrouter`, `search` (fasada) + `serper`/`google-cse`/`brave`, `overpass`, `nominatim`, `page-fetch`, `brightdata`, `supabase-archive`, `telegram`, `resend`, `http` |
-| `src/pipeline/` | logika dziedzinowa: `discover/` (discovery gmin, walidacja propozycji, `entrypoint`, `capabilities`, `--why`), `verify/` (drabina osiągalności, profil, naprawa URL-i), `extract/` (ekstrakcja, followupy, wydarzenia FB), `digest/`, `dedupe`, `camps` (odsiew półkolonii — turnus z zapisami to nie wydarzenie; jeden filtr przed scalaniem, wspólny dla wszystkich ścieżek), `series` (rytm `repeat` z drutu → terminy, a powtórzenia → jeden wpis z listą `dates`; zwijanie po dedupe, wspólne dla modelu, plakatów, cache'u i kalendarzy), `pii`, `facebook`, `prompts` |
+| `src/pipeline/` | logika dziedzinowa: `discover/` (discovery gmin, walidacja propozycji, `entrypoint`, `capabilities`, `--why`), `verify/` (drabina osiągalności, profil, naprawa URL-i), `extract/` (ekstrakcja, followupy, wydarzenia FB), `digest/`, `dedupe`, `non-events` (odsiew wpisów, na które nie da się przyjść — półkolonie, spotkania organizacyjne; jeden filtr przed scalaniem, wspólny dla wszystkich ścieżek, uzupełnia werdykt modelu `is_noise`), `series` (rytm `repeat` z drutu → terminy, a powtórzenia → jeden wpis z listą `dates`; zwijanie po dedupe, wspólne dla modelu, plakatów, cache'u i kalendarzy), `pii`, `facebook`, `prompts` |
 | `src/shared/` | narzędzia bez zależności: `url-template` (zwijanie adresów do szablonów — serce rozpoznania list), `links`, `dates`, `text`, `url`, `hash`, `audit`, `errors`, `json-schema`, `series` (arytmetyka rytmu + etykieta cyklu — jedna implementacja dla digestu i strony) |
 | `src/reporting/` | agregaty, koszty, podsumowania Actions, redakcja PII, polityki retencji raportów |
 | `src/storage/` | **port składowania** — `DocStore`/`CollectionStore` + implementacja na plikach JSON. Jedyne miejsce znające ścieżki; przejście na bazę to druga implementacja i podmiana wiązań w `storage/index.ts` |
@@ -570,6 +570,20 @@ followupsBySource: { "<source.id>": ["<URL plakatu/PDF-a>", …] }
   plakat nie jest w ogóle pobierany. Gdy nie obsługuje walidatorów, decyduje hash treści.
 - `outcome: unchanged` przy followupie = treść identyczna, wydarzenia odtworzone z cache.
 
+**Adres followupa bierzemy ze STRONY, nie z pamięci modelu.** Model dostaje tekst z odnośnikami
+takimi, jakie stoją w HTML-u (`html-to-text` bez `baseUrl`), a w JSON-ie oddawał adres
+bezwzględny — czyli sam sklejał domenę ze ścieżką i przy tym gubił znaki: `mdk2.poznan.pl`
+linkuje `/images/mdk2/rekrutacja_2026_2007/…`, a w `state.json` wylądowało `/images/mdk/…`
+(„2" zużyte na host). Wszystkie trzy PDF-y z tej strony, 404 w **siedmiu** kolejnych przebiegach
+— bo martwy adres siedzi w `followupsBySource`, a 404 nie zmienia hasha strony, więc nic go
+nie usuwa. Od 2026-08-19 adres rozwijamy sami i konfrontujemy z **inwentarzem strony**
+(`href` + `src` z HTML-a, `shared/links.ts`): trafienie wprost przechodzi, przepisany z błędem
+jest przyciągany do prawdziwego po nazwie pliku (jeśli jednoznaczna), a adres udający własny
+tego serwisu, którego na stronie nie ma, **odpada przed pobraniem** (krok `followup.url`).
+Obca domena przechodzi zawsze — inwentarz nie jest dla niej wyrocznią. Sprawdzenie jest
+idempotentne i dlatego **leczy stan**: lista odtworzona z `followupsBySource` przechodzi przez
+nie w każdym przebiegu, w którym strona odda HTML.
+
 ⚠️ Pierwszy przebieg po tej zmianie **przeekstrahuje wszystkie źródła raz** (stary `state.json`
 ma `hashes`, ale nie ma zapisanych wydarzeń) — jednorazowo ok. pełnej stawki z tabeli kosztów.
 
@@ -911,10 +925,10 @@ tego nie widać w historii.
 <!-- Tabela poniżej jest generowana z src/config/params.ts przez `npm run config:docs`.
      Ręczne zmiany przepadną — popraw wpis w rejestrze. -->
 
-Wszystkie 63 parametrów, jakie potok czyta z konfiguracji. Kolumna **klasa** mówi,
+Wszystkie 64 parametrów, jakie potok czyta z konfiguracji. Kolumna **klasa** mówi,
 czym parametr jest i — co ważniejsze — GDZIE mieszka:
 
-- **próg** (30 sztuk) — steruje zachowaniem potoku i stoi w commitowanym `config.json`.
+- **próg** (31 sztuk) — steruje zachowaniem potoku i stoi w commitowanym `config.json`.
   Zmiana progu ma zostawiać ślad: `git log -p config.json` daje datę, autora i wartość przed i po,
   do zestawienia z tym, co w tych dniach robił potok. Każdy przebieg zapisuje w raporcie migawkę
   progów, którymi się kierował (`RunReport.config`), więc stary raport da się czytać bez zgadywania.
@@ -970,6 +984,7 @@ która obowiązuje, gdy nie ustawiono nic. Dłuższe uzasadnienia stoją przy wp
 | `BD_DATASET_FB_PAGE_POSTS` | brak | ustawienie | id scrapera postów z FANPAGE'ÓW — bez niego sonda fanpage'ów nie ruszy |
 | `BD_POLL_MS` | `10000` | próg | co ile odpytywać Bright Data o gotowość migawki |
 | `BD_TIMEOUT_MS` | `480000` | próg | po tylu ms migawka jest porzucana i anulowana (awaria 2026-08-10) |
+| `FB_POSTER_MAX_PER_RUN` | `60` | próg | sufit odczytów plakatów z grup FB na jeden przebieg (0 = nie czytamy wcale) |
 | `FB_GROUP_BLOCKED_LIMIT` | `3` | próg | po tylu płatnych wierszach błędu z rzędu grupa jest pomijana |
 | `FB_GROUP_BLOCKED_RECHECK_DAYS` | `14` | próg | co tyle dni jedna sonda do pomijanej grupy — jedyna droga powrotna |
 | `FB_GROUP_LIMIT_MAX` | `50` | próg | sufit rekordów na grupę; regulator może zejść niżej, nigdy wyżej |

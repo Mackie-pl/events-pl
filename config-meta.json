@@ -173,6 +173,13 @@
       "def": 480000
     },
     {
+      "name": "FB_POSTER_MAX_PER_RUN",
+      "group": "fb",
+      "cls": "tuning",
+      "summary": "sufit odczytów plakatów z grup FB na jeden przebieg (0 = nie czytamy wcale)",
+      "def": 60
+    },
+    {
       "name": "FB_GROUP_BLOCKED_LIMIT",
       "group": "fb",
       "cls": "tuning",

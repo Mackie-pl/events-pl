@@ -190,6 +190,14 @@ export interface FbPostExtras {
   withPlace: number;
   /** jeden URL do obejrzenia w śladzie — czy w ogóle da się go pobrać bez ciasteczek FB */
   sampleImage: string | null;
+  /** pole z autorem postu, jeśli scraper takie oddaje; null = dataset go nie zwraca */
+  authorField: string | null;
+  /** ilu RÓŻNYCH autorów napisało te posty */
+  authors: number;
+  /** ile postów ma najaktywniejszy autor — to jest liczba rozstrzygająca o „tym samym gościu" */
+  maxPostsByAuthor: number;
+  /** ilu autorów napisało więcej niż jeden post w tym oknie */
+  repeatAuthors: number;
 }
 
 /** Kolejność od najbardziej konkretnego: pierwsze pole z URL-em wygrywa i trafia do śladu. */
@@ -223,10 +231,47 @@ function urlsIn(value: unknown, depth = 0): string[] {
   return [];
 }
 
+/**
+ * Pola, w których scrapery FB trzymają autora postu. Jak przy obrazach: nazwy różnią się
+ * między wersjami datasetu, więc próbujemy kilku zamiast zakładać jedną.
+ */
+const AUTHOR_KEYS = [
+  "user_url", "profile_url", "user_id", "profile_id", "author", "user",
+  "post_owner", "owner", "user_username_raw", "username",
+] as const;
+
+/**
+ * Tożsamość autora WYŁĄCZNIE do policzenia — wartość nigdy nie opuszcza tej funkcji.
+ *
+ * To nie jest ostrożność na wyrost: repo jest publiczne, `audit.json` jest commitowany,
+ * a autor posta w wiejskiej grupie to osoba prywatna, nie instytucja. Do pytania „czy ten
+ * sam ktoś wrzuca dziesięć ogłoszeń miesięcznie" wystarczą LICZNIKI — kto to jest, nie jest
+ * nam do niczego potrzebne, więc tego nie zapisujemy (patrz pipeline/pii.ts).
+ */
+function authorIdentity(rec: BdRecord): { key: string; field: string } | null {
+  for (const field of AUTHOR_KEYS) {
+    const v = rec[field];
+    if (typeof v === "string" && v.trim()) return { key: v.trim(), field };
+    if (typeof v === "number" && Number.isFinite(v)) return { key: String(v), field };
+    if (v && typeof v === "object") {
+      const o = v as Record<string, unknown>;
+      for (const inner of ["id", "user_id", "profile_id", "url", "link", "name", "username"]) {
+        const iv = o[inner];
+        if (typeof iv === "string" && iv.trim()) return { key: iv.trim(), field };
+        if (typeof iv === "number" && Number.isFinite(iv)) return { key: String(iv), field };
+      }
+    }
+  }
+  return null;
+}
+
 export function fbPostExtras(records: BdRecord[]): FbPostExtras {
   const out: FbPostExtras = {
     imageField: null, withImage: 0, placeField: null, withPlace: 0, sampleImage: null,
+    authorField: null, authors: 0, maxPostsByAuthor: 0, repeatAuthors: 0,
   };
+  // mapa żyje tylko w tej funkcji i ginie z nią — na zewnątrz idą same liczby
+  const byAuthor = new Map<string, number>();
   for (const r of records) {
     // rekord bez treści to wiersz błędu scrapera, nie post — patrz fbGroupStats
     if (!postContent(r)) continue;
@@ -244,6 +289,16 @@ export function fbPostExtras(records: BdRecord[]): FbPostExtras {
       out.placeField ??= key;
       break;
     }
+    const who = authorIdentity(r);
+    if (who) {
+      out.authorField ??= who.field;
+      byAuthor.set(who.key, (byAuthor.get(who.key) ?? 0) + 1);
+    }
+  }
+  out.authors = byAuthor.size;
+  for (const n of byAuthor.values()) {
+    if (n > out.maxPostsByAuthor) out.maxPostsByAuthor = n;
+    if (n > 1) out.repeatAuthors += 1;
   }
   return out;
 }
@@ -268,6 +323,47 @@ export function fbImagePosts(records: BdRecord[]): Map<string, number> {
       if (images) break;
     }
     out.set(urlKey(link), images);
+  }
+  return out;
+}
+
+/** Plakat do przeczytania: obraz + post, przy którym stał. */
+export interface FbPosterJob {
+  imageUrl: string;
+  postUrl: string;
+  /** treść postu — jedzie do modelu jako KONTEKST, bo plakat rzadko niesie rok i adres */
+  context: string;
+}
+
+/**
+ * Posty, których załącznika warto spróbować przeczytać. BEZ filtra po metadanych i to jest
+ * decyzja, nie niedopatrzenie.
+ *
+ * Sprawdzone 2026-08-19 na 11 obejrzanych obrazkach: proporcje nie oddzielają plakatu od
+ * ogłoszenia (dwa prawdziwe plakaty stały na 0.66 i 1.92, czyli po obu skrajach, a śmieci
+ * zajmowały wszystkie przedziały), a bajty/piksel jeszcze gorzej — plakat szkoleń dla
+ * seniorów (0.097) kompresuje się LŻEJ niż zdjęcie borówek (0.101). Każdy próg po tych
+ * liczbach kasuje prawdziwe wydarzenie.
+ *
+ * Asymetria mówi resztę: fałszywe „to nie plakat" znaczy, że wydarzenie nie powstanie
+ * i nikt się o tym nie dowie, a fałszywe „plakat" kosztuje ~$0.001 (zmierzone) i widać je
+ * w tabeli — model sam oddaje pustą listę dla zdjęcia borówek i dla ogłoszenia o hali.
+ * Sitem jest więc SUFIT liczby odczytów (FB_POSTER_MAX_PER_RUN), nie zgadywanie z pikseli.
+ */
+export function fbPosterJobs(records: BdRecord[]): FbPosterJob[] {
+  const out: FbPosterJob[] = [];
+  for (const r of records) {
+    const content = postContent(r);
+    if (!content) continue; // wiersz błędu scrapera, nie post
+    const postUrl = pick(r, "url", "post_url", "link", "post_link");
+    if (!postUrl) continue; // bez adresu nie ma czym związać wydarzenia ze źródłem
+    for (const key of IMAGE_KEYS) {
+      const urls = urlsIn(r[key]);
+      const first = urls[0];
+      if (!first) continue;
+      out.push({ imageUrl: first, postUrl, context: content });
+      break;
+    }
   }
   return out;
 }

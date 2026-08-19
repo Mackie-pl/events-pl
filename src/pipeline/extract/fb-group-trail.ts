@@ -98,15 +98,48 @@ export function auditFbShares(x: FbShareStats): void {
 export function auditFbPostExtras(x: FbPostExtras, posts: number): void {
   if (!posts) return; // sama porażka scrapera — auditFbGroup już to powiedział
   const place = x.placeField
-    ? ` · ${x.withPlace} z miejscem w polu „${x.placeField}", też pomijanym`
+    ? ` · ${x.withPlace} z miejscem w polu „${x.placeField}", pomijanym`
     : "";
   audit("fb.group",
     x.imageField
-      ? `${x.withImage} z ${posts} postów ma obraz (pole „${x.imageField}") — plakaty NIEczytane, `
-        + `do modelu idzie sam tekst postu${place}`
+      ? `${x.withImage} z ${posts} postów ma obraz (pole „${x.imageField}") — idą do odczytu `
+        + `plakatów${place}`
       : `żaden z ${posts} postów nie oddał obrazu w znanych polach — nie ma czego czytać${place}`,
     {
       withImage: x.withImage, imageField: x.imageField, posts,
       withPlace: x.withPlace, placeField: x.placeField, sampleImage: x.sampleImage,
+    });
+  auditFbAuthors(x, posts);
+}
+
+/**
+ * Czy „ten sam gość dziesiąty raz w tym miesiącu" to w naszych grupach realne zjawisko.
+ *
+ * Pomysł na reputację autora (ignorujemy sprzedawcę borówek, tak jak w realnym życiu) jest
+ * sensowny, ale zanim powstanie mechanizm, trzeba wiedzieć dwie rzeczy, których dziś NIE wiemy:
+ * czy dataset w ogóle oddaje autora i czy powtarzalność jest na tyle skupiona, żeby cokolwiek
+ * dała. Stąd ten krok — mierzy, niczego nie blokuje.
+ *
+ * W ŚLADZIE LĄDUJĄ WYŁĄCZNIE LICZNIKI I NAZWA POLA. Żadnej wartości identyfikującej: repo jest
+ * publiczne, `audit.json` commitowany, a autor postu w wiejskiej grupie to osoba prywatna.
+ * Na pytanie „czy ktoś wrzuca dziesięć ogłoszeń" odpowiada liczba, nie nazwisko.
+ *
+ * Uwaga przy czytaniu wyniku: okno grupy to zwykle jedna–dwie doby (patrz `FbGroupStats`),
+ * więc `maxPostsByAuthor` mierzy skupienie W OKNIE, a nie „w miesiącu". Wzorzec rozłożony
+ * na tygodnie zobaczymy dopiero po kilku przebiegach, składając te liczby z kolejnych dni.
+ */
+function auditFbAuthors(x: FbPostExtras, posts: number): void {
+  if (!x.authorField) {
+    audit("fb.group",
+      `dataset nie oddaje autora postu w żadnym ze znanych pól — reputacja autora nieosiągalna`,
+      { authorField: null, posts });
+    return;
+  }
+  audit("fb.group",
+    `${x.authors} różnych autorów na ${posts} postów (pole „${x.authorField}"), `
+    + `${x.repeatAuthors} napisało więcej niż raz, rekordzista ${x.maxPostsByAuthor}`,
+    {
+      authorField: x.authorField, authors: x.authors, posts,
+      repeatAuthors: x.repeatAuthors, maxPostsByAuthor: x.maxPostsByAuthor,
     });
 }

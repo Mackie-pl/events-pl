@@ -22,6 +22,7 @@ import { DEDUPE_WHY, dedupe } from "../pipeline/dedupe.js";
 import { harvestEventUrls, isEventUrl } from "../pipeline/facebook.js";
 import { pruneBlocks } from "../pipeline/extract/block-cache.js";
 import { resolveFbEvents } from "../pipeline/extract/fb-events.js";
+import { startFbPosterRun } from "../pipeline/extract/fb-posters.js";
 import { fbPageDatasetReady } from "../pipeline/extract/fb-page.js";
 import { fbDailyBudget } from "../pipeline/extract/fb-budget.js";
 import { applyFbMutes, mutedSkip } from "../pipeline/extract/fb-cost-mute.js";
@@ -76,6 +77,10 @@ async function run(): Promise<void> {
   const producedBy = new Map<SourceRun, EventItem[]>();
   // linki do wydarzeń FB zebrane po drodze (treści stron, followupy, posty grup) — rozwiązywane zbiorczo na końcu
   const fbEventUrls = new Set<string>();
+  // sufit odczytów plakatów jest wspólny dla całego przebiegu, więc zeruje się TU, a nie
+  // w processSource; przy okazji z cache'u wypadają wpisy minione i puste (patrz fb-posters.ts)
+  startFbPosterRun(state, todayIso());
+
   for (const src of cfg.sources) {
     beginAuditSource(src.id);
     // Fanpage bez ustawionego datasetu jest jak grupa bez klucza — nie ma czym pobrać.

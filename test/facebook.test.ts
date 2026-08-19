@@ -252,6 +252,44 @@ describe("fbPostExtras — co jest w rekordzie, a nie dochodzi do modelu", () =>
   it("pusta odpowiedź nie udaje pomiaru", () => {
     assert.deepEqual(fbPostExtras([]), {
       imageField: null, withImage: 0, placeField: null, withPlace: 0, sampleImage: null,
+      authorField: null, authors: 0, maxPostsByAuthor: 0, repeatAuthors: 0,
     });
+  });
+
+  /**
+   * Wejście do pytania „czy warto ignorować sprzedawcę borówek". Test pilnuje dwóch rzeczy:
+   * liczenia skupienia autorów ORAZ tego, że z funkcji nie wychodzi nic, co identyfikuje
+   * osobę — `audit.json` jest commitowany w publicznym repo.
+   */
+  it("liczy autorów i skupienie, nie wypuszczając żadnej tożsamości", () => {
+    const x = fbPostExtras([
+      { content: "Borówki", url: "u1", user_url: "https://fb.test/rolnik" },
+      { content: "Borówki znowu", url: "u2", user_url: "https://fb.test/rolnik" },
+      { content: "Borówki i miód", url: "u3", user_url: "https://fb.test/rolnik" },
+      { content: "Koncert", url: "u4", user_url: "https://fb.test/dom-kultury" },
+      { error: "Group is private", user_url: "https://fb.test/ktos" },
+    ]);
+    assert.equal(x.authors, 2, "wiersz błędu to nie post");
+    assert.equal(x.maxPostsByAuthor, 3);
+    assert.equal(x.repeatAuthors, 1);
+    assert.equal(x.authorField, "user_url");
+    assert.equal(JSON.stringify(x).includes("rolnik"), false, "żadnej tożsamości na zewnątrz");
+  });
+
+  it("autor bywa obiektem, nie napisem — bierzemy id, nie kształt", () => {
+    const x = fbPostExtras([
+      { content: "A", url: "u1", author: { id: "123", name: "Jan K." } },
+      { content: "B", url: "u2", author: { id: "123", name: "Jan K." } },
+    ]);
+    assert.equal(x.authors, 1);
+    assert.equal(x.maxPostsByAuthor, 2);
+    assert.equal(JSON.stringify(x).includes("Jan"), false);
+  });
+
+  it("dataset bez pola autora mówi to wprost, zamiast udawać jednego autora", () => {
+    const x = fbPostExtras([{ content: "A", url: "u1" }, { content: "B", url: "u2" }]);
+    assert.equal(x.authorField, null);
+    assert.equal(x.authors, 0);
+    assert.equal(x.maxPostsByAuthor, 0);
   });
 });

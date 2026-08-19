@@ -51,6 +51,24 @@ export const FB_PARAMS = {
     summary: "po tylu ms migawka jest porzucana i anulowana (awaria 2026-08-10)",
   }),
 
+  FB_POSTER_MAX_PER_RUN: num({
+    group: "fb", cls: "tuning", def: 60, min: 0,
+    summary: "sufit odczytów plakatów z grup FB na jeden przebieg (0 = nie czytamy wcale)",
+    doc: [
+      "Post z grupy niesie załącznik, którego spłaszczanie do tekstu nie bierze — a zmierzone",
+      "2026-08-19: posty z obrazem milczą w 90% (wobec 53% bez obrazu), a te, które coś oddają,",
+      "gubią miejsce i godzinę w 57% (wobec 0%). Dwa plakaty obejrzane ręcznie — salsa w Cafe Pod",
+      "Minogą i szkolenia dla seniorów w Mosinie — miały komplet danych i NIE MA ich w events.json.",
+      "Filtra przed odczytem nie ma celowo: ani proporcje obrazu, ani bajty/piksel nie oddzielają",
+      "plakatu od ogłoszenia o przeprowadzkach (sprawdzone na 11 obrazkach), a płatne OCR (~$0.0015)",
+      "kosztuje WIĘCEJ niż samo wywołanie wizyjne — sito droższe od bramkowanej rzeczy nie ma sensu.",
+      "Koszt ZMIERZONY 2026-08-19 na trzech obrazach: $0.0011 (plakat salsy), $0.0010 (zdjęcie",
+      "borówek), $0.0006 (ogłoszenie CNC) — średnio ~$0.001, czyli ten sufit to ~$0.06 na przebieg.",
+      "Model sam odsiewa śmieci: borówki i ogłoszenie o hali oddały pustą listę wydarzeń.",
+      "Rachunek per-rekord u Bright Data i tak jest już zapłacony, zanim tu dojdziemy.",
+    ],
+  }),
+
   FB_GROUP_BLOCKED_LIMIT: posNum({
     group: "fb", cls: "tuning", def: 3,
     summary: "po tylu płatnych wierszach błędu z rzędu grupa jest pomijana",

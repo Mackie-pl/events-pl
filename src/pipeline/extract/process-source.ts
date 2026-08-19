@@ -21,9 +21,10 @@ import { urlKey } from "../../shared/url.js";
 import type {
   EventItem, EventOrigin, PipelineError, PipelineState, Source, SourceRun,
 } from "../../types/index.js";
+import type { FbPosterJob } from "../facebook.js";
 import {
   fbGroupPostsToBlocks, fbGroupPostsToText, fbGroupStats, fbImagePosts, fbOriginsByPost,
-  fbPostExtras, fbShareStats, harvestEventUrls,
+  fbPostExtras, fbPosterJobs, fbShareStats, harvestEventUrls,
 } from "../facebook.js";
 import { dropRepertoire, repertoireSegment } from "../repertoire.js";
 import { expandRepeat } from "../series.js";
@@ -38,6 +39,7 @@ import { fetchFbPage } from "./fb-page.js";
 import { auditFbGroup, auditFbOrigins, auditFbPostExtras, auditFbShares } from "./fb-group-trail.js";
 import { fbGroupLimit, noteFbGroupRate } from "./fb-group-limit.js";
 import { auditFbPosterYield, fbPosterYield } from "./fb-poster-yield.js";
+import { readFbPosters } from "./fb-posters.js";
 import { MAX_FOLLOWUPS_PER_SOURCE, runFollowups } from "./followup.js";
 import { droppedInvalidStats, extractEvents, resetDroppedInvalid } from "./extract.js";
 import { groundFollowups } from "./followup-url.js";
@@ -76,6 +78,13 @@ let fbOrigins = new Map<string, EventOrigin>();
  * jest grupą — i wtedy `auditFbPosterYield` milczy zamiast raportować zera.
  */
 let fbImages = new Map<string, number>();
+
+/**
+ * Plakaty do przeczytania z tej grupy. Ta sama granica co `fbImages`: rekordy żyją tylko
+ * w `fetchSource`, a odczyt musi się zdarzyć po nim — obraz idzie do modelu razem z treścią
+ * postu jako kontekstem, więc jedno i drugie trzeba przenieść przez granicę funkcji.
+ */
+let fbPosters: FbPosterJob[] = [];
 
 export function newSourceRun(src: Source, url: string, status: SourceRun["status"]): SourceRun {
   return {
@@ -132,6 +141,7 @@ async function fetchSource(
       // przynależność obrazów do POSTÓW (nie sumy — te są wyżej): zestawienie z wydarzeniami
       // zachodzi po ekstrakcji, a wtedy rekordów już nie ma
       fbImages = fbImagePosts(records);
+      fbPosters = fbPosterJobs(records);
       // ile z udostępnień to wklejone ogłoszenie, czyli ta sama treść po obu stronach postu —
       // liczone na rekordach, bo w spłaszczonym tekście jedna z kopii już nie istnieje
       auditFbShares(fbShareStats(records));
@@ -250,6 +260,7 @@ export async function processSource(
   resetDroppedInvalid();
   fbOrigins = new Map();
   fbImages = new Map();
+  fbPosters = [];
   beginSource(src.id);
   const bdBefore = bdSnapshot();
   const url = src.url.replace("{page}", "1");
@@ -494,6 +505,12 @@ export async function processSource(
   const collected = await runFollowups(followupUrls, pageEvents, {
     src, state, errors, run, pageHash, context: followupContext, fbEventUrls,
   });
+
+  // plakaty PO followupach, a przed odsiewem dat: wydarzenie z grafiki przechodzi dokładnie
+  // te same bramki (minione, serie, dedupe), co każde inne — inaczej byłoby wpuszczane tylnymi
+  // drzwiami. Rekord Bright Data jest już zapłacony, więc to jedyny moment, w którym da się
+  // z niego wyciągnąć coś, czego spłaszczanie do tekstu nie widziało
+  if (fbPosters.length) collected.push(...await readFbPosters(fbPosters, state));
 
   const events = settleDates(collected, run);
 
