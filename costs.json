@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-18T05:29:29.435Z",
+ "updated": "2026-08-19T04:51:43.937Z",
  "rates": {
   "bdPerRecord": 0.0015,
   "searchPerQuery": 0.001,
@@ -2861,6 +2861,117 @@
    "usd": 0,
    "estimated": true,
    "units": 5.234,
+   "unit": "MB"
+  },
+  {
+   "day": "2026-08-19",
+   "at": "2026-08-19T04:51:43.799Z",
+   "stage": "daily",
+   "run": "2026-08-19T04:32:01.964Z",
+   "category": "llm-extract",
+   "usd": 0.065163,
+   "estimated": false,
+   "units": 47,
+   "unit": "calls",
+   "tokensIn": 170526,
+   "tokensOut": 38170,
+   "top": [
+    {
+     "id": "okpoznan-wydarzenia",
+     "usd": 0.020555,
+     "units": 9
+    },
+    {
+     "id": "poznan-co-gdzie-kiedy",
+     "usd": 0.006763,
+     "units": 6
+    },
+    {
+     "id": "mosina-pl-wydarzenia",
+     "usd": 0.004989,
+     "units": 5
+    },
+    {
+     "id": "ck-zamek",
+     "usd": 0.004989,
+     "units": 6
+    },
+    {
+     "id": "posir-poznan",
+     "usd": 0.004556,
+     "units": 1
+    }
+   ]
+  },
+  {
+   "day": "2026-08-19",
+   "at": "2026-08-19T04:51:43.799Z",
+   "stage": "daily",
+   "run": "2026-08-19T04:32:01.964Z",
+   "category": "fb",
+   "usd": 0.195,
+   "estimated": true,
+   "units": 130,
+   "unit": "records",
+   "top": [
+    {
+     "id": "dopiewo-tablica-ogloszen-fb",
+     "usd": 0.075,
+     "units": 50
+    },
+    {
+     "id": "fb-group-wydarzenia-w-poznaniu-1",
+     "usd": 0.075,
+     "units": 50
+    },
+    {
+     "id": "lubon-fb-group",
+     "usd": 0.024,
+     "units": 16
+    },
+    {
+     "id": "fb-group-wydarzenia-poznan-4",
+     "usd": 0.0135,
+     "units": 9
+    },
+    {
+     "id": "fb-group-kultura-komorniki",
+     "usd": 0.0075,
+     "units": 5
+    }
+   ]
+  },
+  {
+   "day": "2026-08-19",
+   "at": "2026-08-19T04:51:43.799Z",
+   "stage": "daily",
+   "run": "2026-08-19T04:32:01.964Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 93,
+   "unit": "fetches"
+  },
+  {
+   "day": "2026-08-19",
+   "at": "2026-08-19T04:51:43.799Z",
+   "stage": "daily",
+   "run": "2026-08-19T04:32:01.964Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 41,
+   "unit": "lookups"
+  },
+  {
+   "day": "2026-08-19",
+   "at": "2026-08-19T04:51:43.799Z",
+   "stage": "daily",
+   "run": "2026-08-19T04:32:01.964Z",
+   "category": "storage",
+   "usd": 0,
+   "estimated": true,
+   "units": 2.962,
    "unit": "MB"
   }
  ]

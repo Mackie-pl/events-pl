@@ -53604,5 +53604,5961 @@
     "verdict": "too-few-runs"
    }
   ]
+ },
+ {
+  "stage": "daily",
+  "startedAt": "2026-08-19T04:32:01.964Z",
+  "finishedAt": "2026-08-19T04:51:43.798Z",
+  "durationMs": 1181832,
+  "totals": {
+   "sources": 84,
+   "ok": 19,
+   "unchanged": 5,
+   "errors": 1,
+   "skippedFb": 25,
+   "skippedDead": 2,
+   "skippedInactive": 0,
+   "skippedBlocked": 0,
+   "skippedCostly": 18,
+   "empty": 14,
+   "events": 330,
+   "followupsTried": 60,
+   "geoHits": 202,
+   "geoMisses": 62,
+   "droppedInvalid": 3,
+   "calls": 47,
+   "promptTokens": 170526,
+   "completionTokens": 38170,
+   "costUsd": 0.06516303,
+   "redactedPhones": 9,
+   "redactedEmails": 3
+  },
+  "sources": [
+   {
+    "id": "ok-lubon-www",
+    "name": "Ośrodek Kultury w Luboniu",
+    "town": "Luboń",
+    "url": "https://www.oklubon.pl/wydarzenia",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 8,
+    "followups": [
+     {
+      "url": "https://www.oklubon.pl/wydarzenia/odkryj-magie-podrozowania",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 4,
+      "blocks": {
+       "total": 5,
+       "cached": 1,
+       "fresh": 4
+      }
+     },
+     {
+      "url": "https://www.oklubon.pl/wydarzenia/sierpien-w-osrodku-kultury",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 1,
+      "blocks": {
+       "total": 3,
+       "cached": 0,
+       "fresh": 3
+      }
+     }
+    ],
+    "geo": {
+     "hits": 5,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 2,
+     "promptTokens": 8186,
+     "completionTokens": 2064,
+     "costUsd": 0.00401723
+    },
+    "ms": 22210,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 7512,
+    "changed": false,
+    "containers": {
+     "suspects": 2,
+     "probed": 2,
+     "resolved": 1,
+     "events": 5,
+     "dropped": 1
+    },
+    "droppedPast": 3,
+    "cached": 7,
+    "llmByTask": {
+     "extract": {
+      "calls": 2,
+      "promptTokens": 8186,
+      "completionTokens": 2064,
+      "costUsd": 0.00401723
+     }
+    },
+    "archive": [
+     "raw/2026-08-19/ok-lubon-www/422ac0994c7f1cf3cbff25fabbf0b0023f21b703b1fc0f40680f2aa93f8a05f5.json",
+     "raw/2026-08-19/ok-lubon-www__followup/99e6202a16b14f0ba8f6bc62ca6311c0ba18c216ac93cac65b564affd67e43e7.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/ok-lubon-www/0001-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/ok-lubon-www/0001.json",
+     "raw/2026-08-19/ok-lubon-www__followup/1607acd45a4f6a06e2eca9f4ee0367f4fd882dea2882fc8e07d3f57a62f32496.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/ok-lubon-www/0002-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/ok-lubon-www/0002.json"
+    ],
+    "produced": [
+     {
+      "title": "Luboński Szlak Architektury Przemysłowej",
+      "date": "2026-09-26",
+      "url": "https://www.oklubon.pl/wydarzenia/lubonski-szlak-architektury-przemyslowej-3"
+     },
+     {
+      "title": "Zajęcia teatralne dla dzieci Mały Broadway",
+      "date": "2026-09-10",
+      "url": "https://www.oklubon.pl/wydarzenia/zajecia-teatralne-dla-dzieci-maly-broadway"
+     },
+     {
+      "title": "SIERPIEŃ W OŚRODKU KULTURY",
+      "date": "2026-08-06",
+      "url": "https://www.oklubon.pl/wydarzenia/sierpien-w-osrodku-kultury"
+     },
+     {
+      "title": "Czy można przejść całą Nową Zelandię na własnych nogach – od malowniczego południa po dziką północ?",
+      "date": "2026-09-17",
+      "url": "https://www.oklubon.pl/wydarzenia/odkryj-magie-podrozowania"
+     },
+     {
+      "title": "Zimowa Mongolia w dźwiękach końskiej grzywy",
+      "date": "2026-10-02",
+      "url": "https://www.oklubon.pl/wydarzenia/odkryj-magie-podrozowania"
+     },
+     {
+      "title": "A może by tak wszystko rzucić i wyjechać w Bieszczady?",
+      "date": "2026-11-20",
+      "url": "https://www.oklubon.pl/wydarzenia/odkryj-magie-podrozowania"
+     },
+     {
+      "title": "Pierwsi w Arktyce – żeńska eksploracja fiordów Spitzbergenu",
+      "date": "2026-12-11",
+      "url": "https://www.oklubon.pl/wydarzenia/odkryj-magie-podrozowania"
+     },
+     {
+      "title": "Sierpień w Ośrodku Kultury",
+      "date": "2026-08-06",
+      "url": "https://www.oklubon.pl/wydarzenia/sierpien-w-osrodku-kultury",
+      "mergedInto": "ok-lubon-www",
+      "key": "sierpieworodkukultury|2026-08-06"
+     }
+    ]
+   },
+   {
+    "id": "ok-lubon-fb",
+    "name": "Ośrodek Kultury w Luboniu",
+    "town": "Luboń",
+    "url": "https://www.facebook.com/OsrodekKulturyLubon",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "lubon-pl-kalendarium",
+    "name": "Urząd Miasta Luboń - Kalendarz wydarzeń",
+    "town": "Luboń",
+    "url": "https://lubon.pl/kalendarium/5/1/5",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [
+     {
+      "url": "https://lubon.pl/kalendarium/1/5",
+      "kind": "page",
+      "outcome": "same-as-page",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 3684,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 997,
+    "changed": false,
+    "followupsRechecked": 1,
+    "cached": 0,
+    "archive": [
+     "raw/2026-08-19/lubon-pl-kalendarium/8e651e0d3e609ec6a8965a11a272c5619ce557d88be92227e95a3a4aeb04965a.json",
+     "raw/2026-08-19/lubon-pl-kalendarium__followup/8e651e0d3e609ec6a8965a11a272c5619ce557d88be92227e95a3a4aeb04965a.json"
+    ]
+   },
+   {
+    "id": "lubon-pl-kalendarz-2026",
+    "name": "Urząd Miasta Luboń - Kalendarz wydarzeń miejskich 2026",
+    "town": "Luboń",
+    "url": "https://lubon.pl/news/content/4766",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [
+     {
+      "url": "https://lubon.pl/artykuly/350/wydarzenia",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 1628,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 11110,
+    "changed": false,
+    "followupsRechecked": 1,
+    "droppedPast": 42,
+    "cached": 0,
+    "archive": [
+     "raw/2026-08-19/lubon-pl-kalendarz-2026/b082bca9ce331e70c8cb9e4d55160d44bc539f5947f30063ad310dd0438d11b5.json",
+     "raw/2026-08-19/lubon-pl-kalendarz-2026__followup/983745ee6c414675de191e3e1579b8f4c2fd90976fce86aba0572955165beb51.json"
+    ]
+   },
+   {
+    "id": "miasto-lubon-fb",
+    "name": "Miasto Luboń",
+    "town": "Luboń",
+    "url": "https://www.facebook.com/MiastoLubon",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "biblioteka-lubon-www",
+    "name": "Biblioteka Miejska w Luboniu",
+    "town": "Luboń",
+    "url": "https://biblub.com/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 8,
+    "followups": [
+     {
+      "url": "https://biblub.com/category/aktualnosci/page/1",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 2,
+      "blocks": {
+       "total": 17,
+       "cached": 17,
+       "fresh": 0
+      }
+     },
+     {
+      "url": "https://biblub.com/aktualnosci/24-lipca-filia-nr-4-bedzie-nieczynna/",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 1
+     },
+     {
+      "url": "https://biblub.com/aktualnosci/wakacyjne-godziny-otwarcia-biblioteki/",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 0
+     },
+     {
+      "url": "https://biblub.com/aktualnosci/spotkanie-autorskie-barbara-wysoczanska/",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 1
+     },
+     {
+      "url": "https://biblub.com/aktualnosci/cegielnie-karczmy-zaklady-i-gospodarstwa-historia-luboniu/",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 1
+     }
+    ],
+    "geo": {
+     "hits": 8,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2379,
+     "completionTokens": 66,
+     "costUsd": 0.00016803
+    },
+    "ms": 12778,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 4641,
+    "changed": true,
+    "blocks": {
+     "total": 16,
+     "cached": 15,
+     "fresh": 1
+    },
+    "llmByTask": {
+     "extract": {
+      "calls": 1,
+      "promptTokens": 2379,
+      "completionTokens": 66,
+      "costUsd": 0.00016803
+     }
+    },
+    "archive": [
+     "raw/2026-08-19/biblioteka-lubon-www/fc09ed243e47ae61bb99a6fc4cde9c9e4f43be1730012bac8f3a32f74424907f.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/biblioteka-lubon-www/0003-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/biblioteka-lubon-www/0003.json",
+     "raw/2026-08-19/biblioteka-lubon-www__followup/0e37149a8d265164b8fcf62f0a1ba503e2e99c195874af25c947c95b202da760.json",
+     "raw/2026-08-19/biblioteka-lubon-www__followup/2682eb965dbb848e5ae8f2e307759e8f988ecdcdfe77ebbcefb91236624d5738.json",
+     "raw/2026-08-19/biblioteka-lubon-www__followup/82b3d97c008e1590fb65ab072113ffa20fea5ee8df8ccabf5ba57c0be18c181a.json",
+     "raw/2026-08-19/biblioteka-lubon-www__followup/2a497ff02722ae1cf24c4ced2d801fa79863ab787a09dba0b78ebbf877418e44.json",
+     "raw/2026-08-19/biblioteka-lubon-www__followup/d3011286ce7e67d8cfa7d149c0768e6c3f9afa5fc5a55c22892f03f576cae8a3.json"
+    ],
+    "produced": [
+     {
+      "title": "NARODOWE CZYTANIE W BIBLIOTECE MIEJSKIEJ W LUBONIU",
+      "date": "2026-09-01",
+      "url": "https://biblub.com/aktualnosci/10880/"
+     },
+     {
+      "title": "DOTYK KLAWISZY – FORTEPIAN I KLAWESYN",
+      "date": "2026-09-16",
+      "url": "https://biblub.com/aktualnosci/dotyk-klawiszy-fortepian-i-klawesyn/"
+     },
+     {
+      "title": "NARODOWE CZYTANIE W BIBLIOTECE MIEJSKIEJ W LUBONIU",
+      "date": "2026-09-01",
+      "url": "https://biblub.com/aktualnosci/10880/",
+      "mergedInto": "biblioteka-lubon-www",
+      "key": "narodoweczytaniewbibliotecemiejskiejwlub|2026-09-01"
+     },
+     {
+      "title": "DOTYK KLAWISZY – FORTEPIAN I KLAWESYN",
+      "date": "2026-09-16",
+      "url": "https://biblub.com/aktualnosci/dotyk-klawiszy-fortepian-i-klawesyn/",
+      "mergedInto": "biblioteka-lubon-www",
+      "key": "dotykklawiszyfortepianiklawesyn|2026-09-16"
+     },
+     {
+      "title": "Akcja „Słodkie Zwroty Akcji",
+      "date": "2026-08-21",
+      "url": "https://biblub.com/aktualnosci/24-lipca-filia-nr-4-bedzie-nieczynna/"
+     },
+     {
+      "title": "Akcja „Słodkie Zwroty Akcji",
+      "date": "2026-08-28",
+      "url": "https://biblub.com/aktualnosci/24-lipca-filia-nr-4-bedzie-nieczynna/",
+      "mergedInto": "biblioteka-lubon-www",
+      "key": "akcjasodkiezwrotyakcji|2026-08-21"
+     },
+     {
+      "title": "Spotkanie autorskie – Barbara Wysoczańska",
+      "date": "2026-09-09",
+      "url": "https://biblub.com/aktualnosci/spotkanie-autorskie-barbara-wysoczanska/"
+     },
+     {
+      "title": "Historia Lubonia: Cegielnie, karczmy, zakłady i gospodarstwa",
+      "date": "2026-09-14",
+      "url": "https://biblub.com/aktualnosci/cegielnie-karczmy-zaklady-i-gospodarstwa-historia-luboniu/"
+     }
+    ]
+   },
+   {
+    "id": "biblioteka-lubon-fb",
+    "name": "Biblioteka Miejska w Luboniu",
+    "town": "Luboń",
+    "url": "https://www.facebook.com/biblioteka.lubon",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "losir-lubon-fb",
+    "name": "LOSiR Luboń",
+    "town": "Luboń",
+    "url": "https://www.facebook.com/losir.lubon",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "gazeta-lubon-kalendarium",
+    "name": "Gazeta Lubońska - Kalendarium wydarzeń",
+    "town": "Luboń",
+    "url": "https://www.gazeta-lubon.pl/2026/losir-kalendarium/",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 748,
+    "httpStatus": 304,
+    "changed": false,
+    "kind": "html",
+    "droppedPast": 2,
+    "cached": 0
+   },
+   {
+    "id": "wydarzenia-w-luboniu-fb-group",
+    "name": "Wydarzenia w Luboniu",
+    "town": "Luboń",
+    "url": "https://www.facebook.com/groups/947448988718568",
+    "fetch": "fb_group",
+    "status": "skipped-costly",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "lubon-fb-group",
+    "name": "Luboń - grupa informacyjna",
+    "town": "Luboń",
+    "url": "https://www.facebook.com/groups/15461809069",
+    "fetch": "fb_group",
+    "status": "ok",
+    "events": 4,
+    "followups": [
+     {
+      "url": "https://bip.lubon.pl/8-program-stypendialny-wspierania-edukacji-uzdolnionych-dzieci-i-mlodziezy-miasta-lubon.html",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 1,
+      "blocks": {
+       "total": 79,
+       "cached": 76,
+       "fresh": 3
+      }
+     }
+    ],
+    "geo": {
+     "hits": 3,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 2,
+     "promptTokens": 6692,
+     "completionTokens": 200,
+     "costUsd": 0.00090116
+    },
+    "ms": 298790,
+    "fbGroup": {
+     "records": 16,
+     "posts": 15,
+     "errorRows": 1,
+     "limit": 16,
+     "atLimit": true,
+     "newest": "2026-08-18",
+     "oldest": "2026-08-17",
+     "spanDays": 1.42,
+     "postsPerDay": 10.6
+    },
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 7534,
+    "changed": true,
+    "blocks": {
+     "total": 15,
+     "cached": 7,
+     "fresh": 8
+    },
+    "fbPoster": {
+     "withImage": {
+      "posts": 6,
+      "yielded": 2,
+      "events": 2,
+      "noVenue": 1,
+      "noTime": 1
+     },
+     "withoutImage": {
+      "posts": 9,
+      "yielded": 1,
+      "events": 1,
+      "noVenue": 0,
+      "noTime": 0
+     },
+     "unlinked": 1
+    },
+    "llmByTask": {
+     "extract": {
+      "calls": 2,
+      "promptTokens": 6692,
+      "completionTokens": 200,
+      "costUsd": 0.00090116
+     }
+    },
+    "bd": {
+     "triggers": 1,
+     "inputs": 1,
+     "polls": 28,
+     "records": 16,
+     "errors": 0,
+     "snapshots": [
+      "sd_mszlife0bjg2aff0k"
+     ],
+     "byDataset": {
+      "fbGroupPosts": 16
+     }
+    },
+    "archive": [
+     "raw/2026-08-19/lubon-fb-group__bd/301a5c5eee93ac38ace5a948278cfe09c49fbb91a2e3067d2cedf5753169eb8e.json",
+     "raw/2026-08-19/lubon-fb-group/3d94a4659ae014923bb90018d024d1089373cdea16899689d2e9173c572b34be.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/lubon-fb-group/0004-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/lubon-fb-group/0004.json",
+     "raw/2026-08-19/lubon-fb-group__followup/dd101eb12c44e28466ec33eeeb7e59858de9d260b90188789e4c9759a80235a5.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/lubon-fb-group/0005-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/lubon-fb-group/0005.json"
+    ],
+    "produced": [
+     {
+      "title": "Spotkanie organizacyjne dotyczące wyjazdu do Rewala",
+      "date": "2026-08-26",
+      "url": "https://www.facebook.com/groups/15461809069/posts/10164374089829070/"
+     },
+     {
+      "title": "Kolejny Spacer po Luboniu z przewodnikiem – Stary Luboń",
+      "date": "2026-08-22",
+      "url": "https://www.facebook.com/groups/15461809069/posts/10164373564639070/"
+     },
+     {
+      "title": "Termin składania wniosków w ramach Programu Stypendialnego Miasta Luboń",
+      "date": "2026-09-15",
+      "url": "https://www.facebook.com/groups/15461809069/posts/10164373379489070/"
+     },
+     {
+      "title": "Składanie wniosków o przyznanie stypendium dla uzdolnionych dzieci i młodzieży Miasta Luboń",
+      "date": "2026-08-15",
+      "url": "https://bip.lubon.pl/8-program-stypendialny-wspierania-edukacji-uzdolnionych-dzieci-i-mlodziezy-miasta-lubon.html"
+     }
+    ]
+   },
+   {
+    "id": "mieszkancy-lubonia-fb-group",
+    "name": "Mieszkańcy Lubonia",
+    "town": "Luboń",
+    "url": "https://www.facebook.com/groups/119426108184542",
+    "fetch": "fb_group",
+    "status": "skipped-costly",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "plaza-miejska-lubon-fb",
+    "name": "Plaża Miejska Luboń",
+    "town": "Luboń",
+    "url": "https://www.facebook.com/PlazaMiejskaLubon",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "dopiewo-pl-wydarzenia",
+    "name": "Gmina Dopiewo - portal urzędowy",
+    "town": "Dopiewo",
+    "url": "https://dopiewo.pl/wydarzenia",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 22,
+    "followups": [
+     {
+      "url": "https://dopiewo.pl/wydarzenia?page=1",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 9,
+      "blocks": {
+       "total": 17,
+       "cached": 14,
+       "fresh": 3
+      }
+     }
+    ],
+    "geo": {
+     "hits": 2,
+     "misses": 9
+    },
+    "llm": {
+     "calls": 2,
+     "promptTokens": 5702,
+     "completionTokens": 2678,
+     "costUsd": 0.00362726
+    },
+    "ms": 28632,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 7884,
+    "changed": true,
+    "blocks": {
+     "total": 17,
+     "cached": 12,
+     "fresh": 5
+    },
+    "llmByTask": {
+     "extract": {
+      "calls": 2,
+      "promptTokens": 5702,
+      "completionTokens": 2678,
+      "costUsd": 0.00362726
+     }
+    },
+    "archive": [
+     "raw/2026-08-19/dopiewo-pl-wydarzenia/a57fc74d8727efb00b5e1554e1f996c7d397bbc959734ae4e5a321abd8a49eee.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/dopiewo-pl-wydarzenia/0006-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/dopiewo-pl-wydarzenia/0006.json",
+     "raw/2026-08-19/dopiewo-pl-wydarzenia__followup/4f13304d699270686121a8494628c3b4f81bf61dc482499dc06ad22a855a9820.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/dopiewo-pl-wydarzenia/0007-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/dopiewo-pl-wydarzenia/0007.json"
+    ],
+    "produced": [
+     {
+      "title": "Ekipa w akcji - warsztaty komunikacji i współpracy dla dzieci w wieku 8–11 lat",
+      "date": "2026-08-19",
+      "url": "https://dopiewo.pl/wydarzenia/2026-07-10/ekipa-w-akcji-warsztaty-komunikacji-wspolpracy-dla-2",
+      "mergedInto": "dopiewo-pl-wydarzenia",
+      "key": "ekipawakcjiwarsztatykomunikacjiiwsppracy|2026-08-19"
+     },
+     {
+      "title": "Komisja Oświaty",
+      "date": "2026-08-19",
+      "url": "https://dopiewo.pl/wydarzenia/2026-08-12/komisja-oswiaty"
+     },
+     {
+      "title": "Polski na Luzie - klub rozmowy po polsku",
+      "date": "2026-08-20",
+      "url": "https://dopiewo.pl/wydarzenia/2026-07-07/polski-na-luzie-klub-rozmowy-po-polsku-2"
+     },
+     {
+      "title": "Koncert „Muzyczna podróż",
+      "date": "2026-08-21",
+      "url": "https://dopiewo.pl/wydarzenia/2026-06-12/koncert-muzyczna-podroz-maciej-gucik-mateusz",
+      "mergedInto": "bibldop-wydarzenia",
+      "key": "koncertmuzycznapodrmaciejgucikimateuszba|2026-08-21"
+     },
+     {
+      "title": "SPORTOWE SOBOTY GOSIR W LETNIEJ ODSŁONIE",
+      "date": "2026-08-22",
+      "url": "https://dopiewo.pl/wydarzenia/2026-07-15/sportowe-soboty-gosir-w-letniej-odslonie-3",
+      "mergedInto": "dopiewo-pl-wydarzenia",
+      "key": "sportowesobotygosirwletniejodsonie|2026-08-22"
+     },
+     {
+      "title": "SIATKARSKI „AKTYWNY ORLIK W GMINIE DOPIEWO”",
+      "date": "2026-08-22",
+      "url": "https://dopiewo.pl/wydarzenia/2026-07-29/siatkarski-aktywny-orlik-w-gminie-dopiewo",
+      "mergedInto": "gosir-dopiewo-kalendarz",
+      "key": "siatkarskiaktywnyorlikwgminiedopiewo|2026-08-22"
+     },
+     {
+      "title": "EKIPA W AKCJI - WARSZTATY KOMUNIKACJI I WSPÓŁPRACY DLA DZIECI W WIEKU 8–11 LAT",
+      "date": "2026-08-19",
+      "url": "https://dopiewo.pl/wydarzenia/2026-07-10/ekipa-w-akcji-warsztaty-komunikacji-wspolpracy-dla-2"
+     },
+     {
+      "title": "KOMISJA OŚWIATY",
+      "date": "2026-08-19",
+      "url": "https://dopiewo.pl/wydarzenia/2026-08-12/komisja-oswiaty",
+      "mergedInto": "dopiewo-pl-wydarzenia",
+      "key": "komisjaowiaty|2026-08-19"
+     },
+     {
+      "title": "POLSKI NA LUZIE - KLUB ROZMOWY PO POLSKU",
+      "date": "2026-08-20",
+      "url": "https://dopiewo.pl/wydarzenia/2026-07-07/polski-na-luzie-klub-rozmowy-po-polsku-2",
+      "mergedInto": "dopiewo-pl-wydarzenia",
+      "key": "polskinaluzieklubrozmowypopolsku|2026-08-20"
+     },
+     {
+      "title": "Bezpieczny i sprawny senior",
+      "date": "2026-08-22",
+      "url": "https://dopiewo.pl/wydarzenia/2026-08-18/bezpieczny-sprawny-senior"
+     },
+     {
+      "title": "SPORTOWE SOBOTY GOSIR W LETNIEJ ODSŁONIE",
+      "date": "2026-08-22",
+      "url": "https://dopiewo.pl/wydarzenia/2026-07-15/sportowe-soboty-gosir-w-letniej-odslonie-4"
+     },
+     {
+      "title": "ZAKRZEWSKIE KINO PLENEROWE",
+      "date": "2026-08-22",
+      "url": "https://dopiewo.pl/wydarzenia/2026-08-06/zakrzewskie-kino-plenerowe"
+     },
+     {
+      "title": "OWOCOWE PSOTY",
+      "date": "2026-08-23",
+      "url": "https://dopiewo.pl/wydarzenia/2026-07-15/owocowe-psoty-0"
+     },
+     {
+      "title": "Sportowo-kulturalne półkolonie letnie z GOSiR",
+      "date": "2026-08-24",
+      "url": "https://dopiewo.pl/wydarzenia/2026-06-24/sportowo-kulturalne-polkolonie-letnie-z-gosir"
+     },
+     {
+      "title": "Sportowo-kulturalne półkolonie letnie z GOSiR",
+      "date": "2026-08-25",
+      "url": "https://dopiewo.pl/wydarzenia/2026-06-24/sportowo-kulturalne-polkolonie-letnie-z-gosir"
+     },
+     {
+      "title": "Sportowo-kulturalne półkolonie letnie z GOSiR",
+      "date": "2026-08-26",
+      "url": "https://dopiewo.pl/wydarzenia/2026-06-24/sportowo-kulturalne-polkolonie-letnie-z-gosir"
+     },
+     {
+      "title": "Sportowo-kulturalne półkolonie letnie z GOSiR",
+      "date": "2026-08-27",
+      "url": "https://dopiewo.pl/wydarzenia/2026-06-24/sportowo-kulturalne-polkolonie-letnie-z-gosir"
+     },
+     {
+      "title": "Sportowo-kulturalne półkolonie letnie z GOSiR",
+      "date": "2026-08-28",
+      "url": "https://dopiewo.pl/wydarzenia/2026-06-24/sportowo-kulturalne-polkolonie-letnie-z-gosir"
+     },
+     {
+      "title": "Komisja Budżetu",
+      "date": "2026-08-24",
+      "url": "https://dopiewo.pl/wydarzenia/2026-08-18/komisja-budzetu"
+     },
+     {
+      "title": "EKIPA W AKCJI - WARSZTATY KOMUNIKACJI I WSPÓŁPRACY DLA DZIECI W WIEKU 8–11 LAT",
+      "date": "2026-08-19",
+      "url": "https://dopiewo.pl/wydarzenia/2026-07-10/ekipa-w-akcji-warsztaty-komunikacji-wspolpracy-dla-2",
+      "mergedInto": "dopiewo-pl-wydarzenia",
+      "key": "ekipawakcjiwarsztatykomunikacjiiwsppracy|2026-08-19"
+     },
+     {
+      "title": "KOMISJA OŚWIATY",
+      "date": "2026-08-19",
+      "url": "https://dopiewo.pl/wydarzenia/2026-08-12/komisja-oswiaty",
+      "mergedInto": "dopiewo-pl-wydarzenia",
+      "key": "komisjaowiaty|2026-08-19"
+     },
+     {
+      "title": "POLSKI NA LUZIE - KLUB ROZMOWY PO POLSKU",
+      "date": "2026-08-20",
+      "url": "https://dopiewo.pl/wydarzenia/2026-07-07/polski-na-luzie-klub-rozmowy-po-polsku-2",
+      "mergedInto": "dopiewo-pl-wydarzenia",
+      "key": "polskinaluzieklubrozmowypopolsku|2026-08-20"
+     }
+    ]
+   },
+   {
+    "id": "bibldop-wydarzenia",
+    "name": "Gminna Biblioteka Publiczna i Centrum Kultury w Dopiewie",
+    "town": "Dopiewo",
+    "url": "https://www.bibldop.pl/wydarzenia/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 9,
+    "followups": [],
+    "geo": {
+     "hits": 9,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 5280,
+    "httpStatus": 200,
+    "kind": "feed",
+    "chars": 135432,
+    "changed": true,
+    "structured": {
+     "kind": "tribe",
+     "url": "https://www.bibldop.pl/wp-json/tribe/events/v1/events",
+     "seen": 9,
+     "items": 9
+    },
+    "archive": [
+     "raw/2026-08-19/bibldop-wydarzenia/668ccbbd56107f742b386cd8f29d66a3138f1ae23389ab5dc75f56f9fdca9be4.json"
+    ],
+    "produced": [
+     {
+      "title": "Koncert „Muzyczna podróż” Maciej Gucik i Mateusz Badura",
+      "date": "2026-08-21",
+      "url": "https://www.bibldop.pl/wydarzenie/koncert-muzyczna-podroz-maciej-gucik-i-mateusz-badura/"
+     },
+     {
+      "title": "Designer’skie warsztaty dla dzieci „Mini Design Studio”",
+      "date": "2026-08-25",
+      "url": "https://www.bibldop.pl/wydarzenie/kreatywne-warsztaty-dla-dzieci-mini-design-studio/"
+     },
+     {
+      "title": "Dwudniowa wystawa makiet kolejowych",
+      "date": "2026-08-29",
+      "url": "https://www.bibldop.pl/wydarzenie/wystawa-makiet-kolejowych/"
+     },
+     {
+      "title": "Dwudniowa wystawa makiet kolejowych",
+      "date": "2026-08-30",
+      "url": "https://www.bibldop.pl/wydarzenie/dwudniowa-wystawa-makiet-kolejowych/"
+     },
+     {
+      "title": "Sztuka i Terapia – wykład",
+      "date": "2026-09-04",
+      "url": "https://www.bibldop.pl/wydarzenie/sztuka-i-terapia-wyklad/"
+     },
+     {
+      "title": "Narodowe Czytanie",
+      "date": "2026-09-05",
+      "url": "https://www.bibldop.pl/wydarzenie/narodowe-czytanie/"
+     },
+     {
+      "title": "Koncert muzyki jazzowej Dixie Company",
+      "date": "2026-09-11",
+      "url": "https://www.bibldop.pl/wydarzenie/koncert-muzyki-jazzowej-dixie-company-3/"
+     },
+     {
+      "title": "Sztuka i Terapia – wykład",
+      "date": "2026-09-18",
+      "url": "https://www.bibldop.pl/wydarzenie/sztuka-i-terapia-wyklad-2/",
+      "mergedInto": "bibldop-wydarzenia",
+      "key": "sztukaiterapiawykad|2026-09-04"
+     },
+     {
+      "title": "Spotkanie autorskie z Ewą Cielesz",
+      "date": "2026-09-21",
+      "url": "https://www.bibldop.pl/wydarzenie/spotkanie-autorskie-z-ewa-cielesz/"
+     }
+    ]
+   },
+   {
+    "id": "bibldop-fb",
+    "name": "Gminna Biblioteka Publiczna i Centrum Kultury w Dopiewie - FB",
+    "town": "Dopiewo",
+    "url": "https://www.facebook.com/biblioteka.dopiewo",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "gosir-dopiewo-kalendarz",
+    "name": "GOSiR Dopiewo - Kalendarz wydarzeń",
+    "town": "Dopiewo",
+    "url": "https://gosir.dopiewo.pl/kalendarz",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 5,
+    "followups": [
+     {
+      "url": "https://gosir.dopiewo.pl/aktualnosci/siatkarski-aktywny-orlik-w-gminie-dopiewo-22-sierpnia",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 4,
+      "blocks": {
+       "total": 17,
+       "cached": 10,
+       "fresh": 7
+      }
+     }
+    ],
+    "geo": {
+     "hits": 1,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 2,
+     "promptTokens": 6881,
+     "completionTokens": 1621,
+     "costUsd": 0.00265361
+    },
+    "ms": 18677,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 4884,
+    "changed": true,
+    "blocks": {
+     "total": 6,
+     "cached": 5,
+     "fresh": 1
+    },
+    "llmByTask": {
+     "extract": {
+      "calls": 2,
+      "promptTokens": 6881,
+      "completionTokens": 1621,
+      "costUsd": 0.00265361
+     }
+    },
+    "archive": [
+     "raw/2026-08-19/gosir-dopiewo-kalendarz/44338387350a8ce256ffa2fb9a118af1a77ec470988c748e2b821e0a26a65111.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/gosir-dopiewo-kalendarz/0008-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/gosir-dopiewo-kalendarz/0008.json",
+     "raw/2026-08-19/gosir-dopiewo-kalendarz__followup/a0049c04737b868241325eabd2501edecf496d4203bdccec49b3837ed3cafa22.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/gosir-dopiewo-kalendarz/0009-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/gosir-dopiewo-kalendarz/0009.json"
+    ],
+    "produced": [
+     {
+      "title": "Siatkarski „Aktywny Orlik w Gminie Dopiewo”",
+      "date": "2026-08-22",
+      "url": "https://gosir.dopiewo.pl/aktualnosci/siatkarski-aktywny-orlik-w-gminie-dopiewo-22-sierpnia",
+      "mergedInto": "gosir-dopiewo-kalendarz",
+      "key": "siatkarskiaktywnyorlikwgminiedopiewo|2026-08-22"
+     },
+     {
+      "title": "Siatkarski „Aktywny Orlik w Gminie Dopiewo”",
+      "date": "2026-08-22",
+      "url": "https://gosir.dopiewo.pl/aktualnosci/siatkarski-aktywny-orlik-w-gminie-dopiewo-22-sierpnia"
+     },
+     {
+      "title": "Zajęcia z piłki nożnej – „Aktywny Orlik w Gminie Dopiewo”",
+      "date": "2026-09-05",
+      "url": "https://gosir.dopiewo.pl/aktualnosci/siatkarski-aktywny-orlik-w-gminie-dopiewo-22-sierpnia"
+     },
+     {
+      "title": "Finał projektu „Aktywny Orlik” w ramach „Zakończenia lata”",
+      "date": "2026-09-19",
+      "url": "https://gosir.dopiewo.pl/aktualnosci/siatkarski-aktywny-orlik-w-gminie-dopiewo-22-sierpnia"
+     },
+     {
+      "title": "Siatkarski „Aktywny Orlik w Gminie Dopiewo”",
+      "date": "2026-08-22",
+      "url": "https://gosir.dopiewo.pl/aktualnosci/siatkarski-aktywny-orlik-w-gminie-dopiewo-22-sierpnia",
+      "mergedInto": "gosir-dopiewo-kalendarz",
+      "key": "siatkarskiaktywnyorlikwgminiedopiewo|2026-08-22"
+     }
+    ]
+   },
+   {
+    "id": "gosir-dopiewo-fb",
+    "name": "GOSiR Dopiewo - Facebook",
+    "town": "Dopiewo",
+    "url": "https://www.facebook.com/100063499753266",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "cusdopiewo-oferta",
+    "name": "Centrum Usług Społecznych Dopiewo",
+    "town": "Dopiewo",
+    "url": "https://cusdopiewo.pl/oferta/rodzina/dni-rodziny/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 3,
+    "followups": [
+     {
+      "url": "https://cusdopiewo.pl/aktualnosci/page/1",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 0
+     },
+     {
+      "url": "https://dopiewo.pl/aktualnosci/2026-04-23/dopiewskie-dni-rodziny-2026",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 3,
+      "blocks": {
+       "total": 11,
+       "cached": 11,
+       "fresh": 0
+      }
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 3969,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 5503,
+    "changed": false,
+    "followupsRechecked": 2,
+    "containers": {
+     "suspects": 4,
+     "probed": 0,
+     "resolved": 0,
+     "events": 0,
+     "dropped": 0
+    },
+    "droppedPast": 9,
+    "cached": 9,
+    "archive": [
+     "raw/2026-08-19/cusdopiewo-oferta/16178a5239d3bdf55c9631ec03e3a6b306eedba7a1d1c4cfd6ca605161a195a7.json",
+     "raw/2026-08-19/cusdopiewo-oferta__followup/1fe668c70d2bba7a5ec36fd3e5bae7439ea5412ac04916eb5f7ecaf3dc2b0f92.json",
+     "raw/2026-08-19/cusdopiewo-oferta__followup/8a3ba9c0fb494f072239f26921d5b6b84793ded1d4b46acafde787197e32ae57.json"
+    ],
+    "produced": [
+     {
+      "title": "EKIPA W AKCJI - WARSZTATY KOMUNIKACJI I WSPÓŁPRACY DLA DZIECI W WIEKU 8–11 LAT",
+      "date": "2026-08-19",
+      "url": "https://dopiewo.pl/wydarzenia/2026-07-10/ekipa-w-akcji-warsztaty-komunikacji-wspolpracy-dla-2",
+      "mergedInto": "dopiewo-pl-wydarzenia",
+      "key": "ekipawakcjiwarsztatykomunikacjiiwsppracy|2026-08-19"
+     },
+     {
+      "title": "KOMISJA OŚWIATY",
+      "date": "2026-08-19",
+      "url": "https://dopiewo.pl/wydarzenia/2026-08-12/komisja-oswiaty",
+      "mergedInto": "dopiewo-pl-wydarzenia",
+      "key": "komisjaowiaty|2026-08-19"
+     },
+     {
+      "title": "POLSKI NA LUZIE - KLUB ROZMOWY PO POLSKU",
+      "date": "2026-08-20",
+      "url": "https://dopiewo.pl/wydarzenia/2026-07-07/polski-na-luzie-klub-rozmowy-po-polsku-2",
+      "mergedInto": "dopiewo-pl-wydarzenia",
+      "key": "polskinaluzieklubrozmowypopolsku|2026-08-20"
+     }
+    ]
+   },
+   {
+    "id": "dopiewo-aktywnie-kulturalnie-fb",
+    "name": "Gmina Dopiewo - AKTYWNIE I KULTURALNIE",
+    "town": "Dopiewo",
+    "url": "https://www.facebook.com/groups/4281766641940107",
+    "fetch": "fb_group",
+    "status": "skipped-costly",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "dopiewo-mieszkancy-fb",
+    "name": "Gmina Dopiewo - mieszkańcy i sąsiedzi",
+    "town": "Dopiewo",
+    "url": "https://www.facebook.com/groups/GminaDopiewoMieszkancy",
+    "fetch": "fb_group",
+    "status": "skipped-costly",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "dopiewo-tablica-ogloszen-fb",
+    "name": "Gmina Dopiewo - tablica ogłoszeń",
+    "town": "Dopiewo",
+    "url": "https://www.facebook.com/groups/1020981825093965",
+    "fetch": "fb_group",
+    "status": "empty",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 8202,
+     "completionTokens": 170,
+     "costUsd": 0.00174858
+    },
+    "ms": 101489,
+    "fbGroup": {
+     "records": 50,
+     "posts": 25,
+     "errorRows": 25,
+     "limit": 50,
+     "atLimit": true,
+     "newest": "2026-08-18",
+     "oldest": "2026-08-18",
+     "spanDays": 0.45,
+     "postsPerDay": 55.7
+    },
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 16235,
+    "changed": true,
+    "blocks": {
+     "total": 25,
+     "cached": 0,
+     "fresh": 25
+    },
+    "fbPoster": {
+     "withImage": {
+      "posts": 21,
+      "yielded": 0,
+      "events": 0,
+      "noVenue": 0,
+      "noTime": 0
+     },
+     "withoutImage": {
+      "posts": 4,
+      "yielded": 0,
+      "events": 0,
+      "noVenue": 0,
+      "noTime": 0
+     },
+     "unlinked": 0
+    },
+    "llmByTask": {
+     "extract": {
+      "calls": 1,
+      "promptTokens": 8202,
+      "completionTokens": 170,
+      "costUsd": 0.00174858
+     }
+    },
+    "bd": {
+     "triggers": 1,
+     "inputs": 1,
+     "polls": 9,
+     "records": 50,
+     "errors": 0,
+     "snapshots": [
+      "sd_mszlq1k129ioay5zr1"
+     ],
+     "byDataset": {
+      "fbGroupPosts": 50
+     }
+    },
+    "archive": [
+     "raw/2026-08-19/dopiewo-tablica-ogloszen-fb__bd/1feeed095da7f96bfe0b994e6f6b3d39e19eafe7bd10d6071e24a1ac8247f637.json",
+     "raw/2026-08-19/dopiewo-tablica-ogloszen-fb/04544adc6a67877ca8d5f9f255701801564e71902cc17414316f897a7417da13.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/dopiewo-tablica-ogloszen-fb/0010-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/dopiewo-tablica-ogloszen-fb/0010.json"
+    ]
+   },
+   {
+    "id": "dabrowa-dopiewo-fb",
+    "name": "Dąbrowa gmina Dopiewo",
+    "town": "Dopiewo",
+    "url": "https://www.facebook.com/groups/209813476213537",
+    "fetch": "fb_group",
+    "status": "skipped-costly",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "gok-komorniki-kalendarz",
+    "name": "GOK Komorniki - Kalendarz Wydarzeń",
+    "town": "Komorniki",
+    "url": "https://www.gokkomorniki.pl/kalendarz-wydarzen/",
+    "fetch": "plain",
+    "status": "unchanged",
+    "events": 7,
+    "followups": [],
+    "geo": {
+     "hits": 7,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 10436,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 5326,
+    "changed": false,
+    "droppedPast": 5,
+    "cached": 7,
+    "archive": [
+     "raw/2026-08-19/gok-komorniki-kalendarz/6e884fa9dffe52392231da27a38b26759aff1280b5a1f8eb28fbab28a0e8fe5b.json"
+    ],
+    "produced": [
+     {
+      "title": "Kino letnie w Wirach - Krudowie 2",
+      "date": "2026-08-19",
+      "url": "https://www.gokkomorniki.pl/kalendarz-wydarzen/"
+     },
+     {
+      "title": "Dźwięki skrzypiec w zieleni w Łęczycy",
+      "date": "2026-08-20",
+      "url": "https://www.gokkomorniki.pl/kalendarz-wydarzen/"
+     },
+     {
+      "title": "Kino letnie w Wirach - Rocketman",
+      "date": "2026-08-21",
+      "url": "https://www.gokkomorniki.pl/kalendarz-wydarzen/"
+     },
+     {
+      "title": "Święto Pyry 2026",
+      "date": "2026-08-22",
+      "url": "https://www.gokkomorniki.pl/kalendarz-wydarzen/"
+     },
+     {
+      "title": "Dixie Company & Patrycja Kubale",
+      "date": "2026-08-22",
+      "url": "https://www.gokkomorniki.pl/kalendarz-wydarzen/",
+      "mergedInto": "komorniki-pl-kalendarz",
+      "key": "komornikijazzclubno7dixiecompanypatrycja|2026-08-22"
+     },
+     {
+      "title": "Kurs tańca towarzyskiego - Wiry",
+      "date": "2026-08-28",
+      "url": "https://www.gokkomorniki.pl/kalendarz-wydarzen/"
+     },
+     {
+      "title": "\"Z głową w gwiazdach\" - Karol Wójcicki",
+      "date": "2026-08-30",
+      "url": "https://www.gokkomorniki.pl/kalendarz-wydarzen/",
+      "mergedInto": "komorniki-pl-kalendarz",
+      "key": "zgowwgwiazdachkarolwjcicki|2026-08-30"
+     }
+    ]
+   },
+   {
+    "id": "komorniki-pl-kalendarz",
+    "name": "Gmina Komorniki - Kalendarz wydarzeń",
+    "town": "Komorniki",
+    "url": "https://www.komorniki.pl/kalendarz-wydarzen/",
+    "fetch": "plain",
+    "status": "unchanged",
+    "events": 11,
+    "followups": [
+     {
+      "url": "https://www.gokkomorniki.pl/kalendarz-wydarzen/2026/08/28/858-kurs-tanca-towarzyskiego-wiry.html",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 4
+     }
+    ],
+    "geo": {
+     "hits": 9,
+     "misses": 1
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 2923,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 17489,
+    "changed": false,
+    "followupsRechecked": 1,
+    "droppedPast": 6,
+    "cached": 11,
+    "archive": [
+     "raw/2026-08-19/komorniki-pl-kalendarz/278881913c10e178dbdda186cb4e4a3dc517f6c7cbb1fa62b74b1e6e2398e100.json",
+     "raw/2026-08-19/komorniki-pl-kalendarz__followup/2a26cef5bc9fa6749732aa94e181d092700e3a738b8e677a81fc6ad7f4796d6d.json"
+    ],
+    "produced": [
+     {
+      "title": "Kino letnie w Wirach",
+      "date": "2026-08-19",
+      "url": "https://www.komorniki.pl/kalendarz-wydarzen/",
+      "mergedInto": "gok-komorniki-kalendarz",
+      "key": "kinoletniewwirachkrudowie2|2026-08-19"
+     },
+     {
+      "title": "Łęczyca - Dźwięki skrzypiec w zieleni",
+      "date": "2026-08-20",
+      "url": "https://www.gokkomorniki.pl/aktualnosci/20082026-leczyca-dzwieki-skrzypiec-w-zieleni.html"
+     },
+     {
+      "title": "Kino letnie w Wirach",
+      "date": "2026-08-19",
+      "url": "https://www.komorniki.pl/kalendarz-wydarzen/",
+      "mergedInto": "gok-komorniki-kalendarz",
+      "key": "kinoletniewwirachkrudowie2|2026-08-19"
+     },
+     {
+      "title": "Święto pyry - Komorniki",
+      "date": "2026-08-22",
+      "url": "https://www.komorniki.pl/kalendarz-wydarzen/"
+     },
+     {
+      "title": "Komorniki Jazz Club No. 7 – Dixie Company & Patrycja Kubale",
+      "date": "2026-08-22",
+      "url": "https://www.gokkomorniki.pl/aktualnosci/komorniki-jazz-club-no-7-dixie-company-patrycja-kubale.html"
+     },
+     {
+      "title": "XII Podróż Rodzinna pod Parą",
+      "date": "2026-08-29",
+      "url": "https://gosirkomorniki.pl/aktualnosci/xii-podroz-rodzinnapo-para.html"
+     },
+     {
+      "title": "Z głową w gwiazdach - spotkanie z Karolem Wójcickim",
+      "date": "2026-08-30",
+      "url": "https://www.komorniki.pl/kalendarz-wydarzen/"
+     },
+     {
+      "title": "KURS TAŃCA TOWARZYSKIEGO - WIRY",
+      "date": "2026-08-28",
+      "url": "https://www.gokkomorniki.pl/kalendarz-wydarzen/2026/08/28/858-kurs-tanca-towarzyskiego-wiry.html",
+      "mergedInto": "gok-komorniki-kalendarz",
+      "key": "kurstacatowarzyskiegowiry|2026-08-28"
+     },
+     {
+      "title": "\"Z GŁOWĄ W GWIAZDACH\" - KAROL WÓJCICKI",
+      "date": "2026-08-30",
+      "url": "https://www.gokkomorniki.pl/kalendarz-wydarzen/z-glowa-w-gwiazdach-karol-wojcicki.html"
+     },
+     {
+      "title": "ŚWIĘTO PLONÓW 2026",
+      "date": "2026-09-05",
+      "url": "https://www.gokkomorniki.pl/kalendarz-wydarzen/swieto-plonow-2026.html"
+     },
+     {
+      "title": "SPEKTAKL TEATRALNY ŁOO! MATKO!",
+      "date": "2026-09-11",
+      "url": "https://www.gokkomorniki.pl/kalendarz-wydarzen/spektakl-teatralny-loo-matko.html"
+     }
+    ]
+   },
+   {
+    "id": "gosir-komorniki-wydarzenia",
+    "name": "GOSiR Komorniki - Aktualności i wydarzenia",
+    "town": "Komorniki",
+    "url": "https://gosirkomorniki.pl/aktualnosci/wydarzenia/",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 2041,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 3305,
+    "changed": false,
+    "cached": 0,
+    "archive": [
+     "raw/2026-08-19/gosir-komorniki-wydarzenia/066035b39635c91ca9eb4ed3bbef77fa64698da5c016053158e2e601f847a5e5.json"
+    ]
+   },
+   {
+    "id": "biblioteka-komorniki-kalendarz",
+    "name": "Biblioteka Publiczna Gminy Komorniki - Kalendarz Wydarzeń",
+    "town": "Komorniki",
+    "url": "https://www.biblioteka-komorniki.pl/kalendarz-wydarzen/",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 2093,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 3846,
+    "changed": false,
+    "droppedPast": 1,
+    "cached": 0,
+    "archive": [
+     "raw/2026-08-19/biblioteka-komorniki-kalendarz/cf66e570e043dbeda37d2d8c01be3bc9c3216e8c38a2a2527638bcdd53991ede.json"
+    ]
+   },
+   {
+    "id": "fb-gok-komorniki",
+    "name": "Gminny Ośrodek Kultury w Komornikach",
+    "town": "Komorniki",
+    "url": "https://www.facebook.com/gokkomorniki/",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "fb-gmina-komorniki",
+    "name": "Gmina Komorniki",
+    "town": "Komorniki",
+    "url": "https://www.facebook.com/ugkomorniki/",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "fb-gosir-komorniki",
+    "name": "GOSiR Komorniki",
+    "town": "Komorniki",
+    "url": "https://www.facebook.com/gosirkomorniki/",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "fb-biblioteka-komorniki",
+    "name": "Biblioteka Publiczna Gminy Komorniki",
+    "town": "Komorniki",
+    "url": "https://www.facebook.com/BibliotekaKomorniki/",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "fb-group-kultura-komorniki",
+    "name": "Kultura w gminie Komorniki",
+    "town": "Komorniki",
+    "url": "https://www.facebook.com/groups/kulturakomorniki",
+    "fetch": "fb_group",
+    "status": "empty",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 42878,
+    "fbGroup": {
+     "records": 5,
+     "posts": 3,
+     "errorRows": 2,
+     "limit": 5,
+     "atLimit": true,
+     "newest": "2026-08-17",
+     "oldest": "2026-08-13",
+     "spanDays": 3.64,
+     "postsPerDay": 0.8
+    },
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 1852,
+    "changed": false,
+    "fbPoster": {
+     "withImage": {
+      "posts": 3,
+      "yielded": 0,
+      "events": 0,
+      "noVenue": 0,
+      "noTime": 0
+     },
+     "withoutImage": {
+      "posts": 0,
+      "yielded": 0,
+      "events": 0,
+      "noVenue": 0,
+      "noTime": 0
+     },
+     "unlinked": 0
+    },
+    "cached": 0,
+    "bd": {
+     "triggers": 1,
+     "inputs": 1,
+     "polls": 4,
+     "records": 5,
+     "errors": 0,
+     "snapshots": [
+      "sd_mszlsldm1gan52gbzw"
+     ],
+     "byDataset": {
+      "fbGroupPosts": 5
+     }
+    },
+    "archive": [
+     "raw/2026-08-19/fb-group-kultura-komorniki__bd/6d3b179b65d6025476a8eadb789f256ed891952d26f15d8de59df64fcd12992e.json",
+     "raw/2026-08-19/fb-group-kultura-komorniki/26128ebde33d41e665f9dde332340cfb3b0a40d9606032488c3a452557e4db36.json"
+    ]
+   },
+   {
+    "id": "fb-group-mieszkancy-gminy-komorniki",
+    "name": "Mieszkańcy Gminy KOMORNIKI",
+    "town": "Komorniki",
+    "url": "https://www.facebook.com/groups/400360234032181",
+    "fetch": "fb_group",
+    "status": "skipped-costly",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "fb-group-komorniki-ogloszenia",
+    "name": "Gmina Komorniki - grupa ogłoszeniowa",
+    "town": "Komorniki",
+    "url": "https://www.facebook.com/groups/komornikigrupaogloszeniowa",
+    "fetch": "fb_group",
+    "status": "skipped-costly",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "lubon-pl-wydarzenia",
+    "name": "Urząd Miasta Luboń - Aktualności wydarzeń",
+    "town": "Luboń",
+    "url": "https://lubon.pl/artykuly/350/wydarzenia",
+    "fetch": "plain",
+    "status": "unchanged",
+    "events": 1,
+    "followups": [],
+    "geo": {
+     "hits": 1,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 1633,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 4462,
+    "changed": false,
+    "cached": 1,
+    "archive": [
+     "raw/2026-08-19/lubon-pl-wydarzenia/983745ee6c414675de191e3e1579b8f4c2fd90976fce86aba0572955165beb51.json"
+    ],
+    "produced": [
+     {
+      "title": "Wigilia Miejska w Luboniu",
+      "date": "2026-12-11",
+      "url": "https://lubon.pl/artykuly/350/wydarzenia"
+     }
+    ]
+   },
+   {
+    "id": "lubon-pl-kalendarz-2026-2",
+    "name": "Urząd Miasta Luboń - Kalendarz wydarzeń miejskich 2026",
+    "town": "Luboń",
+    "url": "https://lubon.pl/artykul/352/4766/kalendarz-wydarzen-miejskich-w-2026-roku",
+    "fetch": "plain",
+    "status": "unchanged",
+    "events": 4,
+    "followups": [],
+    "geo": {
+     "hits": 4,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 735,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 11110,
+    "changed": false,
+    "containers": {
+     "suspects": 1,
+     "probed": 0,
+     "resolved": 0,
+     "events": 0,
+     "dropped": 0
+    },
+    "droppedPast": 59,
+    "cached": 4,
+    "archive": [
+     "raw/2026-08-19/lubon-pl-kalendarz-2026-2/b082bca9ce331e70c8cb9e4d55160d44bc539f5947f30063ad310dd0438d11b5.json"
+    ],
+    "produced": [
+     {
+      "title": "Kino na leżakach",
+      "date": "2026-08-01",
+      "url": "https://lubon.pl/artykul/352/4766/kalendarz-wydarzen-miejskich-w-2026-roku"
+     },
+     {
+      "title": "Spacer po Luboniu z przewodnikiem - Stary Luboń",
+      "date": "2026-08-22",
+      "url": "https://lubon.pl/artykul/352/4766/kalendarz-wydarzen-miejskich-w-2026-roku",
+      "mergedInto": "lubon-fb-group",
+      "key": "kolejnyspacerpoluboniuzprzewodnikiemstar|2026-08-22"
+     },
+     {
+      "title": "\"Skarby Starożytnego Egiptu\" – wydarzenie w stylu egipskim",
+      "date": "2026-08-22",
+      "url": "https://lubon.pl/artykul/352/4766/kalendarz-wydarzen-miejskich-w-2026-roku"
+     },
+     {
+      "title": "Zakończenie sezonu na Plaży Miejskiej w Luboniu",
+      "date": "2026-08-29",
+      "url": "https://lubon.pl/artykul/352/4766/kalendarz-wydarzen-miejskich-w-2026-roku"
+     }
+    ]
+   },
+   {
+    "id": "nasz-lubon-fb",
+    "name": "Nasz Luboń - Facebook",
+    "town": "Luboń",
+    "url": "https://www.facebook.com/NaszLubon",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "mok-mosina",
+    "name": "Mosinski Osrodek Kultury – MOK Mosina",
+    "town": "Mosina",
+    "url": "https://www.kultura.gmina.pl/",
+    "fetch": "plain",
+    "status": "unchanged",
+    "events": 2,
+    "followups": [
+     {
+      "url": "https://www.kultura.gmina.pl/category/aktualnosci/page/1",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 2
+     }
+    ],
+    "geo": {
+     "hits": 2,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 4974,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 3412,
+    "changed": false,
+    "followupsRechecked": 1,
+    "cached": 2,
+    "archive": [
+     "raw/2026-08-19/mok-mosina/134dc9409a4de4366b63080d68cfc6fdc22599398a1df019611b83172406abe9.json",
+     "raw/2026-08-19/mok-mosina__followup/be2f16affd81b5f8e532eee8a0b7018c9bb30927f6672ab6cdc15856943ba5a0.json"
+    ],
+    "produced": [
+     {
+      "title": "Chopin na jazzowo",
+      "date": "2026-08-28",
+      "url": "https://www.kultura.gmina.pl/chopin-na-jazzowo/"
+     },
+     {
+      "title": "„Diabeł wcielony” – Teatr Bez Kurtyny",
+      "date": "2026-09-19",
+      "url": "https://www.kultura.gmina.pl/diabel-wcielony-teatr-bez-kurtyny/"
+     }
+    ]
+   },
+   {
+    "id": "mosina-pl-wydarzenia",
+    "name": "Urzad Miejski w Mosinie – Kalendarz wydarzen",
+    "town": "Mosina",
+    "url": "https://www.mosina.pl/wydarzenia",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 19,
+    "followups": [
+     {
+      "url": "https://www.mosina.pl/wydarzenia?page=1",
+      "kind": "page",
+      "outcome": "same-as-page",
+      "events": 0
+     },
+     {
+      "url": "https://www.mosina.pl/wydarzenia/zebranie-wiejskie-solectwa-daszewice-22",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 3,
+      "blocks": {
+       "total": 15,
+       "cached": 8,
+       "fresh": 7
+      }
+     },
+     {
+      "url": "https://www.mosina.pl/wydarzenia/miedzynarodowe-skoki-wracaja-do-krajkowa",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 3,
+      "blocks": {
+       "total": 13,
+       "cached": 12,
+       "fresh": 1
+      }
+     },
+     {
+      "url": "https://www.mosina.pl/wydarzenia/zebranie-wiejskie-solectwa-krosno-10",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 3,
+      "blocks": {
+       "total": 13,
+       "cached": 12,
+       "fresh": 1
+      }
+     },
+     {
+      "url": "https://www.mosina.pl/wydarzenia/krolewskie-strzelanie-zniwne-1",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 3,
+      "blocks": {
+       "total": 13,
+       "cached": 12,
+       "fresh": 1
+      }
+     }
+    ],
+    "geo": {
+     "hits": 8,
+     "misses": 9
+    },
+    "llm": {
+     "calls": 5,
+     "promptTokens": 14159,
+     "completionTokens": 3316,
+     "costUsd": 0.00498935
+    },
+    "ms": 62327,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 6703,
+    "changed": true,
+    "blocks": {
+     "total": 12,
+     "cached": 7,
+     "fresh": 5
+    },
+    "llmByTask": {
+     "extract": {
+      "calls": 5,
+      "promptTokens": 14159,
+      "completionTokens": 3316,
+      "costUsd": 0.00498935
+     }
+    },
+    "archive": [
+     "raw/2026-08-19/mosina-pl-wydarzenia/32585d19cf1e531792dc7a944b2e3b2a16b8effeff236c1c2f27c225784b575c.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/mosina-pl-wydarzenia/0011-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/mosina-pl-wydarzenia/0011.json",
+     "raw/2026-08-19/mosina-pl-wydarzenia__followup/32585d19cf1e531792dc7a944b2e3b2a16b8effeff236c1c2f27c225784b575c.json",
+     "raw/2026-08-19/mosina-pl-wydarzenia__followup/f8ef59709e8c68e686a64393993d951327de8c97f614d9609a899e30fbe3c264.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/mosina-pl-wydarzenia/0012-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/mosina-pl-wydarzenia/0012.json",
+     "raw/2026-08-19/mosina-pl-wydarzenia__followup/dceff7d4a31d2d8601f9c725263540e987b9bfa464138bba3e8b0ab789c2fa46.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/mosina-pl-wydarzenia/0013-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/mosina-pl-wydarzenia/0013.json",
+     "raw/2026-08-19/mosina-pl-wydarzenia__followup/735c40a7495bc518cceddf25ff544dd8a61f81e2e9efbb6ab0bfacc7f4f59d51.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/mosina-pl-wydarzenia/0014-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/mosina-pl-wydarzenia/0014.json",
+     "raw/2026-08-19/mosina-pl-wydarzenia__followup/349db5251ef03ad60f07560f383747d0d0d23a94230ee1ab73811a121b8d0479.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/mosina-pl-wydarzenia/0015-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/mosina-pl-wydarzenia/0015.json"
+    ],
+    "produced": [
+     {
+      "title": "Zebranie Wiejskie Sołectwa Daszewice",
+      "date": "2026-09-08",
+      "url": "https://www.mosina.pl/wydarzenia/zebranie-wiejskie-solectwa-daszewice-22",
+      "mergedInto": "mosina-pl-wydarzenia",
+      "key": "zebraniewiejskiesoectwadaszewice|2026-09-08"
+     },
+     {
+      "title": "Międzynarodowe skoki wracają do Krajkowa!",
+      "date": "2026-12-03",
+      "url": "https://www.mosina.pl/wydarzenia/miedzynarodowe-skoki-wracaja-do-krajkowa",
+      "mergedInto": "mosina-pl-wydarzenia",
+      "key": "midzynarodoweskokiwracajdokrajkowa|2026-12-03"
+     },
+     {
+      "title": "Zebranie Wiejskie Sołectwa Krosno",
+      "date": "2026-09-02",
+      "url": "https://www.mosina.pl/wydarzenia/zebranie-wiejskie-solectwa-krosno-10",
+      "mergedInto": "mosina-pl-wydarzenia",
+      "key": "zebraniewiejskiesoectwakrosno|2026-09-02"
+     },
+     {
+      "title": "Królewskie Strzelanie Żniwne",
+      "date": "2026-08-30",
+      "url": "https://www.mosina.pl/wydarzenia/krolewskie-strzelanie-zniwne-1"
+     },
+     {
+      "title": "Zebranie Wiejskie Sołectwa Borkowice, Bolesławiec",
+      "date": "2026-08-24",
+      "url": "https://www.mosina.pl/wydarzenia/zebranie-wiejskie-solectwa-borkowice-boleslawiec-5"
+     },
+     {
+      "title": "Zakończenie lata",
+      "date": "2026-08-29",
+      "url": "https://www.mosina.pl/wydarzenia/zakonczenie-lata"
+     },
+     {
+      "title": "Pippi Langstrumpf zwiedza świat",
+      "date": "2026-08-20",
+      "url": "https://www.mosina.pl/wydarzenia/pippi-langstrumpf-zwiedza-swiat"
+     },
+     {
+      "title": "Zebranie Wiejskie Sołectwa Daszewice",
+      "date": "2026-09-08",
+      "url": "https://www.mosina.pl/wydarzenia/zebranie-wiejskie-solectwa-daszewice-22"
+     },
+     {
+      "title": "Zebranie Wiejskie Sołectwa Krosno",
+      "date": "2026-09-02",
+      "url": "https://www.mosina.pl/wydarzenia/zebranie-wiejskie-solectwa-krosno-10",
+      "mergedInto": "mosina-pl-wydarzenia",
+      "key": "zebraniewiejskiesoectwakrosno|2026-09-02"
+     },
+     {
+      "title": "Zebranie wiejskie sołectwa Borkowice, Bolesławiec",
+      "date": "2026-08-24",
+      "url": "https://www.mosina.pl/wydarzenia/pippi-langstrumpf-zwiedza-swiat",
+      "mergedInto": "mosina-pl-wydarzenia",
+      "key": "zebraniewiejskiesoectwaborkowicebolesawi|2026-08-24"
+     },
+     {
+      "title": "Międzynarodowe skoki wracają do Krajkowa!",
+      "date": "2026-12-03",
+      "url": "https://www.mosina.pl/wydarzenia/miedzynarodowe-skoki-wracaja-do-krajkowa"
+     },
+     {
+      "title": "Zebranie Wiejskie Sołectwa Krosno",
+      "date": "2026-09-02",
+      "url": "https://www.mosina.pl/wydarzenia/zebranie-wiejskie-solectwa-krosno-10",
+      "mergedInto": "mosina-pl-wydarzenia",
+      "key": "zebraniewiejskiesoectwakrosno|2026-09-02"
+     },
+     {
+      "title": "Zebranie wiejskie sołectwa Borkowice, Bolesławiec",
+      "date": "2026-08-24",
+      "url": "https://www.mosina.pl/wydarzenia/pippi-langstrumpf-zwiedza-swiat",
+      "mergedInto": "mosina-pl-wydarzenia",
+      "key": "zebraniewiejskiesoectwaborkowicebolesawi|2026-08-24"
+     },
+     {
+      "title": "Zebranie Wiejskie Sołectwa Krosno",
+      "date": "2026-09-02",
+      "url": "https://www.mosina.pl/wydarzenia/zebranie-wiejskie-solectwa-krosno-10"
+     },
+     {
+      "title": "Zebranie Wiejskie Sołectwa Krosno",
+      "date": "2026-09-02",
+      "url": "https://www.mosina.pl/wydarzenia/zebranie-wiejskie-solectwa-krosno-10",
+      "mergedInto": "mosina-pl-wydarzenia",
+      "key": "zebraniewiejskiesoectwakrosno|2026-09-02"
+     },
+     {
+      "title": "Zebranie wiejskie sołectwa Borkowice, Bolesławiec",
+      "date": "2026-08-24",
+      "url": "https://www.mosina.pl/wydarzenia/pippi-langstrumpf-zwiedza-swiat",
+      "mergedInto": "mosina-pl-wydarzenia",
+      "key": "zebraniewiejskiesoectwaborkowicebolesawi|2026-08-24"
+     },
+     {
+      "title": "Królewskie Strzelanie Żniwne",
+      "date": "2026-08-30",
+      "url": "https://www.mosina.pl/wydarzenia/krolewskie-strzelanie-zniwne-1",
+      "mergedInto": "mosina-pl-wydarzenia",
+      "key": "krlewskiestrzelanieniwne|2026-08-30"
+     },
+     {
+      "title": "Zebranie Wiejskie Sołectwa Krosno",
+      "date": "2026-09-02",
+      "url": "https://www.mosina.pl/wydarzenia/zebranie-wiejskie-solectwa-krosno-10",
+      "mergedInto": "mosina-pl-wydarzenia",
+      "key": "zebraniewiejskiesoectwakrosno|2026-09-02"
+     },
+     {
+      "title": "Zebranie wiejskie sołectwa Borkowice, Bolesławiec",
+      "date": "2026-08-24",
+      "url": "https://www.mosina.pl/wydarzenia/pippi-langstrumpf-zwiedza-swiat",
+      "mergedInto": "mosina-pl-wydarzenia",
+      "key": "zebraniewiejskiesoectwaborkowicebolesawi|2026-08-24"
+     }
+    ]
+   },
+   {
+    "id": "biblioteka-mosina",
+    "name": "Mosinska Biblioteka Publiczna",
+    "town": "Mosina",
+    "url": "https://www.bibliotekamosina.pl/",
+    "fetch": "plain",
+    "status": "error",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 1266,
+    "err": "HTTP 500 https://www.bibliotekamosina.pl/",
+    "httpStatus": 500
+   },
+   {
+    "id": "osir-mosina-kalendarz",
+    "name": "Osrodek Sportu i Rekreacji w Mosinie – Kalendarz",
+    "town": "Mosina",
+    "url": "https://osirmosina.pl/index.php/kalendarz/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 2,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 1542,
+    "httpStatus": 200,
+    "kind": "feed",
+    "chars": 140636,
+    "changed": true,
+    "structured": {
+     "kind": "jsonld",
+     "url": "https://osirmosina.pl/index.php/kalendarz/",
+     "seen": 11,
+     "items": 2,
+     "dropped": {
+      "past": 9,
+      "noDate": 0,
+      "noTitle": 0
+     }
+    },
+    "archive": [
+     "raw/2026-08-19/osir-mosina-kalendarz/0e16434741f440f07331e933750e00aa2695aab621bf36ab8b39edb0a385d759.json"
+    ],
+    "produced": [
+     {
+      "title": "\"Zdrowy kręgosłup\" na trawie",
+      "date": "2026-08-19",
+      "url": "https://osirmosina.pl/index.php/kalendarz/"
+     },
+     {
+      "title": "Wakacyjne wyjazdy",
+      "date": "2026-08-25",
+      "url": "https://osirmosina.pl/index.php/kalendarz/"
+     }
+    ]
+   },
+   {
+    "id": "fb-mok-mosina",
+    "name": "Mosinski Osrodek Kultury – fanpage FB",
+    "town": "Mosina",
+    "url": "https://www.facebook.com/mosinskiosrodekkultury/",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "fb-gmina-mosina",
+    "name": "Gmina Mosina – fanpage FB",
+    "town": "Mosina",
+    "url": "https://www.facebook.com/gminamosina/",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "fb-biblioteka-mosina",
+    "name": "Mosinska Biblioteka Publiczna – fanpage FB",
+    "town": "Mosina",
+    "url": "https://www.facebook.com/bibliotekamosina/",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "fb-osir-mosina",
+    "name": "Osrodek Sportu i Rekreacji w Mosinie – fanpage FB",
+    "town": "Mosina",
+    "url": "https://www.facebook.com/OSiRMosina/",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "fb-group-gmina-mosina-aktualnosci",
+    "name": "Gmina Mosina – aktualnosci, dyskusje",
+    "town": "Mosina",
+    "url": "https://www.facebook.com/groups/125289747488429",
+    "fetch": "fb_group",
+    "status": "skipped-costly",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "fb-group-co-sie-dzieje-mosina",
+    "name": "Co sie dzieje? Mosina i okolice",
+    "town": "Mosina",
+    "url": "https://www.facebook.com/groups/537777706390203",
+    "fetch": "fb_group",
+    "status": "skipped-costly",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "poznan-co-gdzie-kiedy",
+    "name": "Poznań Co Gdzie Kiedy – portal miejski",
+    "town": "Poznań",
+    "url": "https://www.poznan.pl/mim/events/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 26,
+    "followups": [
+     {
+      "url": "https://www.poznan.pl/mim/events/spotkanie-z-agata-widzowska,185526.html",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 1,
+      "blocks": {
+       "total": 26,
+       "cached": 23,
+       "fresh": 3
+      }
+     },
+     {
+      "url": "https://www.poznan.pl/mim/events/drinki-z-vriendi-wieczor-dla-tych-ktorzy-chca-poznac-nowych-ludzi,185671.html",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 1,
+      "blocks": {
+       "total": 30,
+       "cached": 23,
+       "fresh": 7
+      }
+     },
+     {
+      "url": "https://www.poznan.pl/mim/events/eliminacje-ligi-europy-uefa-lech-poznan-fc-thun,185740.html",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 1,
+      "blocks": {
+       "total": 27,
+       "cached": 23,
+       "fresh": 4
+      }
+     },
+     {
+      "url": "https://www.poznan.pl/mim/events/estrada-w-centrum-years-of-denial-koncert,184437.html",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 1,
+      "blocks": {
+       "total": 27,
+       "cached": 23,
+       "fresh": 4
+      }
+     },
+     {
+      "url": "https://www.poznan.pl/mim/events/koncert-brk-scena-nad-rusalka,184606.html",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 2,
+      "blocks": {
+       "total": 28,
+       "cached": 23,
+       "fresh": 5
+      }
+     }
+    ],
+    "geo": {
+     "hits": 24,
+     "misses": 2
+    },
+    "llm": {
+     "calls": 6,
+     "promptTokens": 21508,
+     "completionTokens": 3685,
+     "costUsd": 0.00676348
+    },
+    "ms": 57558,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 29878,
+    "changed": true,
+    "blocks": {
+     "total": 50,
+     "cached": 44,
+     "fresh": 6
+    },
+    "llmByTask": {
+     "extract": {
+      "calls": 6,
+      "promptTokens": 21508,
+      "completionTokens": 3685,
+      "costUsd": 0.00676348
+     }
+    },
+    "archive": [
+     "raw/2026-08-19/poznan-co-gdzie-kiedy/53bb73b5ab2397126b3c518655c103efc2874cd603f6901893fad412ba9204c7.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/poznan-co-gdzie-kiedy/0016-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/poznan-co-gdzie-kiedy/0016.json",
+     "raw/2026-08-19/poznan-co-gdzie-kiedy__followup/c1e761c64b2f435b3f722525e2084a5fe13e587aa30b3a04ddd3f23fe4d2345f.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/poznan-co-gdzie-kiedy/0017-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/poznan-co-gdzie-kiedy/0017.json",
+     "raw/2026-08-19/poznan-co-gdzie-kiedy__followup/118c2a7314f021cd0948b7b57856df90c43f3d66297ae513a48eb0c253b21967.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/poznan-co-gdzie-kiedy/0018-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/poznan-co-gdzie-kiedy/0018.json",
+     "raw/2026-08-19/poznan-co-gdzie-kiedy__followup/b9ba66127fe0fdca1239c5ea5ad856a8279b3193ac799a974dccf3b36ff9b156.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/poznan-co-gdzie-kiedy/0019-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/poznan-co-gdzie-kiedy/0019.json",
+     "raw/2026-08-19/poznan-co-gdzie-kiedy__followup/ac0e369b17926ec358af5dd5496d9e8d78bf9d0dc110fedd230a9e9be2166bda.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/poznan-co-gdzie-kiedy/0020-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/poznan-co-gdzie-kiedy/0020.json",
+     "raw/2026-08-19/poznan-co-gdzie-kiedy__followup/6b229975f619350955c46690289b48ef43eb83868cf7c95d83ff846e65d7e5dd.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/poznan-co-gdzie-kiedy/0021-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/poznan-co-gdzie-kiedy/0021.json"
+    ],
+    "produced": [
+     {
+      "title": "10. Lato z Estradą - Nowe Winogrady Południe - warsztaty plastyczne - Selfkoronacje",
+      "date": "2026-08-19",
+      "url": "https://www.poznan.pl/mim/events/10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-plastyczne-selfkoronacje,184291.html",
+      "mergedInto": "poznan-co-gdzie-kiedy",
+      "key": "10latozestradnowewinogradypoudniewarszta|2026-08-19"
+     },
+     {
+      "title": "10. LATO Z ESTRADĄ - NOWE WINOGRADY POŁUDNIE - SPEKTAKL TANECZNY - HOW TO DO THINGS WITH WORDS",
+      "date": "2026-08-19",
+      "url": "https://www.poznan.pl/mim/events/10-lato-z-estrada-nowe-winogrady-poludnie-spektakl-taneczny-how-to-do-things-with-words,184285.html"
+     },
+     {
+      "title": "PRACOWNIA RĘKODZIEŁA - SZYDEŁKOWA SOWA",
+      "date": "2026-08-19",
+      "url": "https://www.poznan.pl/mim/events/pracownia-rekodziela-szydelkowa-sowa,185541.html"
+     },
+     {
+      "title": "10. LATO Z ESTRADĄ - NOWE WINOGRADY POŁUDNIE - WARSZTATY TANECZNE - LOGIKA CHODNIKA",
+      "date": "2026-08-19",
+      "url": "https://www.poznan.pl/mim/events/10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-taneczne-logika-chodnika,184290.html"
+     },
+     {
+      "title": "ZWIEDZANIE ZAMKU Z PRZEWODNIKIEM",
+      "date": "2026-08-19",
+      "url": "https://www.poznan.pl/mim/events/zwiedzanie-zamku-z-przewodnikiem,185092.html"
+     },
+     {
+      "title": "PLAŻOWY STYL - ZRÓB SOBIE WAKACYJNĄ BRANSOLETKĘ",
+      "date": "2026-08-19",
+      "url": "https://www.poznan.pl/mim/events/plazowy-styl-zrob-sobie-wakacyjna-bransoletke,185256.html"
+     },
+     {
+      "title": "OFERTA INDYWIDUALNA W LABORATORIUM WYOBRAŹNI",
+      "date": "2026-07-30",
+      "url": "https://www.poznan.pl/mim/events/oferta-indywidualna-w-laboratorium-wyobrazni,185437.html"
+     },
+     {
+      "title": "10. LATO Z ESTRADĄ - CHARTOWO - FRIKART: MIASTECZKO CYRKOWE",
+      "date": "2026-08-20",
+      "url": "https://www.poznan.pl/mim/events/10-lato-z-estrada-chartowo-frikart-miasteczko-cyrkowe,184220.html"
+     },
+     {
+      "title": "10. LATO Z ESTRADĄ - CHARTOWO - SPACER ETNOBOTANICZNY - ROŚLINNE PASAŻERKI",
+      "date": "2026-08-20",
+      "url": "https://www.poznan.pl/mim/events/10-lato-z-estrada-chartowo-spacer-etnobotaniczny-roslinne-pasazerki,184221.html"
+     },
+     {
+      "title": "DIY: EKOKROSNO",
+      "date": "2026-08-20",
+      "url": "https://www.poznan.pl/mim/events/diy-ekokrosno,185544.html"
+     },
+     {
+      "title": "WARSZTATY BAJKOTERAPII",
+      "date": "2026-08-20",
+      "url": "https://www.poznan.pl/mim/events/warsztaty-bajkoterapii,185657.html"
+     },
+     {
+      "title": "10. LATO Z ESTRADĄ - CHARTOWO - SPEKTAKL TANECZNY - HOW TO DO THINGS WITH WORDS",
+      "date": "2026-08-20",
+      "url": "https://www.poznan.pl/mim/events/10-lato-z-estrada-chartowo-spektakl-taneczny-how-to-do-things-with-words,184222.html"
+     },
+     {
+      "title": "Klub Książki u Raczyńskich. \"Demon z samotnej wyspy\" Edogawy Ranpo",
+      "date": "2026-08-20",
+      "url": "https://www.poznan.pl/mim/events/klub-ksiazki-u-raczynskich-demon-z-samotnej-wyspy-edogawy-ranpo,185524.html"
+     },
+     {
+      "title": "Scena Pod Lipami - Józef Wajdzik \"Nowe brzmienia klasyki\" - koncert akordeonowy",
+      "date": "2026-08-20",
+      "url": "https://www.poznan.pl/mim/events/scena-pod-lipami-jozef-wajdzik-nowe-brzmienia-klasyki-koncert-akordeonowy,185061.html"
+     },
+     {
+      "title": "SPOTKANIE Z AGATĄ WIDZOWSKĄ",
+      "date": "2026-08-20",
+      "url": "https://www.poznan.pl/mim/events/spotkanie-z-agata-widzowska,185526.html",
+      "mergedInto": "poznan-co-gdzie-kiedy",
+      "key": "spotkaniezagatwidzowsk|2026-08-20"
+     },
+     {
+      "title": "DRINKI Z VRIENDI - WIECZÓR DLA TYCH, KTÓRZY CHCĄ POZNAĆ NOWYCH LUDZI",
+      "date": "2026-08-20",
+      "url": "https://www.poznan.pl/mim/events/drinki-z-vriendi-wieczor-dla-tych-ktorzy-chca-poznac-nowych-ludzi,185671.html",
+      "mergedInto": "poznan-co-gdzie-kiedy",
+      "key": "drinkizvriendiwieczrdlatychktrzychcpozna|2026-08-20"
+     },
+     {
+      "title": "ELIMINACJE LIGI EUROPY UEFA: LECH POZNAŃ - FC THUN",
+      "date": "2026-08-20",
+      "url": "https://www.poznan.pl/mim/events/eliminacje-ligi-europy-uefa-lech-poznan-fc-thun,185740.html",
+      "mergedInto": "poznan-co-gdzie-kiedy",
+      "key": "eliminacjeligieuropyuefalechpoznafcthun|2026-08-20"
+     },
+     {
+      "title": "ESTRADA W CENTRUM - YEARS OF DENIAL - KONCERT",
+      "date": "2026-08-20",
+      "url": "https://www.poznan.pl/mim/events/estrada-w-centrum-years-of-denial-koncert,184437.html",
+      "mergedInto": "poznan-co-gdzie-kiedy",
+      "key": "estradawcentrumyearsofdenialkoncert|2026-08-20"
+     },
+     {
+      "title": "KONCERT - BRK - SCENA NAD RUSAŁKĄ",
+      "date": "2026-08-20",
+      "url": "https://www.poznan.pl/mim/events/koncert-brk-scena-nad-rusalka,184606.html",
+      "mergedInto": "kultura-poznan",
+      "key": "koncertdanielgodsonscenanadrusak|2026-08-20"
+     },
+     {
+      "title": "STAROMIEJSKIE KONCERTY ORGANOWE - RUDOLF INNIG.",
+      "date": "2026-08-20",
+      "url": "https://www.poznan.pl/mim/events/staromiejskie-koncerty-organowe-rudolf-innig,185340.html"
+     },
+     {
+      "title": "Spotkanie z Agatą Widzowską",
+      "date": "2026-08-20",
+      "url": "https://www.poznan.pl/mim/events/spotkanie-z-agata-widzowska,185526.html"
+     },
+     {
+      "title": "Drinki z Vriendi - wieczór dla tych, którzy chcą poznać nowych ludzi",
+      "date": "2026-08-20",
+      "url": "https://www.poznan.pl/mim/events/drinki-z-vriendi-wieczor-dla-tych-ktorzy-chca-poznac-nowych-ludzi,185671.html"
+     },
+     {
+      "title": "Eliminacje Ligi Europy UEFA: Lech Poznań - FC Thun",
+      "date": "2026-08-20",
+      "url": "https://www.poznan.pl/mim/events/eliminacje-ligi-europy-uefa-lech-poznan-fc-thun,185740.html"
+     },
+     {
+      "title": "Estrada w Centrum - Years of Denial - Koncert",
+      "date": "2026-08-20",
+      "url": "https://www.poznan.pl/mim/events/estrada-w-centrum-years-of-denial-koncert,184437.html"
+     },
+     {
+      "title": "KONCERT - BRK - SCENA NAD RUSAŁKĄ",
+      "date": "2026-08-20",
+      "url": "https://www.poznan.pl/mim/events/koncert-brk-scena-nad-rusalka,184606.html",
+      "mergedInto": "kultura-poznan",
+      "key": "koncertdanielgodsonscenanadrusak|2026-08-20"
+     },
+     {
+      "title": "Daniel Godson",
+      "date": "2026-08-20",
+      "url": "https://www.poznan.pl/mim/events/koncert-brk-scena-nad-rusalka,184606.html",
+      "mergedInto": "kultura-poznan",
+      "key": "koncertdanielgodsonscenanadrusak|2026-08-20"
+     }
+    ]
+   },
+   {
+    "id": "kultura-poznan",
+    "name": "Kalendarium Kulturalne kultura.poznan.pl",
+    "town": "Poznań",
+    "url": "https://kultura.poznan.pl/mim/kultura/events/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 21,
+    "followups": [
+     {
+      "url": "https://kultura.poznan.pl/mim/kultura/events/estrada-w-centrum-cisnienie-koncert,184438.html",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 1,
+      "blocks": {
+       "total": 20,
+       "cached": 19,
+       "fresh": 1
+      }
+     }
+    ],
+    "geo": {
+     "hits": 21,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 2,
+     "promptTokens": 5506,
+     "completionTokens": 1275,
+     "costUsd": 0.0018946599999999998
+    },
+    "ms": 21903,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 20729,
+    "changed": true,
+    "blocks": {
+     "total": 43,
+     "cached": 38,
+     "fresh": 5
+    },
+    "llmByTask": {
+     "extract": {
+      "calls": 2,
+      "promptTokens": 5506,
+      "completionTokens": 1275,
+      "costUsd": 0.0018946599999999998
+     }
+    },
+    "archive": [
+     "raw/2026-08-19/kultura-poznan/c18e0871d9eb6480e022e7e5239c3bcfd9cd44a799de7950092b0911dce06d9f.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/kultura-poznan/0022-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/kultura-poznan/0022.json",
+     "raw/2026-08-19/kultura-poznan__followup/22f31e3fb6ee791ff7c6f75504b68a457c882a87e2743288e5b4c78367b34156.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/kultura-poznan/0023-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/kultura-poznan/0023.json"
+    ],
+    "produced": [
+     {
+      "title": "10. LATO Z ESTRADĄ - NOWE WINOGRADY POŁUDNIE - SPEKTAKL TANECZNY - HOW TO DO THINGS WITH WORDS",
+      "date": "2026-08-19",
+      "url": "https://kultura.poznan.pl/mim/kultura/events/10-lato-z-estrada-nowe-winogrady-poludnie-spektakl-taneczny-how-to-do-things-with-words,184285.html",
+      "mergedInto": "poznan-co-gdzie-kiedy",
+      "key": "10latozestradnowewinogradypoudniespektak|2026-08-19"
+     },
+     {
+      "title": "PRACOWNIA RĘKODZIEŁA - SZYDEŁKOWA SOWA",
+      "date": "2026-08-19",
+      "url": "https://kultura.poznan.pl/mim/kultura/events/pracownia-rekodziela-szydelkowa-sowa,185541.html",
+      "mergedInto": "poznan-co-gdzie-kiedy",
+      "key": "pracowniarkodzieaszydekowasowa|2026-08-19"
+     },
+     {
+      "title": "10. LATO Z ESTRADĄ - NOWE WINOGRADY POŁUDNIE - WARSZTATY TANECZNE - LOGIKA CHODNIKA",
+      "date": "2026-08-19",
+      "url": "https://kultura.poznan.pl/mim/kultura/events/10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-taneczne-logika-chodnika,184290.html",
+      "mergedInto": "poznan-co-gdzie-kiedy",
+      "key": "10latozestradnowewinogradypoudniewarszta|2026-08-19"
+     },
+     {
+      "title": "ZWIEDZANIE ZAMKU Z PRZEWODNIKIEM",
+      "date": "2026-08-19",
+      "url": "https://kultura.poznan.pl/mim/kultura/events/zwiedzanie-zamku-z-przewodnikiem,185092.html",
+      "mergedInto": "poznan-co-gdzie-kiedy",
+      "key": "zwiedzaniezamkuzprzewodnikiem|2026-08-19"
+     },
+     {
+      "title": "PLAŻOWY STYL - ZRÓB SOBIE WAKACYJNĄ BRANSOLETKĘ",
+      "date": "2026-08-19",
+      "url": "https://kultura.poznan.pl/mim/kultura/events/plazowy-styl-zrob-sobie-wakacyjna-bransoletke,185256.html",
+      "mergedInto": "poznan-co-gdzie-kiedy",
+      "key": "plaowystylzrbsobiewakacyjnbransoletk|2026-08-19"
+     },
+     {
+      "title": "DIY: EKOKROSNO",
+      "date": "2026-08-20",
+      "url": "https://kultura.poznan.pl/mim/kultura/events/diy-ekokrosno,185544.html",
+      "mergedInto": "poznan-co-gdzie-kiedy",
+      "key": "diyekokrosno|2026-08-20"
+     },
+     {
+      "title": "WARSZTATY BAJKOTERAPII",
+      "date": "2026-08-20",
+      "url": "https://kultura.poznan.pl/mim/kultura/events/warsztaty-bajkoterapii,185657.html",
+      "mergedInto": "poznan-co-gdzie-kiedy",
+      "key": "warsztatybajkoterapii|2026-08-20"
+     },
+     {
+      "title": "Klub Książki u Raczyńskich. \"Demon z Samotnej Wyspy\" Edogawy Ranpo",
+      "date": "2026-08-20",
+      "url": "https://kultura.poznan.pl/mim/kultura/events/klub-ksiazki-u-raczynskich-demon-z-samotnej-wyspy-edogawy-ranpo,185524.html",
+      "mergedInto": "poznan-co-gdzie-kiedy",
+      "key": "klubksikiuraczyskichdemonzsamotnejwyspye|2026-08-20"
+     },
+     {
+      "title": "Scena Pod Lipami - Józef Wajdzik \"Nowe brzmienia klasyki\" - koncert akordeonowy",
+      "date": "2026-08-20",
+      "url": "https://kultura.poznan.pl/mim/kultura/events/scena-pod-lipami-jozef-wajdzik-nowe-brzmienia-klasyki-koncert-akordeonowy,185061.html",
+      "mergedInto": "poznan-co-gdzie-kiedy",
+      "key": "scenapodlipamijzefwajdziknowebrzmieniakl|2026-08-20"
+     },
+     {
+      "title": "Spotkanie z Agatą Widzowską",
+      "date": "2026-08-20",
+      "url": "https://kultura.poznan.pl/mim/kultura/events/spotkanie-z-agata-widzowska,185526.html",
+      "mergedInto": "poznan-co-gdzie-kiedy",
+      "key": "spotkaniezagatwidzowsk|2026-08-20"
+     },
+     {
+      "title": "Drinki z Vriendi - wieczór dla tych, którzy chcą poznać nowych ludzi",
+      "date": "2026-08-20",
+      "url": "https://kultura.poznan.pl/mim/kultura/events/drinki-z-vriendi-wieczor-dla-tych-ktorzy-chca-poznac-nowych-ludzi,185671.html",
+      "mergedInto": "poznan-co-gdzie-kiedy",
+      "key": "drinkizvriendiwieczrdlatychktrzychcpozna|2026-08-20"
+     },
+     {
+      "title": "Estrada w Centrum - Years of Denial - koncert",
+      "date": "2026-08-20",
+      "url": "https://kultura.poznan.pl/mim/kultura/events/estrada-w-centrum-years-of-denial-koncert,184437.html",
+      "mergedInto": "poznan-co-gdzie-kiedy",
+      "key": "estradawcentrumyearsofdenialkoncert|2026-08-20"
+     },
+     {
+      "title": "Koncert - BRK - Scena nad Rusałką",
+      "date": "2026-08-20",
+      "url": "https://kultura.poznan.pl/mim/kultura/events/koncert-brk-scena-nad-rusalka,184606.html",
+      "mergedInto": "kultura-poznan",
+      "key": "koncertdanielgodsonscenanadrusak|2026-08-20"
+     },
+     {
+      "title": "Staromiejskie koncerty organowe - Rudolf Innig",
+      "date": "2026-08-20",
+      "url": "https://kultura.poznan.pl/mim/kultura/events/staromiejskie-koncerty-organowe-rudolf-innig,185340.html",
+      "mergedInto": "poznan-co-gdzie-kiedy",
+      "key": "staromiejskiekoncertyorganowerudolfinnig|2026-08-20"
+     },
+     {
+      "title": "ESTRADA W CENTRUM - CIŚNIENIE - KONCERT",
+      "date": "2026-08-20",
+      "url": "https://kultura.poznan.pl/mim/kultura/events/estrada-w-centrum-cisnienie-koncert,184438.html",
+      "mergedInto": "kultura-poznan",
+      "key": "estradawcentrumcinieniekoncert|2026-08-20"
+     },
+     {
+      "title": "10. LATO Z ESTRADĄ - ŁAWICA - SEANS KINA PLENEROWEGO - PIOSENKI O MIŁOŚCI",
+      "date": "2026-08-20",
+      "url": "https://kultura.poznan.pl/mim/kultura/events/10-lato-z-estrada-lawica-seans-kina-plenerowego-piosenki-o-milosci,184268.html"
+     },
+     {
+      "title": "KONCERT - DANIEL GODSON - SCENA NAD RUSAŁKĄ",
+      "date": "2026-08-20",
+      "url": "https://kultura.poznan.pl/mim/kultura/events/koncert-daniel-godson-scena-nad-rusalka,184610.html"
+     },
+     {
+      "title": "10. LATO Z ESTRADĄ - SZCZEPANKOWO-SPŁAWIE-KRZESINKI - ROZGRZEWKA RUCHOWA",
+      "date": "2026-08-21",
+      "url": "https://kultura.poznan.pl/mim/kultura/events/10-lato-z-estrada-szczepankowo-splawie-krzesinki-rozgrzewka-ruchowa,184324.html",
+      "mergedInto": "kultura-poznan",
+      "key": "10latozestradszczepankowospawiekrzesinki|2026-08-21"
+     },
+     {
+      "title": "10. LATO Z ESTRADĄ - SZCZEPANKOWO-SPŁAWIE-KRZESINKI - KONCERT - DENSY I SENSY",
+      "date": "2026-08-21",
+      "url": "https://kultura.poznan.pl/mim/kultura/events/10-lato-z-estrada-szczepankowo-splawie-krzesinki-koncert-densy-i-sensy,184325.html"
+     },
+     {
+      "title": "DIY: KWIATKI NA SZYDEŁKU",
+      "date": "2026-08-21",
+      "url": "https://kultura.poznan.pl/mim/kultura/events/diy-kwiatki-na-szydelku,185545.html"
+     },
+     {
+      "title": "ESTRADA W CENTRUM - CIŚNIENIE - KONCERT",
+      "date": "2026-08-20",
+      "url": "https://kultura.poznan.pl/mim/kultura/events/estrada-w-centrum-cisnienie-koncert,184438.html"
+     }
+    ]
+   },
+   {
+    "id": "ck-zamek",
+    "name": "Centrum Kultury Zamek w Poznaniu",
+    "town": "Poznań",
+    "url": "https://ckzamek.pl/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 12,
+    "followups": [
+     {
+      "url": "http://ckzamek.pl/wydarzenia/14906-sasiedzka-potancowka-miedzypokoleniowa/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 1,
+      "blocks": {
+       "total": 15,
+       "cached": 9,
+       "fresh": 6
+      }
+     },
+     {
+      "url": "http://kinopalacowe.pl/wydarzenia/14933-replika-octopus-film-festival-2026/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 1,
+      "blocks": {
+       "total": 11,
+       "cached": 6,
+       "fresh": 5
+      }
+     },
+     {
+      "url": "http://ckzamek.pl/wydarzenia/14784-rodzinne-zwiedzanie-zamku/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 1,
+      "blocks": {
+       "total": 14,
+       "cached": 10,
+       "fresh": 4
+      }
+     },
+     {
+      "url": "http://ckzamek.pl/wydarzenia/14949-oprowadzanie-autorsko-kuratorskie-po-wystawie-jerz/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 1,
+      "blocks": {
+       "total": 14,
+       "cached": 11,
+       "fresh": 3
+      }
+     },
+     {
+      "url": "http://ckzamek.pl/wydarzenia/14707-sierpien-2026-w-zamku-sprawdz-program/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 0,
+      "blocks": {
+       "total": 13,
+       "cached": 9,
+       "fresh": 4
+      }
+     }
+    ],
+    "geo": {
+     "hits": 3,
+     "misses": 3
+    },
+    "llm": {
+     "calls": 6,
+     "promptTokens": 19041,
+     "completionTokens": 2720,
+     "costUsd": 0.00498873
+    },
+    "ms": 46936,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 5778,
+    "changed": true,
+    "blocks": {
+     "total": 23,
+     "cached": 19,
+     "fresh": 4
+    },
+    "containers": {
+     "suspects": 1,
+     "probed": 1,
+     "resolved": 0,
+     "events": 0,
+     "dropped": 0
+    },
+    "llmByTask": {
+     "extract": {
+      "calls": 6,
+      "promptTokens": 19041,
+      "completionTokens": 2720,
+      "costUsd": 0.00498873
+     }
+    },
+    "archive": [
+     "raw/2026-08-19/ck-zamek/b1997aa284ca837f7ef94d85b5b5de467c2ff9ab052fd66e3494553d1e05935e.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/ck-zamek/0024-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/ck-zamek/0024.json",
+     "raw/2026-08-19/ck-zamek__followup/bb43d23fb151d310157cc23a1884fae65e6a4d83bdf1bc969e049afdf8c0cda4.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/ck-zamek/0025-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/ck-zamek/0025.json",
+     "raw/2026-08-19/ck-zamek__followup/00330f1f8b4e4e6694e5244081504ff5a6127bec05dcd6c20ff7bf418c73c9ad.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/ck-zamek/0026-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/ck-zamek/0026.json",
+     "raw/2026-08-19/ck-zamek__followup/38432a4298556c818ce5a0277fd3e4a50b39f6fa1b05de37dbf6a7da4bc1180f.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/ck-zamek/0027-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/ck-zamek/0027.json",
+     "raw/2026-08-19/ck-zamek__followup/4dd50d9328aaee115f845f0b0422010a96507f2bcfd69e659a1004c835f43bb6.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/ck-zamek/0028-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/ck-zamek/0028.json",
+     "raw/2026-08-19/ck-zamek__followup/0aeec7d141a965164666acb17fdd61d5834e1c81f9543b299e1c417ea9480786.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/ck-zamek/0029-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/ck-zamek/0029.json"
+    ],
+    "produced": [
+     {
+      "title": "SIERPIEŃ 2026 W ZAMKU",
+      "date": "2026-08-01",
+      "url": "http://ckzamek.pl/wydarzenia/14707-sierpien-2026-w-zamku-sprawdz-program/"
+     },
+     {
+      "title": "Sąsiedzka potańcówka międzypokoleniowa",
+      "date": "2026-08-27",
+      "url": "http://ckzamek.pl/wydarzenia/14906-sasiedzka-potancowka-miedzypokoleniowa/",
+      "mergedInto": "ck-zamek",
+      "key": "ssiedzkapotacwkamidzypokoleniowa|2026-08-27"
+     },
+     {
+      "title": "Replika Octopus Film Festival 2026",
+      "date": "2026-08-26",
+      "url": "http://kinopalacowe.pl/wydarzenia/14933-replika-octopus-film-festival-2026/",
+      "mergedInto": "ck-zamek",
+      "key": "replikaoctopusfilmfestival2026|2026-08-26"
+     },
+     {
+      "title": "Rodzinne zwiedzanie zamku",
+      "date": "2026-08-25",
+      "url": "http://ckzamek.pl/wydarzenia/14784-rodzinne-zwiedzanie-zamku/",
+      "mergedInto": "ck-zamek",
+      "key": "rodzinnezwiedzaniezamku|2026-08-25"
+     },
+     {
+      "title": "WAJDA: RE-WIZJE. KRONIKA WYPADKÓW MIŁOSNYCH",
+      "date": "2026-08-23",
+      "url": "http://kinopalacowe.pl/filmy/14565-wajda-re-wizje-kronika-wypadkow-miosnych/"
+     },
+     {
+      "title": "NATURA TUŻ OBOK: ODKRYWANIE UKRYTEGO ŻYCIA ROŚLIN W MIEŚCIE",
+      "date": "2026-08-23",
+      "url": "http://ckzamek.pl/wydarzenia/14907-natura-tuz-obok-odkrywanie-ukrytego-zycia-roslin-w/"
+     },
+     {
+      "title": "Oprowadzanie autorsko-kuratorskie po wystawie | Jerzy Sadowski Głębia ostrości",
+      "date": "2026-08-22",
+      "url": "http://ckzamek.pl/wydarzenia/14949-oprowadzanie-autorsko-kuratorskie-po-wystawie-jerz/",
+      "mergedInto": "ck-zamek",
+      "key": "oprowadzanieautorskokuratorskiepowystawi|2026-08-22"
+     },
+     {
+      "title": "ZWIEDZANIE ZAMKU Z PRZEWODNICZKĄ",
+      "date": "2026-08-19",
+      "url": "http://ckzamek.pl/wydarzenia/14783-zwiedzanie-zamku-z-przewodniczka/"
+     },
+     {
+      "title": "Sąsiedzka Potańcówka Międzypokoleniowa",
+      "date": "2026-08-27",
+      "url": "http://ckzamek.pl/wydarzenia/14906-sasiedzka-potancowka-miedzypokoleniowa/"
+     },
+     {
+      "title": "REPLIKA OCTOPUS FILM FESTIVAL 2026",
+      "date": "2026-08-26",
+      "url": "http://kinopalacowe.pl/wydarzenia/14933-replika-octopus-film-festival-2026/"
+     },
+     {
+      "title": "Rodzinne zwiedzanie Zamku",
+      "date": "2026-08-25",
+      "url": "http://ckzamek.pl/wydarzenia/14784-rodzinne-zwiedzanie-zamku/"
+     },
+     {
+      "title": "Oprowadzanie autorsko-kuratorskie po wystawie „Jerzy Sadowski. Głębia ostrości”",
+      "date": "2026-08-22",
+      "url": "http://ckzamek.pl/wydarzenia/14949-oprowadzanie-autorsko-kuratorskie-po-wystawie-jerz/"
+     }
+    ]
+   },
+   {
+    "id": "ck-zamek-fb",
+    "name": "Centrum Kultury ZAMEK w Poznaniu – Facebook",
+    "town": "Poznań",
+    "url": "https://www.facebook.com/ckzamek/",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "dk-stokrotka",
+    "name": "Dom Kultury Stokrotka w Poznaniu",
+    "town": "Poznań",
+    "url": "https://www.dkstokrotka.pl/",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [
+     {
+      "url": "https://www.dkstokrotka.pl/propozycje-sierpien-dk-stokrotka",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 0
+     },
+     {
+      "url": "https://www.dkstokrotka.pl/rodzinna-podroz-pod-para",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 1
+     },
+     {
+      "url": "https://www.dkstokrotka.pl/viva-seniorzy",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 1
+     },
+     {
+      "url": "https://www.dkstokrotka.pl/spotkanie-basinski-3",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 0
+     },
+     {
+      "url": "https://www.dkstokrotka.pl/lato-z-kultura-2026",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 3841,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 6167,
+    "changed": false,
+    "followupsRechecked": 5,
+    "droppedPast": 2,
+    "cached": 0,
+    "archive": [
+     "raw/2026-08-19/dk-stokrotka/ebf1849300f36faf828960a815e41f636ece8858194b39be5e513f40f17979c2.json",
+     "raw/2026-08-19/dk-stokrotka__followup/6a8386a594560fbf6c187432b601fcfcafe5f508493693a2751983b6cd682e76.json",
+     "raw/2026-08-19/dk-stokrotka__followup/603396bc110c7a80bc3e83867ecea1f3e93ef0455dbd280aed9db9118bf13e8f.json",
+     "raw/2026-08-19/dk-stokrotka__followup/5d24220e41308644bacff856cc3622e599ad9ed15bdfc42f3fc3667ae6b658de.json",
+     "raw/2026-08-19/dk-stokrotka__followup/82fcc7bbc3ba153d493b94559ee85212481afdce9f4d46f7783d995c8fa922c6.json",
+     "raw/2026-08-19/dk-stokrotka__followup/e4892190c4883736dadfd1b3d758ccb8d57f4b07869e89337584019ba9dd79bd.json"
+    ]
+   },
+   {
+    "id": "jck-poznan",
+    "name": "Jeżyckie Centrum Kultury",
+    "town": "Poznań",
+    "url": "https://jck-poznan.pl/",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [
+     {
+      "url": "https://jck-poznan.pl/wydarzenia/",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 1
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 5402,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 10945,
+    "changed": false,
+    "followupsRechecked": 1,
+    "droppedPast": 4,
+    "cached": 0,
+    "archive": [
+     "raw/2026-08-19/jck-poznan/783c4b17cf288db956b06517df86cf0faa11a4aed2585016d08e2cfdebdf9e1d.json",
+     "raw/2026-08-19/jck-poznan__followup/fb396e4de6f5396e9820b4699d6d1f4fb7f515316dda5782c906af4e3c14cfc5.json"
+    ]
+   },
+   {
+    "id": "mdk1-poznan",
+    "name": "Młodzieżowy Dom Kultury nr 1 w Poznaniu",
+    "town": "Poznań",
+    "url": "https://mdk1.poznan.pl/",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [
+     {
+      "url": "https://mdk1.poznan.pl/wydarzenia.html",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 2
+     },
+     {
+      "url": "https://mdk1.poznan.pl/images/dokumenty/2026_2027/Oferta_zajęć_do_zapisów_na_rok_szkolny_2026-2027.pdf",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 0
+     },
+     {
+      "url": "https://mdk1.poznan.pl/images/dokumenty/2026_2027/1.oświadczenie_rekrutacja_2026_-_2_etapy.pdf",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 0
+     },
+     {
+      "url": "https://mdk1.poznan.pl/images/dokumenty/2026_2027/1.MDK1.Rekrutacja_2026-2027_Procedura.pdf",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 0
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 4708,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 13803,
+    "changed": false,
+    "followupsRechecked": 4,
+    "droppedPast": 5,
+    "cached": 0,
+    "archive": [
+     "raw/2026-08-19/mdk1-poznan/82997734583198686b8e4c30b8dc3c39a6f19a06411e68b8726e95073206a078.json",
+     "raw/2026-08-19/mdk1-poznan__followup/d209782122fcb7419622f77af34fbf26ced645cce6d1f21cdcb47b2a38deb3b6.json"
+    ]
+   },
+   {
+    "id": "mdk2-poznan",
+    "name": "Młodzieżowy Dom Kultury nr 2 w Poznaniu",
+    "town": "Poznań",
+    "url": "https://mdk2.poznan.pl/",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [
+     {
+      "url": "https://mdk2.poznan.pl/aktualnosci.html",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 2
+     },
+     {
+      "url": "https://mdk2.poznan.pl/images/mdk/rekrutacja_2026_2007/Oferta%20do%20rekrutacji%20otwartej.pdf",
+      "kind": "page",
+      "outcome": "error",
+      "events": 0,
+      "err": "HTTP 404 https://mdk2.poznan.pl/images/mdk/rekrutacja_2026_2007/Oferta%20do%20rekrutacji%20otwartej.pdf"
+     },
+     {
+      "url": "https://mdk2.poznan.pl/images/mdk/rekrutacja_2026_2007/oswiadczenie_rekrutacja_2026.pdf",
+      "kind": "page",
+      "outcome": "error",
+      "events": 0,
+      "err": "HTTP 404 https://mdk2.poznan.pl/images/mdk/rekrutacja_2026_2007/oswiadczenie_rekrutacja_2026.pdf"
+     },
+     {
+      "url": "https://mdk2.poznan.pl/images/mdk/rekrutacja_2026_2007/Zasady_rekrutacji_w_roku_szkolnym_2026-2027.pdf",
+      "kind": "page",
+      "outcome": "error",
+      "events": 0,
+      "err": "HTTP 404 https://mdk2.poznan.pl/images/mdk/rekrutacja_2026_2007/Zasady_rekrutacji_w_roku_szkolnym_2026-2027.pdf"
+     }
+    ],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 4973,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 16898,
+    "changed": false,
+    "followupsRechecked": 4,
+    "droppedPast": 5,
+    "cached": 0,
+    "archive": [
+     "raw/2026-08-19/mdk2-poznan/7c4558be75055cb997a0dcfcf8c4705c52745d39cbfc05a55d15211169240ac9.json",
+     "raw/2026-08-19/mdk2-poznan__followup/aee8bdcc0f7e30b651eca601574f2fb3a099a16b60e25749f7ca50f94000edfd.json"
+    ]
+   },
+   {
+    "id": "dk-orle-gniazdo-fb",
+    "name": "Dom Kultury Orle Gniazdo – Facebook",
+    "town": "Poznań",
+    "url": "https://www.facebook.com/OrleGniazdo/",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "posir-poznan",
+    "name": "Poznańskie Ośrodki Sportu i Rekreacji",
+    "town": "Poznań",
+    "url": "https://posir.poznan.pl/wydarzenia",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 30,
+    "followups": [],
+    "geo": {
+     "hits": 26,
+     "misses": 2
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 4609,
+     "completionTokens": 3258,
+     "costUsd": 0.00455593
+    },
+    "ms": 22800,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 11310,
+    "changed": true,
+    "blocks": {
+     "total": 19,
+     "cached": 13,
+     "fresh": 6
+    },
+    "llmByTask": {
+     "extract": {
+      "calls": 1,
+      "promptTokens": 4609,
+      "completionTokens": 3258,
+      "costUsd": 0.00455593
+     }
+    },
+    "archive": [
+     "raw/2026-08-19/posir-poznan/0d80a6aea96f2306545acd7418eaa80e7379c1ee3227731aa96627f8068889d4.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/posir-poznan/0030-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/posir-poznan/0030.json"
+    ],
+    "produced": [
+     {
+      "title": "PUCHAR GKSŻ 500R",
+      "date": "2026-08-19",
+      "url": "https://posir.poznan.pl/wydarzenia"
+     },
+     {
+      "title": "BEZPŁATNE WEJŚCIE NA PICKLEBALL",
+      "date": "2026-08-21",
+      "url": "https://posir.poznan.pl/wydarzenia"
+     },
+     {
+      "title": "WYCIECZKA DO WESTERLAND, JÓZEFÓW 52A",
+      "date": "2026-08-21",
+      "url": "https://posir.poznan.pl/wydarzenia"
+     },
+     {
+      "title": "ROXIE WĘGIEL I LIVKA #NAFALACH 2026",
+      "date": "2026-08-21",
+      "url": "https://posir.poznan.pl/wydarzenia/roxie-wegiel-i-livka-nafalach-2026"
+     },
+     {
+      "title": "WOLFRACE",
+      "date": "2026-08-22",
+      "url": "https://posir.poznan.pl/wydarzenia/wolfrace"
+     },
+     {
+      "title": "PO PROSTU KAJTEK, BORON I ZIPPY OGAR #NAFALACH 2026",
+      "date": "2026-08-22",
+      "url": "https://posir.poznan.pl/wydarzenia/po-prostu-kajtek-boron-i-zippy-ogar-nafalach-2026"
+     },
+     {
+      "title": "DAWID KWIATKOWSKI #NAFALACH 2026",
+      "date": "2026-08-25",
+      "url": "https://posir.poznan.pl/wydarzenia/dawid-kwiatkowski-nafalach-2026"
+     },
+     {
+      "title": "MISTRZOSTWA ŚWIATA W KAJAKARSTWIE",
+      "date": "2026-08-26",
+      "url": "https://posir.poznan.pl/wydarzenia"
+     },
+     {
+      "title": "BEZPŁATNE WEJŚCIE NA PICKLEBALL",
+      "date": "2026-08-28",
+      "url": "https://posir.poznan.pl/wydarzenia",
+      "mergedInto": "posir-poznan",
+      "key": "bezpatnewejcienapickleball|2026-08-21"
+     },
+     {
+      "title": "SPŁYW KAJAKOWY WARTA ODCINEK RADZEWICE -PUSZCZYKOWO",
+      "date": "2026-08-29",
+      "url": "https://posir.poznan.pl/wydarzenia/splyw-kajakowy-warta-odcinek-radzewice-puszczykowo"
+     },
+     {
+      "title": "MITYNG OKRĘGOWY",
+      "date": "2026-08-29",
+      "url": "https://posir.poznan.pl/wydarzenia/mityng-okregowy-5"
+     },
+     {
+      "title": "RAJD PO ZDROWIE",
+      "date": "2026-09-05",
+      "url": "https://posir.poznan.pl/wydarzenia/rajd-po-zdrowie-2"
+     },
+     {
+      "title": "MIĘDZYWOJEWÓDZKIE MISTRZOSTWA MŁODZIKÓW",
+      "date": "2026-09-05",
+      "url": "https://posir.poznan.pl/wydarzenia/miedzywojewodzkie-mistrzostwa-mlodzikow"
+     },
+     {
+      "title": "BIEG PKO",
+      "date": "2026-09-12",
+      "url": "https://posir.poznan.pl/wydarzenia/bieg-pko"
+     },
+     {
+      "title": "FINAŁ ENEA MŁODE POLSKIE WIOSŁA",
+      "date": "2026-09-12",
+      "url": "https://posir.poznan.pl/wydarzenia/final-enea-mlode-polskie-wiosla"
+     },
+     {
+      "title": "MECZ WIARA LECHA - SKP SŁUPCA",
+      "date": "2026-09-12",
+      "url": "https://posir.poznan.pl/wydarzenia/mecz-wiara-lecha-skp-slupca"
+     },
+     {
+      "title": "POZNAŃ TRACK DAY 2026",
+      "date": "2026-09-13",
+      "url": "https://posir.poznan.pl/wydarzenia"
+     },
+     {
+      "title": "MISTRZOSTWA WOJEWÓDZTWA WIELKOPOLSKIEGO W KAJAKARSTWIE",
+      "date": "2026-09-19",
+      "url": "https://posir.poznan.pl/wydarzenia"
+     },
+     {
+      "title": "KIDS RUN",
+      "date": "2026-09-20",
+      "url": "https://posir.poznan.pl/wydarzenia"
+     },
+     {
+      "title": "MIĘDZYNARODOWY DZIEŃ PRZEDSZKOLAKA",
+      "date": "2026-09-25",
+      "url": "https://posir.poznan.pl/wydarzenia"
+     },
+     {
+      "title": "ZABIEGAJ O FUNDUSZE",
+      "date": "2026-09-26",
+      "url": "https://posir.poznan.pl/wydarzenia"
+     },
+     {
+      "title": "BIEG MOTYLI",
+      "date": "2026-09-27",
+      "url": "https://posir.poznan.pl/wydarzenia"
+     },
+     {
+      "title": "MECZ WIARA LECHA - UKS ŚREM",
+      "date": "2026-10-03",
+      "url": "https://posir.poznan.pl/wydarzenia/mecz-wiara-lecha-uks-srem"
+     },
+     {
+      "title": "25. POZNAŃ MARATON IM. MACIEJA FRANKIEWICZA",
+      "date": "2026-10-04",
+      "url": "https://posir.poznan.pl/wydarzenia/zawody-i-mecze/25-poznan-maraton-im-macieja-frankiewicza"
+     },
+     {
+      "title": "BIEG KOBIET ZAWSZE PIER(W)SI",
+      "date": "2026-10-11",
+      "url": "https://posir.poznan.pl/wydarzenia/bieg-kobiet-zawsze-pier-w-si"
+     },
+     {
+      "title": "CENTRALNE KONTROLNE REGATY JESIENNE W WIOŚLARSTWIE",
+      "date": "2026-10-17",
+      "url": "https://posir.poznan.pl/wydarzenia/centralne-kontrolne-regaty-jesienne-w-wioslarstwie-2"
+     },
+     {
+      "title": "MECZ WIARA LECHA - WARTA II POZNAŃ",
+      "date": "2026-10-17",
+      "url": "https://posir.poznan.pl/wydarzenia/mecz-wiara-lecha-warta-ii-poznan"
+     },
+     {
+      "title": "JESIENNY BIEG CHARYTATYWNY",
+      "date": "2026-10-25",
+      "url": "https://posir.poznan.pl/wydarzenia/jesienny-bieg-charytatywny-2"
+     },
+     {
+      "title": "MECZ WIARA LECHA - KŁOS ZANIEMYŚL",
+      "date": "2026-10-31",
+      "url": "https://posir.poznan.pl/wydarzenia/mecz-wiara-lecha-klos-zaniemysl"
+     },
+     {
+      "title": "MECZ WIARA LECHA - OLIMPIA KOŁO",
+      "date": "2026-11-14",
+      "url": "https://posir.poznan.pl/wydarzenia/mecz-wiara-lecha-olimpia-kolo"
+     }
+    ]
+   },
+   {
+    "id": "posir-poznan-fb",
+    "name": "Poznańskie Ośrodki Sportu i Rekreacji – Facebook",
+    "town": "Poznań",
+    "url": "https://www.facebook.com/posir.poznan/",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "biblioteka-raczynskch",
+    "name": "Biblioteka Raczyńskich w Poznaniu",
+    "town": "Poznań",
+    "url": "https://bracz.edu.pl/aktualnosci-kulturalne/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 11,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 2560,
+    "httpStatus": 200,
+    "kind": "feed",
+    "chars": 17490,
+    "changed": true,
+    "structured": {
+     "kind": "tribe",
+     "url": "https://bracz.edu.pl/wp-json/tribe/events/v1/events",
+     "seen": 11,
+     "items": 11
+    },
+    "archive": [
+     "raw/2026-08-19/biblioteka-raczynskch/17323819da3ecaa4794a36d35aa2a109868d34af4a7c657b8a629d9873132fe2.json"
+    ],
+    "produced": [
+     {
+      "title": "Klub Książki na Rubieży. „Dzika droga. Jak odnalazłam siebie” Cheryl Strayed",
+      "date": "2026-08-20",
+      "url": "https://bracz.edu.pl/event/klub-ksiazki-na-rubiezy-dzika-droga-jak-odnalazlam-siebie-cheryl-strayed/"
+     },
+     {
+      "title": "Spotkanie z Agatą Widzowską",
+      "date": "2026-08-20",
+      "url": "https://bracz.edu.pl/event/spotkanie-z-agata-widzowska/",
+      "mergedInto": "poznan-co-gdzie-kiedy",
+      "key": "spotkaniezagatwidzowsk|2026-08-20"
+     },
+     {
+      "title": "Klub Książki u Raczyńskich. „Demon z samotnej wyspy” Edogawy Ranpo",
+      "date": "2026-08-20",
+      "url": "https://bracz.edu.pl/event/klub-ksiazki-u-raczynskich-demon-z-samotnej-wyspy-edogawy-ranpo/",
+      "mergedInto": "poznan-co-gdzie-kiedy",
+      "key": "klubksikiuraczyskichdemonzsamotnejwyspye|2026-08-20"
+     },
+     {
+      "title": "Ewolucja szklanych koralików i biżuterii na Ukrainie od antyku do współczesności",
+      "date": "2026-08-21",
+      "url": "https://bracz.edu.pl/event/ewolucja-szklanych-koralikow-i-bizuterii-na-ukrainie-od-antyku-do-wspolczesnosci/"
+     },
+     {
+      "title": "Czarodzieje. Warsztaty lepienia z gliny dla rodzin z dziećmi",
+      "date": "2026-08-22",
+      "url": "https://bracz.edu.pl/event/czarodzieje-warsztaty-lepienia-z-gliny-dla-rodzin-z-dziecmi/"
+     },
+     {
+      "title": "CZYTATY 10/10. To, czego dorośli ci nie mówią! Spotkanie z Bogusiem Janiszewskim i Maxem Skorwiderem",
+      "date": "2026-08-22",
+      "url": "https://bracz.edu.pl/event/czytaty-10-10-to-czego-dorosli-ci-nie-mowia-spotkanie-z-bogusiem-janiszewskim-i-maxem-skorwiderem/"
+     },
+     {
+      "title": "Z Rozstrzelanego Odrodzenia do nieśmiertelności! Spotkanie z Zinowijem Suchodubem",
+      "date": "2026-08-24",
+      "url": "https://bracz.edu.pl/event/z-rozstrzelanego-odrodzenia-do-niesmiertelnosci-spotkanie-z-zinowijem-suchodubem/"
+     },
+     {
+      "title": "Zwiedzanie Mieszkania-Pracowni Kazimiery Iłłakowiczówny",
+      "date": "2026-08-26",
+      "url": "https://bracz.edu.pl/event/zwiedzanie-mieszkania-pracowni-kazimiery-illakowiczowny-49/"
+     },
+     {
+      "title": "Wildecki Dyskusyjny Klub Książki. „Rdza” Jakuba Małeckiego",
+      "date": "2026-08-27",
+      "url": "https://bracz.edu.pl/event/wildecki-dyskusyjny-klub-ksiazki-rdza-jakuba-maleckiego-2/"
+     },
+     {
+      "title": "Ajnowie. Ich tańce, muzyka i legendy",
+      "date": "2026-08-28",
+      "url": "https://bracz.edu.pl/event/ajnowie-ich-tance-muzyka-i-legendy/"
+     },
+     {
+      "title": "Wiszące ogrody-kokedama. Warsztaty rękodzielnicze dla młodzieży i dorosłych w Filii 15",
+      "date": "2026-08-28",
+      "url": "https://bracz.edu.pl/event/wiszace-ogrody-kokedama-warsztaty-rekodzielnicze-dla-mlodziezy-i-doroslych-w-filii-15/"
+     }
+    ]
+   },
+   {
+    "id": "biblioteka-wielkopolska",
+    "name": "Biblioteka Wielkopolska – Wydarzenia",
+    "town": "Poznań",
+    "url": "https://bw.poznan.pl/biblioteka/wydarzenia/",
+    "fetch": "plain",
+    "status": "empty",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 1947,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 6459,
+    "changed": false,
+    "cached": 0,
+    "archive": [
+     "raw/2026-08-19/biblioteka-wielkopolska/942b5a98f694c2aa6fabd3a67d485df96ec67bb56de3d9ba17088e7545087c82.json"
+    ]
+   },
+   {
+    "id": "wbp-poznan",
+    "name": "Wojewódzka Biblioteka Publiczna w Poznaniu",
+    "town": "Poznań",
+    "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 11,
+    "followups": [
+     {
+      "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/lato-w-bibliotece-2026/",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 10
+     },
+     {
+      "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/konkurs-plastyczny-a-propos-derwicha-satyra-jest-kobieta/",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 1
+     },
+     {
+      "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/lato-na-jezycach-w-bibliotece-wielkopolskiej/",
+      "kind": "page",
+      "outcome": "unchanged",
+      "events": 10
+     },
+     {
+      "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/wystawa-wielkopolska-2-0-legendy-miejskie/",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 1,
+      "blocks": {
+       "total": 3,
+       "cached": 0,
+       "fresh": 3
+      }
+     }
+    ],
+    "geo": {
+     "hits": 4,
+     "misses": 5
+    },
+    "llm": {
+     "calls": 2,
+     "promptTokens": 6450,
+     "completionTokens": 753,
+     "costUsd": 0.0015042599999999999
+    },
+    "ms": 13381,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 3687,
+    "changed": true,
+    "blocks": {
+     "total": 7,
+     "cached": 6,
+     "fresh": 1
+    },
+    "containers": {
+     "suspects": 6,
+     "probed": 1,
+     "resolved": 0,
+     "events": 1,
+     "dropped": 0
+    },
+    "droppedPast": 15,
+    "llmByTask": {
+     "extract": {
+      "calls": 2,
+      "promptTokens": 6450,
+      "completionTokens": 753,
+      "costUsd": 0.0015042599999999999
+     }
+    },
+    "archive": [
+     "raw/2026-08-19/wbp-poznan/ff82b1b7d9d60221cf4dbf13a1c4c4408ff82717c9196feeca5bc997a1be805a.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/wbp-poznan/0031-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/wbp-poznan/0031.json",
+     "raw/2026-08-19/wbp-poznan__followup/0329816d61de50c8ff9a739c193523845bb6801701d7d0d75536e90375faa1a8.json",
+     "raw/2026-08-19/wbp-poznan__followup/bf92863996781ab49650b6b57b19defc893b481d7e5636e75ccb29b40f0323fd.json",
+     "raw/2026-08-19/wbp-poznan__followup/2ea1b916e2dcb7936e0c42877733f2e0cff6e453dc2a01a88b880013d271c775.json",
+     "raw/2026-08-19/wbp-poznan__followup/e1387ccebb0c729cd893f0b2f383b0e6a8004000d921cd208b29556c93069a7a.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/wbp-poznan/0032-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/wbp-poznan/0032.json"
+    ],
+    "produced": [
+     {
+      "title": "LATO W BIBLIOTECE 2026",
+      "date": "2026-06-22",
+      "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/lato-w-bibliotece-2026/"
+     },
+     {
+      "title": "KONKURS PLASTYCZNY \"À PROPOS DERWICHA – SATYRA JEST KOBIETĄ\"",
+      "date": "2026-07-01",
+      "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/konkurs-plastyczny-a-propos-derwicha-satyra-jest-kobieta/",
+      "mergedInto": "wbp-poznan",
+      "key": "konkursplastycznyproposderwichasatyrajes|2026-07-01"
+     },
+     {
+      "title": "LATO NA JEŻYCACH W BIBLIOTECE WIELKOPOLSKIEJ",
+      "date": "2026-07-28",
+      "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/lato-na-jezycach-w-bibliotece-wielkopolskiej/"
+     },
+     {
+      "title": "WYSTAWA: WIELKOPOLSKA 2.0 – LEGENDY MIEJSKIE",
+      "date": "2026-08-17",
+      "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/wystawa-wielkopolska-2-0-legendy-miejskie/",
+      "mergedInto": "wbp-poznan",
+      "key": "wystawawielkopolska20legendymiejskie|2026-08-17"
+     },
+     {
+      "title": "Zielarnia Poetycka",
+      "date": "2026-08-25",
+      "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/lato-w-bibliotece-2026/",
+      "mergedInto": "wbp-poznan",
+      "key": "zielarniapoetycka|2026-08-25"
+     },
+     {
+      "title": "Kawiarenka RPG",
+      "date": "2026-08-01",
+      "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/lato-w-bibliotece-2026/"
+     },
+     {
+      "title": "Konkurs plastyczny „À propos Derwicha – satyra jest kobietą",
+      "date": "2026-07-01",
+      "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/konkurs-plastyczny-a-propos-derwicha-satyra-jest-kobieta/"
+     },
+     {
+      "title": "Zielarnia Poetycka",
+      "date": "2026-08-25",
+      "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/lato-na-jezycach-w-bibliotece-wielkopolskiej/"
+     },
+     {
+      "title": "Rysowanie postaci – od klasyki do mangi",
+      "date": "2026-08-19",
+      "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/lato-na-jezycach-w-bibliotece-wielkopolskiej/"
+     },
+     {
+      "title": "Zbrodnie po jeżycku – spotkanie literackie z Anną Kapczyńską-Martínez",
+      "date": "2026-08-19",
+      "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/lato-na-jezycach-w-bibliotece-wielkopolskiej/"
+     },
+     {
+      "title": "WYSTAWA: WIELKOPOLSKA 2.0 – LEGENDY MIEJSKIE",
+      "date": "2026-08-17",
+      "url": "https://bw.poznan.pl/biblioteka/wydarzenia-2/wystawa-wielkopolska-2-0-legendy-miejskie/"
+     }
+    ]
+   },
+   {
+    "id": "cik-poznan-fb",
+    "name": "Centrum Informacji Kulturalnej Poznań – Facebook",
+    "town": "Poznań",
+    "url": "https://www.facebook.com/cikpoznan/",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "fb-group-wydarzenia-w-poznaniu-1",
+    "name": "WYDARZENIA W POZNANIU – grupa Facebook",
+    "town": "Poznań",
+    "url": "https://www.facebook.com/groups/241900542530749",
+    "fetch": "fb_group",
+    "status": "ok",
+    "events": 26,
+    "followups": [],
+    "geo": {
+     "hits": 20,
+     "misses": 3
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 8910,
+     "completionTokens": 1119,
+     "costUsd": 0.00306438
+    },
+    "ms": 89556,
+    "fbGroup": {
+     "records": 50,
+     "posts": 43,
+     "errorRows": 7,
+     "limit": 50,
+     "atLimit": true,
+     "newest": "2026-08-19",
+     "oldest": "2026-08-15",
+     "spanDays": 3.29,
+     "postsPerDay": 13.1
+    },
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 51510,
+    "changed": true,
+    "blocks": {
+     "total": 43,
+     "cached": 29,
+     "fresh": 14
+    },
+    "fbPoster": {
+     "withImage": {
+      "posts": 10,
+      "yielded": 3,
+      "events": 5,
+      "noVenue": 3,
+      "noTime": 3
+     },
+     "withoutImage": {
+      "posts": 33,
+      "yielded": 21,
+      "events": 21,
+      "noVenue": 0,
+      "noTime": 0
+     },
+     "unlinked": 0
+    },
+    "llmByTask": {
+     "extract": {
+      "calls": 1,
+      "promptTokens": 8910,
+      "completionTokens": 1119,
+      "costUsd": 0.00306438
+     }
+    },
+    "bd": {
+     "triggers": 1,
+     "inputs": 1,
+     "polls": 7,
+     "records": 50,
+     "errors": 0,
+     "snapshots": [
+      "sd_mszlz1wjs4cra0fey"
+     ],
+     "byDataset": {
+      "fbGroupPosts": 50
+     }
+    },
+    "archive": [
+     "raw/2026-08-19/fb-group-wydarzenia-w-poznaniu-1__bd/e22e2e083a58ed7d32b26a124a84d577a0566d19865be5aecd272a08c20ec05b.json",
+     "raw/2026-08-19/fb-group-wydarzenia-w-poznaniu-1/e0c98980335f045856e5f7d406498c7045fdc17b403c15215936ee97384e7eed.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/fb-group-wydarzenia-w-poznaniu-1/0033-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/fb-group-wydarzenia-w-poznaniu-1/0033.json"
+    ],
+    "produced": [
+     {
+      "title": "Międzypokoleniowe Szydełkowanie na Łazarzu",
+      "date": "2026-08-20",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27782107894749976/"
+     },
+     {
+      "title": "Kropla w morzu: korespondencje z Mikołajowa – wystawa zdjęć i prac Kostiantyna Surkova",
+      "date": "2026-09-07",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27818881814405917/"
+     },
+     {
+      "title": "Spotkanie twórców, poetów i pisarzy",
+      "date": "2026-08-20",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27818856064408492/"
+     },
+     {
+      "title": "Spotkania z Regionem: Ogródki, parki, plenery. Wakacyjna rekreacja w dawnym Poznaniu",
+      "date": "2026-08-19",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27718191161141650/"
+     },
+     {
+      "title": "Wybory do Landtagu Saksonii-Anhalt",
+      "date": "2026-09-06",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27793904673570298/"
+     },
+     {
+      "title": "Wybory do Landtagu Meklemburgii-Pomorza Przedniego",
+      "date": "2026-09-20",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27793904673570298/"
+     },
+     {
+      "title": "Wybory do Izby Deputowanych Berlina",
+      "date": "2026-09-20",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27793904673570298/"
+     },
+     {
+      "title": "Wakacje z planszówkami",
+      "date": "2026-08-23",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27793328536961245/"
+     },
+     {
+      "title": "Koncert Marii Burmaki z okazji Dnia Niepodległości Ukrainy",
+      "date": "2026-08-23",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27793532143607551/"
+     },
+     {
+      "title": "Wpatrywanie się",
+      "date": "2026-09-29",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27793364320291000/"
+     },
+     {
+      "title": "Warsztaty ukraińskiej biżuterii",
+      "date": "2026-08-21",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27793169573643808/"
+     },
+     {
+      "title": "Ulepiona przygoda. Animujemy plastelinę!",
+      "date": "2026-09-19",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27793159716978127/"
+     },
+     {
+      "title": "Zabawa na okrągło",
+      "date": "2026-09-09",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27792912080336224/"
+     },
+     {
+      "title": "Make it Pop",
+      "date": "2026-09-08",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27792880937006005/"
+     },
+     {
+      "title": "Spotkanie autorskie z Alicją Regiewicz",
+      "date": "2026-08-21",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27792781733682592/"
+     },
+     {
+      "title": "Wystawa „Wildeccy mistrzowie drugiego planu” – wernisaż",
+      "date": "2026-08-24",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27790205620606870/"
+     },
+     {
+      "title": "Koncert Oskara Cenkiera",
+      "date": "2026-08-22",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27790161753944590/"
+     },
+     {
+      "title": "Spotkanie twórców i dzielenie się sztuką",
+      "date": "2026-08-20",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27782437758050323/"
+     },
+     {
+      "title": "Hydrolaty & Kobido Self",
+      "date": "2026-08-21",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27786200757674023/"
+     },
+     {
+      "title": "Żuk, królewski robaczek / Zróbmy sobie Żuka",
+      "date": "2026-08-21",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27782113128082786/"
+     },
+     {
+      "title": "Turniej Piłki Nożnej z Naszym Sportowym Fyrtlem o Puchar Rady Osiedla Ławica",
+      "date": "2026-08-29",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27782040448090054/"
+     },
+     {
+      "title": "Kino plenerowe: E.T.",
+      "date": "2026-08-20",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27783314064629359/"
+     },
+     {
+      "title": "Festyn sportowo-taneczny – Fajnie, że się ruszasz!",
+      "date": "2026-08-22",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27783010711326361/"
+     },
+     {
+      "title": "Warsztaty tworzenia biżuterii z materiałów z drugiego obiegu",
+      "date": "2026-08-19",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27782971547996944/"
+     },
+     {
+      "title": "Bioblitz – spacer badawczy z przyrodnikiem",
+      "date": "2026-08-22",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27782780818016017/"
+     },
+     {
+      "title": "Warsztaty jogowe w kierunku regeneracji",
+      "date": "2026-08-23",
+      "url": "https://www.facebook.com/groups/241900542530749/posts/27724886060472160/"
+     }
+    ]
+   },
+   {
+    "id": "fb-group-poznan-wydarzenia",
+    "name": "POZNAŃ WYDARZENIA – grupa Facebook",
+    "town": "Poznań",
+    "url": "https://www.facebook.com/groups/pozwyd",
+    "fetch": "fb_group",
+    "status": "skipped-costly",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "fb-group-wydarzenia-poznan-2",
+    "name": "Wydarzenia w Poznaniu – grupa Facebook",
+    "town": "Poznań",
+    "url": "https://www.facebook.com/groups/397203407069688",
+    "fetch": "fb_group",
+    "status": "skipped-costly",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "fb-group-imprezy-poznan",
+    "name": "IMPREZY POZNAŃ – grupa Facebook",
+    "town": "Poznań",
+    "url": "https://www.facebook.com/groups/imprezypoznan",
+    "fetch": "fb_group",
+    "status": "skipped-costly",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "fb-group-allin-poznan",
+    "name": "All in Poznań – wydarzenia – grupa Facebook",
+    "town": "Poznań",
+    "url": "https://www.facebook.com/groups/186299334869330",
+    "fetch": "fb_group",
+    "status": "skipped-costly",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "fb-group-wydarzenia-poznan-3",
+    "name": "Wydarzenia imprezy koncerty rozrywka w Poznaniu – grupa Facebook",
+    "town": "Poznań",
+    "url": "https://www.facebook.com/groups/196361441244106",
+    "fetch": "fb_group",
+    "status": "skipped-costly",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "fb-group-baba-cool",
+    "name": "Baba Cool Poznań – wydarzenia dla dzieci i rodziców – grupa Facebook",
+    "town": "Poznań",
+    "url": "https://www.facebook.com/groups/babacoolpoznan",
+    "fetch": "fb_group",
+    "status": "skipped-costly",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "fb-group-wydarzenia-poznan-4",
+    "name": "Wydarzenia w Poznaniu – grupa Facebook (wydarzeniawPoznaniu)",
+    "town": "Poznań",
+    "url": "https://www.facebook.com/groups/wydarzeniawPoznaniu",
+    "fetch": "fb_group",
+    "status": "empty",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 3544,
+     "completionTokens": 57,
+     "costUsd": 0.00044848
+    },
+    "ms": 87888,
+    "fbGroup": {
+     "records": 9,
+     "posts": 9,
+     "errorRows": 0,
+     "limit": 9,
+     "atLimit": true,
+     "newest": "2026-08-18",
+     "oldest": "2026-08-18",
+     "spanDays": 0.06,
+     "postsPerDay": 155.1
+    },
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 3507,
+    "changed": true,
+    "blocks": {
+     "total": 9,
+     "cached": 0,
+     "fresh": 9
+    },
+    "fbPoster": {
+     "withImage": {
+      "posts": 8,
+      "yielded": 0,
+      "events": 0,
+      "noVenue": 0,
+      "noTime": 0
+     },
+     "withoutImage": {
+      "posts": 1,
+      "yielded": 0,
+      "events": 0,
+      "noVenue": 0,
+      "noTime": 0
+     },
+     "unlinked": 0
+    },
+    "llmByTask": {
+     "extract": {
+      "calls": 1,
+      "promptTokens": 3544,
+      "completionTokens": 57,
+      "costUsd": 0.00044848
+     }
+    },
+    "bd": {
+     "triggers": 1,
+     "inputs": 1,
+     "polls": 8,
+     "records": 9,
+     "errors": 0,
+     "snapshots": [
+      "sd_mszm0z0c1fh5ehyb2o"
+     ],
+     "byDataset": {
+      "fbGroupPosts": 9
+     }
+    },
+    "archive": [
+     "raw/2026-08-19/fb-group-wydarzenia-poznan-4__bd/a069dc4edff3cf44bb081f3c83947af457980162d675372305b9130e23795eeb.json",
+     "raw/2026-08-19/fb-group-wydarzenia-poznan-4/f0e600f1e82c66ad96c875a98c40ed9855788142e58acfe6338dcee3c7fc00a5.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/fb-group-wydarzenia-poznan-4/0034-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/fb-group-wydarzenia-poznan-4/0034.json"
+    ]
+   },
+   {
+    "id": "epoznan-kultura",
+    "name": "epoznan.pl – Kalendarium kulturalne",
+    "town": "Poznań",
+    "url": "https://epoznan.pl/culture",
+    "fetch": "plain",
+    "status": "skipped-dead",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "okpoznan-wydarzenia",
+    "name": "OK Poznań – Wydarzenia",
+    "town": "Poznań",
+    "url": "https://okpoznan.pl/wydarzenia",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 68,
+    "followups": [
+     {
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/j6Goyl6K3iO0Ch9Il52I_kino-muza-senior-w%C2%A0muzie",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 7,
+      "blocks": {
+       "total": 12,
+       "cached": 3,
+       "fresh": 9
+      }
+     },
+     {
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/nLwnrUhBCSYh61nMjKR0_10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-plastyczne-selfkoronacje",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 6,
+      "blocks": {
+       "total": 9,
+       "cached": 4,
+       "fresh": 5
+      }
+     },
+     {
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/GhtAGhLd4ZJkypDHAI14_pracownia-rekodziela-szydelkowa-sowa",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 5,
+      "blocks": {
+       "total": 13,
+       "cached": 8,
+       "fresh": 5
+      }
+     },
+     {
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/GuVesuOQvFiz001hsbBk_10-lato-z-estrada-nowe-winogrady-poludnie-spektakl-taneczny-how-to-do-things-with-words",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 5,
+      "blocks": {
+       "total": 12,
+       "cached": 9,
+       "fresh": 3
+      }
+     },
+     {
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/w7YsiDZ81cYmfpsYXmBZ_10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-taneczne-logika-chodnika",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 5,
+      "blocks": {
+       "total": 9,
+       "cached": 8,
+       "fresh": 1
+      }
+     },
+     {
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/rDqjsJYb3bjoOujIVZ6f_rodzinna-wystawa-sensoryczna-mela-i-szczun-na-historycznej-sciezce",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 11,
+      "blocks": {
+       "total": 21,
+       "cached": 4,
+       "fresh": 17
+      }
+     },
+     {
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/6q3wavIeiSD0LvwqeCtc_pokonal-krzyzaka-zaczarowal-strach-rzezbiarz-franciszek-black",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 5,
+      "blocks": {
+       "total": 12,
+       "cached": 9,
+       "fresh": 3
+      }
+     },
+     {
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/c0ucEPTTWzwrMWBCZpHQ_seniorzy-w-akcji-twoj-wiek-jest-twoim-atutem",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 7,
+      "blocks": {
+       "total": 12,
+       "cached": 9,
+       "fresh": 3
+      }
+     }
+    ],
+    "geo": {
+     "hits": 40,
+     "misses": 23
+    },
+    "llm": {
+     "calls": 9,
+     "promptTokens": 37137,
+     "completionTokens": 13187,
+     "costUsd": 0.02055537
+    },
+    "ms": 156458,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 34661,
+    "changed": true,
+    "blocks": {
+     "total": 66,
+     "cached": 44,
+     "fresh": 22
+    },
+    "containers": {
+     "suspects": 8,
+     "probed": 3,
+     "resolved": 2,
+     "events": 23,
+     "dropped": 2
+    },
+    "droppedInvalid": 3,
+    "llmByTask": {
+     "extract": {
+      "calls": 9,
+      "promptTokens": 37137,
+      "completionTokens": 13187,
+      "costUsd": 0.02055537
+     }
+    },
+    "archive": [
+     "raw/2026-08-19/okpoznan-wydarzenia/eab0b837a5ba6942a61e2897fd6cc3a28e329b7976755f33cc872f9652a713fe.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/okpoznan-wydarzenia/0035-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/okpoznan-wydarzenia/0035.json",
+     "raw/2026-08-19/okpoznan-wydarzenia__followup/2a33d1680c639fbaa0d5e4ca4a1c05082e8ced65eac108cfd99ea976b54b630a.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/okpoznan-wydarzenia/0036-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/okpoznan-wydarzenia/0036.json",
+     "raw/2026-08-19/okpoznan-wydarzenia__followup/93c1a2258cd8fef09d95c497729211fbc2c7addfe4b563b00d7efd55efe042fe.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/okpoznan-wydarzenia/0037-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/okpoznan-wydarzenia/0037.json",
+     "raw/2026-08-19/okpoznan-wydarzenia__followup/b8371c4f7791b1615aec637a371dac346673411988546e7bad3637290f6f7804.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/okpoznan-wydarzenia/0038-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/okpoznan-wydarzenia/0038.json",
+     "raw/2026-08-19/okpoznan-wydarzenia__followup/4ffa5be331a667aafba182b0c9333f78802d8b30c4d370930fe86a0f610b2e34.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/okpoznan-wydarzenia/0039-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/okpoznan-wydarzenia/0039.json",
+     "raw/2026-08-19/okpoznan-wydarzenia__followup/95a72d6b80b98ec8616ed2ccf624cf9741d91f86a2dc370083c25365de580558.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/okpoznan-wydarzenia/0040-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/okpoznan-wydarzenia/0040.json",
+     "raw/2026-08-19/okpoznan-wydarzenia__followup/d9c64820952e7ea49327816d855857cf900b44dc857ace35b3b9249ae0bbd2ff.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/okpoznan-wydarzenia/0041-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/okpoznan-wydarzenia/0041.json",
+     "raw/2026-08-19/okpoznan-wydarzenia__followup/c2198c4fcca52ee0230f6e49bafbe8c45886a9db63ada80a8d55adc542cc0c68.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/okpoznan-wydarzenia/0042-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/okpoznan-wydarzenia/0042.json",
+     "raw/2026-08-19/okpoznan-wydarzenia__followup/256777738e6e5efcd56ccd75d8ae06cab8d42ac693f42672ad26a436a2c1974c.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/okpoznan-wydarzenia/0043-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/okpoznan-wydarzenia/0043.json"
+    ],
+    "produced": [
+     {
+      "title": "CK ZAMEK | ŚWIAT JAK ZIELNIK. Natura w sztuce od XVII do XXI wieku",
+      "date": "2026-09-05",
+      "url": "https://okpoznan.pl/wydarzenia"
+     },
+     {
+      "title": "Pokonał Krzyżaka, zaczarował Strach. Rzeźbiarz Franciszek Black",
+      "date": "2026-08-03",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/6q3wavIeiSD0LvwqeCtc_pokonal-krzyzaka-zaczarowal-strach-rzezbiarz-franciszek-black",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "pokonakrzyakazaczarowastrachrzebiarzfran|2026-08-03"
+     },
+     {
+      "title": "Wolsztyn. Historia napędzana parą",
+      "date": "2026-08-03",
+      "url": "https://okpoznan.pl/wydarzenia"
+     },
+     {
+      "title": "Międzypokoleniowy projekt \"56/26: Szkice wolności\"",
+      "date": "2026-08-13",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/uy0nJGoNVdMPjSWN8Cbl_miedzypokoleniowy-projekt-5626-szkice-wolnosci"
+     },
+     {
+      "title": "Dancing fairPlayce Poznań 2026",
+      "date": "2026-08-15",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/CPMOzJ6qJqPsu9llxawG_dancing-fairplayce-poznan-2026"
+     },
+     {
+      "title": "Akademia Lubrańskiego | Wystawa Kisling. W sercu Montparnasse’u",
+      "date": "2026-08-16",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/Oalr1IqYZN3ER7sHf0iF_akademia-lubranskiego-wstawa-kisling-w-sercu-montparnasseu"
+     },
+     {
+      "title": "Aktywne Półkolonie Poznań – wakacje 2026",
+      "date": "2026-08-17",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/5QbkDz2dQ34s5OEb6VFA_aktywne-polkolonie-poznan-wakacje-2026"
+     },
+     {
+      "title": "AMAkids | warsztaty wakacyjne: Architekci Myślenia",
+      "date": "2026-08-17",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/onr77ASTxWAOSVcG3lwb_amakids-warsztaty-wakacyjne-architekci-myslenia"
+     },
+     {
+      "title": "Letnia Akademia Majsterkowania dla dzieci w wieku 7-11 lat",
+      "date": "2026-08-17",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/y6SfP9y8em1f4hjqBpei_letnia-akademia-majsterkowania-dla-dzieci-w-wieku-7-11-lat"
+     },
+     {
+      "title": "Plenerowe Pałacowe 2026",
+      "date": "2026-08-19",
+      "url": "https://okpoznan.pl/wydarzenia"
+     },
+     {
+      "title": "Kino Muza | Senior w Muzie",
+      "date": "2026-08-19",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/j6Goyl6K3iO0Ch9Il52I_kino-muza-senior-w%C2%A0muzie"
+     },
+     {
+      "title": "10. Lato z Estradą - Nowe Winogrady Południe - Warsztaty plastyczne - Selfkoronacje",
+      "date": "2026-08-19",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/nLwnrUhBCSYh61nMjKR0_10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-plastyczne-selfkoronacje",
+      "mergedInto": "poznan-co-gdzie-kiedy",
+      "key": "10latozestradnowewinogradypoudniewarszta|2026-08-19"
+     },
+     {
+      "title": "Pracownia rękodzieła - szydełkowa sowa",
+      "date": "2026-08-19",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/GhtAGhLd4ZJkypDHAI14_pracownia-rekodziela-szydelkowa-sowa",
+      "mergedInto": "poznan-co-gdzie-kiedy",
+      "key": "pracowniarkodzieaszydekowasowa|2026-08-19"
+     },
+     {
+      "title": "10. Lato z Estradą - Nowe Winogrady Południe - Spektakl taneczny - How to Do Things with Words",
+      "date": "2026-08-19",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/GuVesuOQvFiz001hsbBk_10-lato-z-estrada-nowe-winogrady-poludnie-spektakl-taneczny-how-to-do-things-with-words",
+      "mergedInto": "poznan-co-gdzie-kiedy",
+      "key": "10latozestradnowewinogradypoudniespektak|2026-08-19"
+     },
+     {
+      "title": "10. Lato z Estradą - Nowe Winogrady Południe - Warsztaty taneczne - Logika chodnika",
+      "date": "2026-08-19",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/w7YsiDZ81cYmfpsYXmBZ_10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-taneczne-logika-chodnika",
+      "mergedInto": "poznan-co-gdzie-kiedy",
+      "key": "10latozestradnowewinogradypoudniewarszta|2026-08-19"
+     },
+     {
+      "title": "HISTORIE RÓWNOLEGŁE | SENIOR W MUZIE",
+      "date": "2026-08-19",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/j6Goyl6K3iO0Ch9Il52I_kino-muza-senior-w%C2%A0muzie"
+     },
+     {
+      "title": "AREK.MAMA.PANORAMA | SENIOR W MUZIE",
+      "date": "2026-08-26",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/j6Goyl6K3iO0Ch9Il52I_kino-muza-senior-w%C2%A0muzie"
+     },
+     {
+      "title": "NA TROPIE HISTORII Z KUBĄ I HELENKĄ… - RODZINNY SPACER ANGAŻUJĄCY",
+      "date": "2026-09-13",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/kDsqXrMFDASukPtl2okg_na-tropie-historii-z-kuba-i-helenka-rodzinny-spacer-angazujacy",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "natropiehistoriizkubihelenk|2026-08-26"
+     },
+     {
+      "title": "HISTORIA POLSKICH GIER PATRIOTYCZNYCH - PRELEKCJA DLA DOROSŁYCH",
+      "date": "2026-09-07",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/kXwo7NsuHdQVMuDsmSSP_historia-polskich-gier-patriotycznych-prelekcja-dla-doroslych",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "historiapolskichgierpatriotycznych|2026-09-07"
+     },
+     {
+      "title": "„JAK DZIECKO ROZUMIE HISTORIĘ? ROZWÓJ MYŚLENIA O CZASIE I PRZESZŁOŚCI”, DR KAROLINA APPELT (UAM)",
+      "date": "2026-09-21",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/g7aah4PFPo64powQINuG_jak-dziecko-rozumie-historie-rozwoj-myslenia-o-czasie-i%C2%A0przeszlosci-dr-karolina-appelt-uam",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "jakdzieckorozumiehistorirozwjmyleniaocza|2026-09-21"
+     },
+     {
+      "title": "„FOLKLOR WIELKOPOLSKI”, PROF. UAM DR HAB. ANNA WERONIKA BRZEZIŃSKA",
+      "date": "2026-09-28",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/GT7bsHbsuXNKU0HVBUQn_folklor-wielkopolski-prof-uam-dr-hab-anna-weronika-brzezinska",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "folklorwielkopolski|2026-09-28"
+     },
+     {
+      "title": "HOBBYCON 2026",
+      "date": "2026-11-14",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/LocmUDqNICurMiZ6dt64_hobbycon-2026"
+     },
+     {
+      "title": "10. LATO Z ESTRADĄ - NOWE WINOGRADY POŁUDNIE - WARSZTATY PLASTYCZNE - SELFKORONACJE",
+      "date": "2026-08-19",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/nLwnrUhBCSYh61nMjKR0_10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-plastyczne-selfkoronacje",
+      "mergedInto": "poznan-co-gdzie-kiedy",
+      "key": "10latozestradnowewinogradypoudniewarszta|2026-08-19"
+     },
+     {
+      "title": "MIĘDZYPOKOLENIOWE WARSZTATY NA WYSTAWIE „MELA I SZCZUN NA HISTORYCZNEJ ŚCIEŻCE”",
+      "date": "2026-10-03",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/nLwnrUhBCSYh61nMjKR0_10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-plastyczne-selfkoronacje"
+     },
+     {
+      "title": "LEŚNI ODKRYWCY: MISJA MORASKO - SPACER ANGAŻUJĄCY",
+      "date": "2026-08-21",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/nLwnrUhBCSYh61nMjKR0_10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-plastyczne-selfkoronacje"
+     },
+     {
+      "title": "NA TROPIE HISTORII Z KUBĄ I HELENKĄ… - RODZINNY SPACER ANGAŻUJĄCY",
+      "date": "2026-09-13",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/kDsqXrMFDASukPtl2okg_na-tropie-historii-z-kuba-i-helenka-rodzinny-spacer-angazujacy",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "natropiehistoriizkubihelenk|2026-08-26"
+     },
+     {
+      "title": "NA TROPIE HISTORII Z KUBĄ I HELENKĄ… - RODZINNY SPACER ANGAŻUJĄCY",
+      "date": "2026-08-26",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/nLwnrUhBCSYh61nMjKR0_10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-plastyczne-selfkoronacje"
+     },
+     {
+      "title": "TAJEMNICE LASU–ROŚLINY - WARSZTATY DLA DZIECI",
+      "date": "2026-08-22",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/nLwnrUhBCSYh61nMjKR0_10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-plastyczne-selfkoronacje"
+     },
+     {
+      "title": "MIĘDZYPOKOLENIOWE WARSZTATY NA WYSTAWIE „MELA I SZCZUN NA HISTORYCZNEJ ŚCIEŻCE”",
+      "date": "2026-10-03",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/nLwnrUhBCSYh61nMjKR0_10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-plastyczne-selfkoronacje",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "midzypokoleniowewarsztatynawystawiemelai|2026-10-03"
+     },
+     {
+      "title": "LEŚNI ODKRYWCY: MISJA MORASKO - SPACER ANGAŻUJĄCY",
+      "date": "2026-08-21",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/nLwnrUhBCSYh61nMjKR0_10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-plastyczne-selfkoronacje",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "leniodkrywcymisjamoraskospacerangaujcy|2026-08-21"
+     },
+     {
+      "title": "NA TROPIE HISTORII Z KUBĄ I HELENKĄ… - RODZINNY SPACER ANGAŻUJĄCY",
+      "date": "2026-09-13",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/kDsqXrMFDASukPtl2okg_na-tropie-historii-z-kuba-i-helenka-rodzinny-spacer-angazujacy",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "natropiehistoriizkubihelenk|2026-08-26"
+     },
+     {
+      "title": "NA TROPIE HISTORII Z KUBĄ I HELENKĄ… - RODZINNY SPACER ANGAŻUJĄCY",
+      "date": "2026-08-26",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/nLwnrUhBCSYh61nMjKR0_10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-plastyczne-selfkoronacje",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "natropiehistoriizkubihelenkrodzinnyspace|2026-08-26"
+     },
+     {
+      "title": "TAJEMNICE LASU–ROŚLINY - WARSZTATY DLA DZIECI",
+      "date": "2026-08-22",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/nLwnrUhBCSYh61nMjKR0_10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-plastyczne-selfkoronacje",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "tajemnicelasurolinywarsztatydladzieci|2026-08-22"
+     },
+     {
+      "title": "MIĘDZYPOKOLENIOWE WARSZTATY NA WYSTAWIE „MELA I SZCZUN NA HISTORYCZNEJ ŚCIEŻCE”",
+      "date": "2026-10-03",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/nLwnrUhBCSYh61nMjKR0_10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-plastyczne-selfkoronacje",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "midzypokoleniowewarsztatynawystawiemelai|2026-10-03"
+     },
+     {
+      "title": "LEŚNI ODKRYWCY: MISJA MORASKO - SPACER ANGAŻUJĄCY",
+      "date": "2026-08-21",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/nLwnrUhBCSYh61nMjKR0_10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-plastyczne-selfkoronacje",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "leniodkrywcymisjamoraskospacerangaujcy|2026-08-21"
+     },
+     {
+      "title": "NA TROPIE HISTORII Z KUBĄ I HELENKĄ… - RODZINNY SPACER ANGAŻUJĄCY",
+      "date": "2026-09-13",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/kDsqXrMFDASukPtl2okg_na-tropie-historii-z-kuba-i-helenka-rodzinny-spacer-angazujacy",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "natropiehistoriizkubihelenk|2026-08-26"
+     },
+     {
+      "title": "NA TROPIE HISTORII Z KUBĄ I HELENKĄ… - RODZINNY SPACER ANGAŻUJĄCY",
+      "date": "2026-08-26",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/nLwnrUhBCSYh61nMjKR0_10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-plastyczne-selfkoronacje",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "natropiehistoriizkubihelenkrodzinnyspace|2026-08-26"
+     },
+     {
+      "title": "TAJEMNICE LASU–ROŚLINY - WARSZTATY DLA DZIECI",
+      "date": "2026-08-22",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/nLwnrUhBCSYh61nMjKR0_10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-plastyczne-selfkoronacje",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "tajemnicelasurolinywarsztatydladzieci|2026-08-22"
+     },
+     {
+      "title": "MIĘDZYPOKOLENIOWE WARSZTATY NA WYSTAWIE „MELA I SZCZUN NA HISTORYCZNEJ ŚCIEŻCE”",
+      "date": "2026-10-03",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/nLwnrUhBCSYh61nMjKR0_10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-plastyczne-selfkoronacje",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "midzypokoleniowewarsztatynawystawiemelai|2026-10-03"
+     },
+     {
+      "title": "LEŚNI ODKRYWCY: MISJA MORASKO - SPACER ANGAŻUJĄCY",
+      "date": "2026-08-21",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/nLwnrUhBCSYh61nMjKR0_10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-plastyczne-selfkoronacje",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "leniodkrywcymisjamoraskospacerangaujcy|2026-08-21"
+     },
+     {
+      "title": "NA TROPIE HISTORII Z KUBĄ I HELENKĄ… - RODZINNY SPACER ANGAŻUJĄCY",
+      "date": "2026-09-13",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/kDsqXrMFDASukPtl2okg_na-tropie-historii-z-kuba-i-helenka-rodzinny-spacer-angazujacy",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "natropiehistoriizkubihelenk|2026-08-26"
+     },
+     {
+      "title": "NA TROPIE HISTORII Z KUBĄ I HELENKĄ… - RODZINNY SPACER ANGAŻUJĄCY",
+      "date": "2026-08-26",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/nLwnrUhBCSYh61nMjKR0_10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-plastyczne-selfkoronacje",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "natropiehistoriizkubihelenkrodzinnyspace|2026-08-26"
+     },
+     {
+      "title": "TAJEMNICE LASU–ROŚLINY - WARSZTATY DLA DZIECI",
+      "date": "2026-08-22",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/nLwnrUhBCSYh61nMjKR0_10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-plastyczne-selfkoronacje",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "tajemnicelasurolinywarsztatydladzieci|2026-08-22"
+     },
+     {
+      "title": "Warsztaty dla dzieci",
+      "date": "2026-08-25",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/rDqjsJYb3bjoOujIVZ6f_rodzinna-wystawa-sensoryczna-mela-i-szczun-na-historycznej-sciezce"
+     },
+     {
+      "title": "Warsztaty dla dzieci",
+      "date": "2026-09-05",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/rDqjsJYb3bjoOujIVZ6f_rodzinna-wystawa-sensoryczna-mela-i-szczun-na-historycznej-sciezce",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "warsztatydladzieci|2026-08-25"
+     },
+     {
+      "title": "Warsztaty dla dzieci – międzypokoleniowe",
+      "date": "2026-10-03",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/rDqjsJYb3bjoOujIVZ6f_rodzinna-wystawa-sensoryczna-mela-i-szczun-na-historycznej-sciezce"
+     },
+     {
+      "title": "Historia polskich gier patriotycznych",
+      "date": "2026-09-07",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/rDqjsJYb3bjoOujIVZ6f_rodzinna-wystawa-sensoryczna-mela-i-szczun-na-historycznej-sciezce"
+     },
+     {
+      "title": "Jak dziecko rozumie historię? Rozwój myślenia o czasie i przeszłości",
+      "date": "2026-09-21",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/rDqjsJYb3bjoOujIVZ6f_rodzinna-wystawa-sensoryczna-mela-i-szczun-na-historycznej-sciezce"
+     },
+     {
+      "title": "Folklor wielkopolski",
+      "date": "2026-09-28",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/rDqjsJYb3bjoOujIVZ6f_rodzinna-wystawa-sensoryczna-mela-i-szczun-na-historycznej-sciezce"
+     },
+     {
+      "title": "Leśni Odkrywcy: misja Morasko",
+      "date": "2026-08-21",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/rDqjsJYb3bjoOujIVZ6f_rodzinna-wystawa-sensoryczna-mela-i-szczun-na-historycznej-sciezce"
+     },
+     {
+      "title": "Na tropie historii z Kubą i Helenką…",
+      "date": "2026-08-26",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/rDqjsJYb3bjoOujIVZ6f_rodzinna-wystawa-sensoryczna-mela-i-szczun-na-historycznej-sciezce"
+     },
+     {
+      "title": "Na tropie historii z Kubą i Helenką…",
+      "date": "2026-09-13",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/rDqjsJYb3bjoOujIVZ6f_rodzinna-wystawa-sensoryczna-mela-i-szczun-na-historycznej-sciezce",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "natropiehistoriizkubihelenk|2026-08-26"
+     },
+     {
+      "title": "Muzealny Tydzień Przedszkolaka – edycja IV",
+      "date": "2026-09-22",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/rDqjsJYb3bjoOujIVZ6f_rodzinna-wystawa-sensoryczna-mela-i-szczun-na-historycznej-sciezce"
+     },
+     {
+      "title": "HOBBYCON 2026",
+      "date": "2026-11-14",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/LocmUDqNICurMiZ6dt64_hobbycon-2026",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "hobbycon2026|2026-11-14"
+     },
+     {
+      "title": "Pokonał Krzyżaka, zaczarował Strach. Rzeźbiarz Franciszek Black",
+      "date": "2026-08-03",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/6q3wavIeiSD0LvwqeCtc_pokonal-krzyzaka-zaczarowal-strach-rzezbiarz-franciszek-black"
+     },
+     {
+      "title": "LEŚNI ODKRYWCY: MISJA MORASKO - SPACER ANGAŻUJĄCY",
+      "date": "2026-08-21",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/nLwnrUhBCSYh61nMjKR0_10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-plastyczne-selfkoronacje",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "leniodkrywcymisjamoraskospacerangaujcy|2026-08-21"
+     },
+     {
+      "title": "HISTORIA POLSKICH GIER PATRIOTYCZNYCH - PRELEKCJA DLA DOROSŁYCH",
+      "date": "2026-09-07",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/kXwo7NsuHdQVMuDsmSSP_historia-polskich-gier-patriotycznych-prelekcja-dla-doroslych",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "historiapolskichgierpatriotycznych|2026-09-07"
+     },
+     {
+      "title": "„JAK DZIECKO ROZUMIE HISTORIĘ? ROZWÓJ MYŚLENIA O CZASIE I PRZESZŁOŚCI”, DR KAROLINA APPELT (UAM)",
+      "date": "2026-09-21",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/g7aah4PFPo64powQINuG_jak-dziecko-rozumie-historie-rozwoj-myslenia-o-czasie-i%C2%A0przeszlosci-dr-karolina-appelt-uam",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "jakdzieckorozumiehistorirozwjmyleniaocza|2026-09-21"
+     },
+     {
+      "title": "„FOLKLOR WIELKOPOLSKI”, PROF. UAM DR HAB. ANNA WERONIKA BRZEZIŃSKA",
+      "date": "2026-09-28",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/GT7bsHbsuXNKU0HVBUQn_folklor-wielkopolski-prof-uam-dr-hab-anna-weronika-brzezinska",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "folklorwielkopolski|2026-09-28"
+     },
+     {
+      "title": "Nordic walking",
+      "date": "2026-08-24",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/c0ucEPTTWzwrMWBCZpHQ_seniorzy-w-akcji-twoj-wiek-jest-twoim-atutem"
+     },
+     {
+      "title": "Nordic walking",
+      "date": "2026-08-31",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/c0ucEPTTWzwrMWBCZpHQ_seniorzy-w-akcji-twoj-wiek-jest-twoim-atutem",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "nordicwalking|2026-08-24"
+     },
+     {
+      "title": "Badminton",
+      "date": "2026-08-25",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/c0ucEPTTWzwrMWBCZpHQ_seniorzy-w-akcji-twoj-wiek-jest-twoim-atutem"
+     },
+     {
+      "title": "Tai chi",
+      "date": "2026-08-19",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/c0ucEPTTWzwrMWBCZpHQ_seniorzy-w-akcji-twoj-wiek-jest-twoim-atutem"
+     },
+     {
+      "title": "Tai chi",
+      "date": "2026-08-26",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/c0ucEPTTWzwrMWBCZpHQ_seniorzy-w-akcji-twoj-wiek-jest-twoim-atutem",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "taichi|2026-08-19"
+     },
+     {
+      "title": "LEŚNI ODKRYWCY: MISJA MORASKO - SPACER ANGAŻUJĄCY",
+      "date": "2026-08-21",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/nLwnrUhBCSYh61nMjKR0_10-lato-z-estrada-nowe-winogrady-poludnie-warsztaty-plastyczne-selfkoronacje",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "leniodkrywcymisjamoraskospacerangaujcy|2026-08-21"
+     },
+     {
+      "title": "„JAK DZIECKO ROZUMIE HISTORIĘ? ROZWÓJ MYŚLENIA O CZASIE I PRZESZŁOŚCI”, DR KAROLINA APPELT (UAM)",
+      "date": "2026-09-21",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/g7aah4PFPo64powQINuG_jak-dziecko-rozumie-historie-rozwoj-myslenia-o-czasie-i%C2%A0przeszlosci-dr-karolina-appelt-uam",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "jakdzieckorozumiehistorirozwjmyleniaocza|2026-09-21"
+     },
+     {
+      "title": "„FOLKLOR WIELKOPOLSKI”, PROF. UAM DR HAB. ANNA WERONIKA BRZEZIŃSKA",
+      "date": "2026-09-28",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/GT7bsHbsuXNKU0HVBUQn_folklor-wielkopolski-prof-uam-dr-hab-anna-weronika-brzezinska",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "folklorwielkopolski|2026-09-28"
+     },
+     {
+      "title": "HOBBYCON 2026",
+      "date": "2026-11-14",
+      "url": "https://okpoznan.pl/szczegoly-wydarzenia/LocmUDqNICurMiZ6dt64_hobbycon-2026",
+      "mergedInto": "okpoznan-wydarzenia",
+      "key": "hobbycon2026|2026-11-14"
+     }
+    ]
+   },
+   {
+    "id": "puszczykowo-pl-wydarzenia",
+    "name": "Miasto Puszczykowo – Wydarzenia",
+    "town": "Puszczykowo",
+    "url": "https://puszczykowo.pl/wydarzenia",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 11,
+    "followups": [
+     {
+      "url": "https://puszczykowo.pl/wydarzenia/joga-na-swiezym-powietrzu-bezplatne-zajecia-14",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 1,
+      "blocks": {
+       "total": 13,
+       "cached": 12,
+       "fresh": 1
+      }
+     },
+     {
+      "url": "https://puszczykowo.pl/wydarzenia/tai-chi-zajecia-dla-poczatkujacych-i-zaawansowanych-19",
+      "kind": "page",
+      "outcome": "ok",
+      "events": 4,
+      "blocks": {
+       "total": 18,
+       "cached": 17,
+       "fresh": 1
+      }
+     }
+    ],
+    "geo": {
+     "hits": 2,
+     "misses": 3
+    },
+    "llm": {
+     "calls": 3,
+     "promptTokens": 8789,
+     "completionTokens": 1464,
+     "costUsd": 0.00243629
+    },
+    "ms": 22516,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 5782,
+    "changed": true,
+    "blocks": {
+     "total": 18,
+     "cached": 16,
+     "fresh": 2
+    },
+    "llmByTask": {
+     "extract": {
+      "calls": 3,
+      "promptTokens": 8789,
+      "completionTokens": 1464,
+      "costUsd": 0.00243629
+     }
+    },
+    "archive": [
+     "raw/2026-08-19/puszczykowo-pl-wydarzenia/bd520bd7c241963664db052612ab2b47b882eea21fd4cd71fd7e4171c6768947.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/puszczykowo-pl-wydarzenia/0044-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/puszczykowo-pl-wydarzenia/0044.json",
+     "raw/2026-08-19/puszczykowo-pl-wydarzenia__followup/a7b8f0f5a9bf6b8baabe5a37389418eea6e0589a4e94cf41d7ae0804400f85ae.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/puszczykowo-pl-wydarzenia/0045-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/puszczykowo-pl-wydarzenia/0045.json",
+     "raw/2026-08-19/puszczykowo-pl-wydarzenia__followup/946e87dfc8725a2a31ea7c8467adb7d5ff26b44d3b7799eddf847b74ee37969b.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/puszczykowo-pl-wydarzenia/0046-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/puszczykowo-pl-wydarzenia/0046.json"
+    ],
+    "produced": [
+     {
+      "title": "Tai Chi – zajęcia dla początkujących i zaawansowanych",
+      "date": "2026-08-19",
+      "url": "https://puszczykowo.pl/wydarzenia/tai-chi-zajecia-dla-poczatkujacych-i-zaawansowanych-16"
+     },
+     {
+      "title": "JOGA NA ŚWIEŻYM POWIETRZU – BEZPŁATNE ZAJĘCIA",
+      "date": "2026-08-20",
+      "url": "https://puszczykowo.pl/wydarzenia/joga-na-swiezym-powietrzu-bezplatne-zajecia-14"
+     },
+     {
+      "title": "TAI CHI – ZAJĘCIA DLA POCZĄTKUJĄCYCH I ZAAWANSOWANYCH",
+      "date": "2026-08-20",
+      "url": "https://puszczykowo.pl/wydarzenia/tai-chi-zajecia-dla-poczatkujacych-i-zaawansowanych-19",
+      "mergedInto": "puszczykowo-pl-wydarzenia",
+      "key": "taichizajciadlapocztkujcychizaawansowany|2026-08-20"
+     },
+     {
+      "title": "XIV LETNIE KONCERTY ORGANOWE W WIELKOPOLSKIM PARKU NARODOWYM – JENNIFER PASCUAL I EUGENIUSZ WAWRZYNIAK",
+      "date": "2026-08-20",
+      "url": "https://puszczykowo.pl/wydarzenia/xiv-letnie-koncerty-organowe-w-wielkopolskim-parku-narodowym-jennifer-pascual-i-eugeniusz-wawrzyniak",
+      "mergedInto": "puszczykowo-pl-kultura-wydarzenia",
+      "key": "xivletniekoncertyorganowewwielkopolskimp|2026-08-20"
+     },
+     {
+      "title": "TAI CHI – ZAJĘCIA DLA POCZĄTKUJĄCYCH I ZAAWANSOWANYCH",
+      "date": "2026-08-21",
+      "url": "https://puszczykowo.pl/wydarzenia/tai-chi-zajecia-dla-poczatkujacych-i-zaawansowanych-24"
+     },
+     {
+      "title": "ROCKETMAN (2019 – WIELKA BRYTANIA, USA). KINO LETNIE W DWORZE SKRZYNKI (WSTĘP WOLNY)",
+      "date": "2026-08-21",
+      "url": "https://puszczykowo.pl/wydarzenia/rocketman-2019-wielka-brytania-usa-kino-letnie-w-dworze-skrzynki-wstep-wolny",
+      "mergedInto": "puszczykowo-pl-kultura-wydarzenia",
+      "key": "rocketman2019wielkabrytaniausakinoletnie|2026-08-21"
+     },
+     {
+      "title": "Joga na świeżym powietrzu – bezpłatne zajęcia",
+      "date": "2026-08-27",
+      "url": "https://puszczykowo.pl/wydarzenia/joga-na-swiezym-powietrzu-bezplatne-zajecia-14"
+     },
+     {
+      "title": "TAI CHI – ZAJĘCIA DLA POCZĄTKUJĄCYCH I ZAAWANSOWANYCH",
+      "date": "2026-08-20",
+      "url": "https://puszczykowo.pl/wydarzenia/tai-chi-zajecia-dla-poczatkujacych-i-zaawansowanych-19"
+     },
+     {
+      "title": "Tai Chi – zajęcia dla początkujących i zaawansowanych",
+      "date": "2026-08-19",
+      "url": "https://puszczykowo.pl/wydarzenia/tai-chi-zajecia-dla-poczatkujacych-i-zaawansowanych-16",
+      "mergedInto": "puszczykowo-pl-wydarzenia",
+      "key": "taichizajciadlapocztkujcychizaawansowany|2026-08-19"
+     },
+     {
+      "title": "Joga na świeżym powietrzu – bezpłatne zajęcia",
+      "date": "2026-08-20",
+      "url": "https://puszczykowo.pl/wydarzenia/joga-na-swiezym-powietrzu-bezplatne-zajecia-14",
+      "mergedInto": "puszczykowo-pl-wydarzenia",
+      "key": "joganawieympowietrzubezpatnezajcia|2026-08-20"
+     },
+     {
+      "title": "Tai Chi – zajęcia dla początkujących i zaawansowanych",
+      "date": "2026-08-20",
+      "url": "https://puszczykowo.pl/wydarzenia/tai-chi-zajecia-dla-poczatkujacych-i-zaawansowanych-19",
+      "mergedInto": "puszczykowo-pl-wydarzenia",
+      "key": "taichizajciadlapocztkujcychizaawansowany|2026-08-20"
+     }
+    ]
+   },
+   {
+    "id": "puszczykowo-pl-kultura-wydarzenia",
+    "name": "Miasto Puszczykowo – Wydarzenia kulturalne",
+    "town": "Puszczykowo",
+    "url": "https://puszczykowo.pl/strefa-miejska/kultura/wydarzenia-kulturalne",
+    "fetch": "plain",
+    "status": "ok",
+    "events": 9,
+    "followups": [],
+    "geo": {
+     "hits": 3,
+     "misses": 2
+    },
+    "llm": {
+     "calls": 1,
+     "promptTokens": 2831,
+     "completionTokens": 537,
+     "costUsd": 0.00084623
+    },
+    "ms": 8059,
+    "httpStatus": 200,
+    "kind": "html",
+    "chars": 6282,
+    "changed": true,
+    "blocks": {
+     "total": 19,
+     "cached": 18,
+     "fresh": 1
+    },
+    "llmByTask": {
+     "extract": {
+      "calls": 1,
+      "promptTokens": 2831,
+      "completionTokens": 537,
+      "costUsd": 0.00084623
+     }
+    },
+    "archive": [
+     "raw/2026-08-19/puszczykowo-pl-kultura-wydarzenia/b1ce50d0f49bbcbaa9f602a83aadc15d3d213cf808f0702f870ca760bace9a06.json",
+     "llm/2026-08-19/2026-08-19T04-32-01-964Z/puszczykowo-pl-kultura-wydarzenia/0047-openai_gpt-5.6-luna.json",
+     "blocks/2026-08-19/2026-08-19T04-32-01-964Z/puszczykowo-pl-kultura-wydarzenia/0047.json"
+    ],
+    "produced": [
+     {
+      "title": "XIV LETNIE KONCERTY ORGANOWE W WIELKOPOLSKIM PARKU NARODOWYM – JENNIFER PASCUAL I EUGENIUSZ WAWRZYNIAK",
+      "date": "2026-08-20",
+      "url": "https://puszczykowo.pl/wydarzenia/xiv-letnie-koncerty-organowe-w-wielkopolskim-parku-narodowym-jennifer-pascual-i-eugeniusz-wawrzyniak"
+     },
+     {
+      "title": "ROCKETMAN (2019 – WIELKA BRYTANIA, USA). KINO LETNIE W DWORZE SKRZYNKI (WSTĘP WOLNY)",
+      "date": "2026-08-21",
+      "url": "https://puszczykowo.pl/wydarzenia/rocketman-2019-wielka-brytania-usa-kino-letnie-w-dworze-skrzynki-wstep-wolny"
+     },
+     {
+      "title": "WERSJE MNIE. O KOBIETACH, KTÓRYMI JESTEM. LINORYT – ARTETERAPEUTYCZNE WARSZTATY DLA KOBIET W DWORZE SKRZYNKI",
+      "date": "2026-08-22",
+      "url": "https://puszczykowo.pl/wydarzenia/wersje-mnie-o-kobietach-ktorymi-jestem-linoryt-arteterapeutyczne-warsztaty-dla-kobiet-w-dworze-skrzynki"
+     },
+     {
+      "title": "PUFA SOFA SESSIONS – LUKIER",
+      "date": "2026-08-29",
+      "url": "https://puszczykowo.pl/wydarzenia/pufa-sofa-sessions-lukier"
+     },
+     {
+      "title": "XIV LETNIE KONCERTY ORGANOWE W WIELKOPOLSKIM PARKU NARODOWYM",
+      "date": "2026-08-30",
+      "url": "https://puszczykowo.pl/wydarzenia/xiv-letnie-koncerte-organowe-w-wielkopolskim-parku-narodowym-2"
+     },
+     {
+      "title": "WERNISAŻ WYSTAWY AGATY JAKUBOWSKIEJ W WILLI MIMOZA",
+      "date": "2026-09-04",
+      "url": "https://puszczykowo.pl/wydarzenia/wernisaz-wystawy-agaty-jakubowskiej-w-willi-mimoza"
+     },
+     {
+      "title": "Tai Chi – zajęcia dla początkujących i zaawansowanych",
+      "date": "2026-08-19",
+      "url": "https://puszczykowo.pl/wydarzenia/tai-chi-zajecia-dla-poczatkujacych-i-zaawansowanych-16",
+      "mergedInto": "puszczykowo-pl-wydarzenia",
+      "key": "taichizajciadlapocztkujcychizaawansowany|2026-08-19"
+     },
+     {
+      "title": "Joga na świeżym powietrzu – bezpłatne zajęcia",
+      "date": "2026-08-20",
+      "url": "https://puszczykowo.pl/wydarzenia/joga-na-swiezym-powietrzu-bezplatne-zajecia-14",
+      "mergedInto": "puszczykowo-pl-wydarzenia",
+      "key": "joganawieympowietrzubezpatnezajcia|2026-08-20"
+     },
+     {
+      "title": "Tai Chi – zajęcia dla początkujących i zaawansowanych",
+      "date": "2026-08-20",
+      "url": "https://puszczykowo.pl/wydarzenia/tai-chi-zajecia-dla-poczatkujacych-i-zaawansowanych-19",
+      "mergedInto": "puszczykowo-pl-wydarzenia",
+      "key": "taichizajciadlapocztkujcychizaawansowany|2026-08-20"
+     }
+    ]
+   },
+   {
+    "id": "willa-mimoza-fb",
+    "name": "Willa Mimoza Puszczykowo",
+    "town": "Puszczykowo",
+    "url": "https://www.facebook.com/WillaMimozaPuszczykowo",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "biblioteka-puszczykowo-fb",
+    "name": "Biblioteka Miejska Centrum Animacji Kultury w Puszczykowie",
+    "town": "Puszczykowo",
+    "url": "https://www.facebook.com/BibliotekaPuszczykowo",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "biblioteka-puszczykowo-sowa",
+    "name": "Biblioteka Miejska im. Małgorzaty Musierowicz CAK – katalog",
+    "town": "Puszczykowo",
+    "url": "https://www.puszczykowo-mbp.sowa.pl/",
+    "fetch": "plain",
+    "status": "skipped-dead",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "hala-puszczykowo-fb",
+    "name": "Hala widowiskowo-sportowa w Puszczykowie",
+    "town": "Puszczykowo",
+    "url": "https://www.facebook.com/HalaPuszczykowo",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "puszczykowo-na-sportowo-fb",
+    "name": "Puszczykowo na Sportowo",
+    "town": "Puszczykowo",
+    "url": "https://www.facebook.com/PuszczykowonaSportowo",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "miasto-puszczykowo-fb",
+    "name": "Miasto Puszczykowo",
+    "town": "Puszczykowo",
+    "url": "https://www.facebook.com/miastopuszczykowo",
+    "fetch": "fb",
+    "status": "skipped-fb",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "grupa-puszczykowo-fb",
+    "name": "Puszczykowo – grupa mieszkańców",
+    "town": "Puszczykowo",
+    "url": "https://www.facebook.com/groups/GrupaPuszczykowo",
+    "fetch": "fb_group",
+    "status": "skipped-costly",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "kocham-puszczykowo-fb",
+    "name": "KochamPuszczykowo",
+    "town": "Puszczykowo",
+    "url": "https://www.facebook.com/groups/kochampuszczykowo",
+    "fetch": "fb_group",
+    "status": "skipped-costly",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "puszczykowo-ogloszenia-fb",
+    "name": "Puszczykowo – ogłoszenia, sprawy codzienne",
+    "town": "Puszczykowo",
+    "url": "https://www.facebook.com/groups/659035854121213",
+    "fetch": "fb_group",
+    "status": "skipped-costly",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0
+   },
+   {
+    "id": "fb-events",
+    "name": "Wydarzenia FB (linki)",
+    "town": "",
+    "url": "https://www.facebook.com/events/",
+    "fetch": "fb_event",
+    "status": "empty",
+    "events": 0,
+    "followups": [],
+    "geo": {
+     "hits": 0,
+     "misses": 0
+    },
+    "llm": {
+     "calls": 0,
+     "promptTokens": 0,
+     "completionTokens": 0,
+     "costUsd": 0
+    },
+    "ms": 0,
+    "cached": 0
+   }
+  ],
+  "config": {
+   "values": {
+    "DISCOVER_MAX_SEARCHES": 300,
+    "BD_MAX_FB_EVENTS": 40,
+    "BD_POLL_MS": 10000,
+    "BD_TIMEOUT_MS": 480000,
+    "FB_GROUP_BLOCKED_LIMIT": 3,
+    "FB_GROUP_BLOCKED_RECHECK_DAYS": 14,
+    "FB_GROUP_LIMIT_MAX": 50,
+    "FB_GROUP_LIMIT_MIN": 5,
+    "FB_GROUP_LIMIT_MARGIN": 0.2,
+    "FB_MAX_USD_PER_EVENT": 0.02,
+    "FB_YIELD_MIN_RUNS": 5,
+    "FB_MUTE_DAYS": 30,
+    "FB_MIN_SOURCES_PER_TOWN": 1,
+    "PROBE_FB_PAGE_LIMIT": 20,
+    "PROBE_FB_MAX_RECORDS": 300,
+    "FB_PROBATION_SHARE": 0.15,
+    "EXTRACT_MAX_TOKENS": 12000,
+    "DISCOVER_MAX_TOKENS": 12000,
+    "BLOCK_MAX_CALLS": 80,
+    "REPERTOIRE_URL_SEGMENTS": "seances,seanse,repertuar,repertoire,showtimes,seansy",
+    "CONTAINER_MIN_SPAN_DAYS": 8,
+    "CONTAINER_MAX_PROBES": 3,
+    "ENTRYPOINT_LLM": "always",
+    "ARCHIVE_RETENTION_DAYS": 90,
+    "COST_MONTHLY_BUDGET_USD": 15,
+    "COST_RETENTION_DAYS": 90,
+    "BD_COST_PER_RECORD": 0.0015,
+    "SEARCH_COST_PER_QUERY": 0.001,
+    "SUPABASE_COST_PER_GB_MONTH": 0,
+    "SCRAPE_COST_PER_FETCH": 0
+   }
+  },
+  "brightdata": {
+   "triggers": 5,
+   "inputs": 5,
+   "polls": 56,
+   "records": 130,
+   "errors": 0,
+   "snapshots": [
+    "sd_mszlife0bjg2aff0k",
+    "sd_mszlq1k129ioay5zr1",
+    "sd_mszlsldm1gan52gbzw",
+    "sd_mszlz1wjs4cra0fey",
+    "sd_mszm0z0c1fh5ehyb2o"
+   ],
+   "byDataset": {
+    "fbGroupPosts": 130
+   }
+  },
+  "costs": [
+   {
+    "day": "2026-08-19",
+    "at": "2026-08-19T04:51:43.799Z",
+    "stage": "daily",
+    "run": "2026-08-19T04:32:01.964Z",
+    "category": "llm-extract",
+    "usd": 0.065163,
+    "estimated": false,
+    "units": 47,
+    "unit": "calls",
+    "tokensIn": 170526,
+    "tokensOut": 38170,
+    "top": [
+     {
+      "id": "okpoznan-wydarzenia",
+      "usd": 0.020555,
+      "units": 9
+     },
+     {
+      "id": "poznan-co-gdzie-kiedy",
+      "usd": 0.006763,
+      "units": 6
+     },
+     {
+      "id": "mosina-pl-wydarzenia",
+      "usd": 0.004989,
+      "units": 5
+     },
+     {
+      "id": "ck-zamek",
+      "usd": 0.004989,
+      "units": 6
+     },
+     {
+      "id": "posir-poznan",
+      "usd": 0.004556,
+      "units": 1
+     }
+    ]
+   },
+   {
+    "day": "2026-08-19",
+    "at": "2026-08-19T04:51:43.799Z",
+    "stage": "daily",
+    "run": "2026-08-19T04:32:01.964Z",
+    "category": "fb",
+    "usd": 0.195,
+    "estimated": true,
+    "units": 130,
+    "unit": "records",
+    "top": [
+     {
+      "id": "dopiewo-tablica-ogloszen-fb",
+      "usd": 0.075,
+      "units": 50
+     },
+     {
+      "id": "fb-group-wydarzenia-w-poznaniu-1",
+      "usd": 0.075,
+      "units": 50
+     },
+     {
+      "id": "lubon-fb-group",
+      "usd": 0.024,
+      "units": 16
+     },
+     {
+      "id": "fb-group-wydarzenia-poznan-4",
+      "usd": 0.0135,
+      "units": 9
+     },
+     {
+      "id": "fb-group-kultura-komorniki",
+      "usd": 0.0075,
+      "units": 5
+     }
+    ]
+   },
+   {
+    "day": "2026-08-19",
+    "at": "2026-08-19T04:51:43.799Z",
+    "stage": "daily",
+    "run": "2026-08-19T04:32:01.964Z",
+    "category": "scrape",
+    "usd": 0,
+    "estimated": true,
+    "units": 93,
+    "unit": "fetches"
+   },
+   {
+    "day": "2026-08-19",
+    "at": "2026-08-19T04:51:43.799Z",
+    "stage": "daily",
+    "run": "2026-08-19T04:32:01.964Z",
+    "category": "geo",
+    "usd": 0,
+    "estimated": true,
+    "units": 41,
+    "unit": "lookups"
+   },
+   {
+    "day": "2026-08-19",
+    "at": "2026-08-19T04:51:43.799Z",
+    "stage": "daily",
+    "run": "2026-08-19T04:32:01.964Z",
+    "category": "storage",
+    "usd": 0,
+    "estimated": true,
+    "units": 2.962,
+    "unit": "MB"
+   }
+  ],
+  "fbValue": [
+   {
+    "id": "fb-group-wydarzenia-w-poznaniu-1",
+    "fetchedRuns": 8,
+    "distinct": 119,
+    "novel": 115,
+    "exclusive": 113,
+    "costUsd": 0.6904,
+    "usdPerNovel": 0.006,
+    "rank": 8,
+    "cumulativeUsd": 0.3377,
+    "usdPerFetch": 0.086306225,
+    "verdict": "muted"
+   },
+   {
+    "id": "dopiewo-tablica-ogloszen-fb",
+    "fetchedRuns": 8,
+    "distinct": 298,
+    "novel": 298,
+    "exclusive": 296,
+    "costUsd": 0.68,
+    "usdPerNovel": 0.0023,
+    "rank": 1,
+    "cumulativeUsd": 0.085,
+    "usdPerFetch": 0.08500446625,
+    "verdict": "keep"
+   },
+   {
+    "id": "puszczykowo-ogloszenia-fb",
+    "fetchedRuns": 7,
+    "distinct": 60,
+    "novel": 60,
+    "exclusive": 59,
+    "costUsd": 0.5812,
+    "usdPerNovel": 0.0097,
+    "rank": 11,
+    "cumulativeUsd": 0.3344,
+    "usdPerFetch": 0.08302805,
+    "verdict": "muted"
+   },
+   {
+    "id": "mieszkancy-lubonia-fb-group",
+    "fetchedRuns": 7,
+    "distinct": 111,
+    "novel": 111,
+    "exclusive": 37,
+    "costUsd": 0.581,
+    "usdPerNovel": 0.0052,
+    "rank": 5,
+    "cumulativeUsd": 0.2514,
+    "usdPerFetch": 0.08300492142857142,
+    "verdict": "keep"
+   },
+   {
+    "id": "fb-group-komorniki-ogloszenia",
+    "fetchedRuns": 7,
+    "distinct": 52,
+    "novel": 52,
+    "exclusive": 49,
+    "costUsd": 0.5599,
+    "usdPerNovel": 0.0108,
+    "rank": 13,
+    "cumulativeUsd": 0.3314,
+    "usdPerFetch": 0.07998399,
+    "verdict": "muted"
+   },
+   {
+    "id": "fb-group-poznan-wydarzenia",
+    "fetchedRuns": 7,
+    "distinct": 62,
+    "novel": 61,
+    "exclusive": 40,
+    "costUsd": 0.5443,
+    "usdPerNovel": 0.0089,
+    "rank": 10,
+    "cumulativeUsd": 0.3292,
+    "usdPerFetch": 0.07775025071428572,
+    "verdict": "muted"
+   },
+   {
+    "id": "fb-group-wydarzenia-poznan-3",
+    "fetchedRuns": 7,
+    "distinct": 27,
+    "novel": 26,
+    "exclusive": 23,
+    "costUsd": 0.4095,
+    "usdPerNovel": 0.0158,
+    "rank": 14,
+    "cumulativeUsd": 0.3099,
+    "usdPerFetch": 0.05850214785714286,
+    "verdict": "muted"
+   },
+   {
+    "id": "fb-group-baba-cool",
+    "fetchedRuns": 7,
+    "distinct": 59,
+    "novel": 59,
+    "exclusive": 57,
+    "costUsd": 0.3314,
+    "usdPerNovel": 0.0056,
+    "rank": 7,
+    "cumulativeUsd": 0.2988,
+    "usdPerFetch": 0.04734762857142857,
+    "verdict": "muted"
+   },
+   {
+    "id": "fb-group-allin-poznan",
+    "fetchedRuns": 7,
+    "distinct": 59,
+    "novel": 58,
+    "exclusive": 45,
+    "costUsd": 0.3106,
+    "usdPerNovel": 0.0054,
+    "rank": 6,
+    "cumulativeUsd": 0.2958,
+    "usdPerFetch": 0.044376521428571424,
+    "verdict": "muted"
+   },
+   {
+    "id": "lubon-fb-group",
+    "fetchedRuns": 8,
+    "distinct": 79,
+    "novel": 78,
+    "exclusive": 5,
+    "costUsd": 0.3097,
+    "usdPerNovel": 0.004,
+    "rank": 4,
+    "cumulativeUsd": 0.1684,
+    "usdPerFetch": 0.03871617125,
+    "verdict": "keep"
+   },
+   {
+    "id": "fb-group-gmina-mosina-aktualnosci",
+    "fetchedRuns": 7,
+    "distinct": 9,
+    "novel": 8,
+    "exclusive": 7,
+    "costUsd": 0.2813,
+    "usdPerNovel": 0.0352,
+    "rank": 15,
+    "cumulativeUsd": 0.2514,
+    "usdPerFetch": 0.040179943571428574,
+    "verdict": "over-ceiling"
+   },
+   {
+    "id": "fb-group-wydarzenia-poznan-2",
+    "fetchedRuns": 7,
+    "distinct": 31,
+    "novel": 30,
+    "exclusive": 10,
+    "costUsd": 0.2668,
+    "usdPerNovel": 0.0089,
+    "rank": 9,
+    "cumulativeUsd": 0.2895,
+    "usdPerFetch": 0.038117010714285714,
+    "verdict": "muted"
+   },
+   {
+    "id": "fb-group-imprezy-poznan",
+    "fetchedRuns": 7,
+    "distinct": 22,
+    "novel": 22,
+    "exclusive": 15,
+    "costUsd": 0.2285,
+    "usdPerNovel": 0.0104,
+    "rank": 12,
+    "cumulativeUsd": 0.284,
+    "usdPerFetch": 0.032640225,
+    "verdict": "muted"
+   },
+   {
+    "id": "fb-group-wydarzenia-poznan-4",
+    "fetchedRuns": 8,
+    "distinct": 74,
+    "novel": 74,
+    "exclusive": 69,
+    "costUsd": 0.201,
+    "usdPerNovel": 0.0027,
+    "rank": 2,
+    "cumulativeUsd": 0.1101,
+    "usdPerFetch": 0.02513105625,
+    "verdict": "keep"
+   },
+   {
+    "id": "fb-group-co-sie-dzieje-mosina",
+    "fetchedRuns": 4,
+    "distinct": 13,
+    "novel": 13,
+    "exclusive": 12,
+    "costUsd": 0.1849,
+    "usdPerNovel": 0.0142,
+    "cumulativeUsd": 0.0807,
+    "usdPerFetch": 0.04621875,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "fb-group-kultura-komorniki",
+    "fetchedRuns": 8,
+    "distinct": 45,
+    "novel": 45,
+    "exclusive": 45,
+    "costUsd": 0.1564,
+    "usdPerNovel": 0.0035,
+    "rank": 3,
+    "cumulativeUsd": 0.1297,
+    "usdPerFetch": 0.019550010625000003,
+    "verdict": "keep"
+   },
+   {
+    "id": "dopiewo-aktywnie-kulturalnie-fb",
+    "fetchedRuns": 3,
+    "distinct": 7,
+    "novel": 7,
+    "exclusive": 5,
+    "costUsd": 0.1372,
+    "usdPerNovel": 0.0196,
+    "cumulativeUsd": 0.0772,
+    "usdPerFetch": 0.04572433333333333,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "grupa-puszczykowo-fb",
+    "fetchedRuns": 3,
+    "distinct": 4,
+    "novel": 4,
+    "exclusive": 4,
+    "costUsd": 0.1227,
+    "usdPerNovel": 0.0307,
+    "cumulativeUsd": 0.0754,
+    "usdPerFetch": 0.040903,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "kocham-puszczykowo-fb",
+    "fetchedRuns": 3,
+    "distinct": 1,
+    "novel": 1,
+    "exclusive": 1,
+    "costUsd": 0.111,
+    "usdPerNovel": 0.111,
+    "cumulativeUsd": 0.0715,
+    "usdPerFetch": 0.03699633333333333,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "wydarzenia-w-luboniu-fb-group",
+    "fetchedRuns": 3,
+    "distinct": 2,
+    "novel": 2,
+    "exclusive": 2,
+    "costUsd": 0.1109,
+    "usdPerNovel": 0.0554,
+    "cumulativeUsd": 0.0715,
+    "usdPerFetch": 0.03696233333333333,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "fb-events",
+    "fetchedRuns": 8,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0.0165,
+    "verdict": "no-threshold"
+   },
+   {
+    "id": "dopiewo-mieszkancy-fb",
+    "fetchedRuns": 3,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0.0045,
+    "cumulativeUsd": 0.033,
+    "usdPerFetch": 0.0015000000000000002,
+    "verdict": "probation"
+   },
+   {
+    "id": "dabrowa-dopiewo-fb",
+    "fetchedRuns": 3,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0.0045,
+    "cumulativeUsd": 0.0315,
+    "usdPerFetch": 0.0015000000000000002,
+    "verdict": "probation"
+   },
+   {
+    "id": "fb-group-mieszkancy-gminy-komorniki",
+    "fetchedRuns": 3,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0.0045,
+    "cumulativeUsd": 0.0345,
+    "usdPerFetch": 0.0015000000000000002,
+    "verdict": "probation"
+   },
+   {
+    "id": "ok-lubon-fb",
+    "fetchedRuns": 0,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0,
+    "cumulativeUsd": 0.06,
+    "usdPerFetch": 0.03,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "miasto-lubon-fb",
+    "fetchedRuns": 0,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0,
+    "cumulativeUsd": 0.06,
+    "usdPerFetch": 0.03,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "biblioteka-lubon-fb",
+    "fetchedRuns": 0,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0,
+    "cumulativeUsd": 0.06,
+    "usdPerFetch": 0.03,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "losir-lubon-fb",
+    "fetchedRuns": 0,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0,
+    "cumulativeUsd": 0.06,
+    "usdPerFetch": 0.03,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "plaza-miejska-lubon-fb",
+    "fetchedRuns": 0,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0,
+    "cumulativeUsd": 0.06,
+    "usdPerFetch": 0.03,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "bibldop-fb",
+    "fetchedRuns": 0,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0,
+    "cumulativeUsd": 0.03,
+    "usdPerFetch": 0.03,
+    "verdict": "probation"
+   },
+   {
+    "id": "gosir-dopiewo-fb",
+    "fetchedRuns": 0,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0,
+    "cumulativeUsd": 0.06,
+    "usdPerFetch": 0.03,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "fb-gok-komorniki",
+    "fetchedRuns": 0,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0,
+    "cumulativeUsd": 0.06,
+    "usdPerFetch": 0.03,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "fb-gmina-komorniki",
+    "fetchedRuns": 0,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0,
+    "cumulativeUsd": 0.06,
+    "usdPerFetch": 0.03,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "fb-gosir-komorniki",
+    "fetchedRuns": 0,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0,
+    "cumulativeUsd": 0.06,
+    "usdPerFetch": 0.03,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "fb-biblioteka-komorniki",
+    "fetchedRuns": 0,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0,
+    "cumulativeUsd": 0.06,
+    "usdPerFetch": 0.03,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "nasz-lubon-fb",
+    "fetchedRuns": 0,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0,
+    "cumulativeUsd": 0.06,
+    "usdPerFetch": 0.03,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "fb-mok-mosina",
+    "fetchedRuns": 0,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0,
+    "cumulativeUsd": 0.06,
+    "usdPerFetch": 0.03,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "fb-gmina-mosina",
+    "fetchedRuns": 0,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0,
+    "cumulativeUsd": 0.06,
+    "usdPerFetch": 0.03,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "fb-biblioteka-mosina",
+    "fetchedRuns": 0,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0,
+    "cumulativeUsd": 0.06,
+    "usdPerFetch": 0.03,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "fb-osir-mosina",
+    "fetchedRuns": 0,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0,
+    "cumulativeUsd": 0.06,
+    "usdPerFetch": 0.03,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "ck-zamek-fb",
+    "fetchedRuns": 0,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0,
+    "cumulativeUsd": 0.06,
+    "usdPerFetch": 0.03,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "dk-orle-gniazdo-fb",
+    "fetchedRuns": 0,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0,
+    "cumulativeUsd": 0.06,
+    "usdPerFetch": 0.03,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "posir-poznan-fb",
+    "fetchedRuns": 0,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0,
+    "cumulativeUsd": 0.06,
+    "usdPerFetch": 0.03,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "cik-poznan-fb",
+    "fetchedRuns": 0,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0,
+    "cumulativeUsd": 0.06,
+    "usdPerFetch": 0.03,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "willa-mimoza-fb",
+    "fetchedRuns": 0,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0,
+    "cumulativeUsd": 0.06,
+    "usdPerFetch": 0.03,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "biblioteka-puszczykowo-fb",
+    "fetchedRuns": 0,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0,
+    "cumulativeUsd": 0.06,
+    "usdPerFetch": 0.03,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "hala-puszczykowo-fb",
+    "fetchedRuns": 0,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0,
+    "cumulativeUsd": 0.06,
+    "usdPerFetch": 0.03,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "puszczykowo-na-sportowo-fb",
+    "fetchedRuns": 0,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0,
+    "cumulativeUsd": 0.06,
+    "usdPerFetch": 0.03,
+    "verdict": "too-few-runs"
+   },
+   {
+    "id": "miasto-puszczykowo-fb",
+    "fetchedRuns": 0,
+    "distinct": 0,
+    "novel": 0,
+    "exclusive": 0,
+    "costUsd": 0,
+    "cumulativeUsd": 0.06,
+    "usdPerFetch": 0.03,
+    "verdict": "too-few-runs"
+   }
+  ]
  }
 ]
