@@ -11,6 +11,7 @@ import {
 } from '../../format';
 import type { AuditStep, EventItem, EventRef, ProbeResult } from '../../types';
 
+import { blockSplitInspector } from '../../ui/block-split-inspector';
 import { CodeView } from '../../ui/code-view';
 import { isLlmPath } from '../../ui/llm-call';
 import { llmInspector } from '../../ui/llm-inspector';
@@ -18,6 +19,12 @@ import { llmInspector } from '../../ui/llm-inspector';
 import { ProbeResultView } from './probe-result';
 
 const PREVIEW_KEY = 'events-pl-panel:preview';
+
+/** Ścieżka archiwum z detali kroku — pusta wartość i brak pola znaczą to samo: nie ma czego pokazać. */
+const pathOf = (step: AuditStep): string | null => {
+  const p = step.detail?.['archive'];
+  return typeof p === 'string' && p ? p : null;
+};
 
 @Component({
   selector: 'app-source',
@@ -143,10 +150,29 @@ export class SourcePage {
       .map(([k, v]) => ({ k, v: k === 'usd' && typeof v === 'number' ? fmtUsd(v) : String(v) }));
   }
 
-  /** Ścieżka tego, co krok odłożył w archiwum; brak = archiwum było wyłączone. */
-  protected stepArchive(step: AuditStep): string | null {
-    const p = step.detail?.['archive'];
-    return typeof p === 'string' && p ? p : null;
+  /**
+   * Ścieżka tego, co krok odłożył w archiwum; brak = archiwum było wyłączone.
+   *
+   * Krok `block` (czyli „podział: DOM, 50 kart") własnej ścieżki NIE MA i mieć nie może:
+   * jest emitowany PRZED ekstrakcją, a rozliczenie powstaje po niej i zna dopiero
+   * `block.parsed`. Zamiast dublować ścieżkę w dwóch krokach parujemy je tutaj — pytanie
+   * „co ten podział widział" pada przy notce o podziale, więc przycisk ma stać właśnie tam.
+   *
+   * Szukamy do NAJBLIŻSZEGO kolejnego kroku blokowego: jedno źródło tnie stronę i każdy jej
+   * followup osobno, więc pary `block`/`block.parsed` przeplatają się i wolne przeszukanie
+   * przypięłoby podziałowi rozliczenie cudzej strony.
+   */
+  protected stepArchive(step: AuditStep, i: number): string | null {
+    const own = pathOf(step);
+    if (own || step.step !== 'block') return own;
+    const rest = (this.trail()?.steps ?? []).slice(i + 1);
+    const next = rest.find((s) => s.step === 'block' || s.step === 'block.parsed');
+    return next?.step === 'block.parsed' ? pathOf(next) : null;
+  }
+
+  /** Podział i jego rozliczenie mają własny podgląd — surowy JSON zostaje pod zakładką „raw". */
+  protected isSplit(step: AuditStep): boolean {
+    return step.step === 'block' || step.step === 'block.parsed';
   }
 
   /**
@@ -155,8 +181,11 @@ export class SourcePage {
    */
   protected archiveButton(step: AuditStep): string {
     if (step.step === 'llm') return 'Prompt + response';
-    return step.step === 'block.parsed' ? 'Blocks in / out' : 'Raw records';
+    return this.isSplit(step) ? 'Block split' : 'Raw records';
   }
+
+  /** Podgląd podziału na bloki — patrz ui/block-split-inspector.ts. */
+  protected readonly inspectSplit = blockSplitInspector();
 
   /**
    * Wywołania modelu idą do inspektora, nie do surowego `<pre>`. Obiekt z `llm/` to prompt

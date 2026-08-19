@@ -42,7 +42,7 @@ function pageBlocks(fetched: Fetched, url: string): { blocks: Block[]; info: Spl
   // podział DANY przez źródło bije każdy zgadywany — patrz Fetched.blocks
   if (fetched.blocks?.length) {
     return {
-      blocks: fetched.blocks.map(toBlock),
+      blocks: fetched.blocks.map((text) => toBlock(text, "post")),
       info: { how: `posty (${fetched.blocks.length})`, url },
     };
   }

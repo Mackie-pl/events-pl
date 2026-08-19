@@ -13,12 +13,22 @@
  *      audit.json jest publiczny).
  *   2. DETALE kroku — te same liczby maszynowo, plus adres i ścieżka do archiwum.
  *   3. ARCHIWUM (`blocks/…`) — wiersz na blok: hash, rozmiar, karta czy reszta strony,
- *      z cache czy do modelu, ile wydarzeń dał. Treść bloku TYLKO dla tych, za które
- *      dziś płacimy — reszta strony stoi już w `raw/`.
+ *      z cache czy do modelu, ile wydarzeń dał, CZEMU granica wypadła tu (`cut`) i pełna
+ *      treść. To jest wejście podglądu podziału w panelu.
  *
- * Poziom 3 powstaje WYŁĄCZNIE w dniach ze świeżymi blokami. Dzień w pełni z cache'a nie ma
- * czego tłumaczyć: rozliczenie byłoby tabelą tych samych haszy co wczoraj, a płaciłoby za
- * miejsce raz na źródło na dobę — czyli najwięcej wtedy, gdy nie ma czego debugować.
+ * Dwie decyzje z 2026-08-19 odwrócone, obie z tego samego powodu — rozliczenie miało
+ * tłumaczyć RACHUNEK, a ma tłumaczyć PODZIAŁ, więc niepełny obraz strony nie wystarcza:
+ *
+ *   - treść WSZYSTKICH bloków, nie tylko świeżych. Dotąd blok z cache'a niósł 120 znaków
+ *     nagłówka, bo „reszta strony stoi już w `raw/`" — ale `raw/` trzyma tekst strony BEZ
+ *     granic, a to właśnie granice są przedmiotem pytania. Przy podziale po DOM-ie nie da
+ *     się ich nawet odtworzyć: fragmenty renderują się w kontekście i szwy białych znaków
+ *     się rozjeżdżają. Mierzone na 2026-08-19: +196 kB/dobę (461 → 657 kB), ~18 MB na
+ *     `ARCHIVE_RETENTION_DAYS=90`.
+ *   - archiwum także w dniu BEZ świeżych bloków. Dotąd pomijane jako „nie ma czego
+ *     tłumaczyć", a to dokładnie dzień, w którym widać stabilny chrom strony. Kosztuje
+ *     mniej, niż wyglądało: cache treści całej strony ucina segmentację wcześniej, więc
+ *     podziałów w pełni z cache'a jest 2 na dobę — ~13–16 kB (pomiar 17–19.08).
  *
  * Poziom 3 jest prywatny (treść cudzych stron), więc poziomy 1–2 muszą się bronić same.
  */
@@ -26,11 +36,8 @@ import { archiveBlocks } from "../../adapters/supabase-archive.js";
 import { audit } from "../../shared/audit.js";
 import type { PipelineState } from "../../types/index.js";
 
-import type { Block } from "./blocks.js";
+import type { Block, BlockCut } from "./blocks.js";
 import type { DomSegmentation } from "./dom-blocks.js";
-
-/** Ile znaków bloku wystarczy, żeby go rozpoznać w archiwum bez czytania całości. */
-const HEAD_CHARS = 120;
 
 /** Jak powstał podział — do notki i do archiwum, w jednym kształcie. */
 export interface SplitInfo {
@@ -100,18 +107,15 @@ interface Row {
   chars: number;
   /** karta wydarzenia czy reszta strony (nagłówki, opisy, stopki treściowe) */
   card: boolean;
+  /** czemu blok skończył się tutaj — patrz `BlockCut` */
+  cut: BlockCut;
   state: "cached" | "fresh";
   /** dzień pierwszej ekstrakcji tego bloku — przy `cached` mówi, jak długo się trzyma */
   since?: string;
   events?: number;
   followups?: number;
-  head: string;
-  /** pełna treść TYLKO dla bloków, które dziś poszły do modelu */
-  text?: string;
+  text: string;
 }
-
-const head = (text: string): string =>
-  text.replace(/\s+/g, " ").trim().slice(0, HEAD_CHARS);
 
 /**
  * Bloki, za które dziś zapłaciliśmy i nie wyszło z nich ani jedno wydarzenie — w ZNAKACH,
@@ -151,13 +155,11 @@ interface Ledger {
 
 function row(b: Block, i: number, { cardHashes, freshHashes, state }: Ledger): Row {
   const entry = state.blocks?.[b.hash];
-  const isFresh = freshHashes.has(b.hash);
   return {
-    i, hash: b.hash.slice(0, 16), chars: b.chars, card: cardHashes.has(b.hash),
-    state: isFresh ? "fresh" : "cached",
+    i, hash: b.hash.slice(0, 16), chars: b.chars, card: cardHashes.has(b.hash), cut: b.cut,
+    state: freshHashes.has(b.hash) ? "fresh" : "cached",
     ...(entry ? { since: entry.at, events: entry.events.length, followups: entry.followups.length } : {}),
-    head: head(b.text),
-    ...(isFresh ? { text: b.text } : {}),
+    text: b.text,
   };
 }
 
@@ -186,10 +188,10 @@ export async function auditBlockResult(
   const { silent, silentChars, silentLeads } = wasteOf(rows);
   const freshChars = totalChars(fresh);
 
-  // ARCHIWUM TYLKO ZA ŚWIEŻE BLOKI. Dzień bez ani jednego to dzień, w którym rozliczenie
-  // niesie same liczby — a te stoją już w notce kroku. Obiekt na źródło na dobę, w którym
-  // nic się nie zmieniło, płaciłby za miejsce dokładnie wtedy, gdy nie ma czego debugować.
-  const archive = fresh.length ? await archiveBlocks(info.url, {
+  // ARCHIWUM ZA KAŻDY PODZIAŁ, także w pełni z cache'a — patrz nagłówek modułu. Podgląd
+  // podziału ma pokazywać CAŁĄ stronę, a dzień bez świeżych bloków jest jedynym, w którym
+  // widać ją w stanie ustalonym: sam chrom i karty, które przeżyły.
+  const archive = await archiveBlocks(info.url, {
     how: info.how,
     input: { htmlChars: info.htmlChars ?? null, textChars: totalChars(blocks) },
     dom: info.dom
@@ -201,7 +203,7 @@ export async function auditBlockResult(
       : null,
     totals: { blocks: blocks.length, fresh: fresh.length, fromFresh, fromCached },
     blocks: rows,
-  }) : null;
+  });
 
   // Znaki jałowych bloków stoją W NOTCE, nie tylko w detalach: notka jest jedyną warstwą,
   // którą da się przeczytać wzrokiem w surowym audit.json, a „ile z tej strony poszło na

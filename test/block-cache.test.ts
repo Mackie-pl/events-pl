@@ -11,6 +11,7 @@ import {
   dropPast, lookupBlock, pruneBlocks, storeBlock, touchBlock,
 } from "../src/pipeline/extract/block-cache.js";
 import { unionOf } from "../src/pipeline/extract/block-source.js";
+import type { Block } from "../src/pipeline/extract/blocks.js";
 import type { PipelineState } from "../src/types/index.js";
 
 import { event } from "./helpers.js";
@@ -88,7 +89,8 @@ describe("suma po blokach obecnych na stronie", () => {
     storeBlock(s, "c", { events: [event({ title: "C", date_start: day(3) })], followups: [] }, TODAY);
     return s;
   };
-  const blocks = (...hashes: string[]) => hashes.map((hash) => ({ hash, text: hash, chars: 1 }));
+  const blocks = (...hashes: string[]): Block[] =>
+    hashes.map((hash) => ({ hash, text: hash, chars: 1, cut: "content" }));
 
   it("blok, który zniknął ze strony, zabiera ze sobą wydarzenia", () => {
     // to jest CAŁY mechanizm usuwania: żadnego scalania ani odejmowania, po prostu

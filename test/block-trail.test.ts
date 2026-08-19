@@ -31,8 +31,8 @@ beforeEach(() => {
 });
 
 describe("ślad podziału na bloki", () => {
-  const cached = toBlock("Blok, który stoi na stronie od tygodnia i nic w nim się nie zmieniło.");
-  const fresh = toBlock("Nowa karta: Koncert Kwadrofonik, 12 sierpnia 2026, godz. 19:00.");
+  const cached = toBlock("Blok, który stoi na stronie od tygodnia i nic w nim się nie zmieniło.", "card");
+  const fresh = toBlock("Nowa karta: Koncert Kwadrofonik, 12 sierpnia 2026, godz. 19:00.", "card");
 
   it("krok podziału niesie znaki, nie tylko liczbę bloków", () => {
     auditSplit({ how: "DOM, 2 kart", url: "https://example.test/" }, [cached, fresh], [fresh]);
@@ -99,7 +99,7 @@ describe("ślad podziału na bloki", () => {
    */
   it("jałowy blok, który wskazał followup, jest liczony osobno", async () => {
     const st = state();
-    const bare = toBlock("Stopka: Gminny Ośrodek Kultury, ul. Krótka 1, tel. w zakładce Kontakt.");
+    const bare = toBlock("Stopka: Gminny Ośrodek Kultury, ul. Krótka 1, tel. w zakładce Kontakt.", "content");
     st.blocks![fresh.hash] = {
       events: [], followups: ["https://example.test/plakat.jpg"],
       at: "2026-08-15", seen: "2026-08-15",
@@ -115,15 +115,23 @@ describe("ślad podziału na bloki", () => {
     assert.equal(detail("block.parsed", "silentChars"), fresh.chars + bare.chars);
   });
 
+  /**
+   * Bez SUPABASE_* archiwum jest cichym no-opem, więc krok nie ma czym linkować — i nie ma
+   * udawać, że ma. Świeży blok W ZESTAWIE celowo: przy pustym zestawie „brak ścieżki" miało
+   * dwie możliwe przyczyny naraz i test nie odróżniał wyłączonego archiwum od pominiętego.
+   */
   it("bez archiwum krok nie udaje, że ma co pokazać", async () => {
-    await auditBlockResult({ how: "akapity", url: "https://example.test/" }, [fresh], [], state());
+    await auditBlockResult(
+      { how: "akapity", url: "https://example.test/" }, [fresh], [fresh], state(),
+    );
     assert.equal(detail("block.parsed", "archive"), undefined);
   });
 
   /**
-   * Dzień w pełni z cache'a i tak ma się rozliczyć w śladzie — archiwum jest wtedy pomijane
-   * (patrz block-trail.ts), ale KROK zostaje: „nic nie poszło do modelu, a wydarzenia są"
-   * to odpowiedź, nie brak odpowiedzi.
+   * Dzień w pełni z cache'a i tak ma się rozliczyć w śladzie: „nic nie poszło do modelu,
+   * a wydarzenia są" to odpowiedź, nie brak odpowiedzi. Od 2026-08-19 taki dzień trafia
+   * też do archiwum (patrz block-trail.ts) — to jedyny moment, w którym widać podział
+   * strony w stanie ustalonym.
    */
   it("dzień w pełni z cache'a nadal melduje, co dał cache", async () => {
     const st = state();

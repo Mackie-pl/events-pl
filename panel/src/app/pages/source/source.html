@@ -278,7 +278,7 @@
                       }
                     </span>
                   }
-                  @if (stepArchive(st); as path) {
+                  @if (stepArchive(st, $index); as path) {
                     @if (!bridge.archiveReadable()) {
                       <span class="muted hint">
                         {{ archiveButton(st) }} in the private archive — <code>{{ path }}</code>
@@ -290,6 +290,16 @@
                         appearance="flat"
                         iconStart="@tui.search"
                         (click)="inspect({ path })"
+                      >
+                        {{ archiveButton(st) }}
+                      </button>
+                    } @else if (isSplit(st)) {
+                      <button
+                        tuiButton
+                        size="xs"
+                        appearance="flat"
+                        iconStart="@tui.layers"
+                        (click)="inspectSplit({ path })"
                       >
                         {{ archiveButton(st) }}
                       </button>

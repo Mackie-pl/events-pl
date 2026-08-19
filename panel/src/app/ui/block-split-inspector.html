@@ -1,0 +1,174 @@
+@if (loading()) {
+  <p class="muted">Ciągnę {{ context.data.path }} z prywatnego archiwum…</p>
+} @else if (split(); as s) {
+  <div class="head">
+    <strong class="title">{{ s.how }}</strong>
+    @if (s.detected) {
+      <span tuiBadge size="s" appearance="positive" title="strona rozpoznana jako lista kart">
+        lista kart
+      </span>
+    } @else {
+      <span tuiBadge size="s" appearance="neutral" title="tniemy po akapitach">
+        bez kart
+      </span>
+    }
+    <code class="url">{{ s.url }}</code>
+  </div>
+
+  <section class="facts">
+    <div class="fact">
+      <span>Wejście</span>
+      <strong>
+        @if (s.htmlChars !== null) {
+          {{ num(s.htmlChars) }} zn. HTML →
+        }
+        {{ num(totals().chars) }} zn.
+      </strong>
+    </div>
+    <div class="fact">
+      <span>Bloki</span><strong>{{ totals().blocks }}</strong>
+    </div>
+    <div class="fact">
+      <span>Karty</span>
+      <strong>{{ totals().cards }} · {{ num(totals().cardChars) }} zn.</strong>
+    </div>
+    <div class="fact">
+      <span>Do modelu</span>
+      <strong>{{ totals().fresh }} · {{ num(totals().freshChars) }} zn.</strong>
+    </div>
+    <div class="fact" [class.warn]="totals().silent > 0">
+      <span>Jałowe</span>
+      <strong>{{ totals().silent }} · {{ num(totals().silentChars) }} zn.</strong>
+    </div>
+    <div class="fact">
+      <span>Wydarzenia</span><strong>{{ totals().events }}</strong>
+    </div>
+    @if (s.thinned) {
+      <div class="fact">
+        <span>Odchudzone</span><strong>−{{ num(s.thinned) }} zn.</strong>
+      </div>
+    }
+  </section>
+
+  @if (s.perturbedAt) {
+    <p class="note warn">
+      Podział po DOM-ie odrzucony samokontrolą — {{ s.perturbedAt }}. To, co widać niżej,
+      pochodzi z podziału po akapitach.
+    </p>
+  }
+
+  @if (s.nearMiss.length) {
+    <details class="near-miss">
+      <summary>{{ s.nearMiss.length }} grup rodzeństwa odrzuconych jako lista kart</summary>
+      <ul>
+        @for (m of s.nearMiss; track m.sig) {
+          <li><code>{{ m.sig }}</code> ×{{ m.n }} — {{ m.why }}</li>
+        }
+      </ul>
+    </details>
+  }
+
+  <!-- pasek strony: szerokość segmentu to udział w znakach, więc widać, ile z dokumentu to co -->
+  <div class="ribbon" role="list">
+    @for (b of split()!.blocks; track b.i) {
+      <button
+        type="button"
+        role="listitem"
+        class="seg"
+        [class]="'seg tone-' + tone(b)"
+        [class.open]="opened() === b.i"
+        [style.width]="width(b)"
+        [title]="title(b)"
+        (click)="toggle(b.i)"
+      ></button>
+    }
+  </div>
+  <div class="legend">
+    <span class="key tone-card"></span> karta z cache
+    <span class="key tone-card-fresh"></span> karta do modelu
+    <span class="key tone-rest"></span> reszta z cache
+    <span class="key tone-rest-fresh"></span> reszta do modelu
+    <span class="key tone-silent"></span> świeży bez wydarzeń
+  </div>
+
+  <div class="tabs">
+    @for (f of filters; track f.key) {
+      <button
+        tuiButton
+        size="xs"
+        [appearance]="filter() === f.key ? 'primary' : 'secondary'"
+        [title]="f.hint"
+        (click)="filter.set(f.key)"
+      >
+        {{ f.label }}
+      </button>
+    }
+    <button
+      tuiButton
+      size="xs"
+      [appearance]="showRaw() ? 'primary' : 'secondary'"
+      (click)="showRaw.set(!showRaw())"
+    >
+      raw
+    </button>
+  </div>
+
+  @if (showRaw()) {
+    <app-code-view [text]="s.raw" lang="json" [label]="s.path ?? 'rozliczenie podziału'" />
+  } @else {
+    <ol class="blocks">
+      @for (b of rows(); track b.i) {
+        <li class="block" [class.fresh]="b.fresh" [class.silent]="b.fresh && !b.events">
+          <button type="button" class="row" (click)="toggle(b.i)">
+            <span class="idx">#{{ b.i }}</span>
+            <span tuiBadge size="s" [appearance]="b.card ? 'primary' : 'neutral'">
+              {{ b.card ? 'karta' : 'reszta' }}
+            </span>
+            @if (b.cut; as cut) {
+              <span
+                tuiBadge
+                size="s"
+                [appearance]="cutMeta[cut].warn ? 'warning' : 'neutral'"
+                [title]="cutMeta[cut].hint"
+              >
+                {{ cutMeta[cut].label }}
+              </span>
+            }
+            @if (b.fresh) {
+              <span tuiBadge size="s" appearance="warning" title="poszedł do modelu w tym przebiegu">
+                do modelu
+              </span>
+            } @else {
+              <span tuiBadge size="s" appearance="positive" [title]="'w cache od ' + (b.since ?? '?')">
+                z cache
+              </span>
+            }
+            @if (b.events) {
+              <span tuiBadge size="s" appearance="positive">{{ b.events }} wyd.</span>
+            }
+            @if (b.followups) {
+              <span tuiBadge size="s" appearance="neutral">{{ b.followups }} followup</span>
+            }
+            <span class="chars">{{ num(b.chars) }} zn.</span>
+            @if (b.truncated) {
+              <span tuiBadge size="s" appearance="neutral" title="rozliczenie sprzed 2026-08-19 — treść tylko dla bloków świeżych">
+                urwane
+              </span>
+            }
+            <span class="peek">{{ head(b.text) }}</span>
+          </button>
+          @if (opened() === b.i) {
+            <app-code-view [text]="b.text" lang="text" [label]="'blok #' + b.i + ' · ' + b.hash" />
+          }
+        </li>
+      }
+    </ol>
+  }
+
+  @if (s.path) {
+    <p class="muted path">{{ s.path }}</p>
+  }
+} @else if (fallback(); as raw) {
+  <p class="note warn">To nie jest rozliczenie podziału — pokazuję obiekt tak, jak leży.</p>
+  <app-code-view [text]="raw" lang="json" [label]="context.data.path" />
+}

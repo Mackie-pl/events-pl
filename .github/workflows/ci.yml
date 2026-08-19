@@ -17,6 +17,9 @@ on:
     paths:
       - "src/**"
       - "test/**"
+      # panel ma w tym samym workflow własny job z lintem, więc bez niego commit ruszający
+      # WYŁĄCZNIE panel nie odpalałby nic — dokładnie ta pułapka, co z config.json wyżej
+      - "panel/**"
       - "config.json"
       - "config-meta.json"
       - "package.json"

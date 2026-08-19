@@ -70,6 +70,32 @@ describe("podział na bloki", () => {
   });
 });
 
+/**
+ * Powód cięcia jest OBSERVABILITY, więc jego złamanie jest ciche — podgląd podziału
+ * pokazywałby po prostu inne etykiety i nikt by nie zauważył. Stąd asercje na konkretny
+ * powód przy konkretnym kształcie wejścia, nie na obecność pola.
+ */
+describe("czemu granica wypadła tutaj", () => {
+  it("granica z treści to `content`, ostatni blok strony to `end`", () => {
+    const blocks = segment(page(TITLES));
+    assert.ok(blocks.length > 2, "za mało bloków, żeby rozróżnić powody");
+    assert.equal(blocks[blocks.length - 1]?.cut, "end");
+    // wszystko przed ostatnim zamknęła treść akapitu — sufit 4000 zn. nie ma tu czego łapać
+    for (const b of blocks.slice(0, -1)) assert.equal(b.cut, "content");
+  });
+
+  /**
+   * Sufit jest jedyną granicą zależną od POZYCJI, więc to on psuje lokalność cache'a —
+   * a bez etykiety w archiwum nie da się powiedzieć, czy strona tnie się treścią, czy
+   * przelewa przez sufit. Wymuszamy go progiem, bo na żywej stronie odzywa się rzadko.
+   */
+  it("cięcie samym sufitem to `ceiling`", () => {
+    const blocks = segment(page(TITLES), { maxChars: 300, targetParas: 1000 });
+    assert.ok(blocks.some((b) => b.cut === "ceiling"), "sufit nie odnotował ani jednego cięcia");
+    assert.ok(!blocks.some((b) => b.cut === "content"), "przy targetParas 1000 nie ma granic z treści");
+  });
+});
+
 describe("sufit odzysku", () => {
   it("identyczna treść to 100%, rozłączna to 0%", () => {
     assert.equal(ceilingReuse(page(TITLES), page(TITLES)), 1);

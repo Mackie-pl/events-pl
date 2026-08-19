@@ -22,10 +22,32 @@
  */
 import { sha256 } from "../../shared/hash.js";
 
+/**
+ * CZEMU blok skończył się w tym miejscu. Jedno pole, a rozstrzyga pytanie, którego ślad
+ * dotąd nie umiał postawić: „co ten podział w ogóle uznał za kartę, a co za resztę strony".
+ *
+ * Powód z 2026-08-19 (okpoznan.pl): lista filtrów to JEDEN akapit na 724 znaki, a jej
+ * granica jest rzutem monetą z `isBoundary` — dzień w dzień ta sama treść w innej kolejności
+ * partnerów raz zamyka blok (`content`), raz nie, i wtedy blok połyka sąsiadujący spis
+ * miesięcy. Diagnoza wymagała odtworzenia podziału skryptem, bo w archiwum stały same
+ * hashe: widać BYŁO, że blok jest nowy, nie było widać, że przesunęła się granica.
+ *
+ *   card    — krawędź karty z podziału po DOM-ie (powtarzalne rodzeństwo)
+ *   post    — granica dana przez źródło, nie zgadywana (posty grupy FB)
+ *   content — granica z treści akapitu (`isBoundary`), jedyna odporna na przesunięcia
+ *   ceiling — twardy sufit `maxChars`; JEDYNA granica zależna od pozycji, więc psuje
+ *             lokalność i ma się odzywać rzadko — w śladzie widać, gdy zaczyna dominować
+ *   end     — koniec ciętego kawałka, czyli reszta bufora. Przy podziale po DOM-ie każdy
+ *             fragment MIĘDZY kartami tnie się osobno, więc `end` nie znaczy „koniec strony",
+ *             tylko „dalej zaczyna się karta" — i dlatego bywa go na stronie kilka.
+ */
+export type BlockCut = "card" | "post" | "content" | "ceiling" | "end";
+
 export interface Block {
   text: string;
   hash: string;
   chars: number;
+  cut: BlockCut;
 }
 
 /**
@@ -106,10 +128,15 @@ export function paragraphs(text: string): string[] {
 const isBoundary = (para: string, targetParas: number): boolean =>
   parseInt(keyOf(para).slice(0, 8), 16) % targetParas === 0;
 
-/** Blok z gotowego tekstu. Hash liczy się z TREŚCI po masce, więc jest kluczem cache'a. */
-export const toBlock = (text: string): Block => ({ text, hash: keyOf(text), chars: text.length });
+/**
+ * Blok z gotowego tekstu. Hash liczy się z TREŚCI po masce, więc jest kluczem cache'a;
+ * `cut` NIE wchodzi do hasza — ta sama treść ma dawać ten sam klucz niezależnie od tego,
+ * czy przyszła z karty, czy z akapitów, bo inaczej zmiana podziału zerwałaby cały cache.
+ */
+export const toBlock = (text: string, cut: BlockCut): Block =>
+  ({ text, hash: keyOf(text), chars: text.length, cut });
 
-const mkBlock = (paras: string[]): Block => toBlock(paras.join("\n\n"));
+const mkBlock = (paras: string[], cut: BlockCut): Block => toBlock(paras.join("\n\n"), cut);
 
 export function segment(text: string, opts: SegmentOptions = DEFAULT_SEGMENT): Block[] {
   const blocks: Block[] = [];
@@ -120,13 +147,16 @@ export function segment(text: string, opts: SegmentOptions = DEFAULT_SEGMENT): B
     size += p.length + 2;
     // sufit jest bezpiecznikiem na strony bez ani jednej granicy, i JAKO JEDYNY zależy od
     // pozycji — czyli potrafi zepsuć lokalność. Dlatego jest wysoko: ma się odzywać rzadko.
-    if (size >= opts.maxChars || isBoundary(p, opts.targetParas)) {
-      blocks.push(mkBlock(buf));
+    // Powód cięcia liczy się PRZED sufitem: gdy oba padają na tym samym akapicie, granica
+    // wypadłaby tu również bez sufitu, więc `ceiling` znaczy „TYLKO sufit", a nie „też sufit".
+    const boundary = isBoundary(p, opts.targetParas);
+    if (boundary || size >= opts.maxChars) {
+      blocks.push(mkBlock(buf, boundary ? "content" : "ceiling"));
       buf = [];
       size = 0;
     }
   }
-  if (buf.length) blocks.push(mkBlock(buf));
+  if (buf.length) blocks.push(mkBlock(buf, "end"));
   return blocks;
 }
 

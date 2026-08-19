@@ -378,7 +378,7 @@ function cut(marked: string): { blocks: Block[]; cardHashes: string[] } {
     if (i % 2 === 1) {
       const text = part.trim();
       if (text) {
-        const block = toBlock(text);
+        const block = toBlock(text, "card");
         blocks.push(block);
         cardHashes.push(block.hash);
       }

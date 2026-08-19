@@ -45,8 +45,8 @@ describe("unionOf — który blok jest kontekstem followupa", () => {
 
   it("plakat dostaje tekst bloku, w którym model go wskazał", () => {
     const u = unionOf(
-      [{ text: "Koncert w sobotę", hash: "h1", chars: 16 },
-        { text: "Kontakt do biura", hash: "h2", chars: 16 }],
+      [{ text: "Koncert w sobotę", hash: "h1", chars: 16, cut: "card" },
+        { text: "Kontakt do biura", hash: "h2", chars: 16, cut: "content" }],
       state({ h1: ["https://x.test/plakat.jpg"], h2: [] }),
       "2026-08-18",
     );
@@ -55,8 +55,8 @@ describe("unionOf — który blok jest kontekstem followupa", () => {
 
   it("ten sam plakat w dwóch blokach bierze pierwszy — drugi to zwykle „zobacz też”", () => {
     const u = unionOf(
-      [{ text: "Opis wydarzenia", hash: "h1", chars: 15 },
-        { text: "Zobacz też", hash: "h2", chars: 10 }],
+      [{ text: "Opis wydarzenia", hash: "h1", chars: 15, cut: "card" },
+        { text: "Zobacz też", hash: "h2", chars: 10, cut: "content" }],
       state({ h1: ["https://x.test/p.jpg"], h2: ["https://x.test/p.jpg"] }),
       "2026-08-18",
     );
@@ -66,7 +66,7 @@ describe("unionOf — który blok jest kontekstem followupa", () => {
 
   it("blok bez wpisu w cache nie wnosi ani odnośnika, ani kontekstu", () => {
     const u = unionOf(
-      [{ text: "Nowy blok", hash: "nieznany", chars: 9 }], state({}), "2026-08-18",
+      [{ text: "Nowy blok", hash: "nieznany", chars: 9, cut: "card" }], state({}), "2026-08-18",
     );
     assert.equal(u.context.size, 0);
     assert.deepEqual(u.followups, []);
