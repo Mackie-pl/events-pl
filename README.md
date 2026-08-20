@@ -648,10 +648,51 @@ Dwie rzeczy z tego wiersza zmieniły się 2026-08-19, obie po tym, jak diagnoza 
   całej strony ucina segmentację wcześniej i takich podziałów wypada 2 na dobę.
 
 `cut` mówi, CO postawiło granicę: `card` (krawędź karty z DOM-u), `post` (granica dana przez
-źródło — post grupy FB), `content` (hash akapitu, jedyna granica odporna na przesunięcia),
-`ceiling` (twardy sufit 4 000 zn. — **jedyna** zależna od pozycji, więc psuje lokalność
-cache'a i ma się odzywać rzadko), `end` (koniec ciętego kawałka). Bez tego pola nie dało się
-odróżnić „zmieniła się strona" od „przesunęła się nasza granica".
+źródło — post grupy FB), `flip` (zmiana rodzaju akapitu: chrom obok treści), `content` (hash
+akapitu, jedyna granica odporna na przesunięcia), `ceiling` (twardy sufit 4 000 zn. — **jedyna**
+zależna od pozycji, więc psuje lokalność cache'a i ma się odzywać rzadko), `end` (koniec ciętego
+kawałka). Bez tego pola nie dało się odróżnić „zmieniła się strona" od „przesunęła się nasza
+granica".
+
+### Chrom odsiewany bez modelu
+
+Menu, zgody na ciasteczka, stopki prawne, paski filtrów i stron rozpoznaje `extract/chrome.ts` —
+zwykłym sitem, bez ani jednego wywołania. Podstawa jest pomiarowa (681 bloków z 35 stron,
+2026-08-19): **datę niesie 91% bloków, z których wyszło wydarzenie, i 22% pozostałych**; godzinę
+odpowiednio 67% i 10%. Reszta to zamknięte słownictwo polskiego CMS-u („Polityka prywatności",
+„Deklaracja dostępności", „Mapa strony", „Przejdź do treści") i kształt: krótkie wiersze, dużo
+odnośników, spisy podstron, paski numerów stron.
+
+Kształt reguł dyktuje **asymetria błędu**. Fałszywe „to chrom" kasuje wydarzenie na zawsze i nikt
+się nie dowie; fałszywe „to treść" kosztuje ułamek centa i widać je w tabeli jałowych bloków.
+Stąd trzy bezpieczniki:
+
+- **weto daty i godziny jest bezwarunkowe** — blok z datą nigdy nie jest chromem, choćby miał
+  wszystkie inne cechy menu. Odstępstwo dla stopek prawnych zostało zmierzone (+9 punktów odzysku)
+  i **odrzucone**: za każdym razem znajdował się blok, w którym segmentacja skleiła stopkę
+  z prawdziwym wydarzeniem;
+- **guziki liczą się tylko jako całe wiersze.** „Czytaj więcej" w słowniku fraz kosztowało cztery
+  karty bw.poznan.pl z rzędu — zajawka zakończona guzikiem to nadal zajawka;
+- **fail closed**: gdy sito uzna za chrom CAŁĄ stronę, nie odsiewamy niczego.
+
+Odsiew **nie zostawia stanu**: nic nie wchodzi do `state.blocks`, więc jutro ten sam fragment
+przechodzi tę samą darmową ocenę od nowa, a strona, która zmieni kształt, zmienia werdykt sama.
+Krok `block.chrome` w śladzie mówi ile, ile znaków i **z jakiego powodu**.
+
+Żeby sito miało co odsiewać, musiał się zmienić sam podział — chrom sklejony z kartą jest nie do
+ruszenia z definicji. Dwie zmiany z 2026-08-20, obie mierzone na 53 stronach (444 013 zn.):
+
+| zmiana | po co |
+|---|---|
+| granica `flip` w `segment()` | dotąd cięcie stawiał wyłącznie hash akapitu, czyli średnio co szósty — stopka obok ogona karty zostawała z nim w jednym bloku, jeśli moneta nie padła między nimi. Chrom uwięziony w blokach niejednorodnych: **31 814 → 11 270 zn.**, kosztem 7,5% więcej bloków |
+| weto `CARD_CHROME_LIMIT` w `dom-blocks.ts` | wykrywanie kart pyta o STRUKTURĘ, a drzewo nawigacji z `<li>` spełnia je co do joty: mdk1/mdk2.poznan.pl oddawały spis oferty zajęć (3 201 i 3 504 zn.) jako kartę, poznan.pl — kategorie zgody na ciasteczka. Fragment z przewagą chromu przestaje być kartą i wraca do podziału po akapitach. **58 rozciętych „kart", zero z nich dało kiedykolwiek wydarzenie, zero zgubionych followupów** |
+
+Razem, na wdrożonym kodzie: **69 447 z 444 013 znaków (15,6%) nie jedzie do modelu**, przy zerze
+bloków z wydarzeniami wśród odsianych. Oszczędność jest niewielka w pieniądzu — chrom jest
+stabilny, więc cache bloków i tak zjadał go po pierwszym dniu (odsiew dotyka ~1% treści, za którą
+płaci kolejny przebieg) — i cała jej wartość leży w PIERWSZYM czytaniu strony: nowe źródło
+z `discover`, świeży followup, przebudowany serwis. To jest ten koszt, który rośnie z liczbą
+źródeł, a nie z liczbą dni.
 
 **Podgląd podziału w panelu** (`Block split` przy kroku `podział:` w śladzie źródła, wymaga
 `npm run panel-server`): pasek całej strony z szerokością segmentu proporcjonalną do znaków,

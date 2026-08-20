@@ -9,9 +9,9 @@
  */
 
 /** Czemu blok skończył się w tym miejscu — patrz `BlockCut` w src/pipeline/extract/blocks.ts. */
-export type BlockCut = 'card' | 'post' | 'content' | 'ceiling' | 'end';
+export type BlockCut = 'card' | 'post' | 'flip' | 'content' | 'ceiling' | 'end';
 
-const CUTS: readonly BlockCut[] = ['card', 'post', 'content', 'ceiling', 'end'];
+const CUTS: readonly BlockCut[] = ['card', 'post', 'flip', 'content', 'ceiling', 'end'];
 
 /**
  * Etykiety powodów cięcia. Nie są tłumaczeniem nazwy pola, tylko odpowiedzią na pytanie
@@ -21,6 +21,7 @@ const CUTS: readonly BlockCut[] = ['card', 'post', 'content', 'ceiling', 'end'];
 export const CUT_META: Record<BlockCut, { label: string; hint: string; warn?: boolean }> = {
   card: { label: 'card', hint: 'krawędź karty z podziału po DOM-ie' },
   post: { label: 'post', hint: 'granica dana przez źródło (post grupy FB)' },
+  flip: { label: 'flip', hint: 'zmiana rodzaju akapitu: chrom obok treści' },
   content: { label: 'content', hint: 'granica z treści akapitu — odporna na przesunięcia' },
   ceiling: {
     label: 'ceiling',

@@ -117,6 +117,8 @@ export interface BlockStats {
   total: number;
   cached: number;
   fresh: number;
+  /** bloki odsiane jako chrom PRZED wywołaniem — nie płacimy za nie i nie wchodzą do cache'a */
+  chrome?: number;
 }
 
 /**

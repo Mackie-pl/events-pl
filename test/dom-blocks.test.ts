@@ -5,7 +5,9 @@
  * (suma bloków = strona) i brak listy musi cofać nas do starego zachowania, a nie do zera.
  */
 import { strict as assert } from "node:assert";
+import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
+import { fileURLToPath } from "node:url";
 
 import { reuseAgainst } from "../src/pipeline/extract/blocks.js";
 import { segmentHtml } from "../src/pipeline/extract/dom-blocks.js";
@@ -58,6 +60,51 @@ const allText = (html: string): string =>
   segmentHtml(html).blocks.map((b) => b.text).join("\n").toLowerCase();
 
 const has = (html: string, needle: string): boolean => allText(html).includes(needle.toLowerCase());
+
+/**
+ * MENU TO NIE KARTA, choćby miało kształt karty.
+ *
+ * Wykrywanie kart pyta wyłącznie o STRUKTURĘ: powtarzalne rodzeństwo o tym samym podpisie.
+ * Drzewo nawigacji z `<li>` spełnia to co do joty, więc mdk1/mdk2.poznan.pl oddawały spis
+ * oferty zajęć (3 504 i 3 201 zn.) jako kartę wydarzenia, a poznan.pl kartę z kategoriami
+ * zgody na ciasteczka. Karta jest niepodzielna, więc chrom wjeżdżał do modelu co dzień
+ * i nie było jak go tknąć — pomiar 2026-08-20: 69 „kart" po 40% chromu i więcej,
+ * 28 855 znaków, 12,2% masy wszystkich kart.
+ *
+ * Weto jest TREŚCIOWE i nakłada się na strukturalne zgadywanie: fragment, w którym przeważają
+ * znaki chromu, wraca do podziału po akapitach. Rozstrzyga asymetria — takie „karty" nie dały
+ * ani jednego wydarzenia od początku rejestru, a każda z nich kosztuje codziennie.
+ */
+describe("karta, która jest chromem", () => {
+  /** mdk2.poznan.pl/aktualnosci — strona z rejestru, pobrana 2026-08-19 (patrz fixtures). */
+  const MDK2 = readFileSync(
+    fileURLToPath(new URL("fixtures/mdk2-poznan-aktualnosci-2026-08-19.html", import.meta.url)),
+    "utf8",
+  );
+
+  it("spis oferty zajęć nie zostaje kartą", () => {
+    const seg = segmentHtml(MDK2);
+    const cards = new Set(seg.cardHashes);
+    const oferta = seg.blocks.filter(
+      (b) => cards.has(b.hash) && b.text.includes("/oferta-zajec/"),
+    );
+    assert.deepEqual(oferta.map((b) => b.chars), [], "drzewo oferty nadal liczy się jako karta");
+  });
+
+  it("treść nie ginie — spis nadal stoi w którymś bloku", () => {
+    const seg = segmentHtml(MDK2);
+    assert.ok(
+      seg.blocks.some((b) => b.text.includes("/oferta-zajec/")),
+      "unieważniona karta zniknęła ze strony zamiast wrócić do reszty",
+    );
+  });
+
+  it("prawdziwe karty przeżywają weto", () => {
+    const seg = segmentHtml(MDK2);
+    assert.ok(seg.detected, "strona przestała być listą kart");
+    assert.ok(seg.cards >= 10, `zostało tylko ${seg.cards} kart — weto zjadło listę`);
+  });
+});
 
 describe("podział po DOM-ie", () => {
   it("rozpoznaje powtarzalne rodzeństwo jako karty", () => {

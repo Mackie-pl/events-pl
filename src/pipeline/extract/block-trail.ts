@@ -100,6 +100,24 @@ export function auditNearMiss(dom: DomSegmentation): void {
     { candidates: dom.nearMiss.length, why: shown });
 }
 
+/**
+ * Krok „co odsiało sito chromu" — emitowany PRZED podziałem na paczki, bo to decyzja
+ * o wydatku, a nie jej skutek.
+ *
+ * Notka wymienia POWODY, nie tylko sztuki: odsiew bez powodu jest nie do sprawdzenia,
+ * a przy kilkudziesięciu źródłach nikt nie zajrzy do archiwum, żeby zgadnąć, czemu blok
+ * nie pojechał. Milczy, gdy nie odsiano nic — pusty krok na każdą stronę to szum.
+ */
+export function auditChrome(skipped: { block: Block; why: string }[], fresh: Block[]): void {
+  if (!skipped.length) return;
+  const chars = totalChars(skipped.map((s) => s.block));
+  const why = [...new Set(skipped.map((s) => s.why.replace(/:.*$/u, "")))].slice(0, 3);
+  audit("block.chrome",
+    `${skipped.length} z ${fresh.length} nowych bloków to chrom — ${num(chars)} zn. `
+    + `(${pct(chars, totalChars(fresh))}% świeżej treści) nie jedzie do modelu: ${why.join("; ")}`,
+    { skipped: skipped.length, chars, fresh: fresh.length, why: why.join("; ") });
+}
+
 /** Jeden wiersz rozliczenia — wyłącznie do prywatnego archiwum, nigdy do audit.json. */
 interface Row {
   i: number;

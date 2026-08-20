@@ -18,6 +18,8 @@ export type AuditKind =
   | 'llm'
   | 'event.dropped'
   | 'block'
+  /** ile świeżych bloków odsiało sito chromu i z jakiego powodu (patrz extract/chrome.ts) */
+  | 'block.chrome'
   /** bloki → wydarzenia: co dały świeże, co cache (detail.archive = rozliczenie blok po bloku) */
   | 'block.parsed'
   | 'event.past'

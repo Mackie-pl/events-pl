@@ -32,7 +32,8 @@ import { parseDocument } from "htmlparser2";
 
 import { toText } from "../../adapters/page-fetch.js";
 
-import { type Block, segment, toBlock } from "./blocks.js";
+import { type Block, paragraphs, segment, toBlock } from "./blocks.js";
+import { chromeShare } from "./chrome.js";
 
 /** Tyle samokształtnego rodzeństwa uznajemy za listę. Dwa to za mało — bywa układem 2-kolumnowym. */
 const MIN_SIBLINGS = 3;
@@ -370,6 +371,22 @@ function mark(el: Element): void {
   siblings.splice(siblings.indexOf(el), 1, open, el, close);
 }
 
+/**
+ * Ile znaków karty musi być chromem, żeby przestała być kartą.
+ *
+ * Wykrywanie kart pyta wyłącznie o STRUKTURĘ — powtarzalne rodzeństwo o tym samym podpisie —
+ * a drzewo nawigacji z `<li>` spełnia to co do joty. Stąd mdk1/mdk2.poznan.pl oddawały spis
+ * oferty zajęć (3 201 i 3 504 zn.) jako kartę wydarzenia, a poznan.pl kartę z kategoriami
+ * zgody na ciasteczka. Karta jest niepodzielna, więc ten chrom jechał do modelu codziennie
+ * i nie było jak go tknąć: pomiar 2026-08-20 — 69 „kart" po ≥40% chromu, 28 855 znaków,
+ * 12,2% masy wszystkich kart.
+ *
+ * Próg jest wysoko (połowa ZNAKÓW), bo pomyłka w tę stronę rozcina prawdziwą kartę. Przy
+ * połowie żadna z 58 rozciętych kart nie dała nigdy wydarzenia ani nie zgubiła followupa,
+ * a to, co po nich zostało, to nagłówki w rodzaju „E-URZĄD" i „MENU PRAWNE".
+ */
+const CARD_CHROME_LIMIT = 0.5;
+
 /** Tekst z znacznikami → bloki. Nieparzyste kawałki to karty, parzyste — reszta strony. */
 function cut(marked: string): { blocks: Block[]; cardHashes: string[] } {
   const blocks: Block[] = [];
@@ -377,6 +394,13 @@ function cut(marked: string): { blocks: Block[]; cardHashes: string[] } {
   for (const [i, part] of marked.split(MARK_SPLIT).entries()) {
     if (i % 2 === 1) {
       const text = part.trim();
+      if (text && chromeShare(paragraphs(text)) >= CARD_CHROME_LIMIT) {
+        // weto TREŚCIOWE nałożone na strukturalne zgadywanie: to nie jest karta, tylko menu.
+        // Wraca do podziału po akapitach, gdzie granica na zmianie rodzaju rozdzieli chrom
+        // od tego, co ewentualnie zostało z treści.
+        blocks.push(...segment(text));
+        continue;
+      }
       if (text) {
         const block = toBlock(text, "card");
         blocks.push(block);

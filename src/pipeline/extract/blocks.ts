@@ -22,6 +22,8 @@
  */
 import { sha256 } from "../../shared/hash.js";
 
+import { looksLikeChrome } from "./chrome.js";
+
 /**
  * CZEMU blok skończył się w tym miejscu. Jedno pole, a rozstrzyga pytanie, którego ślad
  * dotąd nie umiał postawić: „co ten podział w ogóle uznał za kartę, a co za resztę strony".
@@ -34,6 +36,7 @@ import { sha256 } from "../../shared/hash.js";
  *
  *   card    — krawędź karty z podziału po DOM-ie (powtarzalne rodzeństwo)
  *   post    — granica dana przez źródło, nie zgadywana (posty grupy FB)
+ *   flip    — zmiana RODZAJU akapitu: chrom obok treści (patrz `segment`)
  *   content — granica z treści akapitu (`isBoundary`), jedyna odporna na przesunięcia
  *   ceiling — twardy sufit `maxChars`; JEDYNA granica zależna od pozycji, więc psuje
  *             lokalność i ma się odzywać rzadko — w śladzie widać, gdy zaczyna dominować
@@ -41,7 +44,7 @@ import { sha256 } from "../../shared/hash.js";
  *             fragment MIĘDZY kartami tnie się osobno, więc `end` nie znaczy „koniec strony",
  *             tylko „dalej zaczyna się karta" — i dlatego bywa go na stronie kilka.
  */
-export type BlockCut = "card" | "post" | "content" | "ceiling" | "end";
+export type BlockCut = "card" | "post" | "flip" | "content" | "ceiling" | "end";
 
 export interface Block {
   text: string;
@@ -138,11 +141,39 @@ export const toBlock = (text: string, cut: BlockCut): Block =>
 
 const mkBlock = (paras: string[], cut: BlockCut): Block => toBlock(paras.join("\n\n"), cut);
 
+/**
+ * Rodzaj akapitu — chrom albo treść. Pamięć podręczna, bo ten sam akapit przechodzi tędy
+ * i przy wyznaczaniu granic, i przy odsiewie całych bloków.
+ */
+const chromeCache = new Map<string, boolean>();
+const isChrome = (para: string): boolean => {
+  const hit = chromeCache.get(para);
+  if (hit !== undefined) return hit;
+  const v = looksLikeChrome(para).chrome;
+  chromeCache.set(para, v);
+  return v;
+};
+
 export function segment(text: string, opts: SegmentOptions = DEFAULT_SEGMENT): Block[] {
   const blocks: Block[] = [];
+  const paras = paragraphs(text);
   let buf: string[] = [];
   let size = 0;
-  for (const p of paragraphs(text)) {
+  for (const [i, p] of paras.entries()) {
+    // ZMIANA RODZAJU zamyka blok PRZED dołożeniem akapitu — stopka i ogon karty mają wyjść
+    // z tego dwoma blokami, a nie jednym. Dotąd granice stawiał wyłącznie hash akapitu, czyli
+    // średnio co szósty, więc chrom obok karty zostawał z nią w jednym bloku, jeśli moneta
+    // nie padła akurat między nimi. Blok mieszany jest nie do odsiania z definicji: zabrałby
+    // ze sobą wydarzenie. Pomiar 2026-08-20 na 53 stronach — chrom uwięziony w blokach
+    // niejednorodnych spadł z 31 814 do 11 270 znaków, kosztem 7,5% więcej bloków.
+    //
+    // LOKALNOŚĆ ZOSTAJE, i to jest tu warunek konieczny: rodzaj zależy wyłącznie od WŁASNEJ
+    // treści akapitu, więc usunięcie karty nadal przestawia granice tylko w jej sąsiedztwie.
+    if (buf.length && isChrome(p) !== isChrome(paras[i - 1]!)) {
+      blocks.push(mkBlock(buf, "flip"));
+      buf = [];
+      size = 0;
+    }
     buf.push(p);
     size += p.length + 2;
     // sufit jest bezpiecznikiem na strony bez ani jednej granicy, i JAKO JEDYNY zależy od

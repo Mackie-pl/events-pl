@@ -96,6 +96,57 @@ describe("czemu granica wypadła tutaj", () => {
   });
 });
 
+/**
+ * GRANICA NA ZMIANIE RODZAJU AKAPITU.
+ *
+ * Dotąd granice stawiał wyłącznie hash akapitu, czyli średnio co szósty — więc stopka obok
+ * ogona karty zostawała z nim w jednym bloku, jeśli moneta nie padła akurat między nimi.
+ * Blok mieszany jest nie do odsiania z definicji: zabrałby ze sobą wydarzenie. Pomiar
+ * z 2026-08-20 na 53 stronach: 31 814 znaków chromu tkwiło w blokach niejednorodnych,
+ * po tej zmianie 11 270.
+ */
+describe("granica na zmianie rodzaju akapitu", () => {
+  /** ok-lubon.pl, 2026-08-20 — ogon karty, pasek stron i stopka prawna w jednym bloku. */
+  const SKLEJKA = [
+    "14 marca 2026 12:00 - 13:00\n[https://www.oklubon.pl/wydarzenia/spektakl-dla-dzieci-jajko]",
+    "POLITYKA PRYWATNOŚCI",
+    "Ta strona korzysta z plików cookies aby świadczyć usługi na najwyższym poziomie."
+      + " Dalsze korzystanie ze strony oznacza zgodę, zgodnie z polityką prywatności.",
+  ].join("\n\n");
+
+  it("data i stopka prawna nie mogą wylądować w jednym bloku", () => {
+    const blocks = segment(SKLEJKA);
+    const zData = blocks.filter((b) => b.text.includes("14 marca 2026"));
+    assert.equal(zData.length, 1, "akapit z datą ma stać w dokładnie jednym bloku");
+    assert.ok(
+      !zData[0]!.text.includes("POLITYKA PRYWATNOŚCI"),
+      "blok z datą wciąż niesie stopkę — odsiew nie ma jak jej ruszyć",
+    );
+  });
+
+  it("powód cięcia mówi wprost, że to zmiana rodzaju", () => {
+    const cuts = segment(SKLEJKA).map((b) => b.cut);
+    assert.ok(cuts.includes("flip"), `brak granicy \`flip\` w śladzie: ${cuts.join(", ")}`);
+  });
+
+  /**
+   * Własność, dla której ten podział w ogóle istnieje, MUSI przeżyć nową granicę: rodzaj
+   * akapitu zależy wyłącznie od jego własnej treści, więc usunięcie karty nadal przesuwa
+   * granice tylko w jej sąsiedztwie. Sprawdzone też na żywej stronie (okpoznan, 43 bloki):
+   * jeden nowy blok po zniknięciu trzech akapitów.
+   */
+  it("nie psuje lokalności: usunięcie karty to nadal jeden nowy blok", () => {
+    const chrom = "\n\nMenu [/]\n\nPolityka prywatności [/polityka]\n\nMapa strony [/mapa]";
+    const before = segment(page(TITLES) + chrom);
+    const after = segment(page(TITLES.filter((t) => t !== "Kwadrofonik")) + chrom);
+    const seen = new Set(before.map((b) => b.hash));
+    assert.ok(
+      after.filter((b) => !seen.has(b.hash)).length <= 1,
+      `spodziewany ≤1 nowy blok, było ${after.filter((b) => !seen.has(b.hash)).length}`,
+    );
+  });
+});
+
 describe("sufit odzysku", () => {
   it("identyczna treść to 100%, rozłączna to 0%", () => {
     assert.equal(ceilingReuse(page(TITLES), page(TITLES)), 1);

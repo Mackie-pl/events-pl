@@ -18,7 +18,8 @@ import type { BlockStats, EventItem, PipelineState } from "../../types/index.js"
 
 import { type Block, segment, toBlock } from "./blocks.js";
 import { detach, lookupBlock, storeBlock, touchBlock } from "./block-cache.js";
-import { type SplitInfo, auditBlockResult, auditNearMiss, auditSplit } from "./block-trail.js";
+import { type SplitInfo, auditBlockResult, auditChrome, auditNearMiss, auditSplit } from "./block-trail.js";
+import { looksLikeChrome } from "./chrome.js";
 import { segmentHtml } from "./dom-blocks.js";
 import { extractBatch } from "./extract.js";
 
@@ -95,6 +96,35 @@ export function chunk(blocks: Block[]): Block[][] {
   return out;
 }
 
+/** Blok odsiany jako chrom — razem z powodem, bo bez niego odsiew jest niesprawdzalny. */
+export interface SkippedChrome {
+  block: Block;
+  why: string;
+}
+
+/**
+ * Rozdzielenie świeżych bloków na te, za które warto zapłacić, i CHROM.
+ *
+ * Chrom rozpoznaje `chrome.ts` — bez modelu, po słownictwie i kształcie, z bezwarunkowym
+ * wetem na datę i godzinę. Odsiew nie zostawia po sobie ŻADNEGO stanu: nic nie wchodzi do
+ * `state.blocks`, więc jutro ten sam fragment przejdzie tę samą (darmową) ocenę od nowa.
+ * Strona, która zmieni kształt, zmienia werdykt sama — nie ma czego wygaszać ani odświeżać.
+ *
+ * FAIL CLOSED: gdy sito uzna za chrom CAŁĄ paczkę, nie odsiewamy niczego. Taka strona to albo
+ * strona bez wydarzeń, albo pomyłka sita — i tylko drugie jest groźne. Koszt jednej strony
+ * jest znany i mały, a cicho wygaszone źródło kosztuje wszystkie swoje wydarzenia naraz.
+ */
+export function partitionChrome(blocks: Block[]): { send: Block[]; skipped: SkippedChrome[] } {
+  const send: Block[] = [];
+  const skipped: SkippedChrome[] = [];
+  for (const block of blocks) {
+    const v = looksLikeChrome(block.text);
+    if (v.chrome) skipped.push({ block, why: v.why });
+    else send.push(block);
+  }
+  return send.length ? { send, skipped } : { send: blocks, skipped: [] };
+}
+
 /**
  * Suma po blokach obecnych dziś na stronie; wydarzenia NIEODSIANE z minionych.
  * Eksportowane dla testów — to tutaj mieszka reguła „znikający blok = znikające wydarzenia".
@@ -164,16 +194,19 @@ export async function blockSource(
   }
 
   const cached = blocks.length - fresh.length;
+  // ODSIEW CHROMU przed wywołaniem, na samych świeżych blokach — te z cache'a i tak są darmowe.
+  const { send, skipped } = partitionChrome(fresh);
+  auditChrome(skipped, fresh);
   // `url` w śladzie, bo tą drogą chodzą teraz także followupy: bez adresu nie da się odróżnić
   // podziału strony źródła od podziału jej podstrony, a to osobne rozliczenia
-  auditSplit(info, blocks, fresh);
+  auditSplit(info, blocks, send);
 
   // PACZKAMI, nie po jednym bloku: prompt systemowy waży ~900 tokenów, więc wywołanie na blok
   // sprowadzało pierwszy przebieg źródła do kilkunastokrotności ceny jednego wywołania na całą
   // stronę (pomiar na `estrada`: 33 wywołania, $0.244). Model podpisuje każdy wpis numerem
   // bloku i po tym numerze wynik wraca na swoje miejsce — przypisanie zostaje, cena spada.
   let note: string | undefined;
-  for (const batch of chunk(fresh)) {
+  for (const batch of chunk(send)) {
     const result = await extractBatch(batch.map((b) => b.text), url, program);
     for (const [i, b] of batch.entries()) {
       // blok bez pewnego wyniku (ucięta odpowiedź) NIE trafia do cache: zapisany jako
@@ -190,11 +223,14 @@ export async function blockSource(
 
   // PO ekstrakcji, bo dopiero teraz `state` zna wynik świeżych bloków — jeden krok mówi
   // wtedy naraz, co przyszło z cache'a i za co dziś zapłaciliśmy (patrz block-trail.ts)
-  await auditBlockResult(info, blocks, fresh, state);
+  await auditBlockResult(info, blocks, send, state);
 
   return {
     ...unionOf(blocks, state, today),
     ...(note ? { note } : {}),
-    blocks: { total: blocks.length, cached, fresh: fresh.length },
+    blocks: {
+      total: blocks.length, cached, fresh: send.length,
+      ...(skipped.length ? { chrome: skipped.length } : {}),
+    },
   };
 }
