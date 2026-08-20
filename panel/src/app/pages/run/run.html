@@ -11,8 +11,15 @@
     <h1>Source runs</h1>
     <div tuiSubtitle>
       {{ r.stage }} · {{ dt(r.startedAt) }} → {{ dt(r.finishedAt) }} · {{ ms(r.durationMs) }} ·
-      {{ num(r.totals.events) }} events · {{ usd(r.totals.costUsd) }} ({{ r.totals.calls }} LLM
-      calls, {{ tok(r.totals.promptTokens) }} in / {{ tok(r.totals.completionTokens) }} out)
+      {{ num(r.totals.events) }} events · {{ usd(spend()!.total) }}
+      @if (spend()!.ledger) {
+        (LLM {{ usd(spend()!.llm) }} w {{ r.totals.calls }} wywołaniach, FB
+        {{ usd(spend()!.fb) }} · {{ tok(r.totals.promptTokens) }} in /
+        {{ tok(r.totals.completionTokens) }} out)
+      } @else {
+        (sam LLM — przebieg sprzed księgi kosztów · {{ r.totals.calls }} wywołań,
+        {{ tok(r.totals.promptTokens) }} in / {{ tok(r.totals.completionTokens) }} out)
+      }
     </div>
   </header>
 
@@ -86,7 +93,11 @@
           } @else {
             Nic jeszcze nie ma zmierzonej ceny — kolejka wartości jest pusta.
           }
-          Pobrania kosztują <strong>{{ usd(fbSpendPerRun()) }}</strong> na przebieg.
+          Regulator dopuścił pobrania za <strong>~{{ usd(fbForecastUsd()) }}</strong>
+          &mdash; to PROGNOZA ze średniej z poprzednich przebiegów, liczona przed pobraniem.
+          Rachunek tego przebiegu: <strong>{{ usd(fbActualUsd()) }}</strong>
+          za {{ num(fbRecords()) }} rekordów, bo pobrało
+          {{ fbFetchedCount() }} z {{ fbAdmittedCount() }} dopuszczonych źródeł.
         } @else {
           Przebieg sprzed regulatora budżetu — są werdykty, nie ma kolejki ani kosztu pobrania.
           Pozycje i cena brzegowa pojawią się po najbliższym <code>daily</code>.

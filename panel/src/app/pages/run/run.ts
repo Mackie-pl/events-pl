@@ -14,6 +14,7 @@ import {
   fmtNum,
   fmtTokens,
   fmtUsd,
+  runSpend,
 } from '../../format';
 import { RUN_SCOPE } from '../../types';
 import type { FbValueRow, SourceRun, SourceStatus } from '../../types';
@@ -65,6 +66,15 @@ export class RunPage {
 
   protected readonly run = computed(() => this.data.runByStartedAt(this.runId()));
 
+  /**
+   * Rachunek przebiegu z jego wpisów księgi. `totals.costUsd` zna wyłącznie OpenRouter,
+   * więc nagłówek podawał kwotę mniejszą od tej, którą ten sam dzień pokazuje w Money.
+   */
+  protected readonly spend = computed(() => {
+    const run = this.run();
+    return run ? runSpend(run) : null;
+  });
+
   constructor() {
     // decyzje spoza pojedynczego źródła (scalanie, redakcja, publikacja) siedzą w audit.json
     this.data.requestAudit();
@@ -100,12 +110,39 @@ export class RunPage {
     return kept[kept.length - 1]?.usdPerNovel ?? null;
   });
 
-  /** Ile realnie kosztuje jedno pobranie wszystkiego, co regulator dopuścił. */
-  protected readonly fbSpendPerRun = computed(() =>
-    this.fbQueue()
-      .filter((r) => r.verdict === 'keep' || r.verdict === 'town-floor' || r.verdict === 'probation')
-      .reduce((n, r) => n + (r.usdPerFetch ?? 0), 0),
+  /** Werdykty, po których źródło ma prawo pobierać w tym przebiegu. */
+  private readonly admitted = computed(() =>
+    this.fbQueue().filter(
+      (r) => r.verdict === 'keep' || r.verdict === 'town-floor' || r.verdict === 'probation',
+    ),
   );
+
+  /**
+   * PROGNOZA, nie rachunek: suma `usdPerFetch` dopuszczonych źródeł, a `usdPerFetch` to średnia
+   * z poprzednich przebiegów (albo sufit `limit × stawka` dla nigdy niepobieranych). Etykieta
+   * mówiła „pobrania kosztują X na przebieg" i wyglądała jak kwota — 2026-08-20 dawała $0.299,
+   * gdy realny rachunek kanału wyniósł $0.255, bo 6 z 10 dopuszczonych źródeł w ogóle nie
+   * pobrało. To nie jest usterka regulatora: budżet rezerwuje się przed pobraniem.
+   */
+  protected readonly fbForecastUsd = computed(() =>
+    this.admitted().reduce((n, r) => n + (r.usdPerFetch ?? 0), 0),
+  );
+
+  protected readonly fbAdmittedCount = computed(() => this.admitted().length);
+
+  /** Ile z dopuszczonych naprawdę pobrało — różnica z prognozą ma być widoczna, nie domyślna. */
+  protected readonly fbFetchedCount = computed(() => {
+    const withRecords = new Set(
+      (this.run()?.sources ?? []).filter((s) => s.bd?.records).map((s) => s.id),
+    );
+    return this.admitted().filter((r) => withRecords.has(r.id)).length;
+  });
+
+  /** Rachunek kanału FB z księgi tego przebiegu: wolumen × stawka, ta sama liczba co w Money. */
+  protected readonly fbActualUsd = computed(() => this.spend()?.fb ?? 0);
+
+  /** Rekordy Bright Data kupione w tym przebiegu — wolumen stojący za kwotą wyżej. */
+  protected readonly fbRecords = computed(() => this.run()?.brightdata?.records ?? 0);
 
   /** Kroki zakresu przebiegu — nie należą do żadnego źródła, więc nie ma ich na stronie źródła. */
   protected readonly runSteps = computed(

@@ -1,6 +1,7 @@
 import type {
   AuditKind,
   CostCategory,
+  CostEntry,
   FetchProbe,
   ProposalDecision,
   SourceStatus,
@@ -265,4 +266,41 @@ export function fmtProbe(p: FetchProbe | undefined): string {
     fmtMs(p.ms),
   ].filter(Boolean);
   return parts.join(' · ');
+}
+
+/** Rachunek jednego przebiegu w rozbiciu, którego `totals.costUsd` nie zna. */
+export interface RunSpend {
+  /** wszystko, co ten przebieg kosztował — model plus dostawcy */
+  total: number;
+  /** kwoty od OpenRouter (kategorie `llm-*`) */
+  llm: number;
+  /** Bright Data: wolumen × stawka */
+  fb: number;
+  /** false = raport sprzed księgi kosztów; wtedy `total` to sam LLM z `totals` */
+  ledger: boolean;
+}
+
+/**
+ * `totals.costUsd` to WYŁĄCZNIE kwoty od OpenRouter. Przebieg 2026-08-20 pokazywał przez to
+ * w nagłówku $0.110, gdy sam Bright Data kosztował tego dnia $0.255 — większa połowa rachunku
+ * nie miała gdzie się pokazać, a Money i historia przebiegów podawały dwie różne liczby na to
+ * samo pytanie. Rozbicie liczymy z `run.costs`, czyli z TYCH SAMYCH wpisów, które lądują
+ * w costs.json; dopóki obie strony czytają jedno źródło, nie mają się jak rozjechać.
+ */
+export function runSpend(run: {
+  totals: { costUsd: number };
+  costs?: readonly CostEntry[];
+}): RunSpend {
+  const entries = run.costs ?? [];
+  // raport sprzed księgi: nie zgadujemy dostawców, mówimy tyle, ile wiadomo
+  if (!entries.length) {
+    return { total: run.totals.costUsd, llm: run.totals.costUsd, fb: 0, ledger: false };
+  }
+  let total = 0, llm = 0, fb = 0;
+  for (const e of entries) {
+    total += e.usd;
+    if (e.category.startsWith('llm-')) llm += e.usd;
+    else if (e.category === 'fb') fb += e.usd;
+  }
+  return { total, llm, fb, ledger: true };
 }

@@ -13,6 +13,7 @@ import {
   fmtNum,
   fmtTokens,
   fmtUsd,
+  runSpend,
 } from '../../format';
 import type { RunReport, SourceStatus } from '../../types';
 
@@ -35,6 +36,20 @@ export class OverviewPage {
 
   protected readonly latest = this.data.latest;
   protected readonly runs = this.data.runsDesc;
+
+  /**
+   * Rachunek liczony RAZ na przebieg, nie w szablonie: wiersz historii i karta u góry mają
+   * pokazywać tę samą kwotę co Money, a ta bierze się z sumy wpisów księgi.
+   */
+  protected readonly rows = computed(() =>
+    this.runs().map((run) => ({ run, spend: runSpend(run) })),
+  );
+
+  protected readonly latestSpend = computed(() => {
+    const run = this.latest();
+    return run ? runSpend(run) : null;
+  });
+
   protected readonly errors = computed(() => this.data.events.value().errors);
   protected readonly generated = computed(() => this.data.events.value().generated);
   protected readonly eventCount = computed(() => this.data.events.value().events.length);

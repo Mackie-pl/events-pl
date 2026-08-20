@@ -20,10 +20,14 @@
       <span class="card-value">{{ num(run.totals.events) }}</span>
       <span class="card-sub">from {{ run.totals.sources }} sources → details</span>
     </a>
+    <!-- Kwota od OpenRouter to nie cały rachunek przebiegu: Bright Data bywa jego większą
+         połową, a karta „LLM cost" pokazywała wyłącznie tę mniejszą. -->
     <a class="card" routerLink="/costs">
-      <span class="card-label">LLM cost</span>
-      <span class="card-value">{{ usd(run.totals.costUsd) }}</span>
-      <span class="card-sub">{{ run.totals.calls }} calls → spend per day</span>
+      <span class="card-label">Run cost</span>
+      <span class="card-value">{{ usd(latestSpend()!.total) }}</span>
+      <span class="card-sub">
+        LLM {{ usd(latestSpend()!.llm) }} · FB {{ usd(latestSpend()!.fb) }} → spend per day
+      </span>
     </a>
     <div class="card">
       <span class="card-label">Tokens</span>
@@ -89,22 +93,33 @@
           <th tuiTh>OK</th>
           <th tuiTh>Errors</th>
           <th tuiTh>Events</th>
-          <th tuiTh>Cost</th>
+          <th tuiTh>Cost (LLM + dostawcy)</th>
           <th tuiTh>Tokens in/out</th>
         </tr>
       </thead>
       <tbody tuiTbody>
-        @for (r of runs(); track r.startedAt) {
-          <tr tuiTr class="clickable" [routerLink]="['/run', r.startedAt]">
-            <td tuiTd>{{ dt(r.startedAt) }}</td>
-            <td tuiTd>{{ r.stage }}</td>
-            <td tuiTd>{{ ms(r.durationMs) }}</td>
-            <td tuiTd>{{ r.totals.sources }}</td>
-            <td tuiTd class="positive">{{ r.totals.ok }}</td>
-            <td tuiTd [class.negative]="r.totals.errors > 0">{{ r.totals.errors }}</td>
-            <td tuiTd>{{ r.totals.events }}</td>
-            <td tuiTd>{{ usd(r.totals.costUsd) }}</td>
-            <td tuiTd>{{ tok(r.totals.promptTokens) }} / {{ tok(r.totals.completionTokens) }}</td>
+        @for (row of rows(); track row.run.startedAt) {
+          <tr tuiTr class="clickable" [routerLink]="['/run', row.run.startedAt]">
+            <td tuiTd>{{ dt(row.run.startedAt) }}</td>
+            <td tuiTd>{{ row.run.stage }}</td>
+            <td tuiTd>{{ ms(row.run.durationMs) }}</td>
+            <td tuiTd>{{ row.run.totals.sources }}</td>
+            <td tuiTd class="positive">{{ row.run.totals.ok }}</td>
+            <td tuiTd [class.negative]="row.run.totals.errors > 0">{{ row.run.totals.errors }}</td>
+            <td tuiTd>{{ row.run.totals.events }}</td>
+            <td tuiTd>
+              {{ usd(row.spend.total) }}
+              @if (row.spend.ledger) {
+                <span class="cost-split">
+                  LLM {{ usd(row.spend.llm) }} · FB {{ usd(row.spend.fb) }}
+                </span>
+              } @else {
+                <span class="cost-split">sam LLM — przebieg sprzed księgi</span>
+              }
+            </td>
+            <td tuiTd>
+              {{ tok(row.run.totals.promptTokens) }} / {{ tok(row.run.totals.completionTokens) }}
+            </td>
           </tr>
         }
       </tbody>
