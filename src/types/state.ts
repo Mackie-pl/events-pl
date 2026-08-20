@@ -70,6 +70,12 @@ export interface PipelineState {
    */
   followupsBySource?: Record<string, string[]>;
   /**
+   * Autorzy postów FB, których plakatów nie czytamy — klucz to sha256(sól + id), NIGDY samo id.
+   * Repo jest publiczne, a autor postu w wiejskiej grupie to osoba prywatna; do pytania
+   * „czy ten sam ktoś wrzucił trzy razy śmieć" wystarczy licznik. Patrz extract/fb-author-mute.ts.
+   */
+  fbPosterAuthors?: Record<string, { empty: number; at: string; mutedUntil?: string }>;
+  /**
    * Followupy, które okazały się TĄ SAMĄ treścią co strona źródła: source.id → urlKey → dzień
    * potwierdzenia (YYYY-MM-DD). Bez tej pamięci taki adres zjadał slot w kolejce w każdym
    * przebiegu — wykryć go da się dopiero po pobraniu, a wtedy limit jest już wydany.

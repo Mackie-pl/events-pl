@@ -180,6 +180,34 @@
       "def": 60
     },
     {
+      "name": "FB_POSTER_MAX_PER_SOURCE",
+      "group": "fb",
+      "cls": "tuning",
+      "summary": "sufit odczytów plakatów z JEDNEGO źródła (0 = tylko sufit przebiegu)",
+      "def": 20
+    },
+    {
+      "name": "FB_AUTHOR_SALT",
+      "group": "fb",
+      "cls": "secret",
+      "summary": "sól do haszowania autora postu — BEZ NIEJ wyciszanie autorów nie działa wcale",
+      "def": null
+    },
+    {
+      "name": "FB_AUTHOR_MUTE_AFTER",
+      "group": "fb",
+      "cls": "tuning",
+      "summary": "po tylu plakatach bez ani jednego wydarzenia autor przestaje dostawać odczyty",
+      "def": 3
+    },
+    {
+      "name": "FB_AUTHOR_MUTE_DAYS",
+      "group": "fb",
+      "cls": "tuning",
+      "summary": "po tylu dniach wyciszony autor dostaje kolejną szansę",
+      "def": 30
+    },
+    {
       "name": "FB_GROUP_BLOCKED_LIMIT",
       "group": "fb",
       "cls": "tuning",

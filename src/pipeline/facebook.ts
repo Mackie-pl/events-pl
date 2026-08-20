@@ -333,6 +333,11 @@ export interface FbPosterJob {
   postUrl: string;
   /** treść postu — jedzie do modelu jako KONTEKST, bo plakat rzadko niesie rok i adres */
   context: string;
+  /**
+   * Id autora prosto z rekordu — WYŁĄCZNIE do zahaszowania w `fb-author-mute.ts`.
+   * Nie wolno tego zapisać ani wpisać do śladu: repo jest publiczne (patrz pipeline/pii.ts).
+   */
+  author: string | null;
 }
 
 /**
@@ -361,7 +366,10 @@ export function fbPosterJobs(records: BdRecord[]): FbPosterJob[] {
       const urls = urlsIn(r[key]);
       const first = urls[0];
       if (!first) continue;
-      out.push({ imageUrl: first, postUrl, context: content });
+      out.push({
+        imageUrl: first, postUrl, context: content,
+        author: authorIdentity(r)?.key ?? null,
+      });
       break;
     }
   }

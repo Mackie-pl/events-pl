@@ -22,6 +22,7 @@ import { fetchImageB64 } from "../../adapters/page-fetch.js";
 import { P } from "../../config/params.js";
 import { audit } from "../../shared/audit.js";
 import { detach } from "./block-cache.js";
+import { authorKey, authorMuted, noteAuthorRead, pruneAuthors } from "./fb-author-mute.js";
 import type { EventItem, PipelineState } from "../../types/index.js";
 import type { FbPosterJob } from "../facebook.js";
 
@@ -54,6 +55,7 @@ const EMPTY_POSTER_TTL_MS = 30 * 24 * 60 * 60 * 1000;
  */
 export function startFbPosterRun(state: PipelineState, today: string): void {
   readThisRun = 0;
+  pruneAuthors(state, today);
   const cache = state.extractions;
   if (!cache) return;
   let dropped = 0;
@@ -117,6 +119,9 @@ async function readOne(
     { data: img.data, mediaType: img.mediaType }, job.postUrl, job.context,
   );
   const events = stamp(out.events, job.postUrl);
+  // licznik autora dostaje WYNIK, nie sam fakt odczytu — zero wydarzeń zbliża do wyciszenia,
+  // jedno wydarzenie kasuje historię (patrz fb-author-mute.ts)
+  noteAuthorRead(authorKey(job.author), events.length, state);
   // zapis także przy zerze wydarzeń — „ten plakat nic nie niesie" jest wynikiem wartym
   // zapamiętania dokładnie tak samo jak lista wydarzeń, i chroni przed płaceniem drugi raz
   cache[key] = { hash: key, events: detach(events), at: new Date().toISOString() };
@@ -134,11 +139,21 @@ export async function readFbPosters(
 ): Promise<EventItem[]> {
   const cap = posterCap();
   if (!cap || !jobs.length) return [];
+  // sufit źródła liczony od stanu NA WEJŚCIU, nie od zera: inaczej to samo źródło wywołane
+  // dwa razy (strona + followupy) dostawałoby pulę od nowa
+  const perSource = P.FB_POSTER_MAX_PER_SOURCE.get();
+  const startedAt = readThisRun;
 
   const out: EventItem[] = [];
-  let skipped = 0;
+  let capped = 0;
+  let byRun = 0;
+  let muted = 0;
   for (const job of jobs) {
-    if (readThisRun >= cap) { skipped += 1; continue; }
+    // PRZED sufitami: wyciszony autor nie ma zajmować miejsca w puli — to jest cały powód,
+    // dla którego ten mechanizm powstał (2026-08-20 zabrakło miejsc, nie pieniędzy)
+    if (authorMuted(authorKey(job.author), state)) { muted += 1; continue; }
+    if (readThisRun >= cap) { capped += 1; byRun += 1; continue; }
+    if (perSource && readThisRun - startedAt >= perSource) { capped += 1; continue; }
     try {
       const events = await readOne(job, state);
       if (events) out.push(...events);
@@ -147,11 +162,19 @@ export async function readFbPosters(
         { url: job.postUrl, err: e instanceof Error ? e.message : String(e) });
     }
   }
-  if (skipped) {
-    audit("fb.group", `${skipped} plakatów pominiętych — sufit ${cap} odczytów na przebieg wyczerpany`,
-      { skipped, cap, read: readThisRun });
+  if (capped) {
+    // rozróżnienie ma znaczenie dla diagnozy: „sufit źródła" znaczy, że pula jeszcze jest
+    // i dostaną ją następne grupy, „sufit przebiegu" — że skończyła się dla wszystkich
+    audit("fb.group",
+      byRun === capped
+        ? `${capped} plakatów pominiętych — sufit ${cap} odczytów na przebieg wyczerpany`
+        : `${capped} plakatów pominiętych — limit ${perSource} na źródło (pula przebiegu: `
+          + `${cap - readThisRun} wolnych)`,
+      { skipped: capped, byRun, cap, perSource, read: readThisRun });
   }
-  audit("fb.group", `plakaty: ${jobs.length} do przeczytania → ${out.length} wydarzeń`,
-    { jobs: jobs.length, events: out.length, readThisRun, cap });
+  audit("fb.group",
+    `plakaty: ${jobs.length} do przeczytania → ${out.length} wydarzeń`
+    + (muted ? ` (${muted} pominiętych — autor wyciszony)` : ""),
+    { jobs: jobs.length, events: out.length, muted, readThisRun, cap });
   return out;
 }

@@ -31,6 +31,15 @@ describe("fbPosterJobs — co idzie do odczytu", () => {
     ]), []);
   });
 
+  it("autor jedzie w zadaniu, żeby dało się go zahaszować — i tylko po to", () => {
+    const jobs = fbPosterJobs([
+      { content: "Borówki", url: "https://fb.test/p/9", photos: [img], user_url: "https://fb.test/rolnik" },
+      { content: "Bez autora", url: "https://fb.test/p/10", photos: [img] },
+    ]);
+    assert.equal(jobs[0]?.author, "https://fb.test/rolnik");
+    assert.equal(jobs[1]?.author, null, "brak autora to nie powód do wyciszania kogokolwiek");
+  });
+
   it("galeria to jedno zadanie — płacimy za pierwszy obraz, nie za wszystkie", () => {
     const jobs = fbPosterJobs([
       { content: "Foto", url: "https://fb.test/p/3", photos: [img, img + "&x=2", img + "&x=3"] },

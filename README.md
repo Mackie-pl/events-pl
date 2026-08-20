@@ -1018,10 +1018,10 @@ tego nie widać w historii.
 <!-- Tabela poniżej jest generowana z src/config/params.ts przez `npm run config:docs`.
      Ręczne zmiany przepadną — popraw wpis w rejestrze. -->
 
-Wszystkie 66 parametrów, jakie potok czyta z konfiguracji. Kolumna **klasa** mówi,
+Wszystkie 70 parametrów, jakie potok czyta z konfiguracji. Kolumna **klasa** mówi,
 czym parametr jest i — co ważniejsze — GDZIE mieszka:
 
-- **próg** (33 sztuk) — steruje zachowaniem potoku i stoi w commitowanym `config.json`.
+- **próg** (36 sztuk) — steruje zachowaniem potoku i stoi w commitowanym `config.json`.
   Zmiana progu ma zostawiać ślad: `git log -p config.json` daje datę, autora i wartość przed i po,
   do zestawienia z tym, co w tych dniach robił potok. Każdy przebieg zapisuje w raporcie migawkę
   progów, którymi się kierował (`RunReport.config`), więc stary raport da się czytać bez zgadywania.
@@ -1078,6 +1078,10 @@ która obowiązuje, gdy nie ustawiono nic. Dłuższe uzasadnienia stoją przy wp
 | `BD_POLL_MS` | `10000` | próg | co ile odpytywać Bright Data o gotowość migawki |
 | `BD_TIMEOUT_MS` | `480000` | próg | po tylu ms migawka jest porzucana i anulowana (awaria 2026-08-10) |
 | `FB_POSTER_MAX_PER_RUN` | `60` | próg | sufit odczytów plakatów z grup FB na jeden przebieg (0 = nie czytamy wcale) |
+| `FB_POSTER_MAX_PER_SOURCE` | `20` | próg | sufit odczytów plakatów z JEDNEGO źródła (0 = tylko sufit przebiegu) |
+| `FB_AUTHOR_SALT` | brak | sekret | sól do haszowania autora postu — BEZ NIEJ wyciszanie autorów nie działa wcale |
+| `FB_AUTHOR_MUTE_AFTER` | `3` | próg | po tylu plakatach bez ani jednego wydarzenia autor przestaje dostawać odczyty |
+| `FB_AUTHOR_MUTE_DAYS` | `30` | próg | po tylu dniach wyciszony autor dostaje kolejną szansę |
 | `FB_GROUP_BLOCKED_LIMIT` | `3` | próg | po tylu płatnych wierszach błędu z rzędu grupa jest pomijana |
 | `FB_GROUP_BLOCKED_RECHECK_DAYS` | `14` | próg | co tyle dni jedna sonda do pomijanej grupy — jedyna droga powrotna |
 | `FB_GROUP_LIMIT_MAX` | `50` | próg | sufit rekordów na grupę; regulator może zejść niżej, nigdy wyżej |

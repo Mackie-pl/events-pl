@@ -69,6 +69,56 @@ export const FB_PARAMS = {
     ],
   }),
 
+  FB_POSTER_MAX_PER_SOURCE: num({
+    group: "fb", cls: "tuning", def: 20, min: 0,
+    summary: "sufit odczytów plakatów z JEDNEGO źródła (0 = tylko sufit przebiegu)",
+    doc: [
+      "Sufit przebiegu sam w sobie działa „kto pierwszy, ten lepszy”, a źródła idą w kolejności",
+      "z rejestru. 2026-08-20 skończyło się to tak: lubon i dopiewo wydały 24 odczyty na ZERO",
+      "wydarzeń, a fb-group-wydarzenia-poznan-4 — grupa, która dała 5 z 8 wydarzeń tego dnia —",
+      "dostała 30 plakatów POMINIĘTYCH, bo sufit już nie istniał. Zabrakło nie pieniędzy",
+      "($0.06 za przebieg), tylko miejsc.",
+      "Ten próg ogranicza więc pojedyncze źródło, żeby jałowa grupa nie zjadła całej puli.",
+      "Nie jest to harmonogram ani podział proporcjonalny: przy jednym aktywnym źródle część",
+      "puli zostanie niewykorzystana i widać to w śladzie — wtedy próg się podnosi, a nie",
+      "buduje planistę. Węższe sito po autorze (a nie po źródle) robi FB_AUTHOR_MUTE_AFTER.",
+    ],
+  }),
+
+  FB_AUTHOR_SALT: optText({
+    group: "fb", cls: "secret",
+    summary: "sól do haszowania autora postu — BEZ NIEJ wyciszanie autorów nie działa wcale",
+    doc: [
+      "Wyciszanie autora wymaga rozpoznania, że to ten sam ktoś — a repo jest PUBLICZNE",
+      "i state.json commitowany. Trzymamy więc sha256(sól + id autora), nigdy samego id:",
+      "licznik odpowiada na „czy ten sam ktoś wrzucił trzy razy śmieć”, nie na „kto to jest”.",
+      "Bez soli mechanizm się nie uruchamia — celowo, tą samą regułą co przy wyciszaniu źródeł:",
+      "sito, które kasuje cudze wydarzenia, nie może włączać się samo z domyślnej wartości.",
+      "Sól ma być stała (zmiana = utrata historii) i NIE MOŻE trafić do repo.",
+    ],
+  }),
+  FB_AUTHOR_MUTE_AFTER: posNum({
+    group: "fb", cls: "tuning", def: 3,
+    summary: "po tylu plakatach bez ani jednego wydarzenia autor przestaje dostawać odczyty",
+    doc: [
+      "Sprzedawca borówek wrzuca co kilka dni INNE zdjęcie, więc cache po pliku (posterKey)",
+      "go nie łapie z definicji — a każdy taki plakat zajmuje miejsce w puli odczytów, której",
+      "2026-08-20 zabrakło grupie dającej 5 z 8 wydarzeń. Trzy puste odczyty to próg, przy",
+      "którym pomyłka jest tania: wyciszony autor DALEJ jest czytany tekstem, tracimy tylko",
+      "obraz. Jedno wydarzenie zeruje licznik — kto raz coś zorganizował, nie jest szumem.",
+    ],
+  }),
+  FB_AUTHOR_MUTE_DAYS: posNum({
+    group: "fb", cls: "tuning", def: 30,
+    summary: "po tylu dniach wyciszony autor dostaje kolejną szansę",
+    doc: [
+      "Wyciszenie MUSI wygasać: rolnik sprzedający latem borówki zimą potrafi ogłosić kolędowanie,",
+      "a stan „raz zapadł, na zawsze” jest błędem projektowym — świat się zmienia i nikt tego",
+      "nie sprawdzi. Po wygaśnięciu licznik startuje od zera, więc autor dostaje pełne",
+      "FB_AUTHOR_MUTE_AFTER prób, a nie jedną.",
+    ],
+  }),
+
   FB_GROUP_BLOCKED_LIMIT: posNum({
     group: "fb", cls: "tuning", def: 3,
     summary: "po tylu płatnych wierszach błędu z rzędu grupa jest pomijana",
