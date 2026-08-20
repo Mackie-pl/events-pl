@@ -73,6 +73,14 @@ export interface ChatOptions {
   temperature?: number;
   /** JSON Schema wymuszony na odpowiedzi (structured outputs); brak = zwykły tekst */
   schema?: { name: string; schema: unknown };
+  /**
+   * Adres obrazu, który poszedł do modelu jako base64. NIE idzie do dostawcy — służy
+   * wyłącznie archiwum: bajtów plakatu nie zapisujemy (megabajty base64 za jedno wywołanie),
+   * więc bez adresu w archiwum zostawał sam licznik „[obraz pominięty — 440 kB]" i nie dało
+   * się zobaczyć, CO model właściwie oglądał. Adres waży kilkaset bajtów i pokazuje to samo,
+   * dopóki nie wygaśnie podpis w CDN-ie.
+   */
+  imageSrc?: string;
 }
 
 /**
@@ -225,6 +233,8 @@ export interface LlmCallRecord {
   err?: string;
   /** powód zatrzymania (`stop`/`length`) — w archiwum odróżnia „model tak uznał" od „ucięliśmy go" */
   finish?: string;
+  /** adres obrazu wysłanego jako base64 — patrz `ChatOptions.imageSrc` */
+  imageSrc?: string;
 }
 
 /**
@@ -420,7 +430,10 @@ export async function chat(opts: ChatOptions): Promise<string> {
   lastFinish = null;
   lastUsage = null;
   lastArchive = null;
-  const base = { model: opts.model, task: opts.task, system: opts.system, user: opts.user };
+  const base = {
+    model: opts.model, task: opts.task, system: opts.system, user: opts.user,
+    ...(opts.imageSrc ? { imageSrc: opts.imageSrc } : {}),
+  };
   const ms = (): number => Math.round(performance.now() - t0);
   // nieudane wywołania archiwizujemy tak samo jak udane — to one wymagają debugowania
   const failed = async (err: string): Promise<void> =>

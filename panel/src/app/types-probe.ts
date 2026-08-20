@@ -22,6 +22,8 @@ export interface ProbeLlmCall {
   ms: number;
   ok: boolean;
   err?: string;
+  /** adres obrazu, który poszedł do modelu — bajty zostają poza odpowiedzią, adres wystarczy */
+  imageSrc?: string;
 }
 
 export interface ProbeResult {

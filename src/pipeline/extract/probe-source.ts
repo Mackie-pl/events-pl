@@ -97,6 +97,9 @@ function toProbeCall(rec: LlmCallRecord): ProbeLlmCall {
   return {
     task: rec.task, model: rec.model, system: rec.system, user, response: rec.response,
     usage: rec.usage, ms: rec.ms, ok: rec.ok, ...(rec.err ? { err: rec.err } : {}),
+    // adres plakatu zamiast jego bajtów — panel pokaże obrazek, a odpowiedź mostu
+    // zostaje lekka (base64 plakatu to setki kilobajtów na jedno wywołanie)
+    ...(rec.imageSrc ? { imageSrc: rec.imageSrc } : {}),
   };
 }
 

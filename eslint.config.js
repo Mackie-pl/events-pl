@@ -11,7 +11,10 @@ export default defineConfig([
   // panel/** bo jego pliki nie należą do rootowego tsconfiga (projectService by się wywalił),
   // .claude/** bo trzyma worktree'y agenta — kopie repo, które lintowały się drugi raz
   // (lokalnie 60 problemów zamiast 30 w CI) i to na nieaktualnym kodzie.
-  globalIgnores(["dist/**", "_site/**", "panel/**", "coverage/**", ".claude/**"]),
+  // scratch-*.ts to jednorazowe skrypty diagnostyczne w korzeniu — poza tsconfigiem, więc
+  // typowany parser wywracał na nich CAŁY lint (błąd, nie ostrzeżenie) i blokował commit
+  // pracy, która nie ma z nimi nic wspólnego. Są też w .gitignore.
+  globalIgnores(["dist/**", "_site/**", "panel/**", "coverage/**", ".claude/**", "scratch-*.ts"]),
   {
     files: ["**/*.ts"],
     extends: [

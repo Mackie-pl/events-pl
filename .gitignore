@@ -11,3 +11,8 @@ dist/
 # publiczne. Ta sama granica, co przy archiwum: do repo idą metryki, treść zostaje lokalnie
 # albo w prywatnym buckecie (patrz adapters/supabase-archive.ts).
 eval/*/Untitled-*.md
+
+# jednorazowe skrypty diagnostyczne w korzeniu (scratch-seg.ts, scratch-prompt.ts…): sięgają
+# do sieci i do prywatnego archiwum, więc do publicznego repo nie idą. Lint ignoruje je
+# z tego samego powodu, dla którego nie ma ich w tsconfigu — nie są częścią potoku.
+scratch-*.ts

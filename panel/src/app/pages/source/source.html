@@ -6,7 +6,8 @@
     <span class="muted">/</span>
     <a tuiLink [routerLink]="['/run', runId()]">{{ dt(runId()) }}</a>
     <span class="muted">/</span>
-    <span>{{ s.id }}</span>
+    <!-- ta strona to źródło TEGO DNIA; id prowadzi do niego w ogóle — historia i rejestr -->
+    <a tuiLink [routerLink]="['/source', s.id]" title="Historia tego źródła">{{ s.id }}</a>
     <span class="spacer"></span>
     @if (bridge.available() === true) {
       <!-- tylko przy działającym moście: wdrożony panel nie ma jak (i nie ma prawa) pobierać stron -->
@@ -122,7 +123,9 @@
           @if (c.hasBd) {
             <div class="fact">
               <span>Bright Data</span
-              ><strong>{{ usd(c.bd) }} <span class="muted">· {{ num(c.records) }} rec.</span></strong>
+              ><strong
+                >{{ usd(c.bd) }} <span class="muted">· {{ num(c.records) }} rec.</span></strong
+              >
             </div>
             <div class="fact">
               <span>Cost total</span><strong>{{ usd(c.total) }}</strong>
@@ -148,7 +151,9 @@
                       @if (e.detailPattern) {
                         · <code>{{ e.detailPattern }}</code> ×{{ e.detailCount }}
                       }
-                      @if (e.paginated) { · paginacja }
+                      @if (e.paginated) {
+                        · paginacja
+                      }
                     </span>
                   </li>
                 }
@@ -161,7 +166,9 @@
                   <li>
                     <code>{{ c.kind }}</code>
                     <a tuiLink [href]="c.url" target="_blank" rel="noopener">{{ c.url }}</a>
-                    <span class="muted">· {{ c.itemsSeen }} rekordów, {{ c.datesParsed }} z datą</span>
+                    <span class="muted"
+                      >· {{ c.itemsSeen }} rekordów, {{ c.datesParsed }} z datą</span
+                    >
                     @if (!c.datesParsed) {
                       <span class="warn">· bez terminów, nie nadaje się do ekstrakcji</span>
                     }
@@ -187,11 +194,7 @@
                   tuiBadge
                   size="s"
                   [appearance]="
-                    f.outcome === 'ok'
-                      ? 'positive'
-                      : f.outcome === 'error'
-                        ? 'negative'
-                        : 'neutral'
+                    f.outcome === 'ok' ? 'positive' : f.outcome === 'error' ? 'negative' : 'neutral'
                   "
                 >
                   {{ f.outcome }}
@@ -214,8 +217,8 @@
             Archive ({{ archivePaths().length }})
             @if (!bridge.archiveReadable()) {
               <span class="muted hint">
-                private — run <code>npm run panel-server</code> locally (with SUPABASE_* in .env)
-                to read contents
+                private — run <code>npm run panel-server</code> locally (with SUPABASE_* in .env) to
+                read contents
               </span>
             }
           </h2>
@@ -224,29 +227,18 @@
               <li>
                 @if (!bridge.archiveReadable()) {
                   <span class="muted">{{ archiveLabel(p) }}</span>
-                } @else if (isLlm(p)) {
+                } @else {
                   <button
                     tuiButton
                     size="xs"
                     appearance="flat"
                     iconStart="@tui.search"
-                    (click)="inspect({ path: p })"
+                    (click)="openArchive(p)"
                   >
-                    Inspect call
-                  </button>
-                } @else {
-                  <button tuiButton size="xs" appearance="flat" (click)="toggleArchive(p)">
-                    {{ openedPath() === p ? 'Hide' : archiveLabel(p) }}
+                    {{ isLlm(p) ? 'Inspect call' : archiveLabel(p) }}
                   </button>
                 }
                 <code class="path">{{ p }}</code>
-                @if (openedPath() === p) {
-                  @if (archiveLoading()) {
-                    <tui-loader size="s" />
-                  } @else if (archiveBody(); as body) {
-                    <app-code-view class="full" [text]="body" lang="json" [label]="p" />
-                  }
-                }
               </li>
             }
           </ul>
@@ -304,16 +296,15 @@
                         {{ archiveButton(st) }}
                       </button>
                     } @else {
-                      <button tuiButton size="xs" appearance="flat" (click)="toggleArchive(path)">
-                        {{ openedPath() === path ? 'Hide' : archiveButton(st) }}
+                      <button
+                        tuiButton
+                        size="xs"
+                        appearance="flat"
+                        iconStart="@tui.file-text"
+                        (click)="inspectRaw({ path })"
+                      >
+                        {{ archiveButton(st) }}
                       </button>
-                    }
-                    @if (openedPath() === path) {
-                      @if (archiveLoading()) {
-                        <tui-loader size="s" />
-                      } @else if (archiveBody(); as body) {
-                        <app-code-view [text]="body" lang="json" [label]="path" />
-                      }
                     }
                   }
                 </div>

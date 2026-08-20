@@ -24,6 +24,12 @@ export interface LlmCallView {
   finish?: string;
   runId?: string;
   sourceId?: string | null;
+  /**
+   * Adres obrazu, który poszedł do modelu. Bajtów nie ma ani w archiwum, ani w odpowiedzi
+   * sondy (setki kilobajtów base64 na wywołanie), więc plakat pokazujemy Z ORYGINAŁU.
+   * Podpis w CDN-ie Facebooka wygasa po kilku dniach — starsze wywołania pokażą sam adres.
+   */
+  imageSrc?: string;
   /** Ścieżka w archiwum, jeśli stamtąd pochodzi. */
   path?: string;
   /** Surowy obiekt, tak jak leży w archiwum — zakładka „raw". */
@@ -52,6 +58,7 @@ interface ArchivedCall {
   finish?: string;
   runId?: string;
   sourceId?: string | null;
+  imageSrc?: unknown;
 }
 
 function imageLine(p: ImagePart): string {
@@ -96,6 +103,7 @@ export function llmCallFromJson(text: string, path?: string): LlmCallView | null
     finish: rec.finish,
     runId: rec.runId,
     sourceId: rec.sourceId,
+    ...(typeof rec.imageSrc === 'string' ? { imageSrc: rec.imageSrc } : {}),
     path,
     raw: text,
   };
@@ -113,6 +121,7 @@ export function llmCallFromProbe(call: ProbeLlmCall): LlmCallView {
     ms: call.ms,
     ok: call.ok,
     err: call.err,
+    ...(call.imageSrc ? { imageSrc: call.imageSrc } : {}),
     raw: JSON.stringify(call, null, 2),
   };
 }

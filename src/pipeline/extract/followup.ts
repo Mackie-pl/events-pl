@@ -145,7 +145,7 @@ async function read(url: string, got: Pulled, ctx: ReadCtx): Promise<EventItem[]
   const { state, fr, context, program } = ctx;
   if (got.img) {
     return (await extractPoster(
-      { data: got.img.data, mediaType: got.img.mediaType }, url, context,
+      { data: got.img.data, mediaType: got.img.mediaType, src: url }, url, context,
     )).events;
   }
   const viaBlocks = got.page && await blockSource(got.page, url, state, program);

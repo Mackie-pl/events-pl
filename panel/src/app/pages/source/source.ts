@@ -15,6 +15,8 @@ import { blockSplitInspector } from '../../ui/block-split-inspector';
 import { CodeView } from '../../ui/code-view';
 import { isLlmPath } from '../../ui/llm-call';
 import { llmInspector } from '../../ui/llm-inspector';
+import { rawInspector } from '../../ui/raw-inspector';
+import { isBlocksPath } from '../../ui/raw-snapshot';
 
 import { ProbeResultView } from './probe-result';
 
@@ -195,13 +197,17 @@ export class SourcePage {
   protected readonly inspect = llmInspector();
 
   protected readonly isLlm = isLlmPath;
+  protected readonly isBlocks = isBlocksPath;
+
+  /**
+   * Zrzut wejścia — patrz ui/raw-inspector.ts. Wszystko, co nie jest wywołaniem modelu
+   * ani rozliczeniem podziału, idzie tutaj: inspektor sam pokazuje treść surowo, jeśli
+   * obiekt okaże się czymś innym, niż mówi ścieżka.
+   */
+  protected readonly inspectRaw = rawInspector();
 
   /** Ścieżki w prywatnym archiwum; treść pobieralna tylko przez lokalny most. */
   protected readonly archivePaths = computed(() => this.sourceRun()?.archive ?? []);
-
-  protected readonly openedPath = signal<string | null>(null);
-  protected readonly archiveBody = signal<string | null>(null);
-  protected readonly archiveLoading = signal(false);
 
   /** raw/…/<sha>.json → "raw · sha 124c64…"; llm/…/0001-model.json → "llm · 0001-model" */
   protected archiveLabel(path: string): string {
@@ -211,21 +217,15 @@ export class SourcePage {
     return kind === 'raw' ? `raw · ${name.slice(0, 12)}…` : `${kind} · ${name}`;
   }
 
-  protected toggleArchive(path: string): void {
-    if (this.openedPath() === path) {
-      this.openedPath.set(null);
-      this.archiveBody.set(null);
-      return;
-    }
-    this.openedPath.set(path);
-    this.archiveBody.set(null);
-    this.archiveLoading.set(true);
-    this.bridge.object(path).subscribe((text) => {
-      // ignoruj odpowiedź, jeśli w międzyczasie kliknięto inny obiekt
-      if (this.openedPath() !== path) return;
-      this.archiveBody.set(text);
-      this.archiveLoading.set(false);
-    });
+  /**
+   * Który podgląd otworzyć dla ścieżki z listy archiwum. Rozstrzyga PREFIKS, bo to on
+   * mówi, jaki kształt tam leży (patrz supabase-archive.ts) — a każdy z podglądów i tak
+   * sam sprawdza, czy dostał to, czego się spodziewał.
+   */
+  protected openArchive(path: string): void {
+    if (isLlmPath(path)) this.inspect({ path });
+    else if (isBlocksPath(path)) this.inspectSplit({ path });
+    else this.inspectRaw({ path });
   }
 
   // --- sonda na żądanie (lokalny most) ---

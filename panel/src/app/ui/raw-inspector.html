@@ -1,0 +1,101 @@
+@if (loading()) {
+  <p class="muted">Ciągnę {{ context.data.path }} z prywatnego archiwum…</p>
+} @else if (snap(); as s) {
+  <div class="head">
+    <strong class="title">{{ s.sourceId || 'zrzut' }}</strong>
+    @if (s.kind) {
+      <span tuiBadge size="s" appearance="neutral" title="rodzaj wejścia wg potoku">
+        {{ s.kind }}
+      </span>
+    }
+    @if (s.url) {
+      <span class="url">{{ s.url }}</span>
+    }
+  </div>
+
+  <section class="facts">
+    <div class="fact">
+      <span>Treść</span><strong>{{ bytes(s.chars) }}</strong>
+    </div>
+    @if (s.records.length) {
+      <div class="fact">
+        <span>Rekordy</span><strong>{{ num(s.records.length) }}</strong>
+      </div>
+    }
+    @if (s.fetchedAt) {
+      <div class="fact">
+        <span>Pobrane</span><strong>{{ dt(s.fetchedAt) }}</strong>
+      </div>
+    }
+    @if (s.runId) {
+      <div class="fact">
+        <span>Run</span><strong>{{ s.runId }}</strong>
+      </div>
+    }
+  </section>
+
+  @if (s.path) {
+    <p class="muted path">{{ s.path }}</p>
+  }
+
+  <div class="tabs">
+    @for (t of tabs(); track t) {
+      <button
+        tuiButton
+        size="xs"
+        [appearance]="tab() === t ? 'primary' : 'secondary'"
+        (click)="tab.set(t)"
+      >
+        {{ tabLabel[t] }}
+      </button>
+    }
+  </div>
+
+  @switch (tab()) {
+    @case ('records') {
+      <ol class="records">
+        @for (r of s.records; track r.i) {
+          <li class="record" [class.record--open]="opened() === r.i">
+            <button type="button" class="row" (click)="toggle(r.i)">
+              <span class="i">#{{ r.i + 1 }}</span>
+              <span class="head-line">{{ r.head }}</span>
+              <span class="size">{{ bytes(r.chars) }}</span>
+            </button>
+            @if (opened() === r.i) {
+              <app-code-view
+                [text]="r.json"
+                lang="json"
+                [label]="'rekord #' + (r.i + 1)"
+                maxHeight="min(44vh, 34rem)"
+              />
+            }
+          </li>
+        }
+      </ol>
+    }
+    @case ('body') {
+      @if (s.body.note) {
+        <p class="warn note">{{ s.body.note }}</p>
+      }
+      <app-code-view
+        [text]="s.body.text"
+        [lang]="s.body.lang"
+        label="treść zrzutu"
+        maxHeight="min(58vh, 44rem)"
+      />
+    }
+    @case ('raw') {
+      <app-code-view
+        [text]="s.raw"
+        lang="json"
+        label="raw archive object"
+        maxHeight="min(58vh, 44rem)"
+      />
+    }
+  }
+} @else if (fallback(); as text) {
+  <p class="warn">To nie jest zrzut wejścia — pokazuję treść tak, jak leży.</p>
+  <app-code-view [text]="text" lang="json" maxHeight="min(58vh, 44rem)" />
+} @else {
+  <p class="muted">Brak treści pod tą ścieżką.</p>
+}

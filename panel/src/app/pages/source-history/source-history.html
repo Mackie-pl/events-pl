@@ -1,0 +1,177 @@
+@if (loading() && !history().length) {
+  <tui-loader size="xl" class="page-loader" />
+} @else {
+  <nav class="crumbs">
+    <a tuiLink routerLink="/">Overview</a>
+    <span class="muted">/</span>
+    <span>{{ sourceId() }}</span>
+  </nav>
+
+  <header tuiTitle class="page-title">
+    <h1>
+      {{ name() }}
+      @if (meta(); as m) {
+        @if (m.dead) {
+          <span tuiBadge appearance="negative">dead</span>
+        }
+        @if (m.inactive) {
+          <span tuiBadge appearance="warning">inactive</span>
+        }
+        @if (!m.verified) {
+          <span tuiBadge appearance="neutral">unverified</span>
+        }
+      }
+    </h1>
+    <div tuiSubtitle>
+      <code>{{ sourceId() }}</code>
+      @if (town()) {
+        · {{ town() }}
+      }
+      @if (meta(); as m) {
+        · {{ m.type }}
+        @if (m.fetch !== m.type) {
+          · <code>{{ m.fetch }}</code>
+        }
+        @if (since(); as d) {
+          · w rejestrze od {{ d }}
+        }
+      } @else {
+        · <span class="warn">poza rejestrem — sources.json go już nie ma</span>
+      }
+      @if (url()) {
+        · <a tuiLink [href]="url()" target="_blank" rel="noopener">{{ url() }}</a>
+      }
+    </div>
+  </header>
+
+  @if (meta()?.notes; as notes) {
+    <p class="notes">{{ notes }}</p>
+  }
+
+  <section class="cards">
+    <div class="card">
+      <span class="card-label">Przebiegi w oknie</span>
+      <span class="card-value">{{ totals().fetched }} / {{ totals().runs }}</span>
+      <span class="card-sub">pobrań / wszystkich wystąpień (runs.json trzyma 7 dni)</span>
+    </div>
+    <div class="card">
+      <span class="card-label">Wydarzenia (suma z okna)</span>
+      <span class="card-value">{{ num(totals().events) }}</span>
+      <span class="card-sub">przed dedupe, tak jak liczy je przebieg</span>
+    </div>
+    <div class="card">
+      <span class="card-label">Koszt w oknie</span>
+      <span class="card-value">{{ usd(totals().usd) }}</span>
+      <span class="card-sub">model + rekordy Bright Data po stawce z księgi</span>
+    </div>
+    <div class="card">
+      <span class="card-label">Błędy</span>
+      <span class="card-value" [class.negative]="totals().errors > 0">{{ totals().errors }}</span>
+      <span class="card-sub">przebiegi zakończone statusem error</span>
+    </div>
+  </section>
+
+  <h2 class="section-title">Historia przebiegów</h2>
+  @if (history().length) {
+    <div class="table-wrap">
+      <table tuiTable class="hist-table">
+        <thead tuiThead>
+          <tr tuiThGroup>
+            <th tuiTh>Przebieg</th>
+            <th tuiTh>Status</th>
+            <th tuiTh>Chars</th>
+            <th tuiTh>Changed</th>
+            <th tuiTh>Events</th>
+            <th tuiTh>LLM</th>
+            <th tuiTh>BD</th>
+            <th tuiTh>Koszt</th>
+            <th tuiTh>Czas</th>
+            <th tuiTh>Błąd</th>
+          </tr>
+        </thead>
+        <tbody tuiTbody>
+          @for (h of history(); track h.run.startedAt) {
+            <tr
+              tuiTr
+              class="clickable"
+              [routerLink]="['/run', h.run.startedAt, 'source', sourceId()]"
+            >
+              <td tuiTd>{{ dt(h.run.startedAt) }}</td>
+              <td tuiTd>
+                <span tuiBadge size="s" [appearance]="statusMeta[h.s.status].appearance">
+                  {{ statusMeta[h.s.status].label }}
+                </span>
+              </td>
+              <td tuiTd class="num">{{ h.s.chars !== undefined ? num(h.s.chars) : '—' }}</td>
+              <td tuiTd>
+                @if (h.s.changed === true) {
+                  <tui-icon icon="@tui.check" class="positive" />
+                } @else if (h.s.changed === false) {
+                  <span class="muted">—</span>
+                }
+              </td>
+              <td tuiTd class="num" [class.bold]="h.s.events > 0">{{ h.s.events }}</td>
+              <td tuiTd class="num">{{ h.s.llm.calls || '—' }}</td>
+              <td tuiTd class="num">{{ h.s.bd?.records || '—' }}</td>
+              <td tuiTd class="num">{{ h.usd ? usd(h.usd) : '—' }}</td>
+              <td tuiTd class="num">{{ ms(h.s.ms) }}</td>
+              <td tuiTd class="err-cell" [title]="h.s.err ?? ''">{{ h.s.err ?? '' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <p class="muted">
+      Tego źródła nie ma w żadnym z przebiegów, które trzyma <code>runs.json</code> (7 dni). Starsze
+      wydatki przeżywają w <a tuiLink routerLink="/costs">Money</a>.
+    </p>
+  }
+
+  <h2 class="section-title">
+    Wydarzenia w rejestrze
+    <span class="count">{{ events().length }}</span>
+  </h2>
+  <p class="muted hint">
+    Stan bieżący <code>events.json</code>, nie archiwum: wydarzenia po terminie z rejestru wypadają,
+    więc zero tutaj znaczy „nic aktualnego", a nie „nigdy nic nie dało".
+    @if (noise()) {
+      {{ noise() }} oznaczonych jako szum zostaje w tabeli — digest ich nie pokaże.
+    }
+  </p>
+  @if (events().length) {
+    <div class="table-wrap">
+      <table tuiTable class="events-table">
+        <thead tuiThead>
+          <tr tuiThGroup>
+            <th tuiTh>Data</th>
+            <th tuiTh>Godzina</th>
+            <th tuiTh>Tytuł</th>
+            <th tuiTh>Miejsce</th>
+            <th tuiTh>Cena</th>
+            <th tuiTh>Link</th>
+          </tr>
+        </thead>
+        <tbody tuiTbody>
+          @for (e of events(); track e.source_url + e.title + e.date_start) {
+            <tr tuiTr [class.noise]="e.is_noise">
+              <td tuiTd class="num">
+                {{ e.date_start }}
+                @if (e.date_end && e.date_end !== e.date_start) {
+                  <span class="muted">→ {{ e.date_end }}</span>
+                }
+              </td>
+              <td tuiTd class="num">{{ e.time_start ?? '—' }}</td>
+              <td tuiTd class="title-cell" [title]="e.title">{{ e.title }}</td>
+              <td tuiTd class="title-cell">{{ e.venue ?? e.town ?? '—' }}</td>
+              <td tuiTd>{{ price(e) }}</td>
+              <td tuiTd>
+                <a tuiLink [href]="e.source_url" target="_blank" rel="noopener">otwórz</a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+}

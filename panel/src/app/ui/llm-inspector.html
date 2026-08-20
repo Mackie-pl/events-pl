@@ -54,6 +54,18 @@
 
   @switch (tab()) {
     @case ('prompt') {
+      @if (c.imageSrc; as src) {
+        <figure class="poster">
+          @if (imageDead()) {
+            <p class="warn note">
+              Plakat nie doszedł spod swojego adresu — podpis w CDN-ie wygasa po kilku dniach.
+            </p>
+          } @else {
+            <img [src]="src" alt="plakat wysłany do modelu" (error)="imageDead.set(true)" />
+          }
+          <figcaption>{{ src }}</figcaption>
+        </figure>
+      }
       <app-code-view
         [text]="c.user"
         lang="text"

@@ -1,0 +1,134 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.6rem;
+
+  .title {
+    font-size: 1rem;
+  }
+
+  .url {
+    font-size: 0.75rem;
+    color: var(--tui-text-secondary);
+    overflow-wrap: anywhere;
+  }
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 0.4rem;
+
+  .fact {
+    display: flex;
+    flex-direction: column;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.6rem;
+    background: var(--tui-background-neutral-1);
+    border: 1px solid var(--tui-border-normal);
+    min-width: 0;
+
+    span {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--tui-text-secondary);
+    }
+
+    strong {
+      font-size: 0.95rem;
+      overflow-wrap: anywhere;
+    }
+  }
+}
+
+.tabs {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin: 0.75rem 0 0.5rem;
+}
+
+.records {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: min(58vh, 44rem);
+  overflow-y: auto;
+
+  .record {
+    border-top: 1px solid var(--tui-border-normal);
+
+    &:last-child {
+      border-bottom: 1px solid var(--tui-border-normal);
+    }
+
+    &--open {
+      background: var(--tui-background-neutral-1);
+    }
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    width: 100%;
+    padding: 0.35rem 0.2rem;
+    border: 0;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    font: inherit;
+
+    &:hover {
+      background: var(--tui-background-neutral-1);
+    }
+  }
+
+  .i {
+    font-family: ui-monospace, 'SFMono-Regular', 'Menlo', 'Consolas', monospace;
+    font-size: 0.75rem;
+    color: var(--tui-text-secondary);
+    min-width: 2.5rem;
+  }
+
+  .size {
+    font-size: 0.75rem;
+    color: var(--tui-text-secondary);
+    white-space: nowrap;
+  }
+
+  /* zajawka zjada resztę wiersza i urywa się wielokropkiem — wiersz ma zostać jednolinijkowy */
+  .head-line {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 0.78rem;
+    color: var(--tui-text-secondary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.note {
+  margin: 0.4rem 0 0;
+  font-size: 0.8rem;
+}
+
+.path {
+  margin: 0.5rem 0 0;
+  font-size: 0.72rem;
+  font-family: ui-monospace, 'SFMono-Regular', 'Menlo', 'Consolas', monospace;
+  overflow-wrap: anywhere;
+}
+
+.warn {
+  color: var(--tui-status-warning);
+}

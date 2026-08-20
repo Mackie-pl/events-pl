@@ -50,6 +50,13 @@ export class LlmInspector {
 
   protected readonly tab = signal<Tab>('prompt');
 
+  /**
+   * Plakat nie doszedł spod swojego adresu. Podpisany link fbcdn wygasa po kilku dniach,
+   * więc przy starszym wywołaniu to NORMALNY stan, a nie awaria panelu — pokazujemy wtedy
+   * sam adres i mówimy wprost, czemu nie ma obrazka.
+   */
+  protected readonly imageDead = signal(false);
+
   /** Odpowiedź z powrotem jako JSON — wraz z adnotacją, gdy się nie dała sparsować. */
   protected readonly response = computed(() => asPrettyJson(this.call()?.response ?? ''));
 

@@ -1,0 +1,136 @@
+.page-loader {
+  margin: 4rem auto;
+}
+
+.crumbs {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.page-title {
+  margin-bottom: 1rem;
+}
+
+.notes {
+  margin: 0 0 1rem;
+  color: var(--tui-text-secondary);
+  font-style: italic;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--tui-border-normal);
+  background: var(--tui-background-neutral-1);
+}
+
+.card-label {
+  font-size: 0.8rem;
+  color: var(--tui-text-secondary);
+}
+
+.card-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.card-sub {
+  font-size: 0.75rem;
+  color: var(--tui-text-secondary);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1.5rem 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.count {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--tui-text-secondary);
+}
+
+.hint {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  max-width: 60rem;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.hist-table,
+.events-table {
+  width: 100%;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.title-cell {
+  max-width: 24rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.err-cell {
+  max-width: 16rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--tui-status-negative);
+}
+
+.clickable {
+  cursor: pointer;
+
+  &:hover td {
+    background: var(--tui-background-neutral-1-hover);
+  }
+}
+
+// szum zostaje widoczny, ale wyblakły — digest go pominie, a tabela ma to pokazywać
+.noise td {
+  opacity: 0.55;
+}
+
+.positive {
+  color: var(--tui-status-positive);
+}
+
+.negative {
+  color: var(--tui-status-negative);
+}
+
+.bold {
+  font-weight: 700;
+}
+
+.warn {
+  color: var(--tui-status-warning);
+}
+
+.muted {
+  color: var(--tui-text-secondary);
+}

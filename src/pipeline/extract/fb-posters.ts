@@ -116,7 +116,7 @@ async function readOne(
 
   readThisRun += 1;
   const out = await extractPoster(
-    { data: img.data, mediaType: img.mediaType }, job.postUrl, job.context,
+    { data: img.data, mediaType: img.mediaType, src: job.imageUrl }, job.postUrl, job.context,
   );
   const events = stamp(out.events, job.postUrl);
   // licznik autora dostaje WYNIK, nie sam fakt odczytu — zero wydarzeń zbliża do wyciszenia,

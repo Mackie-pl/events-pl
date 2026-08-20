@@ -17,6 +17,14 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/source/source').then((m) => m.SourcePage),
   },
   {
+    // źródło w skali dłuższej niż jeden przebieg — historia statusów + wszystko, co ma
+    // dziś w rejestrze. Bez runId w adresie, bo pytanie nie dotyczy żadnego jednego dnia.
+    path: 'source/:sourceId',
+    title: 'Źródło · events-pl',
+    loadComponent: () =>
+      import('./pages/source-history/source-history').then((m) => m.SourceHistoryPage),
+  },
+  {
     path: 'costs',
     title: 'Pieniądze · events-pl',
     loadComponent: () => import('./pages/costs/costs').then((m) => m.CostsPage),

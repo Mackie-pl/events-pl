@@ -323,7 +323,7 @@ const POSTER_CONTEXT_CHARS = 1200;
  * odczytu między dniami wyglądałaby na kaprys modelu.
  */
 export async function extractPoster(
-  img: { data: string; mediaType: "image/jpeg" | "image/png" },
+  img: { data: string; mediaType: "image/jpeg" | "image/png"; src?: string },
   sourceUrl: string,
   context?: string,
 ): Promise<ExtractionResult> {
@@ -331,6 +331,9 @@ export async function extractPoster(
   const out = await chat({
     model: MODEL_EXTRACT,
     task: "poster",
+    // adres plakatu jedzie razem z bajtami, bo to jedyne, co po wywołaniu zostaje
+    // w archiwum — same bajty są tam za drogie (patrz `ChatOptions.imageSrc`)
+    ...(img.src ? { imageSrc: img.src } : {}),
     system: POSTER_SYSTEM,
     user: [
       imagePart(img.data, img.mediaType),
