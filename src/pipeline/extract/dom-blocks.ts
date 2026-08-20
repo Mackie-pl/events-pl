@@ -21,9 +21,20 @@
  *    wydarzenia nie ma kart i nie ma czego szukać; udawanie, że ma, byłoby gorsze od dzisiejszego
  *    zachowania.
  *
- * Nadwykrycie jest tanie, niedowykrycie drogie: trzy widżety w pasku bocznym uznane za „karty"
- * to nadal poprawne, lokalne bloki cache'a. Przeoczona lista wydarzeń to pełna cena za stronę
- * bez zmian. Stąd progi poniżej są liberalne.
+ * 4. Karta MUSI NIEŚĆ WŁASNY ADRES (`selfLinked`). Kształt to za mało: sekcje jednego wpisu
+ *    („Harmonogram", „Program", „Informacje organizacyjne") są równie samokształtnym
+ *    rodzeństwem, co karty na liście, a nigdzie nie prowadzą.
+ *
+ * PUNKT 4 ODWRACA ZAŁOŻENIE, na którym stały progi w tym pliku — „nadwykrycie jest tanie,
+ * bo widżet uznany za kartę to nadal poprawny, lokalny blok cache'a". Nie jest, gdy podział
+ * przetnie JEDNO wydarzenie. Pomiar 2026-08-20 na okpoznan.pl (strona jednego wydarzenia,
+ * 12 „kart"): cache zapisał wydarzenie przy fragmencie na 231 zn., a bloki z miejscem,
+ * godzinami i programem dostały ZERO. Odtworzenie następnego przebiegu pokazało cenę —
+ * świeży sam blok-nosiciel oddaje wydarzenie bez miejsca, bez miasta i bez godzin i tą
+ * wersją NADPISUJE cache; świeży sam blok z godzinami oddaje zero, więc poprawka przepada.
+ * Po drugiej stronie wagi stoi ~4% wywołania (3 925 vs ~4 000 tok. na stronie tego rozmiaru),
+ * bo prompt systemowy waży więcej niż cała taka strona. Dlatego progi zostają liberalne
+ * WSZĘDZIE POZA tożsamością karty, gdzie fail closed znaczy „to nie jest lista".
  */
 import render from "dom-serializer";
 import { type AnyNode, type Element, Text, hasChildren, isTag } from "domhandler";
@@ -125,6 +136,12 @@ export interface NearMiss {
   n: number;
   /** powód odrzucenia pierwszego członka, który nie przeszedł */
   why: string;
+  /**
+   * Które weto grupę zatrzymało. Brak = rozmiar karty (`whyNotCard`). `"link"` znaczy, że
+   * grupa BYŁA listą co do kształtu i rozmiaru, a odpadła na tożsamości — i tylko ten
+   * przypadek zasługuje na ślad także wtedy, gdy karty na stronie jednak są.
+   */
+  veto?: "link";
 }
 
 /**
@@ -155,11 +172,41 @@ function cardGroup(el: Element, misses: NearMiss[]): Element[] | null {
     // wszystkie muszą się mieścić w rozmiarze karty; jeden przerost znaczy, że to sekcje
     // i właściwa lista siedzi niżej — wtedy `null` posyła obchód głębiej
     const [sigOf, group] = best;
-    if (group.every(sized)) return group;
-    const why = group.map(whyNotCard).find((w) => w !== null);
-    if (why) noteMiss(misses, { sig: sigOf, n: group.length, why });
+    if (!group.every(sized)) {
+      const why = group.map(whyNotCard).find((w) => w !== null);
+      if (why) noteMiss(misses, { sig: sigOf, n: group.length, why });
+      continue;
+    }
+    const own = selfLinked(group);
+    if (own * 2 <= group.length) {
+      noteMiss(misses, { sig: sigOf, n: group.length, veto: "link",
+        why: `${group.length - own} z ${group.length} bez własnego odnośnika` });
+      continue;
+    }
+    return group;
   }
   return null;
+}
+
+/**
+ * KARTA PRZEDSTAWIA SIĘ WŁASNYM ADRESEM — ile członków grupy to robi.
+ *
+ * Powtarzalne rodzeństwo to za mało, żeby uznać coś za listę wydarzeń: sekcje jednego wpisu
+ * („Harmonogram", „Program", „Informacje organizacyjne") mają dokładnie ten sam kształt.
+ * Rozstrzyga adres — karta na liście prowadzi do SWOJEGO wydarzenia, sekcja opisu nie
+ * prowadzi nigdzie albo dzieli odnośnik z sąsiadkami (ten sam zapis, ta sama rezerwacja).
+ *
+ * Liczymy odnośniki UNIKALNE W GRUPIE, nie samo ich istnienie. Pomiar 2026-08-20 na
+ * okpoznan.pl: pięć „kart" opisu, z czego dwie niosły ten sam link do zapisów — gdyby
+ * wystarczyło „ma jakiś href", grupa przeszłaby, a to ona rozbiła wydarzenie na kawałki.
+ */
+function selfLinked(group: Element[]): number {
+  const hrefs = group.map((el) => new Set(
+    descendants(el, "a").map((a) => a.attribs["href"] ?? "").filter(Boolean),
+  ));
+  const ile = new Map<string, number>();
+  for (const set of hrefs) for (const h of set) ile.set(h, (ile.get(h) ?? 0) + 1);
+  return hrefs.filter((set) => [...set].some((h) => ile.get(h) === 1)).length;
 }
 
 /** Ile odrzuceń wpuszczamy do śladu. Diagnoza, nie log — dłuższa lista niczego nie dodaje. */
@@ -167,12 +214,15 @@ const MAX_MISSES = 5;
 
 /** Ten sam kształt bywa na stronie kilka razy; zostaje najliczniejsze wystąpienie. */
 function noteMiss(misses: NearMiss[], miss: NearMiss): void {
-  const prev = misses.find((m) => m.sig === miss.sig);
+  const prev = misses.find((m) => m.sig === miss.sig && m.veto === miss.veto);
   if (prev) {
     if (miss.n > prev.n) Object.assign(prev, miss);
     return;
   }
-  if (misses.length < MAX_MISSES) misses.push(miss);
+  // limit LICZONY OSOBNO dla każdego weta, bo inaczej rodzaj rzadszy przepada niezauważony:
+  // na poznan.pl pięć slotów zajęły odrzucenia na rozmiarze („link ×14, 0 zn.") i weto
+  // tożsamości — to, które właśnie zmieniło podział strony — nie zostawiło ani słowa
+  if (misses.filter((m) => m.veto === miss.veto).length < MAX_MISSES) misses.push(miss);
 }
 
 /** Karty w kolejności dokumentu. Do wnętrza karty nie schodzimy — jest już jednostką. */

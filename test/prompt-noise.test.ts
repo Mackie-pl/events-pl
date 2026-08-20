@@ -85,10 +85,11 @@ describe("karta z poznan.pl — powtórzone wiersze", () => {
     // gdy serwis przebuduje listę, ten test ma powiedzieć „zmieniły się dane", a nie
     // sypnąć trzema niezrozumiałymi porażkami niżej
     assert.equal(seg.detected, true, "podział po DOM-ie ma rozpoznać listę kart");
-    // 31, nie 34: trzy „karty" tej strony to sekcje zgody na ciasteczka („Cookies plików
-    // wideo", „Funkcjonalne pliki"…), a od 2026-08-20 fragment z przewagą chromu przestaje
-    // być kartą i wraca do podziału po akapitach (patrz CARD_CHROME_LIMIT w dom-blocks.ts)
-    assert.equal(seg.cards, 31, "31 kart — tyle miała strona z 2026-08-14 po odjęciu zgód");
+    // 26, nie 34: ośmiu „kartom" tej strony bliżej do zgody na ciasteczka niż do wydarzenia.
+    // Trzy odsiewa przewaga chromu (CARD_CHROME_LIMIT), pięć kolejnych — od 2026-08-20 —
+    // brak własnego odnośnika: proza polityki prywatności jest samokształtnym rodzeństwem,
+    // ale nigdzie nie prowadzi. Żadna karta z DATĄ przy tym nie znikła i to jest tu warunek.
+    assert.equal(seg.cards, 26, "26 kart — tyle miała strona z 2026-08-14 po odjęciu zgód");
   });
 
   it("żaden wiersz nie stoi w karcie wydarzenia dwa razy", () => {

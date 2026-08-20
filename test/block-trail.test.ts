@@ -7,7 +7,9 @@
  * też krok pusty.
  */
 import { strict as assert } from "node:assert";
+import { readFileSync } from "node:fs";
 import { beforeEach, describe, it } from "node:test";
+import { fileURLToPath } from "node:url";
 
 import { toBlock } from "../src/pipeline/extract/blocks.js";
 import { auditBlockResult, auditNearMiss, auditSplit } from "../src/pipeline/extract/block-trail.js";
@@ -145,12 +147,17 @@ describe("ślad podziału na bloki", () => {
   });
 });
 
-/** Lista kart w kształcie, który podział po DOM-ie rozpoznaje (patrz dom-blocks.test.ts). */
+/**
+ * Lista kart w kształcie, który podział po DOM-ie rozpoznaje (patrz dom-blocks.test.ts).
+ * Każda karta ma WŁASNY adres — bez tego jest nieodróżnialna od sekcji jednego wpisu
+ * i od 2026-08-20 słusznie nie jest listą (`selfLinked` w dom-blocks.ts).
+ */
 const HTML_LIST = `<!doctype html><html><body><main>
   <h2>Nadchodzące wydarzenia</h2>
   ${["Peregrinus", "Kwadrofonik", "Lautari", "Bastarda"]
     .map((t) => `<article class="event"><h3>${t}</h3>
       <p>Opis wydarzenia ${t}, w którym stoi tyle tekstu, ile zwykle stoi w zajawce karty.</p>
+      <a href="/wydarzenie/${t.toLowerCase()}">Szczegóły</a>
       </article>`)
     .join("\n")}
 </main></body></html>`;
@@ -173,6 +180,29 @@ describe("czemu strona nie jest listą kart", () => {
     assert.ok(miss, `żadna grupa nie została odnotowana: ${JSON.stringify(seg.nearMiss)}`);
     assert.equal(miss.n, 5);
     assert.match(miss.why, /poniżej progu karty/u);
+  });
+
+  /**
+   * okpoznan.pl — strona JEDNEGO wydarzenia z paskiem „inne wydarzenia" na dole, pobrana
+   * 2026-08-20. Pasek JEST listą kart, więc `detected` jest prawdą i stary warunek kroku
+   * („tylko gdy nie ma kart") przemilczałby weto, które akurat na tej stronie rozstrzyga
+   * o wszystkim: bez niego opis wydarzenia rozpadał się na pięć „kart".
+   */
+  const AMAKIDS = readFileSync(
+    fileURLToPath(new URL("fixtures/okpoznan-amakids-2026-08-20.html", import.meta.url)),
+    "utf8",
+  );
+
+  it("weto tożsamości melduje się TAKŻE na stronie z prawdziwymi kartami", () => {
+    const seg = segmentHtml(AMAKIDS);
+    assert.equal(seg.detected, true, "fixture przestał mieć pasek innych wydarzeń");
+
+    auditNearMiss(seg);
+    assert.match(note("block"), /bez własnych adresów/u);
+    assert.ok(
+      (detail("block", "linkVeto") as number) >= 1,
+      `weto tożsamości nie weszło do detali: ${JSON.stringify(stepOf("block")?.detail)}`,
+    );
   });
 
   it("krok pojawia się tylko wtedy, gdy było co odrzucać", () => {

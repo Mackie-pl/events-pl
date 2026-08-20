@@ -209,3 +209,66 @@ describe("podział po DOM-ie", () => {
     assert.ok(has(single, "Kwadrofonik"), "fallback zgubił treść strony");
   });
 });
+
+/**
+ * KARTA MUSI SIĘ PRZEDSTAWIĆ WŁASNYM ODNOŚNIKIEM.
+ *
+ * Wykrywanie kart pyta o STRUKTURĘ, a sekcje jednego wpisu („Harmonogram", „Program",
+ * „Informacje organizacyjne") są równie samokształtnym rodzeństwem, co karty na liście.
+ * Skutek zmierzony 2026-08-20 na okpoznan.pl (patrz fixture): strona JEDNEGO wydarzenia
+ * rozpadła się na 12 „kart", a cache zapisał wydarzenie przy fragmencie na 231 znaków —
+ * bloki z miejscem, godzinami i programem dostały ZERO wydarzeń. Odtworzenie jutrzejszego
+ * przebiegu (dwa wywołania modelu) pokazało, co z tego wynika:
+ *   - świeży sam blok-nosiciel → „WARSZTAT VI ARCHITEKCI MYŚLENIA", venue "", town "",
+ *     godziny null (zamiast „Centrum Edukacyjne AMAkids, ul. Ścinawska 19", 7:30–16:30),
+ *     i ta wersja NADPISUJE cache;
+ *   - świeży sam blok z miejscem i godzinami → zero wydarzeń, czyli poprawka przepada.
+ *
+ * Odróżnia je jedno: karta na liście niesie WŁASNY adres wydarzenia, sekcja wpisu nie ma
+ * żadnego albo dzieli go z sąsiadkami. To odwraca założenie z nagłówka dom-blocks.ts
+ * („nadwykrycie jest tanie"): nadwykrycie kosztuje miejsce, godziny i tytuł wydarzenia,
+ * a niedowykrycie na tak małej stronie kosztuje ~4% wywołania (3 925 vs ~4 000 tok.).
+ */
+describe("karta bez własnego odnośnika", () => {
+  /** okpoznan.pl — strona JEDNEGO wydarzenia, pobrana 2026-08-20 (patrz fixtures). */
+  const AMAKIDS = readFileSync(
+    fileURLToPath(new URL("fixtures/okpoznan-amakids-2026-08-20.html", import.meta.url)),
+    "utf8",
+  );
+
+  it("sekcje jednego wpisu nie zostają kartami", () => {
+    const seg = segmentHtml(AMAKIDS);
+    const cards = new Set(seg.cardHashes);
+    const sekcje = seg.blocks.filter(
+      (b) => cards.has(b.hash) && /Harmonogram Kursu|Informacje Organizacyjne/u.test(b.text),
+    );
+    assert.deepEqual(sekcje.map((b) => b.chars), [], "sekcja opisu nadal liczy się jako karta");
+  });
+
+  it("wydarzenie zostaje w JEDNYM bloku — tytuł, miejsce i godziny razem", () => {
+    const seg = segmentHtml(AMAKIDS);
+    const razem = seg.blocks.filter(
+      (b) => b.text.includes("ARCHITEKCI MYŚLENIA")
+        && b.text.includes("Ścinawska 19") && b.text.includes("7:30"),
+    );
+    assert.equal(razem.length, 1,
+      "pola jednego wydarzenia rozjechały się po blokach — cache nie złoży ich z powrotem");
+  });
+
+  it("karty z paska „inne wydarzenia” przeżywają — mają własne adresy", () => {
+    const seg = segmentHtml(AMAKIDS);
+    const cards = new Set(seg.cardHashes);
+    const inne = seg.blocks.filter(
+      (b) => cards.has(b.hash) && b.text.includes("/szczegoly-wydarzenia/"),
+    );
+    assert.ok(inne.length >= 4, `zostało ${inne.length} kart paska — weto zjadło prawdziwą listę`);
+  });
+
+  it("treść nie ginie — opis nadal stoi w którymś bloku", () => {
+    const seg = segmentHtml(AMAKIDS);
+    assert.ok(
+      seg.blocks.some((b) => b.text.includes("Harmonogram Kursu")),
+      "unieważniona karta zniknęła ze strony zamiast wrócić do reszty",
+    );
+  });
+});

@@ -642,6 +642,7 @@ pierwsze dwa są publiczne (`audit.json`), a trzeci niesie cudzą treść i zost
 |---|---|
 | krok `block` | `podział: DOM, 38 kart → 41 bl. / 28 431 zn.; 39 z cache, 2 do modelu (1 204 zn., 4% treści)` — znaki obok liczby bloków, bo „2 z 41 bloków" brzmi jak nic, a bywa połową strony |
 | krok `block` (drugi wariant) | `bez kart mimo 3 grup rodzeństwa — tniemy po akapitach. div.tile ×5 (18 zn. — poniżej progu karty)`: **czemu** ta strona nie została rozpoznana jako lista. Wcześniej „nie ma listy" i „jest, ale nie po naszemu" wyglądały identycznie |
+| krok `block` (trzeci wariant) | `2 grup rodzeństwa bez własnych adresów — to sekcje jednego wpisu, nie lista kart, więc tniemy je po akapitach`: jedyne weto meldowane **także wtedy, gdy karty na stronie są**. Tak wygląda strona jednego wydarzenia — pasek „inne wydarzenia" JEST listą, a sekcje opisu obok niej tylko udają |
 | krok `block.parsed` | co z tego wyszło: ile wydarzeń dały świeże bloki, ile cache, ile bloków opłaconych **bez ani jednego** wydarzenia — i ile te bloki **ważyły** (`silent`, `silentChars`, `silentLeads` względem `freshChars`). Sztuki same nie mówią nic: „18 z 19 bez wydarzenia" bywa osiemnastoma stopkami, a bywa połową strony, a płacimy za znaki. `silentLeads` odejmuje te, które wprawdzie nie dały wydarzenia, ale wskazały followup — one nie są stratą |
 | `blocks/…` w archiwum | wiersz na blok: hash, rozmiar, karta czy reszta strony, **czemu granica wypadła tutaj** (`cut`), z cache czy do modelu, od kiedy w cache'u, ile wydarzeń dał — i **treść każdego** bloku. Zapisywane przy każdym podziale, także w pełni z cache'a |
 
@@ -698,6 +699,37 @@ ruszenia z definicji. Dwie zmiany z 2026-08-20, obie mierzone na 53 stronach (44
 |---|---|
 | granica `flip` w `segment()` | dotąd cięcie stawiał wyłącznie hash akapitu, czyli średnio co szósty — stopka obok ogona karty zostawała z nim w jednym bloku, jeśli moneta nie padła między nimi. Chrom uwięziony w blokach niejednorodnych: **31 814 → 11 270 zn.**, kosztem 7,5% więcej bloków |
 | weto `CARD_CHROME_LIMIT` w `dom-blocks.ts` | wykrywanie kart pyta o STRUKTURĘ, a drzewo nawigacji z `<li>` spełnia je co do joty: mdk1/mdk2.poznan.pl oddawały spis oferty zajęć (3 201 i 3 504 zn.) jako kartę, poznan.pl — kategorie zgody na ciasteczka. Fragment z przewagą chromu przestaje być kartą i wraca do podziału po akapitach. **58 rozciętych „kart", zero z nich dało kiedykolwiek wydarzenie, zero zgubionych followupów** |
+
+#### Karta musi nieść własny adres
+
+Trzecie weto, z 2026-08-20, i jedyne, które nie dotyczy chromu, tylko POPRAWNOŚCI podziału.
+Wykrywanie kart pyta o kształt, a sekcje jednego wpisu („Harmonogram", „Program", „Informacje
+organizacyjne") są równie samokształtnym rodzeństwem, co karty na liście. Odróżnia je adres:
+karta prowadzi do SWOJEGO wydarzenia, sekcja opisu nie prowadzi nigdzie albo dzieli odnośnik
+z sąsiadkami. Stąd `selfLinked` w `dom-blocks.ts` — grupa jest listą, gdy większość członków
+niesie odnośnik UNIKALNY w grupie.
+
+Bez tego strona jednego wydarzenia rozpadała się na kawałki jednego wydarzenia. Pomiar na
+`okpoznan.pl/szczegoly-wydarzenia/…amakids…` (2026-08-20, fixture w `test/fixtures/`):
+12 „kart", wydarzenie zapisane w cache'u przy fragmencie na **231 zn.**, a bloki z miejscem,
+godzinami i programem — **zero wydarzeń**. Tego dnia wynik był poprawny tylko dlatego, że
+wszystkie świeże bloki pojechały jedną paczką i model posklejał je wbrew instrukcji („czytaj
+każdy osobno"). Odtworzenie NASTĘPNEGO przebiegu, dwoma wywołaniami, pokazuje rachunek:
+
+| co jest świeże | co wraca |
+|---|---|
+| sam blok-nosiciel (zmiana ceny) | `WARSZTAT VI ARCHITEKCI MYŚLENIA`, `venue: ""`, `town: ""`, godziny `null` — zamiast „Centrum Edukacyjne AMAkids, ul. Ścinawska 19", 7:30–16:30. I ta wersja **nadpisuje** cache |
+| sam blok z miejscem i godzinami | **zero wydarzeń** — poprawka przepada, w sumie zostaje wczorajsza wersja |
+
+Po drugiej stronie wagi stoi **~4% wywołania** (3 925 vs ~4 000 tok.): prompt systemowy waży
+więcej niż cała taka strona, więc podział na niej nie oszczędzał niczego mierzalnego. To
+odwraca założenie, na którym stały progi wykrywania („nadwykrycie jest tanie") — jest tanie,
+dopóki nie przecina jednego wydarzenia.
+
+Regresja sprawdzona na fixturach listingowych: `poznan-events-lista` 31 → 26 kart,
+`mdk2-poznan-aktualnosci` 16 → 13. **Wszystkie osiem odrzuconych to proza zgody na
+ciasteczka** („Administratorem danych osobowych…", „COOKIES PLIKÓW WIDEO") — samokształtne
+rodzeństwo, które nigdzie nie prowadzi. Ani jedna karta z datą nie znikła.
 
 Razem, na wdrożonym kodzie: **69 447 z 444 013 znaków (15,6%) nie jedzie do modelu**, przy zerze
 bloków z wydarzeniami wśród odsianych. Oszczędność jest niewielka w pieniądzu — chrom jest

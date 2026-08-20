@@ -325,3 +325,64 @@ z jednej strony — to za mało na nowy kształt pola i na `shared/series.ts`. P
 policzyć w `events.json` wpisy, których tytuł albo `container` niosą „miesiąca" / „co miesiąc",
 a które weszły jako pojedynczy termin. Dopóki liczba nie wyjdzie, sonda kontenerów odzyskuje
 z takiej strony to, co umie (rytmy tygodniowe), i tyle.
+
+---
+
+## 11. Followupy: „bez bloków" odłożone, zostaje pasek „inne wydarzenia"
+
+Pomysł zgłoszony 2026-08-20: followup to zwykle strona JEDNEGO wydarzenia, więc może w ogóle
+nie dzielić followupów na bloki. **Odłożone**, bo pomiar mówi, że dzielił nie ten wymiar co
+trzeba — decyduje KSZTAŁT strony, nie to, czy przyszliśmy do niej followupem:
+
+- Rozpad opisu na kawałki naprawia weto tożsamości karty (`selfLinked`, `dom-blocks.ts`) —
+  i naprawia je też na stronie źródła, czego „followupy bez bloków" nie tknęłoby.
+- Followupy BYWAJĄ listami: `dopiewo.pl/wydarzenia?page=1` (9 wydarzeń), `biblub.com/category/
+  aktualnosci/page/1`, `kultura.gmina.pl/category/aktualnosci/page/1`. Trzy z 91 followupów
+  w przebiegach 18–20.08 — mało, ale to akurat są PAGINACJE, czyli osobny wątek (niżej).
+- Oszczędność z podziału na stronie szczegółów jest w granicach szumu: 3 925 vs ~4 000 tokenów,
+  bo prompt systemowy (4 046 zn.) waży więcej niż taka strona.
+
+Wracać do tego, gdy podział zacznie psuć wydarzenie mimo weta tożsamości — wtedy sygnałem
+będzie znowu jedno wydarzenie rozpisane na kilka bloków, a nie sam fakt bycia followupem.
+
+### Co z tego ZOSTAJE otwarte: pasek „inne wydarzenia"
+
+Strona szczegółów każdego CMS-a niesie na dole listę sąsiadów i to JEST prawdziwa lista kart
+(własne adresy), więc weto tożsamości jej nie tyka — i słusznie. Pomiar z 18–20.08:
+
+- 93 obce ekstrakcje na 31 followupach, po scaleniu 33 unikalne (tytuł + data);
+- **17 z 33 wraca na 3–7 różnych podstronach** — to podpis paska. Pozostałe 16 pochodzi
+  z followupów, które naprawdę są listami;
+- 21 stoi dziś w `events.json` (rejestr: 198), z czego 14 przyszło też listingiem — czyli
+  duplikat do rozstrzygnięcia w dedupe — a **7 zawdzięcza rejestr wyłącznie paskowi**;
+- jakość: pasek wypełnia **2,39 z 5** pól (godzina, miejsce, miasto, cena, wiek) wobec **3,11**
+  dla wydarzeń czytanych z własnej strony;
+- **~10 z 198 wpisów rejestru ma `source_url` cudzej podstrony** — digest linkuje „Folklor
+  wielkopolski" do strony o wystawie sensorycznej. To jest tu jedyna realna szkoda.
+
+Pieniędzy to nie kosztuje: kafle paska są identyczne na wielu stronach, więc mają wspólny hash
+i jadą z cache'u. To defekt JAKOŚCI, nie rachunku — i dlatego rozwiązanie ma być tanie.
+
+**Kandydat: powtarzalność w obrębie serwisu.** Blok stojący na wielu stronach jednego źródła
+jest meblem serwisu, nie treścią TEJ strony. Pomiar na żywych followupach (bloki niosące
+wydarzenia, „na ≥3 stronach" wobec „tylko na jednej"):
+
+| źródło | stron | wspólnych z wydarzeniami | własnych z wydarzeniami |
+|---|---|---|---|
+| `okpoznan-wydarzenia` | 17 | **19** | 6 |
+| `dopiewo-pl-wydarzenia` | 5 | 3 | 14 |
+| `mosina-pl-wydarzenia` | 8 | 1 | 8 |
+| `puszczykowo`, `poznan-co-gdzie-kiedy`, `ck-zamek`, `gosir-dopiewo` | 4–6 | **0** | 7–25 |
+
+Odsiew celuje dokładnie w pasek i milczy na czterech serwisach, które paska nie mają. Reguła
+ma działać **tylko na followupie**: na stronie źródła ten sam blok JEST treścią i zabranie go
+skasowałoby wydarzenie z jedynego miejsca, w którym stoi poprawnie. Wymaga rozszerzenia
+`state.blocks` o liczbę różnych stron źródła, na których blok widziano.
+
+Cena: znikną te 7 wydarzeń „tylko z paska". To jest do przyjęcia dopiero z paginacją — dziś
+pasek zbiera przypadkiem to, co powinna oddać druga strona listingu.
+
+Odrzucone po drodze: odsiew po klasie (`carousel`, `related`) — słownictwo konkretnego CMS-a,
+czyli lista wyjątków w przebraniu; próg text-to-link — pasek jest gęsty od odnośników, ale
+karty prawdziwego listingu też (plakat + link), więc próg mierzyłby zastępczo to, co
+powtarzalność mierzy wprost.

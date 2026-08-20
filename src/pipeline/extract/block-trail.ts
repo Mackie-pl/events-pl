@@ -93,11 +93,32 @@ export function auditSplit(info: SplitInfo, blocks: Block[], fresh: Block[]): vo
  * wyglądały dotąd tak samo, czyli na nic.
  */
 export function auditNearMiss(dom: DomSegmentation): void {
-  if (dom.detected || dom.perturbed || !dom.nearMiss.length) return;
+  if (dom.perturbed) return;
+  auditLinkVeto(dom);
+  if (dom.detected || !dom.nearMiss.length) return;
   const shown = dom.nearMiss.map((m) => `${m.sig} ×${m.n} (${m.why})`).join("; ");
   audit("block",
     `bez kart mimo ${dom.nearMiss.length} grup rodzeństwa — tniemy po akapitach. ${shown}`,
     { candidates: dom.nearMiss.length, why: shown });
+}
+
+/**
+ * Krok „grupa wyglądała na listę, ale nie prowadzi do niczego" — jedyne weto meldowane
+ * TAKŻE wtedy, gdy karty na stronie są.
+ *
+ * Bo tak właśnie wygląda strona jednego wydarzenia: pasek „inne wydarzenia" jest prawdziwą
+ * listą (`detected: true`), a sekcje opisu obok niej tylko udają. Gdyby ten wiersz milczał
+ * przy rozpoznanych kartach, decyzja, która rozstrzyga o kształcie CAŁEJ strony, nie
+ * zostawiałaby śladu dokładnie tam, gdzie zmienia najwięcej.
+ */
+function auditLinkVeto(dom: DomSegmentation): void {
+  const veto = dom.nearMiss.filter((m) => m.veto === "link");
+  if (!veto.length) return;
+  const shown = veto.map((m) => `${m.sig} ×${m.n} (${m.why})`).join("; ");
+  audit("block",
+    `${veto.length} grup rodzeństwa bez własnych adresów — to sekcje jednego wpisu, `
+    + `nie lista kart, więc tniemy je po akapitach. ${shown}`,
+    { linkVeto: veto.length, why: shown });
 }
 
 /**
