@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-19T04:51:43.937Z",
+ "updated": "2026-08-20T05:00:57.790Z",
  "rates": {
   "bdPerRecord": 0.0015,
   "searchPerQuery": 0.001,
@@ -2972,6 +2972,157 @@
    "usd": 0,
    "estimated": true,
    "units": 2.962,
+   "unit": "MB"
+  },
+  {
+   "day": "2026-08-20",
+   "at": "2026-08-20T05:00:57.626Z",
+   "stage": "daily",
+   "run": "2026-08-20T04:31:10.703Z",
+   "category": "llm-extract",
+   "usd": 0.067343,
+   "estimated": false,
+   "units": 53,
+   "unit": "calls",
+   "tokensIn": 195708,
+   "tokensOut": 38463,
+   "top": [
+    {
+     "id": "okpoznan-wydarzenia",
+     "usd": 0.020176,
+     "units": 10
+    },
+    {
+     "id": "fb-group-wydarzenia-poznan-4",
+     "usd": 0.005354,
+     "units": 2
+    },
+    {
+     "id": "mieszkancy-lubonia-fb-group",
+     "usd": 0.004639,
+     "units": 1
+    },
+    {
+     "id": "mosina-pl-wydarzenia",
+     "usd": 0.004156,
+     "units": 5
+    },
+    {
+     "id": "dopiewo-pl-wydarzenia",
+     "usd": 0.003923,
+     "units": 5
+    }
+   ]
+  },
+  {
+   "day": "2026-08-20",
+   "at": "2026-08-20T05:00:57.626Z",
+   "stage": "daily",
+   "run": "2026-08-20T04:31:10.703Z",
+   "category": "llm-vision",
+   "usd": 0.04239,
+   "estimated": false,
+   "units": 61,
+   "unit": "calls",
+   "tokensIn": 245609,
+   "tokensOut": 5428,
+   "top": [
+    {
+     "id": "mieszkancy-lubonia-fb-group",
+     "usd": 0.018864,
+     "units": 28
+    },
+    {
+     "id": "dopiewo-tablica-ogloszen-fb",
+     "usd": 0.013208,
+     "units": 18
+    },
+    {
+     "id": "lubon-fb-group",
+     "usd": 0.003905,
+     "units": 6
+    },
+    {
+     "id": "fb-group-wydarzenia-poznan-4",
+     "usd": 0.003605,
+     "units": 6
+    },
+    {
+     "id": "fb-group-kultura-komorniki",
+     "usd": 0.002388,
+     "units": 2
+    }
+   ]
+  },
+  {
+   "day": "2026-08-20",
+   "at": "2026-08-20T05:00:57.626Z",
+   "stage": "daily",
+   "run": "2026-08-20T04:31:10.703Z",
+   "category": "fb",
+   "usd": 0.255,
+   "estimated": true,
+   "units": 170,
+   "unit": "records",
+   "top": [
+    {
+     "id": "mieszkancy-lubonia-fb-group",
+     "usd": 0.075,
+     "units": 50
+    },
+    {
+     "id": "dopiewo-tablica-ogloszen-fb",
+     "usd": 0.075,
+     "units": 50
+    },
+    {
+     "id": "fb-group-wydarzenia-poznan-4",
+     "usd": 0.075,
+     "units": 50
+    },
+    {
+     "id": "lubon-fb-group",
+     "usd": 0.021,
+     "units": 14
+    },
+    {
+     "id": "fb-group-kultura-komorniki",
+     "usd": 0.0075,
+     "units": 5
+    }
+   ]
+  },
+  {
+   "day": "2026-08-20",
+   "at": "2026-08-20T05:00:57.626Z",
+   "stage": "daily",
+   "run": "2026-08-20T04:31:10.703Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 174,
+   "unit": "fetches"
+  },
+  {
+   "day": "2026-08-20",
+   "at": "2026-08-20T05:00:57.626Z",
+   "stage": "daily",
+   "run": "2026-08-20T04:31:10.703Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 40,
+   "unit": "lookups"
+  },
+  {
+   "day": "2026-08-20",
+   "at": "2026-08-20T05:00:57.626Z",
+   "stage": "daily",
+   "run": "2026-08-20T04:31:10.703Z",
+   "category": "storage",
+   "usd": 0,
+   "estimated": true,
+   "units": 3.833,
    "unit": "MB"
   }
  ]
