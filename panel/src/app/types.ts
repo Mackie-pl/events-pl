@@ -214,6 +214,17 @@ export interface ContainerStats {
   dropped: number;
 }
 
+/** Jedna dalsza strona listingu — lustro `PageRun` z src/types/run.ts. */
+export interface PageRun {
+  page: number;
+  url: string;
+  /** `stale` = darmowa sonda dat nie znalazła przyszłych terminów, więc nie płaciliśmy */
+  outcome: 'ok' | 'unchanged' | 'stale' | 'error';
+  events: number;
+  why?: string;
+  blocks?: BlockStats;
+}
+
 export interface FollowupRun {
   url: string;
   kind: 'poster' | 'page';
@@ -357,6 +368,8 @@ export interface SourceRun {
   droppedRepertoire?: number;
   /** ścieżki obiektów w prywatnym archiwum; treść dostępna tylko przez lokalny serwer */
   archive?: string[];
+  /** dalsze strony listingu (2, 3…); brak = jedna strona albo pager bez adresów */
+  pages?: PageRun[];
   /** followupy sprawdzone mimo niezmienionej strony źródła */
   followupsRechecked?: number;
   /** sonda stron-programów; brak = źródło nie miało wpisu o tym kształcie */

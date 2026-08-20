@@ -31,6 +31,7 @@
  * to kilkanaście tysięcy tokenów wyjścia dziennie i digest zalany repertuarem.
  */
 import { P } from "../config/index.js";
+import { audit } from "../shared/audit.js";
 import type { EventItem } from "../types/index.js";
 
 /** Ścieżka adresu; adresu nie do rozłożenia (followup podany względnie) nie odrzucamy — tniemy ręcznie. */
@@ -79,4 +80,26 @@ export function repertoireSegment(url: string): string | null {
 export function dropRepertoire(events: EventItem[]): { kept: EventItem[]; dropped: number } {
   const kept = events.filter((ev) => repertoireSegment(ev.source_url) === null);
   return { kept, dropped: events.length - kept.length };
+}
+
+/**
+ * Adresy do pobrania bez repertuarów. IDEMPOTENTNA i to jest tu warunek, nie ozdoba:
+ * wołamy ją kilka razy — na propozycjach modelu (żeby limit followupów nie poszedł na adresy,
+ * których i tak nie pobierzemy), na liście odtworzonej ze `state.followupsBySource` przy
+ * niezmienionej stronie i na propozycjach z dalszych stron listingu. Kolejne wywołanie nie ma
+ * już czego odrzucić, więc nie dopisuje drugiej notki do śladu.
+ *
+ * Stoi TUTAJ, a nie w process-source.ts, odkąd tą samą bramką chodzi paginacja: repertuar
+ * pod adresem strony 2 jest tym samym repertuarem, a druga kopia tych pięciu linii oznaczałaby
+ * dwa miejsca do poprawienia przy następnej regule.
+ */
+export function fetchableUrls(urls: string[]): string[] {
+  return urls.filter((u) => {
+    const segment = repertoireSegment(u);
+    if (!segment) return true;
+    audit("url.skipped",
+      `„/${segment}/" to repertuar, a nie lista wydarzeń — nie pobieramy tej podstrony`,
+      { url: u, segment });
+    return false;
+  });
 }

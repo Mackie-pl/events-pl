@@ -123,6 +123,9 @@ export const STEP_META: Record<
   // 'save': odrzucony adres to strona, za której przeczytanie NIE zapłaciliśmy — najtańszy
   // możliwy wariant tej decyzji, bo zapada przed pobraniem, nie po ekstrakcji
   'url.skipped': { icon: '@tui.circle-slash', tone: 'save' },
+  // kolejna strona listingu to dalszy ciąg tej samej listy, nie nowe źródło —
+  // stąd ikona stron, a nie odnośnika
+  'page': { icon: '@tui.copy', tone: 'plain' },
   'followup.proposed': { icon: '@tui.list-plus', tone: 'plain' },
   // 'save': adres, który nigdzie nie prowadzi, odpada PRZED pobraniem — a odrzucony wracałby
   // po 404 w każdym przebiegu, bo 404 nie zmienia hasha strony

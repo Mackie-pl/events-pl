@@ -827,6 +827,64 @@ razem z jego cache'em po haszu treści i ścieżką blokową (`src/pipeline/extr
 Asymetria, która tę regułę ustawia: fałszywa sonda to jeden fetch, fałszywe przepuszczenie to
 dziesięć zajęć, których nikt nigdy nie zobaczy.
 
+### Paginacja listingu: strona 2 to nadal to samo źródło
+
+Trzecia droga do źródła, obok strony pierwszej i followupów — z własnym sufitem
+(`LISTING_PAGES_MAX`, domyślnie 3), bo podstrona wydarzenia i druga strona listy to dwa różne
+zwierzęta. Wrzucone do jednej kolejki, paginacja zjadała sloty podstronom: w przebiegach
+18–20.08 `dopiewo.pl/wydarzenia?page=1` zajmowało slot followupa każdego dnia.
+
+**Adres kolejnej strony CZYTAMY z pagera, nie zgadujemy z nazwy parametru.** Pomiar 2026-08-20
+na 35 źródłach nie-FB dał pięć konwencji naraz, z czego dwie nie miały prawa trafić na żadną
+listę nazw, bo to nazwy jednego CMS-a:
+
+| źródło | adres strony 2 |
+|---|---|
+| oklubon.pl | `/wydarzenia?pno=2` |
+| puszczykowo.pl (Concrete CMS) | `/wydarzenia?ccm_paging_p=2&ccm_order_by=…` |
+| mosina.pl | `https://www.mosina.pl/wydarzenia?page=2` |
+| biblub.com | `https://biblub.com/page/2/` |
+| bracz.edu.pl (WordPress) | `<link rel="next">` w nagłówku |
+
+Dwie pułapki, obie znalezione na żywych stronach i obie zamknięte testem:
+
+- **kalendarz udający pager** — `poznan.pl/mim/events` ma siatkę dni (`<td><a href="/mim/events/2026-08-02/">2</a>`).
+  Numer dnia wygląda jak numer strony, a adres prowadzi do innego DNIA: pójście za tym otwiera
+  trzydzieści stron zamiast jednej. Odsiewa go tabela w przodkach **i** to, że numer odnośnika
+  jest dniem daty z jego adresu;
+- **`<a rel="next">` = następny WPIS** — `gazeta-lubon.pl` prowadzi tak do „XXI sesji Rady Miasta",
+  bo WordPress podpisuje tym nawigację między postami. Ufamy wyłącznie `<link rel="next">`.
+
+**Darmowa sonda przed płatnym wywołaniem.** O wartości strony 2 decyduje porządek sortowania
+serwisu, nie jego adres: kalendarz rosnąco trzyma tam PÓŹNIEJSZE wydarzenia, blog aktualności —
+STARSZE wpisy. Pobranie HTTP nic nie kosztuje, więc liczymy daty w gotowym tekście i dopiero
+potem decydujemy o modelu. Przebieg na sucho, 2026-08-20:
+
+```
+mosina-pl-wydarzenia       s.2 CZYTAJ (3 z 4 w przyszłości) | s.3 CZYTAJ (1 z 1)
+poznan-co-gdzie-kiedy      s.2 CZYTAJ (22 z 23)             | s.3 CZYTAJ (22 z 23)
+kultura-poznan             s.2 CZYTAJ (20 z 20)             | s.3 CZYTAJ (20 z 20)
+biblioteka-raczynskch      s.2 CZYTAJ (7 z 9)               | s.3 CZYTAJ (3 z 5)
+puszczykowo-pl-wydarzenia  s.2 CZYTAJ (6 z 6)               | s.3 CZYTAJ (6 z 6)
+ok-lubon-www               s.2 POMIŃ  (27 terminów, ZERO w przyszłości: 2025-09-12…2026-02-20)
+biblioteka-lubon-www       s.2 POMIŃ  (10 terminów, ZERO w przyszłości: 2024-06-19…2026-05-22)
+```
+
+Dwie strony pominięte za darmo, jedenaście do przeczytania (144 501 zn. ≈ 72 tys. tokenów
+wejścia przy PIERWSZYM czytaniu; potem płacimy tylko za bloki, które się zmieniły). Brak dat
+w treści czytamy **mimo wszystko** — asymetria jest jednostronna: pominięta strona kosztuje cały
+swój listing, zbędne wywołanie ~$0,0015.
+
+Chodzenie kończy się na pierwszym z pięciu warunków: sufit stron · pager bez adresów
+(okpoznan.pl: cztery numery, zero `href` — numer dokłada JS, więc dalej nie dojdziemy pobraniem
+`plain`) · HTTP 304 (nie ma z czego odczytać kolejnego adresu) · sonda bez przyszłych terminów ·
+strona bez ani jednego wydarzenia. Rozliczenie idzie do `SourceRun.pages[]` (`page`, `url`,
+`outcome`, `events`, `why`, `blocks`), a krok `page` w śladzie mówi, na czym skończyliśmy.
+
+Followupy z dalszych stron gruntujemy **wobec ich własnej strony**: `groundFollowups` odrzuca
+adres z serwisu, którego nie ma na czytanej stronie, więc przepuszczenie propozycji ze strony 2
+przez inwentarz strony 1 skasowałoby je co do jednej.
+
 ## Dane osobowe (PII)
 
 Repo jest **publiczne**, a strony instytucji podają numery kontaktowe osób prowadzących zapisy.
@@ -1062,10 +1120,10 @@ tego nie widać w historii.
 <!-- Tabela poniżej jest generowana z src/config/params.ts przez `npm run config:docs`.
      Ręczne zmiany przepadną — popraw wpis w rejestrze. -->
 
-Wszystkie 70 parametrów, jakie potok czyta z konfiguracji. Kolumna **klasa** mówi,
+Wszystkie 71 parametrów, jakie potok czyta z konfiguracji. Kolumna **klasa** mówi,
 czym parametr jest i — co ważniejsze — GDZIE mieszka:
 
-- **próg** (36 sztuk) — steruje zachowaniem potoku i stoi w commitowanym `config.json`.
+- **próg** (37 sztuk) — steruje zachowaniem potoku i stoi w commitowanym `config.json`.
   Zmiana progu ma zostawiać ślad: `git log -p config.json` daje datę, autora i wartość przed i po,
   do zestawienia z tym, co w tych dniach robił potok. Każdy przebieg zapisuje w raporcie migawkę
   progów, którymi się kierował (`RunReport.config`), więc stary raport da się czytać bez zgadywania.
@@ -1147,6 +1205,7 @@ która obowiązuje, gdy nie ustawiono nic. Dłuższe uzasadnienia stoją przy wp
 | `DISCOVER_MAX_TOKENS` | `12000` | próg | sufit tokenów odpowiedzi przy ocenie trafień wyszukiwarki |
 | `BLOCK_MAX_CALLS` | `80` | próg | sufit wywołań LLM na blokowanie źródeł w przebiegu (0 = nie wołaj) |
 | `REPERTOIRE_URL_SEGMENTS` | `seances,seanse,repertuar,repertoire,showtimes,seansy` | próg | segmenty ścieżki znaczące repertuar — takich adresów nie czytamy (po przecinku) |
+| `LISTING_PAGES_MAX` | `3` | próg | ile stron listingu czytamy przy jednym źródle (1 = tylko pierwsza, czyli jak dotąd) |
 | `FOLLOWUPS_PER_SOURCE` | `7` | próg | ile podstron / PDF-ów / plakatów dociągamy przy jednym źródle (0 = wcale) |
 | `FOLLOWUP_SAME_PAGE_RECHECK_DAYS` | `30` | próg | po ilu dniach followup identyczny ze stroną źródła wraca do kolejki (0 = pyta zawsze) |
 | `CONTAINER_MIN_SPAN_DAYS` | `8` | próg | od ilu dni zakres bez rytmu i bez godziny uznajemy za stronę programu (0 = nie sonduj) |

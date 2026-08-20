@@ -202,6 +202,29 @@ export interface EventRef {
   key?: string;
 }
 
+/**
+ * Jedna DALSZA strona listingu. `outcome` mówi, na czym skończyło się chodzenie, i to jest
+ * tu sedno: „strona 2 dała 0 wydarzeń" i „strony 2 w ogóle nie czytaliśmy, bo ma same
+ * minione terminy" to dwie różne diagnozy, a bez tego pola wyglądają identycznie.
+ */
+export interface PageRun {
+  /** numer strony — 2 dla pierwszej dalszej */
+  page: number;
+  url: string;
+  /**
+   * `ok` — przeczytana, `unchanged` — ten sam hash co poprzednio (bez modelu),
+   * `stale` — darmowa sonda dat nie znalazła ani jednego przyszłego terminu, więc
+   * nie zapłaciliśmy za nią wywołania, `error` — pobranie nieudane.
+   */
+  outcome: "ok" | "unchanged" | "stale" | "error";
+  /** wydarzenia z tej strony (także odtworzone z cache) */
+  events: number;
+  /** zdanie o decyzji — werdykt sondy albo powód błędu */
+  why?: string;
+  /** rozliczenie podziału na bloki tej strony */
+  blocks?: BlockStats;
+}
+
 export interface SourceRun {
   id: string;
   name: string;
@@ -276,6 +299,12 @@ export interface SourceRun {
    * diagnozy dla jałowego źródła.
    */
   blocks?: BlockStats;
+  /**
+   * DALSZE STRONY listingu (2, 3…). Brak = źródło ma jedną stronę albo pager bez adresów.
+   * Osobno od `blocks` i od `followups`, bo to trzecia droga do tego samego źródła i tylko
+   * własny wiersz odpowiada na „czemu to źródło nagle kosztuje dwa razy tyle".
+   */
+  pages?: PageRun[];
   /** followupy sprawdzone mimo niezmienionej strony źródła */
   followupsRechecked?: number;
   /**

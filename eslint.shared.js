@@ -28,6 +28,11 @@ export const sizeRules = {
  *   adapters/openrouter.ts  chat
  *   pipeline/discover/discover-town.ts        discoverTown
  *   pipeline/extract/process-source.ts        processFollowup, processSource
+ *   pipeline/extract/paginate.ts              pullPage
+ *
+ * `pullPage` dołączyło 2026-08-20 razem z paginacją listingu: decyzje da się z niego wyjąć
+ * i są wyjęte (`nextPageUrl`, `worthReading` — obie z testami na prawdziwych pagerach),
+ * a to, co zostało, to pobranie, cache i wywołanie modelu.
  *
  * Dla żadnej z nich NIE MA darmowej wyroczni: sprawdzenie ich wymaga OpenRoutera,
  * wyszukiwarki albo Bright Data, czyli płatnego przebiegu. Wszystko, co dało się rozciąć

@@ -26,7 +26,7 @@ import {
   fbGroupPostsToBlocks, fbGroupPostsToText, fbGroupStats, fbImagePosts, fbOriginsByPost,
   fbPostExtras, fbPosterJobs, fbShareStats, harvestEventUrls,
 } from "../facebook.js";
-import { dropRepertoire, repertoireSegment } from "../repertoire.js";
+import { dropRepertoire, fetchableUrls } from "../repertoire.js";
 import { expandRepeat } from "../series.js";
 
 import { detach, dropPast } from "./block-cache.js";
@@ -43,24 +43,8 @@ import { runFollowups } from "./followup.js";
 import { droppedInvalidStats, extractEvents, resetDroppedInvalid } from "./extract.js";
 import { attachEntrypoint, queueFollowups } from "./followup-queue.js";
 import { groundFollowups } from "./followup-url.js";
+import { runPages } from "./paginate.js";
 
-/**
- * Adresy do pobrania bez repertuarów. IDEMPOTENTNA i to jest tu warunek, nie ozdoba:
- * wołamy ją dwa razy — raz na propozycjach modelu (żeby limit followupów na źródło
- * nie poszedł na adresy, których i tak nie pobierzemy), raz na gotowej liście (żeby złapać
- * także tę odtworzoną ze `state.followupsBySource` przy niezmienionej stronie). Drugie
- * wywołanie nie ma już czego odrzucić, więc nie dopisuje drugiej notki do śladu.
- */
-function fetchable(urls: string[]): string[] {
-  return urls.filter((u) => {
-    const segment = repertoireSegment(u);
-    if (!segment) return true;
-    audit("url.skipped",
-      `„/${segment}/" to repertuar, a nie lista wydarzeń — nie pobieramy tej podstrony`,
-      { url: u, segment });
-    return false;
-  });
-}
 
 /**
  * Post w grupie FB → oryginał, którego jest udostępnieniem. Wypełniane przez `fetchSource`,
@@ -446,7 +430,7 @@ export async function processSource(
       // w limicie mieści, decyduje `queueFollowups` niżej — i decyduje na nowo w każdym
       // przebiegu. Inaczej adres wypchnięty raz znikałby ze stanu na zawsze, choćby to on
       // niósł miejsce i godzinę (tak zginęła podstrona „Pippi…", patrz followup-queue.ts).
-      followupUrls = fetchable(groundFollowups(proposed, url, fetched.html));
+      followupUrls = fetchableUrls(groundFollowups(proposed, url, fetched.html));
       if (proposed.length) {
         audit("followup.proposed",
           `model wskazał ${followupUrls.length} odnośników do dociągnięcia`,
@@ -461,13 +445,27 @@ export async function processSource(
   // To samo dotyczy inwentarza: adres sklejony przez model przed tą regułą siedzi w stanie
   // i wraca po 404 w każdym przebiegu, bo 404 nie zmienia hasha strony. Oba wywołania są
   // idempotentne, więc lista właśnie zbudowana wyżej przechodzi tędy bez ani jednej notki.
-  const healed = fetchable(groundFollowups(followupUrls, url, fetched.html));
+  const healed = fetchableUrls(groundFollowups(followupUrls, url, fetched.html));
   if (healed.length !== followupUrls.length) {
     // zapis wprost do stanu, bo inaczej ten sam martwy adres wracałby tu codziennie:
     // gałąź „strona bez zmian" nie przechodzi przez zapis wyżej
     (state.followupsBySource ??= {})[src.id] = healed;
   }
   followupUrls = healed;
+
+  // DALSZE STRONY LISTINGU — przed kolejką followupów, bo strona 2 dorzuca do niej własne
+  // podstrony, a po niej (i przed nią) NIE przechodzi przez `groundFollowups` na inwentarzu
+  // strony PIERWSZEJ: adres ze strony 2 nie stoi na stronie 1, więc bramka skasowałaby go
+  // co do jednego. Paginacja gruntuje swoje propozycje sama, wobec własnej strony.
+  //
+  // Wydarzenia dalszych stron dokładają się do `pageEvents`, żeby kolejka followupów widziała
+  // deficyt (brak miejsca / godziny) TAKŻE w nich — inaczej podstrony wpisów ze strony 2
+  // nigdy nie wygrałyby slotu z wpisami ze strony 1.
+  const paged = await runPages({ src, state, run, html: fetched.html, pageUrl: url });
+  if (paged.events.length || paged.followups.length) {
+    pageEvents = [...pageEvents, ...paged.events];
+    followupUrls = [...followupUrls, ...paged.followups.filter((u) => !followupUrls.includes(u))];
+  }
 
   // KOLEJKA: co z tego naprawdę pobieramy. Deficyt (brak miejsca / godziny) idzie przodem,
   // adresy znane jako ta sama strona nie zajmują slotu — patrz followup-queue.ts.

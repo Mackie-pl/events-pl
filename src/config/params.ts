@@ -152,6 +152,22 @@ export const P = defineParams({
       "Pusta wartość wyłącza regułę.",
     ],
   }),
+  LISTING_PAGES_MAX: num({
+    group: "pipeline", cls: "tuning", def: 3, min: 1,
+    summary: "ile stron listingu czytamy przy jednym źródle (1 = tylko pierwsza, czyli jak dotąd)",
+    doc: [
+      "Paginacja listingu, NIE followup: strona 2 jest dalszym ciągiem tej samej listy, więc ma",
+      "własny sufit i nie zabiera slotu podstronom wydarzeń (FOLLOWUPS_PER_SOURCE).",
+      "Adres kolejnej strony CZYTAMY z pagera (src/pipeline/extract/paginate.ts), nie zgadujemy",
+      "z nazwy parametru — pomiar 2026-08-20 na 35 źródłach dał pięć konwencji naraz, w tym",
+      "`?pno=` i `?ccm_paging_p=`, których żadna lista nazw by nie przewidziała.",
+      "Trójka, bo dalej rzadko stoi cokolwiek przyszłego: na stronach 2 zmierzonych 2026-08-20",
+      "przyszłe terminy miały mosina (2 z 3), puszczykowo (6 z 6) i poznan.pl (21 z 22),",
+      "a biblub.com ZERO — jego strona 2 to archiwum 2024-06…2026-05.",
+      "Sufit jest hamulcem, nie regulatorem: chodzenie kończy się wcześniej, gdy strona nie ma",
+      "przyszłych terminów (darmowa sonda po datach) albo nie oddała ani jednego wydarzenia.",
+    ],
+  }),
   FOLLOWUPS_PER_SOURCE: num({
     group: "pipeline", cls: "tuning", def: 7, min: 0,
     summary: "ile podstron / PDF-ów / plakatów dociągamy przy jednym źródle (0 = wcale)",

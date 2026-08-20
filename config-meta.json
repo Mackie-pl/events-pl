@@ -320,6 +320,13 @@
       "def": "seances,seanse,repertuar,repertoire,showtimes,seansy"
     },
     {
+      "name": "LISTING_PAGES_MAX",
+      "group": "pipeline",
+      "cls": "tuning",
+      "summary": "ile stron listingu czytamy przy jednym źródle (1 = tylko pierwsza, czyli jak dotąd)",
+      "def": 3
+    },
+    {
       "name": "FOLLOWUPS_PER_SOURCE",
       "group": "pipeline",
       "cls": "tuning",
