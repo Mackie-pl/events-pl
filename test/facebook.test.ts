@@ -176,6 +176,47 @@ describe("fbGroupStats", () => {
     assert.equal(s.newest, undefined);
   });
 
+  /**
+   * Rekordy z PRAWDZIWEJ migawki `fb-group-kultura-komorniki` z 2026-08-20 (5 rekordów,
+   * ślad mówił „2 postów z 5 płatnych rekordów"). Trzy „wiersze błędu" nie były błędami:
+   * dwa udostępnienia reeli bez podpisu i jeden post z samym zdjęciem. W całym przebiegu
+   * (169 rekordów, 11 grup) PRAWDZIWYCH wierszy błędu było zero, a tak liczonych — 46.
+   */
+  it("udostępnienie bez podpisu to post, nie wiersz błędu — treść jest w oryginale", () => {
+    const s = fbGroupStats([{
+      url: "https://www.facebook.com/groups/kulturakomorniki/posts/2457310234790113/",
+      date_posted: "2026-08-19T14:25:02.000Z",
+      original_post: {
+        post_id: "UzpfSTEwMDA5MDY3NTA1NDExODoxMDExMDkzMTkxOTIzMTczOjEwMTEwOTMxOTE5MjMxNzM=",
+        user_name: "Szkoła Podstawowa Popatrz Szerzej w Komornikach",
+        content: "W ostatnim tygodniu sierpnia zapraszamy na półkolonie",
+      },
+    }], 5);
+    assert.equal(s.posts, 1);
+    assert.equal(s.errorRows, 0);
+    assert.equal(s.sharedOnly, 1);
+    assert.equal(s.newest, "2026-08-19", "post bez `content` też niesie datę, więc liczy się do okna");
+  });
+
+  it("post z samym zdjęciem to post — jego treść stoi na obrazie", () => {
+    const s = fbGroupStats([{
+      url: "https://www.facebook.com/groups/kulturakomorniki/posts/2457484188106051/",
+      date_posted: "2026-08-19T18:27:51.000Z",
+      attachments: [{ type: "Photo", url: "https://scontent.xx.fbcdn.net/v/t39.30808-6/775375680.jpg" }],
+    }], 5);
+    assert.equal(s.posts, 1);
+    assert.equal(s.imageOnly, 1);
+    assert.equal(s.sharedOnly, 0);
+  });
+
+  it("wiersz błędu z miniaturą nadal nie jest postem — obraz go nie ratuje", () => {
+    const s = fbGroupStats([
+      { error: "Group is private", thumbnail: "https://scontent.xx.fbcdn.net/v/t39/ikona.jpg" },
+    ], 5);
+    assert.equal(s.posts, 0);
+    assert.equal(s.errorRows, 1, "inaczej płacilibyśmy $0.001 za odczyt ikony martwej grupy");
+  });
+
   it("posty bez czytelnej daty liczą się do rekordów, ale nie do okna", () => {
     const s = fbGroupStats([post("2026-08-10"), { content: "Bez daty" }], 50);
     assert.equal(s.posts, 2);
@@ -185,7 +226,8 @@ describe("fbGroupStats", () => {
 
   it("pusta odpowiedź nie udaje pomiaru", () => {
     const s = fbGroupStats([], 50);
-    assert.deepEqual(s, { records: 0, posts: 0, errorRows: 0, limit: 50, atLimit: false });
+    assert.deepEqual(s,
+      { records: 0, posts: 0, errorRows: 0, sharedOnly: 0, imageOnly: 0, limit: 50, atLimit: false });
   });
 });
 

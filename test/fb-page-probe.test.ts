@@ -143,7 +143,8 @@ describe("scorePage", () => {
     const r = scorePage({
       meta: META,
       run: run({
-        fbGroup: { records: 20, posts: 12, errorRows: 0, limit: 20, atLimit: true },
+        fbGroup: { records: 20, posts: 12, errorRows: 0, sharedOnly: 0, imageOnly: 0,
+          limit: 20, atLimit: true },
       }),
       events: [],
       baseline,

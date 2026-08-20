@@ -40,6 +40,31 @@ describe("fbPosterJobs — co idzie do odczytu", () => {
     assert.equal(jobs[1]?.author, null, "brak autora to nie powód do wyciszania kogokolwiek");
   });
 
+  /**
+   * Post BEZ tekstu jest właściwym przypadkiem tej ścieżki, nie wyjątkiem od niej: skoro
+   * nie ma podpisu, obraz jest jedyną treścią, jaką da się z opłaconego rekordu przeczytać.
+   * Bramka na `content` zamykała ją dokładnie tam, gdzie miała być otwarta — 12 z 169
+   * rekordów przebiegu 2026-08-20 (rekord z `fb-group-kultura-komorniki`, post z 19.08).
+   */
+  it("post bez tekstu idzie do odczytu, z pustym kontekstem", () => {
+    const jobs = fbPosterJobs([{
+      url: "https://www.facebook.com/groups/kulturakomorniki/posts/2457484188106051/",
+      date_posted: "2026-08-19T18:27:51.000Z",
+      attachments: [{ type: "Photo", url: img }],
+    }]);
+    assert.equal(jobs.length, 1);
+    assert.equal(jobs[0]?.context, "", "brak kontekstu to nie brak plakatu");
+  });
+
+  it("udostępnienie bez podpisu daje kontekst z oryginału, nie pustkę", () => {
+    const jobs = fbPosterJobs([{
+      url: "https://fb.test/p/11",
+      photos: [img],
+      original_post: { post_id: "abc", content: "Półkolonie w ostatnim tygodniu sierpnia" },
+    }]);
+    assert.equal(jobs[0]?.context, "Półkolonie w ostatnim tygodniu sierpnia");
+  });
+
   it("galeria to jedno zadanie — płacimy za pierwszy obraz, nie za wszystkie", () => {
     const jobs = fbPosterJobs([
       { content: "Foto", url: "https://fb.test/p/3", photos: [img, img + "&x=2", img + "&x=3"] },

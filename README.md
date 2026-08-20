@@ -241,6 +241,18 @@ więc rytm publikacji (`SourceRun.fbGroup`: `posts` vs płatne `records`, `newes
 `postsPerDay`, `atLimit`) i zapisuje go w `runs.json` oraz w śladzie jako krok `fb.group`. Pomiar
 **niczym jeszcze nie steruje** — jest wejściem do przyszłego limitu liczonego osobno dla każdej grupy.
 
+**Co jest POSTEM, a co wierszem błędu.** Postem jest rekord, z którego da się cokolwiek przeczytać:
+własny podpis, treść udostępnionego oryginału (`original_post.content`) albo sam obraz. Wierszem
+błędu — dopiero taki, w którym nie ma nic, albo taki z jawnym werdyktem scrapera (`error`,
+`warning`), i miniatura go nie ratuje (odczyt ikony martwej grupy to $0.001 za nic). Wąska
+definicja „post = ma `content`" kosztowała treść: 2026-08-20 na 169 opłaconych rekordach z 11 grup
+46 rekordów nie miało `content`, a wśród nich PRAWDZIWYCH wierszy błędu było **zero** — 32 to
+udostępnienia bez podpisu (całe ogłoszenie w oryginale, wyrzucane przed modelem), 12 to posty
+z samym plakatem (nie trafiały do odczytu obrazów, choć obraz był ich jedyną treścią). Rozbicie
+`sharedOnly` / `imageOnly` w `SourceRun.fbGroup` i w kroku śladu `fb.group` pokazuje, z czego
+składa się różnica `records − posts`. Post bez ani jednego znaku tekstu **nie** dostaje bloku dla
+modelu (nagłówek z datą i linkiem to tokeny bez treści) — czyta go wyłącznie ścieżka plakatów.
+
 Sonda 2026-08-11 (`fb-group-allin-poznan`, `limit_per_input=5`, koszt $0.0075) rozstrzygnęła rzecz
 nieudokumentowaną u dostawcy: **`limit_per_input` oddaje NAJNOWSZE posty, malejąco po `date_posted`**
 (5 rekordów z jednego dnia, 13:03 → 09:22), więc liczenie limitu z tempa ma sens. Ta sama sonda

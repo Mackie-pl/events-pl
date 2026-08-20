@@ -75,10 +75,17 @@ export interface FbValueRow {
 export interface FbGroupStats {
   /** rekordy oddane przez Bright Data — to jest jednostka rozliczenia */
   records: number;
-  /** rekordy niosące treść postu */
+  /** rekordy, z których da się cokolwiek przeczytać: podpis, oryginał udostępnienia albo plakat */
   posts: number;
-  /** rekordy bez treści = wiersze błędu z `include_errors` (grupa prywatna, usunięta, zmieniony adres) */
+  /**
+   * rekordy bez NICZEGO = wiersze błędu z `include_errors` (grupa prywatna, usunięta,
+   * zmieniony adres). Brak samego `content` do tego nie wystarcza — patrz `sharedOnly`.
+   */
   errorRows: number;
+  /** posty bez własnego podpisu — treść przyszła z udostępnionego oryginału */
+  sharedOnly: number;
+  /** posty bez ani jednego znaku tekstu: treść stoi wyłącznie na obrazie, czyta ją odczyt plakatu */
+  imageOnly: number;
   /** komunikat z pierwszego wiersza błędu, o ile scraper go podał */
   blockedWhy?: string;
   /** `limit_per_input` użyty przy tym pobraniu — bez niego `atLimit` nie da się odtworzyć */

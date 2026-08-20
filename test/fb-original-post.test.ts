@@ -192,6 +192,44 @@ describe("fbGroupPostsToBlocks — każda treść raz", () => {
   });
 });
 
+/**
+ * Udostępnienie BEZ własnego podpisu — najczęstszy kształt tego, co potok do 2026-08-20
+ * uznawał za wiersz błędu scrapera i wyrzucał przed modelem (32 z 169 opłaconych rekordów
+ * jednego przebiegu). Rekord przycięty z prawdziwej migawki `fb-group-kultura-komorniki`
+ * (2026-08-20): udostępniony reel szkoły, w poście ani jednego znaku od udostępniającego.
+ */
+describe("udostępnienie bez podpisu — cała treść po stronie oryginału", () => {
+  const bezPodpisu = {
+    url: "https://www.facebook.com/groups/kulturakomorniki/posts/2457310234790113/",
+    date_posted: "2026-08-19T14:25:02.000Z",
+    original_post: {
+      post_id: "UzpfSTEwMDA5MDY3NTA1NDExODoxMDExMDkzMTkxOTIzMTczOjEwMTEwOTMxOTE5MjMxNzM=",
+      post_url: "https://www.facebook.com/reel/1577612957360299/",
+      user_name: "Szkoła Podstawowa Popatrz Szerzej w Komornikach",
+      date: "2026-08-19T14:24:23.000Z",
+      content: "W ostatnim tygodniu sierpnia zapraszamy na półkolonie, podczas których"
+        + " sprawdzimy, jak działa człowiek.",
+    },
+  };
+
+  it("post trafia do modelu — z nagłówkiem oryginału i jego treścią", () => {
+    const blok = fbGroupPostsToBlocks([bezPodpisu])[0];
+    assert.ok(blok, "post bez podpisu nie może zniknąć przed modelem");
+    assert.match(blok, new RegExp(SHARED_LABEL));
+    assert.equal(blok.match(/półkolonie/g)?.length, 1, "treść raz, bez podpisu do powtórzenia");
+    assert.match(blok, /LINK: https:\/\/www\.facebook\.com\/groups\/kulturakomorniki/);
+  });
+
+  it("wiąże się z oryginałem tak samo jak udostępnienie z podpisem", () => {
+    const o = fbOriginsByPost([bezPodpisu]).get(urlKey(bezPodpisu.url));
+    assert.equal(o?.url, "https://www.facebook.com/reel/1577612957360299/");
+  });
+
+  it("nie liczy się do odsiewu powtórzeń — nie ma dwóch stron do porównania", () => {
+    assert.equal(fbShareStats([bezPodpisu]).shares, 0);
+  });
+});
+
 describe("fbShareStats — ślad odsiewu", () => {
   it("liczy strony postu i zaoszczędzone znaki", () => {
     const s = fbShareStats([bitterSweet, galeria, zDopiskiem, grecki, wlasny]);

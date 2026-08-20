@@ -258,11 +258,17 @@ export interface BdUsage {
 /**
  * Rytm publikacji grupy FB. `records` to jednostka rozliczenia, `posts` to treść —
  * grupa prywatna oddaje płatny wiersz błędu i zerową treść, i tylko ta różnica ją zdradza.
+ * Postem jest też post bez `content`: udostępnienie bez podpisu (treść w oryginale)
+ * i post z samym plakatem — stąd `sharedOnly` i `imageOnly`.
  */
 export interface FbGroupStats {
   records: number;
   posts: number;
   errorRows: number;
+  /** posty bez własnego podpisu — treść z udostępnionego oryginału */
+  sharedOnly: number;
+  /** posty bez tekstu — treść wyłącznie na obrazie */
+  imageOnly: number;
   blockedWhy?: string;
   limit: number;
   /** limit wyczerpany → `postsPerDay` jest dolnym oszacowaniem, nie pomiarem */

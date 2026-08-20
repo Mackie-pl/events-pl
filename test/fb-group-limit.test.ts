@@ -13,7 +13,7 @@ import type { FbGroupStats, PipelineState } from "../src/types/index.js";
 const state = (): PipelineState => ({ hashes: {}, geo: {} });
 
 const stats = (over: Partial<FbGroupStats> = {}): FbGroupStats => ({
-  records: 50, posts: 50, errorRows: 0, limit: 50, atLimit: true,
+  records: 50, posts: 50, errorRows: 0, sharedOnly: 0, imageOnly: 0, limit: 50, atLimit: true,
   newest: "2026-08-12", oldest: "2026-08-11", spanDays: 1.5, postsPerDay: 33, ...over,
 });
 

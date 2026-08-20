@@ -105,9 +105,22 @@ export function fbEventToItem(rec: BdRecord, today: string): EventItem | null {
   };
 }
 
-/** Treść postu — ten sam zestaw wariantów, którego używa spłaszczanie do tekstu. */
+/** PODPIS postu, czyli tekst napisany w tej grupie. Bez treści udostępnionego oryginału. */
 const postContent = (r: BdRecord): string | null =>
   pick(r, "content", "text", "post_text", "message", "description", "post_content");
+
+/**
+ * Treść, którą rekord w ogóle niesie — podpis, a gdy go nie ma, treść udostępnionego oryginału.
+ *
+ * Rozdzielone od `postContent`, bo to dwa różne pytania. Udostępniając reela, ludzie często
+ * nie piszą nic od siebie: rekord nie ma `content`, a całe ogłoszenie stoi w `original_post`.
+ * Patrzenie wyłącznie na pola najwyższego poziomu uznawało taki post za wiersz błędu scrapera
+ * i wyrzucało go przed modelem — zmierzone 2026-08-20 na 169 opłaconych rekordach z 11 grup:
+ * 46 bez `content`, z tego 32 to właśnie udostępnienia z pełną treścią w oryginale, 12 posty
+ * z samym plakatem, a PRAWDZIWYCH wierszy błędu ZERO. Do porównania podpisu z oryginałem
+ * (`fbShareStats`, `postLines`) dalej służy `postContent` — tam chodzi o to, kto co napisał.
+ */
+const postText = (r: BdRecord): string | null => postContent(r) ?? fbOriginal(r)?.content ?? null;
 
 const isoDay = (ms: number): string => new Date(ms).toISOString().slice(0, 10);
 
@@ -120,19 +133,30 @@ const isoDay = (ms: number): string => new Date(ms).toISOString().slice(0, 10);
  * przypadki i jest wejściem do limitu liczonego osobno dla każdej grupy. Sam limitu NIE
  * rusza — najpierw kilka dni pomiaru, potem decyzja.
  *
- * Rekord bez treści to przy `include_errors=true` raport błędu scrapera (grupa prywatna,
- * usunięta, zmieniony adres), a nie post — płatny tak samo, wart zera. Rozdzielenie
- * `records` od `posts` jest jedynym miejscem, w którym ta różnica w ogóle widać.
+ * POSTEM jest rekord, z którego da się cokolwiek przeczytać — własnym podpisem, treścią
+ * udostępnionego oryginału albo plakatem. Wierszem błędu (`include_errors=true`: grupa
+ * prywatna, usunięta, zmieniony adres) dopiero taki, w którym nie ma NIC: płatny tak samo,
+ * wart zera. Wąska definicja „post = ma `content`" kazała 2026-08-20 uznać 46 ze 169
+ * opłaconych rekordów za błędy scrapera, choć błędem nie był żaden — patrz `postText`.
+ * Rozbicie na `sharedOnly`/`imageOnly` jest jedynym miejscem, gdzie tę różnicę widać.
  */
 export function fbGroupStats(records: BdRecord[], limit: number): FbGroupStats {
   const times: number[] = [];
   let posts = 0;
   let errorRows = 0;
+  let sharedOnly = 0;
+  let imageOnly = 0;
   let blockedWhy: string | null = null;
 
   for (const r of records) {
-    if (postContent(r)) {
+    if (isPost(r)) {
       posts += 1;
+      if (!postContent(r)) {
+        // dwa różne braki i tylko rozbicie je rozróżnia: „bez podpisu" to treść, którą MAMY
+        // (w oryginale), „sam plakat" to treść, po którą trzeba dopiero pójść do modelu
+        if (postText(r)) sharedOnly += 1;
+        else imageOnly += 1;
+      }
       const t = parseInstant(pick(r, "date_posted", "date", "timestamp", "created_time", "post_date"));
       if (t !== null) times.push(t);
     } else {
@@ -145,6 +169,8 @@ export function fbGroupStats(records: BdRecord[], limit: number): FbGroupStats {
     records: records.length,
     posts,
     errorRows,
+    sharedOnly,
+    imageOnly,
     limit,
     atLimit: records.length >= limit,
     ...(blockedWhy ? { blockedWhy } : {}),
@@ -232,6 +258,34 @@ function urlsIn(value: unknown, depth = 0): string[] {
 }
 
 /**
+ * Pierwsze pole rekordu niosące obraz — jedno miejsce dla wszystkich trzech odbiorców
+ * (ślad, mapa post→obrazy, kolejka plakatów). Rozjazd między nimi znaczyłby, że ślad mówi
+ * o innym zbiorze postów niż ten, za który płacimy odczyty.
+ */
+function firstImage(rec: BdRecord): { field: string; urls: string[] } | null {
+  for (const field of IMAGE_KEYS) {
+    const urls = urlsIn(rec[field]);
+    if (urls.length) return { field, urls };
+  }
+  return null;
+}
+
+/** Jawny werdykt scrapera z `include_errors` — pole obecne znaczy „to nie jest post". */
+const errorWhy = (r: BdRecord): string | null =>
+  pick(r, "error", "warning", "error_code", "warning_code");
+
+/**
+ * Czy rekord jest POSTEM: cokolwiek do przeczytania, tekstem albo obrazem.
+ *
+ * Sam obraz liczy się WYŁĄCZNIE przy braku werdyktu błędu — wiersz „grupa prywatna" bywa
+ * oddawany z miniaturą, a odczyt takiej miniatury to $0.001 wydane na ikonę. Asymetria jak
+ * zwykle rozstrzyga: przeoczony plakat to wydarzenie, którego nikt nie zobaczy, ale czytanie
+ * grafik z wierszy błędu to wydatek, który rośnie dokładnie wtedy, gdy źródło jest martwe.
+ */
+const isPost = (r: BdRecord): boolean =>
+  postText(r) !== null || (errorWhy(r) === null && firstImage(r) !== null);
+
+/**
  * Pola, w których scrapery FB trzymają autora postu. Jak przy obrazach: nazwy różnią się
  * między wersjami datasetu, więc próbujemy kilku zamiast zakładać jedną.
  */
@@ -273,15 +327,13 @@ export function fbPostExtras(records: BdRecord[]): FbPostExtras {
   // mapa żyje tylko w tej funkcji i ginie z nią — na zewnątrz idą same liczby
   const byAuthor = new Map<string, number>();
   for (const r of records) {
-    // rekord bez treści to wiersz błędu scrapera, nie post — patrz fbGroupStats
-    if (!postContent(r)) continue;
-    for (const key of IMAGE_KEYS) {
-      const urls = urlsIn(r[key]);
-      if (!urls.length) continue;
+    // rekord, z którego nie da się przeczytać nic, to wiersz błędu scrapera — patrz fbGroupStats
+    if (!isPost(r)) continue;
+    const img = firstImage(r);
+    if (img) {
       out.withImage += 1;
-      out.imageField ??= key;
-      out.sampleImage ??= urls[0] ?? null;
-      break;
+      out.imageField ??= img.field;
+      out.sampleImage ??= img.urls[0] ?? null;
     }
     for (const key of PLACE_KEYS) {
       if (!pick(r, key)) continue;
@@ -314,15 +366,10 @@ export function fbPostExtras(records: BdRecord[]): FbPostExtras {
 export function fbImagePosts(records: BdRecord[]): Map<string, number> {
   const out = new Map<string, number>();
   for (const r of records) {
-    if (!postContent(r)) continue;
+    if (!isPost(r)) continue;
     const link = pick(r, "url", "post_url", "link", "post_link");
     if (!link) continue;
-    let images = 0;
-    for (const key of IMAGE_KEYS) {
-      images = urlsIn(r[key]).length;
-      if (images) break;
-    }
-    out.set(urlKey(link), images);
+    out.set(urlKey(link), firstImage(r)?.urls.length ?? 0);
   }
   return out;
 }
@@ -358,20 +405,17 @@ export interface FbPosterJob {
 export function fbPosterJobs(records: BdRecord[]): FbPosterJob[] {
   const out: FbPosterJob[] = [];
   for (const r of records) {
-    const content = postContent(r);
-    if (!content) continue; // wiersz błędu scrapera, nie post
     const postUrl = pick(r, "url", "post_url", "link", "post_link");
     if (!postUrl) continue; // bez adresu nie ma czym związać wydarzenia ze źródłem
-    for (const key of IMAGE_KEYS) {
-      const urls = urlsIn(r[key]);
-      const first = urls[0];
-      if (!first) continue;
-      out.push({
-        imageUrl: first, postUrl, context: content,
-        author: authorIdentity(r)?.key ?? null,
-      });
-      break;
-    }
+    const first = firstImage(r)?.urls[0];
+    if (!first) continue;
+    out.push({
+      // post bez tekstu (sam plakat) idzie tędy z pustym kontekstem — to WŁAŚNIE on jest
+      // przypadkiem, w którym odczyt obrazu jest jedyną drogą do treści, więc bramka na
+      // tekst zamykała ścieżkę dokładnie tam, gdzie miała ją otwierać
+      imageUrl: first, postUrl, context: postText(r) ?? "",
+      author: authorIdentity(r)?.key ?? null,
+    });
   }
   return out;
 }
@@ -423,9 +467,8 @@ export function fbOriginal(rec: BdRecord): FbOriginal | null {
 export function fbOriginsByPost(records: BdRecord[]): Map<string, EventOrigin> {
   const out = new Map<string, EventOrigin>();
   for (const r of records) {
-    if (!postContent(r)) continue;
     const link = pick(r, "url", "post_url", "link", "post_link");
-    const orig = fbOriginal(r);
+    const orig = fbOriginal(r); // wiersz błędu nie ma oryginału, więc odpada sam z siebie
     if (link && orig) out.set(urlKey(link), { key: orig.key, url: orig.url });
   }
   return out;
@@ -478,14 +521,17 @@ export function fbShareShape(caption: string, original: string): FbShareShape {
  * w udostępnionym ogłoszeniu znaczyło dzień JEGO publikacji, nie dzień udostępnienia.
  * Znika razem z treścią, którą zapowiada: nagłówek nad niczym byłby gorszy niż jego brak.
  */
-function postLines(rec: BdRecord, content: string): string[] {
+function postLines(rec: BdRecord): string[] {
+  const caption = postContent(rec);
   const orig = fbOriginal(rec);
-  if (!orig?.content) return [content];
+  if (!orig?.content) return caption ? [caption] : [];
   const header = `${SHARED_LABEL} (${orig.author ?? "?"}, ${orig.date ?? "?"}) — to jest właściwe ogłoszenie:`;
-  switch (fbShareShape(content, orig.content)) {
+  // udostępnienie bez własnego podpisu: nie ma czego porównywać, cała treść jest w oryginale
+  if (!caption) return [header, orig.content];
+  switch (fbShareShape(caption, orig.content)) {
     case "sam oryginał": return [header, orig.content];
-    case "sam podpis": return [content];
-    default: return [content, header, orig.content];
+    case "sam podpis": return [caption];
+    default: return [caption, header, orig.content];
   }
 }
 
@@ -536,15 +582,18 @@ const POST_SEPARATOR = "\n\n---\n\n";
 export function fbGroupPostsToBlocks(records: BdRecord[]): string[] {
   const blocks: string[] = [];
   for (const r of records) {
-    const content = postContent(r);
-    if (!content) continue;
+    const lines = postLines(r);
+    // post bez ani jednego znaku tekstu (sam plakat) NIE dostaje bloku: nagłówek z datą
+    // i linkiem to tokeny bez treści, a model dostałby wpis, o którym nie wie nic. Jego
+    // jedyną treść czyta `fb-posters.ts` prosto z obrazu — patrz `fbPosterJobs`.
+    if (!lines.length) continue;
     const date = pick(r, "date_posted", "date", "timestamp", "created_time", "post_date");
     const link = pick(r, "url", "post_url", "link", "post_link");
     blocks.push(
       [
         date ? `DATA POSTU: ${date}` : null,
         link ? `LINK: ${link}` : null,
-        ...postLines(r, content),
+        ...lines,
       ].filter(Boolean).join("\n"),
     );
   }

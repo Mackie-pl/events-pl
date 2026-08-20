@@ -21,6 +21,22 @@ import type { FbPostExtras, FbShareStats } from "../facebook.js";
  * policzone z tego okna jest bez wartości i cały pomysł trzeba porzucić, zanim zacznie
  * sterować wydatkiem.
  */
+/**
+ * Z czego składa się różnica `records − posts`.
+ *
+ * Bez tego zdania „5 postów z 5 rekordów" nie odpowiada na pytanie, czemu wczoraj to samo
+ * źródło pokazywało 2 — a to jest pierwsze, które ktoś zada, patrząc na skok po zmianie
+ * definicji postu (2026-08-20: udostępnienie bez podpisu i post z samym plakatem przestały
+ * uchodzić za wiersze błędu scrapera).
+ */
+function shapeNote(s: FbGroupStats): string {
+  return [
+    s.sharedOnly ? `${s.sharedOnly} bez podpisu (treść z udostępnionego oryginału)` : null,
+    s.imageOnly ? `${s.imageOnly} z samym plakatem, bez tekstu` : null,
+    s.errorRows ? `${s.errorRows} wierszy błędu scrapera` : null,
+  ].filter(Boolean).join(", ");
+}
+
 export function auditFbGroup(s: FbGroupStats, archive?: string | null): void {
   // ścieżka surowej migawki idzie do OBU wariantów, ale najbardziej potrzebna jest w tym
   // pierwszym: „zero postów za N płatnych rekordów" to zdanie, po którym pierwsze pytanie
@@ -32,19 +48,21 @@ export function auditFbGroup(s: FbGroupStats, archive?: string | null): void {
       { records: s.records, errorRows: s.errorRows, why: s.blockedWhy ?? null, ...where });
     return;
   }
+  const shape = shapeNote(s);
   const rate = s.postsPerDay === undefined
     ? `wszystko z jednej chwili — tempa nie da się policzyć, wiadomo tylko ≥${s.posts}/dobę`
     // okno krótsze od doby trafia w godziny szczytu i zawyża tempo (noc nic nie publikuje) —
     // limit policzony z takiej próbki byłby za wysoki, czyli droższy
     : `${s.postsPerDay} postów/dobę${(s.spanDays ?? 0) < 1 ? " (okno < doby — zawyżone)" : ""}`;
   audit("fb.group",
-    `${s.posts} postów z ${s.records} płatnych rekordów · najnowszy ${s.newest}, najstarszy ${s.oldest} `
-    + `(okno ${s.spanDays} dni) → ${rate} · `
+    `${s.posts} postów z ${s.records} płatnych rekordów${shape ? ` (w tym ${shape})` : ""} · `
+    + `najnowszy ${s.newest}, najstarszy ${s.oldest} (okno ${s.spanDays} dni) → ${rate} · `
     + (s.atLimit
       ? `limit ${s.limit} wyczerpany, więc to DOLNA granica tempa`
       : `limit ${s.limit} niewyczerpany, więc okno to cała dostępna grupa`),
     {
-      posts: s.posts, records: s.records, newest: s.newest ?? null, oldest: s.oldest ?? null,
+      posts: s.posts, records: s.records, sharedOnly: s.sharedOnly, imageOnly: s.imageOnly,
+      errorRows: s.errorRows, newest: s.newest ?? null, oldest: s.oldest ?? null,
       spanDays: s.spanDays ?? null, postsPerDay: s.postsPerDay ?? null, atLimit: s.atLimit,
       ...where,
     });

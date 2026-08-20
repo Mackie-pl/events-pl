@@ -18,11 +18,14 @@ const group: Source = {
 };
 
 const blocked: FbGroupStats =
-  { records: 1, posts: 0, errorRows: 1, limit: 50, atLimit: false, blockedWhy: "Group is private" };
+  { records: 1, posts: 0, errorRows: 1, sharedOnly: 0, imageOnly: 0, limit: 50, atLimit: false,
+    blockedWhy: "Group is private" };
 const healthy: FbGroupStats =
-  { records: 50, posts: 50, errorRows: 0, limit: 50, atLimit: true, postsPerDay: 8 };
+  { records: 50, posts: 50, errorRows: 0, sharedOnly: 0, imageOnly: 0, limit: 50, atLimit: true,
+    postsPerDay: 8 };
 /** Bright Data nie oddało nic: timeout, 401, anulowana migawka. */
-const nothing: FbGroupStats = { records: 0, posts: 0, errorRows: 0, limit: 50, atLimit: false };
+const nothing: FbGroupStats =
+  { records: 0, posts: 0, errorRows: 0, sharedOnly: 0, imageOnly: 0, limit: 50, atLimit: false };
 
 describe("fb-group-blocked", () => {
   it("pojedynczy wiersz błędu jeszcze nie wyłącza grupy", () => {
