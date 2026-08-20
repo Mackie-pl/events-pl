@@ -19,6 +19,34 @@ const bySource = (id: string): SourceTrail | undefined => auditTrails().find((t)
 
 beforeEach(() => { beginAuditRun(); });
 
+describe("rozpoznanie zwolnionego terminu w usłudze", () => {
+  it("łapie idiom ogłoszeń usługowych, także bez ogonków i w liczbie mnogiej", () => {
+    // pierwszy tytuł to prawdziwy rekord z events.json (2026-08-20, mieszkancy-lubonia-fb-group,
+    // przyszedł z PLAKATU i miał venue: "" — w digeście wyglądałby jak zwykłe wydarzenie)
+    for (const title of [
+      "Zwolnił się termin na stylizację dłoni lub stóp",
+      "Zwolnil sie termin u fryzjera",
+      "Zwolniły się dwa ostatnie terminy na paznokcie",
+      "Zwolniło się miejsce na jutro",
+    ]) {
+      assert.equal(isNonEvent(event({ title })), true, title);
+    }
+  });
+
+  it("NIE łapie wydarzeń, w których po prostu są wolne miejsca", () => {
+    // wąskość jest tu ważniejsza niż zasięg: na warsztaty z zapisami przyjść MOŻNA,
+    // a skasowanego wpisu nikt w digeście nie zauważy
+    for (const title of [
+      "Warsztaty ceramiczne — zostały wolne miejsca",
+      "Wolne terminy na zwiedzanie Cytadeli",
+      "Koncert — ostatnie wolne miejsca",
+      "Termin spotkania z autorem",
+    ]) {
+      assert.equal(isNonEvent(event({ title })), false, title);
+    }
+  });
+});
+
 describe("rozpoznanie półkolonii", () => {
   it("łapie odmianę i pisownię bez ogonków", () => {
     // pierwszy tytuł to prawdziwy rekord z events.json (dk-pod-lipami, ścieżka `tribe`)

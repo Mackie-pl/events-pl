@@ -63,6 +63,22 @@ const RULES: NonEvent[] = [
     // wyłącznie sprawy urzędowe. Oba szyki, bo „organizacyjne spotkanie" też się zdarza.
     re: /(spotkani|zebrani|zbi[oó]rk)\w*\s+organizacyjn|organizacyjn\w*\s+(spotkani|zebrani|zbi[oó]rk)/i,
   },
+  {
+    why: "zwolniony termin w usłudze",
+    is: "wizyta do umówienia u kogoś, nie wydarzenie do przyjścia",
+    // „Zwolnił się termin na stylizację dłoni lub stóp" — dwa wpisy w events.json
+    // z 2026-08-20 (mieszkancy-lubonia-fb-group), oba z PLAKATU i oba z `venue: ""`,
+    // bo salon podaje adres tylko w komentarzu. Model dał im nawet godzinę, więc
+    // w digeście wyglądałyby jak zwykłe wydarzenie.
+    //
+    // Idiom ogłoszeń usługowych (paznokcie, fryzjer, dentysta) i dlatego nadaje się
+    // do rejestru: ma STAŁĄ nazwę. Wzorzec celowo wymaga „zwolnił się" — samo
+    // „wolny termin" łapałoby warsztaty z zapisami, na które przyjść MOŻNA.
+    // Do dwóch słów przerwy, żeby zmieścić „zwolniły się DWA ostatnie terminy".
+    // `[łl]` jawnie, bo `\w` w JS jest ASCII-only i zatrzymuje się na „ł" —
+    // dokładnie ten sam powód, dla którego „półkoloni" wyżej ma klasy znaków, a nie `\w`
+    re: /zwolni[łl]\w*\s+si[eę](?:\s+\S+){0,2}\s+(?:termin|miejsc)/i,
+  },
 ];
 
 /** Tytuł, kontener i tagi — trzy miejsca, w których nazwa zjawiska naprawdę występuje. */
