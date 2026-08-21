@@ -158,6 +158,12 @@ export interface EventItem {
   is_noise: boolean;
   geo?: { lat: number; lon: number } | null;
   /**
+   * Gdzie wydarzenie leży względem regionu (werdykt geokodera, `src/types/geo.ts`).
+   * Wpisy `far`/`abroad` do events.json nie dochodzą — odsiewa je `pipeline/locality.ts` —
+   * więc tutaj bywa wyłącznie `region` albo `unknown`.
+   */
+  locality?: 'region' | 'far' | 'abroad' | 'unknown';
+  /**
    * Post z grupy FB bywa UDOSTĘPNIENIEM cudzego ogłoszenia — wtedy `source_url` prowadzi do
    * repostu, a `origin.url` do oryginału organizatora. Ten sam `origin.key` w dwóch grupach
    * to jedno wydarzenie i po nim scala je dedupe (`why: "oryginał"`).

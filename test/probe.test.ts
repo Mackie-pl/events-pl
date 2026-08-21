@@ -19,7 +19,7 @@ const extraction = (hash: string): CachedExtraction => ({ hash, events: [], at: 
 
 const state = (): PipelineState => ({
   hashes: { zamek: "h1", kultura: "h2" },
-  geo: { "Rynek|Poznań": { lat: 52.4, lon: 16.9 } },
+  geo: { "Rynek|Poznań": { pin: { lat: 52.4, lon: 16.9 }, where: "region" } },
   extractions: {
     zamek: { ...extraction("h1"), etag: "W/\"abc\"", lastModified: "Mon, 27 Jul 2026 04:00:00 GMT" },
     kultura: extraction("h2"),
@@ -61,7 +61,7 @@ describe("forgetSource (--force)", () => {
   it("zostawia cache geokodera — sonda sprawdza ekstrakcję, nie Nominatim (limit 1/s)", () => {
     const s = state();
     forgetSource(s, "zamek");
-    assert.deepEqual(s.geo, { "Rynek|Poznań": { lat: 52.4, lon: 16.9 } });
+    assert.deepEqual(s.geo, { "Rynek|Poznań": { pin: { lat: 52.4, lon: 16.9 }, where: "region" } });
   });
 
   it("na nieznanym źródle i pustym stanie nie wybucha", () => {

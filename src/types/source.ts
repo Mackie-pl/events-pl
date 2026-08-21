@@ -1,5 +1,7 @@
 /** Rejestr źródeł: co pobieramy, skąd się wzięło i czy adres jeszcze żyje. */
 
+import type { Bounds } from "../shared/bbox.js";
+
 export type FetchStrategy =
   | "plain"
   | "headless"
@@ -182,6 +184,12 @@ export interface SourcesFile {
     name: string;
     center: { lat: number; lon: number };
     radius_km: number;
+    /**
+     * Prostokąt, w którym discovery szukało gmin (granice miasta centralnego + promień).
+     * Dopisuje go `discover`, czyta geokoder — bez niego zasięg trzeba zgadywać z samego
+     * promienia, a to obszar mniejszy od prawdziwego o rozciągłość miasta centralnego.
+     */
+    bounds?: Bounds;
     discovered_at: string;
     discovery_method: string;
   };

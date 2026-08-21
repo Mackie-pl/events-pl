@@ -30,7 +30,7 @@ src/actions/discover.ts  ·  --why <id> = skąd to źródło      (metryki + śl
 | `sources.json` | rejestr źródeł Poznań +15 km (etap 1 wykonany ręcznie 2026-07-20; 46 źródeł, 13 gmin) + `provenance` przy każdym źródle dodanym automatycznie |
 | `src/actions/` | wejścia potoku — `daily`, `discover`, `digest`, `backfill-costs`, `probe` (sprawdzenie jednego źródła na żądanie), `probe-fb-pages` (jednorazowy pomiar fanpage'ów), `fb-budget-preview` (darmowy podgląd decyzji regulatora budżetu), `panel-server` (lokalny most panelu). Same main() + orkiestracja, zero logiki dziedzinowej |
 | `src/adapters/` | wyjścia do świata: `openrouter`, `search` (fasada) + `serper`/`google-cse`/`brave`, `overpass`, `nominatim`, `page-fetch`, `brightdata`, `supabase-archive`, `telegram`, `resend`, `http` |
-| `src/pipeline/` | logika dziedzinowa: `discover/` (discovery gmin, walidacja propozycji, `entrypoint`, `capabilities`, `--why`), `verify/` (drabina osiągalności, profil, naprawa URL-i), `extract/` (ekstrakcja, followupy, wydarzenia FB), `digest/`, `dedupe`, `non-events` (odsiew wpisów, na które nie da się przyjść — półkolonie, spotkania organizacyjne; jeden filtr przed scalaniem, wspólny dla wszystkich ścieżek, uzupełnia werdykt modelu `is_noise`), `series` (rytm `repeat` z drutu → terminy, a powtórzenia → jeden wpis z listą `dates`; zwijanie po dedupe, wspólne dla modelu, plakatów, cache'u i kalendarzy), `pii`, `facebook`, `prompts` |
+| `src/pipeline/` | logika dziedzinowa: `discover/` (discovery gmin, walidacja propozycji, `entrypoint`, `capabilities`, `--why`), `verify/` (drabina osiągalności, profil, naprawa URL-i), `extract/` (ekstrakcja, followupy, wydarzenia FB), `digest/`, `dedupe`, `non-events` (odsiew wpisów, na które nie da się przyjść — półkolonie, spotkania organizacyjne; jeden filtr przed scalaniem, wspólny dla wszystkich ścieżek, uzupełnia werdykt modelu `is_noise`), `locality` (odsiew wydarzeń spoza regionu — wycieczki biur podróży; werdykt geokodera, nie lista słów ani domen), `series` (rytm `repeat` z drutu → terminy, a powtórzenia → jeden wpis z listą `dates`; zwijanie po dedupe, wspólne dla modelu, plakatów, cache'u i kalendarzy), `pii`, `facebook`, `prompts` |
 | `src/shared/` | narzędzia bez zależności: `url-template` (zwijanie adresów do szablonów — serce rozpoznania list), `links`, `dates`, `text`, `url`, `hash`, `audit`, `errors`, `json-schema`, `series` (arytmetyka rytmu + etykieta cyklu — jedna implementacja dla digestu i strony) |
 | `src/reporting/` | agregaty, koszty, podsumowania Actions, redakcja PII, polityki retencji raportów |
 | `src/storage/` | **port składowania** — `DocStore`/`CollectionStore` + implementacja na plikach JSON. Jedyne miejsce znające ścieżki; przejście na bazę to druga implementacja i podmiana wiązań w `storage/index.ts` |
@@ -881,9 +881,104 @@ Chodzenie kończy się na pierwszym z pięciu warunków: sufit stron · pager be
 strona bez ani jednego wydarzenia. Rozliczenie idzie do `SourceRun.pages[]` (`page`, `url`,
 `outcome`, `events`, `why`, `blocks`), a krok `page` w śladzie mówi, na czym skończyliśmy.
 
+#### Pager bez adresów: zgadywanie z darmową wyrocznią
+
+Zostaje przypadek, w którym czytać nie ma czego — okpoznan.pl wypisuje
+`<a class="js_ajax_box_page_link">2</a>` **bez `href`**, bo numer dokłada JS w wywołaniu AJAX.
+Paginacja jest tam jednak **serwerowa**: ten sam adres pobrany zwykłym GET-em oddaje pełną
+stronę 2. Przeglądarka nie jest więc do niczego potrzebna — potrzebna jest NAZWA parametru.
+
+Zgadywanie nazwy odrzuciliśmy przy `nextPageUrl`, bo było niesprawdzalne. Tutaj sprawdza się
+za darmo, a zła nazwa jest cicha i dlatego groźna (pomiar 2026-08-21):
+
+```
+?active_page=2                  16 adresów, 16 nowych   → działa
+?page=2 ?p=2 ?pno=2 ?strona=2   16 adresów, ZERO nowych → to nadal strona 1, z kodem HTTP 200
+```
+
+Zła nazwa nie daje błędu, tylko stronę pierwszą — bez wyroczni płacilibyśmy co dzień za
+duplikat i widzieli w raporcie sukces. Stąd kandydaci (`active_page`, `page`, `p`, `pno`,
+`strona`, `paged`) są **wyłącznie generatorem**, a rozstrzyga porównanie kompletu wpisów
+o kształcie adresu ze strony 1 — nie hash treści, bo ten różni się także od zmienionego
+banera. Wymagamy **przewagi** nowych wpisów, a nie rozłączności: listingi bywają posortowane
+tak, że wpis z pogranicza wraca na obu stronach.
+
+Sonda rusza **tylko** tam, gdzie pager JEST, a jego numery nigdzie nie prowadzą. Werdykt —
+także odmowny — ląduje w `state.pagerTemplate` i wygasa po `PAGER_PROBE_RECHECK_DAYS`
+(domyślnie 14, liczone przy odczycie): bez pamiętania odmowy sześć pobrań u cudzego serwisu
+wracałoby w każdym przebiegu, a bez wygasania przebudowany serwis zostałby spisany na zawsze.
+
+Na okpoznan.pl daje to **52 wydarzenia zamiast 16**:
+
+```
+?active_page=2  16 nowych   ?active_page=3  16 nowych
+?active_page=4   4 nowe     ?active_page=5  zero wpisów → koniec
+```
+
+Ostatni wiersz to **bramka ogona**: strona 5 ma 31 524 znaki i ani jednego wpisu, a sonda dat
+mówi tam „nie ma dat, czytaj" (fail open), więc sama by za tę ramkę zapłaciła. Kształt wpisu
+ze strony 1 zatrzymuje to za darmo — i milczy, gdy strony 1 nie da się ocenić szablonem,
+bo „nie umiem ocenić" to nie to samo, co „to nie jest dalsza strona".
+
+**Czemu nie przeglądarka.** `fetchHeadless` potrafi wyłącznie `goto` + `content()`, więc
+kliknięcie w pager to nowy kod; `playwright` jest `optionalDependency` i nie jest
+zainstalowany, a w CI to ~150 MB przeglądarki i czas na każdą stronę — wszystko po to, żeby
+dostać adres, który da się zgadnąć i sprawdzić za darmo. Przeglądarka zostaje na wypadek listy
+renderowanej naprawdę po stronie klienta; **takiego źródła w rejestrze na 2026-08-21 nie ma
+ani jednego** i to jest liczba do sprawdzenia, zanim ktokolwiek zacznie ją instalować.
+
 Followupy z dalszych stron gruntujemy **wobec ich własnej strony**: `groundFollowups` odrzuca
 adres z serwisu, którego nie ma na czytanej stronie, więc przepuszczenie propozycji ze strony 2
 przez inwentarz strony 1 skasowałoby je co do jednej.
+
+## Lokalność: wydarzenie ma się dziać u nas
+
+Wpis może być prawdziwym wydarzeniem — mieć datę, cenę, zapisy i komplet danych — a i tak nie być
+NASZYM wydarzeniem. Tablica ogłoszeń gminy sprzedaje wycieczki („WAKACJE W TURCJI | ALANYA",
+„BAŁKANTRIP", „SZKOCJA 360°"): model słusznie nie znaczy ich jako szum, bo wziąć w nich udział
+można. To inna oś niż `is_noise` i `non-events.ts`, więc dostaje osobne sito: `pipeline/locality.ts`.
+
+Reguła jest **geograficzna, nie słownikowa i nie adresowa**. Lista domen biur podróży zestarzeje
+się w miesiąc (za rok będzie 99 innych), a lista słów nie ma czego łapać: Polska ma wsie **Turcja,
+Grecja, Hiszpania, Szkocja, Chiny i Maroko**. Rozstrzyga pytanie do geokodera: *czy ta miejscowość
+istnieje w prostokącie regionu*.
+
+Stąd `bounded=1` + `viewbox` w `adapters/nominatim.ts` — do 2026-08-21 pytaliśmy o całą Polskę
+(`countrycodes=pl`) i była to cicha usterka, bo wyglądała jak sukces. Drabinka schodzi do coraz
+krótszych członów, więc „Świetlica Wiejska w Borkowicach" dostawała Bolesławiec spod Wrocławia:
+`hit=true`, pinezka 283 km od wydarzenia, nikt tego nie ogląda. Tak stało **11 z 204**
+zgeokodowanych wpisów, cztery z nich całkowicie miejscowe.
+
+Werdykt (`GeoWhere` w `types/geo.ts`) zapada w trzech pytaniach, każde tylko wtedy, gdy
+poprzednie nie odpowiedziało:
+
+| pytanie | werdykt | co robimy |
+|---|---|---|
+| adres z `venue` w prostokącie? | `region` + pinezka | publikujemy |
+| miejscowość jest osadą w prostokącie? (`featureType=settlement`) | `region` | publikujemy bez pinezki |
+| jest osadą gdzie indziej w Polsce? | `far` | **kasujemy**, ślad mówi gdzie |
+| jest za granicą? | `abroad` | **kasujemy**, ślad mówi w jakim kraju |
+| nic z powyższych | `unknown` | publikujemy — brak wiedzy nie jest decyzją |
+
+Zmierzone na `events.json` z 2026-08-21 (331 wydarzeń, 215 par `venue|town`): **30 z 31 naszych
+miejscowości** znajduje się w prostokącie, **21 z 23 destynacji wyjazdowych** — nie. Odsiew objął
+**34 wpisy** (14 zza granicy, 20 z dalszej Polski) i **ani jednego miejscowego**; pinezek
+przybyło (181 → 197), bo przestały wędrować.
+
+Trzy bezpieczniki, wszystkie z pomiaru:
+
+- **pytamy o `town`, nigdy o człony `venue`.** „Sala Fitness OSiR" puszczone na świat trafia
+  w cokolwiek, a fałszywe „to nie nasze" kasuje wydarzenie po cichu;
+- **`featureType=settlement`**, bo bez niego prostokąt przepuszczał „Maroko" (sklep w Suchym Lesie),
+  „Peru" (konsulat honorowy) i „Maderę" (przysiółek pod Neklą) — filtr podniósł rozdzielenie
+  z 15/19 do 21/23, nie tracąc żadnej z naszych wsi;
+- **prostokąt ma być hojny.** Zasięg bierzemy z discovery (`sources.json` → `region.bounds`), bo
+  promień liczy się od GRANIC miasta centralnego; sam `center` + `radius_km` opisuje koło od
+  punktu i wypycha poza region Mosinę, Dopiewo i Borkowice (26 z 215 par dostawało wtedy fałszywe
+  „poza regionem"). Bez danych z discovery dokładamy 25 km marginesu.
+
+Zmiana prostokąta **unieważnia cache geokodera** (`state.geoRegion`): stare odpowiedzi opisują
+inny obszar, a klucz `venue|town` się nie zmienia, więc Bolesławiec siedziałby w nim na zawsze.
 
 ## Dane osobowe (PII)
 
@@ -1120,10 +1215,10 @@ tego nie widać w historii.
 <!-- Tabela poniżej jest generowana z src/config/params.ts przez `npm run config:docs`.
      Ręczne zmiany przepadną — popraw wpis w rejestrze. -->
 
-Wszystkie 71 parametrów, jakie potok czyta z konfiguracji. Kolumna **klasa** mówi,
+Wszystkie 72 parametrów, jakie potok czyta z konfiguracji. Kolumna **klasa** mówi,
 czym parametr jest i — co ważniejsze — GDZIE mieszka:
 
-- **próg** (37 sztuk) — steruje zachowaniem potoku i stoi w commitowanym `config.json`.
+- **próg** (38 sztuk) — steruje zachowaniem potoku i stoi w commitowanym `config.json`.
   Zmiana progu ma zostawiać ślad: `git log -p config.json` daje datę, autora i wartość przed i po,
   do zestawienia z tym, co w tych dniach robił potok. Każdy przebieg zapisuje w raporcie migawkę
   progów, którymi się kierował (`RunReport.config`), więc stary raport da się czytać bez zgadywania.
@@ -1205,6 +1300,7 @@ która obowiązuje, gdy nie ustawiono nic. Dłuższe uzasadnienia stoją przy wp
 | `DISCOVER_MAX_TOKENS` | `12000` | próg | sufit tokenów odpowiedzi przy ocenie trafień wyszukiwarki |
 | `BLOCK_MAX_CALLS` | `80` | próg | sufit wywołań LLM na blokowanie źródeł w przebiegu (0 = nie wołaj) |
 | `REPERTOIRE_URL_SEGMENTS` | `seances,seanse,repertuar,repertoire,showtimes,seansy` | próg | segmenty ścieżki znaczące repertuar — takich adresów nie czytamy (po przecinku) |
+| `PAGER_PROBE_RECHECK_DAYS` | `14` | próg | co ile dni ponawiamy sondę nazwy parametru paginacji (pager bez adresów) |
 | `LISTING_PAGES_MAX` | `3` | próg | ile stron listingu czytamy przy jednym źródle (1 = tylko pierwsza, czyli jak dotąd) |
 | `FOLLOWUPS_PER_SOURCE` | `7` | próg | ile podstron / PDF-ów / plakatów dociągamy przy jednym źródle (0 = wcale) |
 | `FOLLOWUP_SAME_PAGE_RECHECK_DAYS` | `30` | próg | po ilu dniach followup identyczny ze stroną źródła wraca do kolejki (0 = pyta zawsze) |

@@ -10,6 +10,7 @@
 import { setTimeout as sleep } from "node:timers/promises";
 
 import { P } from "../config/index.js";
+import { type Bounds, distanceToBounds, padBounds } from "../shared/bbox.js";
 import { describeError } from "../shared/errors.js";
 import type { GeoLookup } from "../types/index.js";
 
@@ -61,11 +62,6 @@ const statusKind = (status: number): string =>
 const RETRY_DELAYS_MS = [2_000, 5_000];
 
 const worthRetrying = (status: number): boolean => status === 429 || status >= 500;
-
-const KM_PER_DEG_LAT = 110.574;
-const kmPerDegLon = (lat: number): number => 111.320 * Math.cos((lat * Math.PI) / 180);
-
-export interface Bounds { minlat: number; minlon: number; maxlat: number; maxlon: number }
 
 interface OverpassElement {
   tags?: Record<string, string>;
@@ -127,34 +123,14 @@ function pickCenter(els: OverpassElement[]): Bounds | undefined {
 }
 
 /**
- * Odległość punktu od prostokąta (0 w środku). Equirectangular — na 15–30 km wystarcza.
- * Wyeksportowane dla testu: cicha pomyłka w znaku albo w przelicznikach nie wywala niczego,
- * tylko po cichu zmienia zasięg projektu, a to widać dopiero po rachunku za Serpera.
- */
-export function distanceToBounds(lat: number, lon: number, b: Bounds): number {
-  const dLat = Math.max(b.minlat - lat, 0, lat - b.maxlat) * KM_PER_DEG_LAT;
-  const dLon = Math.max(b.minlon - lon, 0, lon - b.maxlon) * kmPerDegLon(lat);
-  return Math.hypot(dLat, dLon);
-}
-
-/**
  * „gmina Komorniki" → „Komorniki". OSM trzyma prefiks w `name` dla gmin wiejskich, a on trafiłby
  * prosto do zapytań wyszukiwarki („gmina Komorniki dom kultury"), zawężając je bez potrzeby.
  */
 export const stripGmina = (name: string): string => name.replace(/^gmina\s+/i, "").trim();
 
-/**
- * Prostokąt miasta rozszerzony o promień, w formacie bboksu Overpass. Nadmiarowy w rogach
- * (√2·R zamiast R), ale to filtr WSTĘPNY — właściwe przycięcie robi `distanceToBounds`.
- */
-function paddedBox(center: Bounds, radiusKm: number): string {
-  const padLat = radiusKm / KM_PER_DEG_LAT;
-  const padLon = radiusKm / kmPerDegLon((center.minlat + center.maxlat) / 2);
-  return [
-    center.minlat - padLat, center.minlon - padLon,
-    center.maxlat + padLat, center.maxlon + padLon,
-  ].map((n) => n.toFixed(5)).join(",");
-}
+/** Prostokąt Overpassa z gotowych granic — kolejność pól jest ich, nie nasza. */
+const overpassBox = (b: Bounds): string =>
+  [b.minlat, b.minlon, b.maxlat, b.maxlon].map((n) => n.toFixed(5)).join(",");
 
 /** Gminy (admin_level 7) w promieniu od granic miasta centralnego. */
 export async function townsInRadius(centerTown: string, radiusKm: number): Promise<GeoLookup> {
@@ -172,9 +148,12 @@ export async function townsInRadius(centerTown: string, radiusKm: number): Promi
     ));
     if (!center) throw new Error(`OSM nie zna granic administracyjnych dla "${centerTown}"`);
 
+    // prostokąt zapamiętujemy: to jedyny zapis obszaru, który discovery realnie przeszukało,
+    // a geokoder potrzebuje DOKŁADNIE tego samego (patrz setGeoRegion w nominatim.ts)
+    geo.bounds = padBounds(center, radiusKm);
     const candidates = await overpass(
       `[out:json][timeout:60];
-       relation["boundary"="administrative"]["admin_level"="7"](${paddedBox(center, radiusKm)});
+       relation["boundary"="administrative"]["admin_level"="7"](${overpassBox(geo.bounds)});
        out tags center;`,
       onStatus, onAttempt,
     );

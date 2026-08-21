@@ -9,7 +9,7 @@
 import { strict as assert } from "node:assert";
 import { describe, it } from "node:test";
 
-import { geoQueries } from "../src/adapters/nominatim.js";
+import { geoQueries } from "../src/adapters/nominatim-query.js";
 
 describe("geoQueries — rozbijanie venue na człony", () => {
   it("rozdziela nazwę miejsca i adres, nazwa idzie pierwsza", () => {

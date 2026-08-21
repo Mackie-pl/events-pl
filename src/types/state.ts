@@ -1,6 +1,7 @@
 /** state.json — cache między przebiegami (hashe, geo, ekstrakcje). */
 
 import type { EventItem } from "./event.js";
+import type { GeoVerdict } from "./geo.js";
 
 /**
  * Zapamiętany wynik ekstrakcji dla konkretnej treści.
@@ -59,10 +60,26 @@ export interface PipelineState {
    * Gdyby cache trzymał już odsiane, ten sygnał byłby nie do odróżnienia od „blok bez wydarzeń".
    */
   blocks?: Record<string, CachedBlock>;
-  /** cache geokodera per "venue|town" */
-  geo: Record<string, { lat: number; lon: number } | null>;
+  /** cache geokodera per "venue|town" — cały werdykt, bo „gdzie to jest" jest tak samo drogie */
+  geo: Record<string, GeoVerdict>;
+  /**
+   * Prostokąt regionu, w którym zadano pytania siedzące w `geo`. Zmiana zasięgu projektu
+   * unieważnia cache (patrz `setGeoRegion` w adapters/nominatim.ts) — bez stempla stare
+   * odpowiedzi z innego obszaru zostałyby tu na zawsze, bo klucz „venue|town" się nie zmienia.
+   */
+  geoRegion?: string;
   /** cache ekstrakcji per source.id / URL followupa */
   extractions?: Record<string, CachedExtraction>;
+  /**
+   * Szablon paginacji ODGADNIĘTY sondą — dla listingów, których pager nie niesie adresów
+   * (numer dokłada JS). `url` z `{page}` w miejscu numeru; `null` znaczy „sondowaliśmy
+   * i żaden kandydat nie oddał drugiej strony", i to też trzeba pamiętać: bez tego pięć
+   * pobrań u cudzego serwisu wracałoby w każdym przebiegu.
+   *
+   * Wpis wygasa po `PAGER_PROBE_RECHECK_DAYS` liczonych przy ODCZYCIE, jak `sameAsPage`:
+   * serwis przebudowany w międzyczasie ma się odnaleźć sam, bez człowieka w pętli.
+   */
+  pagerTemplate?: Record<string, { url: string | null; at: string }>;
   /**
    * Followupy ostatnio widziane w danym źródle. Followupy pochodzą z ekstrakcji strony,
    * więc przy niezmienionej stronie nie znamy ich z bieżącego przebiegu — a plakat potrafi

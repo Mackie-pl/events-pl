@@ -19,7 +19,7 @@ import { describeError } from "../../shared/errors.js";
 import { sha256 } from "../../shared/hash.js";
 import { urlKey } from "../../shared/url.js";
 import type {
-  EventItem, EventOrigin, PipelineError, PipelineState, Source, SourceRun,
+  EventItem, EventOrigin, GeoVerdict, PipelineError, PipelineState, Source, SourceRun,
 } from "../../types/index.js";
 import type { FbPosterJob } from "../facebook.js";
 import {
@@ -198,6 +198,16 @@ function settleDates(events: EventItem[], run: SourceRun): EventItem[] {
   return rep.kept;
 }
 
+/** Jedno zdanie o tym, co geokoder rozstrzygnął — cztery werdykty, cztery różne wnioski. */
+function geoNote(venue: string, town: string, g: GeoVerdict): string {
+  const what = venue || town;
+  if (g.pin) return `„${what}" → ${g.pin.lat}, ${g.pin.lon}`;
+  if (g.where === "abroad") return `„${what}" leży w kraju „${g.place}" — to nie nasz region`;
+  if (g.where === "far") return `„${what}" → ${g.place}, w Polsce, ale poza regionem`;
+  if (g.where === "region") return `„${what}" — miejscowość nasza, ale adresu geokoder nie zna`;
+  return `„${what}" — geokoder nie zna tego adresu`;
+}
+
 /**
  * Domknięcie wydarzeń: przypisanie źródła i geokodowanie. Wspólne dla obu ścieżek —
  * maszynowej i modelowej — bo miejsce trzeba znaleźć tak samo niezależnie od tego,
@@ -218,16 +228,20 @@ async function attachGeo(
     // `urlKey` po OBU stronach mapy — inaczej rozjazd o `www.` cicho gubi całe wiązanie
     const origin = fbOrigins.get(urlKey(ev.source_url ?? ""));
     if (origin) ev.origin = origin;
-    // geocode ma własny cache po "venue|town", więc wydarzenia z cache nie kosztują zapytań
-    if (ev.venue) {
+    // geocode ma własny cache po "venue|town", więc wydarzenia z cache nie kosztują zapytań.
+    // Pytamy TAKŻE bez `venue`: wpis z plakatu bywa bez adresu, a samo „Turcja" w `town`
+    // wystarczy, żeby stwierdzić, że to nie jest wydarzenie z naszego regionu.
+    if (ev.venue || ev.town) {
       const g = await geocode(ev.venue, ev.town, state.geo);
-      ev.geo = g;
-      if (g) run.geo.hits++; else run.geo.misses++;
+      ev.geo = g.pin;
+      ev.locality = g.where;
+      // liczniki zostają przy pytaniu O ADRES: wpis bez `venue` nie jest pudłem geokodera
+      if (ev.venue) { if (g.pin) run.geo.hits++; else run.geo.misses++; }
       const key = `${ev.venue}|${ev.town}`;
       if (!geoSeen.has(key)) {
         geoSeen.add(key);
-        audit("geo", g ? `„${ev.venue}" → ${g.lat}, ${g.lon}` : `„${ev.venue}" — geokoder nie zna tego adresu`,
-          { venue: ev.venue, town: ev.town, hit: g !== null });
+        audit("geo", geoNote(ev.venue, ev.town, g),
+          { venue: ev.venue, town: ev.town, hit: g.pin !== null, where: g.where });
       }
     }
   }

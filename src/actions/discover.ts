@@ -128,6 +128,8 @@ async function runStages(
     report.radiusKm = opts.radius;
     const geo = await townsInRadius(opts.center, opts.radius);
     report.geo = geo;
+    // zasięg zapisujemy w rejestrze, bo czyta go DAILY (geokoder), a nie tylko raport
+    if (geo.bounds) cfg.region.bounds = geo.bounds;
     console.log(`Gminy w promieniu ${opts.radius} km od ${opts.center}:`, geo.towns.join(", "));
     for (const [i, town] of geo.towns.entries()) {
       console.log(`\n── gmina ${i + 1}/${geo.towns.length}: ${town}`);

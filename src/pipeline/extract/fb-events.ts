@@ -61,10 +61,12 @@ function partitionByCache(
 
 /** Współrzędne miejsca, jeśli w ogóle je znamy. Liczniki trafień idą do raportu przebiegu. */
 async function geocodeEvent(ev: EventItem, state: PipelineState, run: SourceRun): Promise<void> {
-  if (!ev.venue) return;
+  if (!ev.venue && !ev.town) return;
   const g = await geocode(ev.venue, ev.town, state.geo);
-  ev.geo = g;
-  if (g) run.geo.hits++; else run.geo.misses++;
+  ev.geo = g.pin;
+  ev.locality = g.where;
+  // liczniki zostają przy pytaniu O ADRES: wpis bez `venue` nie jest pudłem geokodera
+  if (ev.venue) { if (g.pin) run.geo.hits++; else run.geo.misses++; }
 }
 
 /**

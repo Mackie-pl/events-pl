@@ -8,6 +8,7 @@
 import { appendFile } from "node:fs/promises";
 
 import { bdEnabled, bdUsage } from "../adapters/brightdata.js";
+import { setGeoRegion } from "../adapters/nominatim.js";
 import { setCallRecorder } from "../adapters/openrouter.js";
 import {
   archiveEnabled,
@@ -17,6 +18,7 @@ import {
   beginRun,
 } from "../adapters/supabase-archive.js";
 import { P } from "../config/index.js";
+import { withinRegion } from "../pipeline/locality.js";
 import { withoutNonEvents } from "../pipeline/non-events.js";
 import { DEDUPE_WHY, dedupe } from "../pipeline/dedupe.js";
 import { harvestEventUrls, isEventUrl } from "../pipeline/facebook.js";
@@ -70,6 +72,9 @@ async function run(): Promise<void> {
   }
   const cfg = await sourcesStore.load();
   const state = await stateStore.load();
+  // prostokąt regionu dla geokodera — z sources.json, czyli z tego samego miejsca, z którego
+  // discovery bierze zasięg. Ustawiane PRZED pierwszym źródłem, bo pyta o niego każde.
+  setGeoRegion(cfg.region, state);
   const errors: PipelineError[] = [];
   const sourceRuns: SourceRun[] = [];
   let allEvents: EventItem[] = [];
@@ -214,7 +219,7 @@ async function run(): Promise<void> {
   pruneBlocks(state);
   // przed scalaniem, bo ten sam turnus potrafi przyjść z dwóch źródeł naraz i wtedy dedupe
   // wybierałby zwycięzcę spośród rekordów, z których żaden nie ma prawa się opublikować
-  allEvents = withoutNonEvents(allEvents);
+  allEvents = withinRegion(withoutNonEvents(allEvents));
   const merged = dedupe(allEvents);
   allEvents = merged.events;
   // przegrany trafia do śladu SWOJEGO źródła — tam go szuka ktoś, kto pyta „czemu to zniknęło?"

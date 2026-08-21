@@ -1,6 +1,7 @@
 /** Raport przebiegu discover (discover-runs.json). */
 
 import type { ConfigSnapshot } from "../config/snapshot.js";
+import type { Bounds } from "../shared/bbox.js";
 import type { CostEntry } from "./cost.js";
 import type {
   EntryPoint, FetchProbe, FetchStrategy, ReachOutcome, SearchResult, SourceCapability, SourceType,
@@ -43,6 +44,15 @@ export interface GeoLookup {
   query: string;
   towns: string[];
   ms: number;
+  /**
+   * Prostokąt, w którym discovery SZUKAŁO gmin: granice miasta centralnego + promień.
+   * Zapisujemy go, bo to jedyny zapis ZASIĘGU PROJEKTU, jaki gdziekolwiek istnieje —
+   * `center` + `radius_km` z sources.json opisują punkt i promień, a prawdziwy obszar
+   * jest o całą rozciągłość miasta centralnego większy (Poznań to ~24 km w poprzek,
+   * więc Mosina leży 20 km od środka i 5 km od granicy). Geokoder pyta o ten sam
+   * prostokąt — patrz `setGeoRegion` w adapters/nominatim.ts.
+   */
+  bounds?: Bounds;
   err?: string;
   /** Overpass padł — discovery poleciało tylko dla miasta centralnego */
   fallback?: boolean;

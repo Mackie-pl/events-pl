@@ -7,6 +7,7 @@ export type * from "./audit.js";
 export type * from "./cost.js";
 export type * from "./discover-run.js";
 export type * from "./event.js";
+export type * from "./geo.js";
 export type * from "./probe.js";
 export type * from "./reuse.js";
 export type * from "./run.js";

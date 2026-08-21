@@ -13,7 +13,8 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { geocode } from "../../src/adapters/nominatim.js";
+import { geocode, setGeoRegion } from "../../src/adapters/nominatim.js";
+import type { GeoVerdict, PipelineState } from "../../src/types/index.js";
 
 /** Prostokąt „Poznań i okolice" — pinezka poza nim znaczy trafienie w losowe miejsce w Polsce. */
 const AREA = { minlat: 52.2, maxlat: 52.6, minlon: 16.6, maxlon: 17.2 };
@@ -51,15 +52,20 @@ const HARD: Array<[venue: string, town: string]> = [
 
 describe("geocode — miejsca z auditu „geokoder nie zna tego adresu”", () => {
   it("znajduje wszystkie i stawia pinezkę w okolicy Poznania", { timeout: 180_000 }, async () => {
-    const cache: Record<string, { lat: number; lon: number } | null> = {};
+    // ten sam region, co w sources.json — od 2026-08-21 drabinka pyta W PROSTOKĄCIE,
+    // więc test bez niego sprawdzałby inny mechanizm niż ten, który chodzi w przebiegu
+    setGeoRegion({ center: { lat: 52.4064, lon: 16.9252 }, radius_km: 15 },
+      { geo: {} } as unknown as PipelineState);
+    const cache: Record<string, GeoVerdict> = {};
     const misses: string[] = [];
     const strays: string[] = [];
 
     for (const [venue, town] of [...VENUES, ...HARD]) {
-      const g = await geocode(venue, town, cache);
-      if (!g) { misses.push(`„${venue}" (${town})`); continue; }
-      if (g.lat < AREA.minlat || g.lat > AREA.maxlat || g.lon < AREA.minlon || g.lon > AREA.maxlon) {
-        strays.push(`„${venue}" → ${g.lat}, ${g.lon}`);
+      const { pin } = await geocode(venue, town, cache);
+      if (!pin) { misses.push(`„${venue}" (${town})`); continue; }
+      if (pin.lat < AREA.minlat || pin.lat > AREA.maxlat
+        || pin.lon < AREA.minlon || pin.lon > AREA.maxlon) {
+        strays.push(`„${venue}" → ${pin.lat}, ${pin.lon}`);
       }
     }
 

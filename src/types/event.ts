@@ -7,6 +7,7 @@
  */
 
 import type { Followup, ModelEvent } from "./event-schema.js";
+import type { GeoWhere } from "./geo.js";
 import type { BdUsage } from "./usage.js";
 
 export type { AgeRange, Followup, Price, SubSlot } from "./event-schema.js";
@@ -51,6 +52,11 @@ export interface EventItem extends ModelEvent {
   origin?: EventOrigin;
   /** dopisywane po geokodowaniu (Nominatim + cache) */
   geo?: { lat: number; lon: number } | null;
+  /**
+   * Gdzie to wydarzenie leży względem regionu — werdykt geokodera, nie zgadywanie z tekstu.
+   * `abroad` odsiewa `pipeline/locality.ts`; `far` na razie WYŁĄCZNIE mierzymy.
+   */
+  locality?: GeoWhere;
   /**
    * Terminy serii, rosnąco; brak pola = wydarzenie nie jest serią. Dopisuje foldSeries().
    *
