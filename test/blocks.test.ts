@@ -163,3 +163,60 @@ describe("sufit odzysku", () => {
     );
   });
 });
+
+/**
+ * ODNOŚNIK NALEŻY DO KARTY NAD SOBĄ.
+ *
+ * Gdy `<a>` owija całą kartę (`<a><article>…</article></a>`), renderer wypuszcza adres
+ * dopiero ZA jej tekstem, osobnym akapitem. Granica z hasha nie wie, że te dwa akapity to
+ * jedna rzecz, więc potrafi wypaść dokładnie między nimi — zostaje blok z samym adresem
+ * i karta, która nie ma jak swojego adresu podać.
+ *
+ * Tekst niżej to prawdziwy render karty z okpoznan.pl/wydarzenia (2026-08-21) — ta sama,
+ * przez którą „Wolsztyn. Historia napędzana parą" poszedł w digeście z adresem listingu.
+ */
+describe("akapit będący samym odnośnikiem", () => {
+  const bareLink = (text: string): boolean => /^\[[^\]\s]+\]$/.test(text.trim());
+
+  /** render karty Wolsztyna z okpoznan.pl/wydarzenia, pobrany 2026-08-21 */
+  const KARTA = [
+    " * Sie\n   03\n   -\n   Wrz\n   30\n   #1\n   60+",
+    "WOLSZTYN. HISTORIA NAPĘDZANA PARĄ",
+    "03.08 - 30.09.2026",
+    "ul. Franciszka Ratajczaka 44, Poznań",
+    "[/szczegoly-wydarzenia/XzV0cpN575A2D9XgU396_wolsztyn-historia-napedzana-para]",
+  ].join("\n\n");
+
+  it("zostaje w bloku karty, a nie startuje własnego", () => {
+    const blocks = segment(KARTA);
+    assert.deepEqual(
+      blocks.filter((b) => bareLink(b.text)).map((b) => b.text), [],
+      "adres oderwał się od karty — model dostaje kartę bez adresu i blok bez treści",
+    );
+    assert.ok(
+      blocks.some((b) => b.text.includes("WOLSZTYN") && b.text.includes("wolsztyn-historia")),
+      "tytuł i adres tej samej karty mają wyjść jednym blokiem",
+    );
+  });
+
+  it("adres nie znika — przesuwamy granicę, nie odsiewamy treści", () => {
+    const all = segment(KARTA).map((b) => b.text).join("\n");
+    assert.ok(all.includes("wolsztyn-historia-napedzana-para"));
+  });
+
+  // --- regresja: czego ta reguła NIE ma prawa ruszyć ---
+
+  it("akapit z tekstem I adresem zostaje zwykłym akapitem", () => {
+    // „Szczegóły [/event/x]" niesie własne słowo, więc nigdy nie był sierotą i granica
+    // przed nim jest tak samo dobra, jak każda inna — inaczej reguła zaczęłaby sklejać karty
+    const text = ["KONCERT W PARKU", "12 / 08 / 26 19:00", "Szczegóły [/event/koncert]"].join("\n\n");
+    assert.equal(segment(text).filter((b) => bareLink(b.text)).length, 0);
+    assert.deepEqual(segment(text), segment(text), "podział ma być deterministyczny");
+  });
+
+  it("sam odnośnik na POCZĄTKU tekstu nie ma się do czego dokleić i zostaje", () => {
+    const text = ["[/szczegoly-wydarzenia/abc_pierwsza]", "PIERWSZA KARTA", "01.09.2026"].join("\n\n");
+    const all = segment(text).map((b) => b.text).join("\n");
+    assert.ok(all.includes("abc_pierwsza"), "adres bez poprzednika zniknął zamiast zostać");
+  });
+});

@@ -272,3 +272,58 @@ describe("karta bez własnego odnośnika", () => {
     );
   });
 });
+
+/**
+ * ADRES KARTY MA ZOSTAĆ PRZY KARCIE.
+ *
+ * okpoznan.pl/wydarzenia — cała lista wydarzeń pobrana 2026-08-21 (patrz fixtures), bez
+ * nagłówka strony, stopki i widżetu kalendarza. Odnośnik owija tam CAŁĄ kartę
+ * (`<a><article>…</article></a>`), więc renderer wypuszcza go dopiero ZA jej tekstem —
+ * a granica z hasha akapitu potrafi wypaść dokładnie w tej szczelinie. Zostaje wtedy blok
+ * mający w środku sam adres i nic poza nim.
+ *
+ * Kosztowało to konkretny wpis w digeście z 2026-08-21: „Wolsztyn. Historia napędzana parą"
+ * poszedł z adresem listingu zamiast własnej podstrony (model słusznie NIE podstawił adresu
+ * karty obok, choć ten stał w tym samym bloku). Bez własnego adresu nie było czego dociągnąć
+ * followupem, więc wpis został bez godziny i z samą ulicą zamiast nazwy miejsca.
+ */
+describe("okpoznan.pl — odnośnik owinięty wokół karty", () => {
+  /** okpoznan.pl/wydarzenia — lista wydarzeń, pobrana 2026-08-21 (patrz fixtures). */
+  const OKPOZNAN = readFileSync(
+    fileURLToPath(new URL("fixtures/okpoznan-wydarzenia-2026-08-21.html", import.meta.url)),
+    "utf8",
+  );
+
+  /** Akapit, który jest SAMYM adresem — „[/adres]" i ani jednego słowa własnego. */
+  const bareLink = (text: string): boolean => /^\[[^\]\s]+\]$/.test(text.trim());
+
+  it("żaden blok nie jest samym odnośnikiem", () => {
+    const orphans = segmentHtml(OKPOZNAN).blocks.filter((b) => bareLink(b.text));
+    assert.deepEqual(
+      orphans.map((b) => b.text.trim()), [],
+      "blok bez ani jednego słowa własnego nie ma czego wnieść do ekstrakcji, "
+      + "a karcie obok zabiera jej własny adres",
+    );
+  });
+
+  it("karta Wolsztyna niesie SWÓJ adres, a nie tylko adres karty obok", () => {
+    const seg = segmentHtml(OKPOZNAN);
+    const card = seg.blocks.find((b) => b.text.includes("WOLSZTYN. HISTORIA NAPĘDZANA PARĄ"));
+    assert.ok(card, "karta zniknęła ze strony");
+    assert.ok(
+      card.text.includes("wolsztyn-historia-napedzana-para"),
+      `adres karty wypadł poza jej blok — model nie ma jak go przepisać:\n${card.text}`,
+    );
+  });
+
+  it("adres nie ginie po drodze — każdy z listy stoi w którymś bloku", () => {
+    // sedno: to NIE jest odsiew, tylko przesunięcie granicy. Gdyby poprawka gubiła adresy,
+    // pierwszy test świeciłby na zielono z tego samego powodu, dla którego jest zły
+    const seg = segmentHtml(OKPOZNAN);
+    const all = seg.blocks.map((b) => b.text).join("\n");
+    for (const slug of ["wolsztyn-historia-napedzana-para", "plenerowe-palacowe-2026",
+      "staromiejskie-koncerty-organowe-2026"]) {
+      assert.ok(all.includes(slug), `adres „${slug}" zniknął ze strony`);
+    }
+  });
+});

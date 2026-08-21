@@ -132,6 +132,15 @@ const isBoundary = (para: string, targetParas: number): boolean =>
   parseInt(keyOf(para).slice(0, 8), 16) % targetParas === 0;
 
 /**
+ * Akapit będący SAMYM adresem — „[/adres]" i ani jednego słowa własnego.
+ *
+ * Bierze się z kart, w których `<a>` owija CAŁĄ kartę (`<a><article>…</article></a>`):
+ * renderer wypuszcza wtedy adres dopiero ZA jej tekstem, osobnym akapitem. Kształt jest
+ * pospolity — tak wygląda większość siatek kart — więc to reguła, nie łatka na jeden serwis.
+ */
+const isBareLink = (para: string): boolean => /^\[[^\]\s]+\]$/.test(para.trim());
+
+/**
  * Blok z gotowego tekstu. Hash liczy się z TREŚCI po masce, więc jest kluczem cache'a;
  * `cut` NIE wchodzi do hasza — ta sama treść ma dawać ten sam klucz niezależnie od tego,
  * czy przyszła z karty, czy z akapitów, bo inaczej zmiana podziału zerwałaby cały cache.
@@ -169,7 +178,16 @@ export function segment(text: string, opts: SegmentOptions = DEFAULT_SEGMENT): B
     //
     // LOKALNOŚĆ ZOSTAJE, i to jest tu warunek konieczny: rodzaj zależy wyłącznie od WŁASNEJ
     // treści akapitu, więc usunięcie karty nadal przestawia granice tylko w jej sąsiedztwie.
-    if (buf.length && isChrome(p) !== isChrome(paras[i - 1]!)) {
+    //
+    // WYJĄTEK: akapit będący samym adresem NIE zaczyna bloku. Adres należy do karty NAD
+    // sobą i bez niej nie znaczy nic — a karta bez niego nie ma jak podać własnej podstrony.
+    // Zmierzone na okpoznan.pl/wydarzenia (2026-08-21): trzy karty z 16 traciły tak swój
+    // adres, a jedna z nich („Wolsztyn. Historia napędzana parą") poszła w digeście
+    // z adresem listingu, bez godziny i z samą ulicą — bo bez własnego adresu nie było
+    // czego dociągnąć followupem. Model zachował się wtedy poprawnie: adres sąsiedniej
+    // karty stał w tym samym bloku i NIE został podstawiony.
+    const bare = isBareLink(p);
+    if (buf.length && !bare && isChrome(p) !== isChrome(paras[i - 1]!)) {
       blocks.push(mkBlock(buf, "flip"));
       buf = [];
       size = 0;
@@ -181,7 +199,10 @@ export function segment(text: string, opts: SegmentOptions = DEFAULT_SEGMENT): B
     // Powód cięcia liczy się PRZED sufitem: gdy oba padają na tym samym akapicie, granica
     // wypadłaby tu również bez sufitu, więc `ceiling` znaczy „TYLKO sufit", a nie „też sufit".
     const boundary = isBoundary(p, opts.targetParas);
-    if (boundary || size >= opts.maxChars) {
+    // ta sama reguła od drugiej strony: nie zamykamy bloku, gdy zaraz za nim stoi sam adres.
+    // Sufit też ustępuje — przekroczenie go o długość odnośnika jest bez znaczenia, a blok
+    // z samym adresem nie niesie do ekstrakcji ani jednego słowa.
+    if ((boundary || size >= opts.maxChars) && !isBareLink(paras[i + 1] ?? "")) {
       blocks.push(mkBlock(buf, boundary ? "content" : "ceiling"));
       buf = [];
       size = 0;

@@ -667,6 +667,17 @@ zależna od pozycji, więc psuje lokalność cache'a i ma się odzywać rzadko),
 kawałka). Bez tego pola nie dało się odróżnić „zmieniła się strona" od „przesunęła się nasza
 granica".
 
+Jedna rzecz granicy NIE przysługuje: **akapit będący samym adresem nie zaczyna bloku**. Gdy
+`<a>` owija całą kartę (`<a><article>…</article></a>` — tak wygląda większość siatek kart),
+renderer wypuszcza adres dopiero ZA jej tekstem, osobnym akapitem, a hash nie wie, że te dwa
+akapity to jedna rzecz. Zmierzone na okpoznan.pl/wydarzenia (2026-08-21): **3 karty z 16**
+traciły tak swój adres, zostawiając bloki po 68–81 znaków z samym `[/szczegoly-wydarzenia/…]`.
+Kosztowało to konkretny wpis w digeście — „Wolsztyn. Historia napędzana parą" poszedł z adresem
+listingu, bez godziny i z samą ulicą zamiast nazwy miejsca, bo bez własnego adresu nie było
+czego dociągnąć followupem. Model zachował się przy tym poprawnie: adres sąsiedniej karty stał
+w tym samym bloku i NIE został podstawiony. Po poprawce: 0 bloków-sierot, 9 z 9 kart z własnym
+adresem.
+
 ### Chrom odsiewany bez modelu
 
 Menu, zgody na ciasteczka, stopki prawne, paski filtrów i stron rozpoznaje `extract/chrome.ts` —
