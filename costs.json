@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-20T05:00:57.790Z",
+ "updated": "2026-08-21T05:15:05.537Z",
  "rates": {
   "bdPerRecord": 0.0015,
   "searchPerQuery": 0.001,
@@ -3123,6 +3123,157 @@
    "usd": 0,
    "estimated": true,
    "units": 3.833,
+   "unit": "MB"
+  },
+  {
+   "day": "2026-08-21",
+   "at": "2026-08-21T05:15:05.383Z",
+   "stage": "daily",
+   "run": "2026-08-21T04:32:18.881Z",
+   "category": "llm-extract",
+   "usd": 0.152223,
+   "estimated": false,
+   "units": 77,
+   "unit": "calls",
+   "tokensIn": 328855,
+   "tokensOut": 93034,
+   "top": [
+    {
+     "id": "poznan-co-gdzie-kiedy",
+     "usd": 0.024721,
+     "units": 10
+    },
+    {
+     "id": "kultura-poznan",
+     "usd": 0.02199,
+     "units": 10
+    },
+    {
+     "id": "dopiewo-tablica-ogloszen-fb",
+     "usd": 0.021884,
+     "units": 4
+    },
+    {
+     "id": "puszczykowo-pl-kultura-wydarzenia",
+     "usd": 0.016987,
+     "units": 7
+    },
+    {
+     "id": "fb-group-baba-cool",
+     "usd": 0.012924,
+     "units": 3
+    }
+   ]
+  },
+  {
+   "day": "2026-08-21",
+   "at": "2026-08-21T05:15:05.383Z",
+   "stage": "daily",
+   "run": "2026-08-21T04:32:18.881Z",
+   "category": "llm-vision",
+   "usd": 0.044412,
+   "estimated": false,
+   "units": 61,
+   "unit": "calls",
+   "tokensIn": 224620,
+   "tokensOut": 11485,
+   "top": [
+    {
+     "id": "fb-group-allin-poznan",
+     "usd": 0.015087,
+     "units": 20
+    },
+    {
+     "id": "fb-group-kultura-komorniki",
+     "usd": 0.009951,
+     "units": 14
+    },
+    {
+     "id": "dopiewo-tablica-ogloszen-fb",
+     "usd": 0.009762,
+     "units": 13
+    },
+    {
+     "id": "fb-group-baba-cool",
+     "usd": 0.006862,
+     "units": 11
+    },
+    {
+     "id": "lubon-fb-group",
+     "usd": 0.002313,
+     "units": 2
+    }
+   ]
+  },
+  {
+   "day": "2026-08-21",
+   "at": "2026-08-21T05:15:05.383Z",
+   "stage": "daily",
+   "run": "2026-08-21T04:32:18.881Z",
+   "category": "fb",
+   "usd": 0.282,
+   "estimated": true,
+   "units": 188,
+   "unit": "records",
+   "top": [
+    {
+     "id": "dopiewo-tablica-ogloszen-fb",
+     "usd": 0.075,
+     "units": 50
+    },
+    {
+     "id": "fb-group-allin-poznan",
+     "usd": 0.075,
+     "units": 50
+    },
+    {
+     "id": "fb-group-baba-cool",
+     "usd": 0.054,
+     "units": 36
+    },
+    {
+     "id": "fb-group-kultura-komorniki",
+     "usd": 0.0405,
+     "units": 27
+    },
+    {
+     "id": "lubon-fb-group",
+     "usd": 0.0285,
+     "units": 19
+    }
+   ]
+  },
+  {
+   "day": "2026-08-21",
+   "at": "2026-08-21T05:15:05.383Z",
+   "stage": "daily",
+   "run": "2026-08-21T04:32:18.881Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 197,
+   "unit": "fetches"
+  },
+  {
+   "day": "2026-08-21",
+   "at": "2026-08-21T05:15:05.383Z",
+   "stage": "daily",
+   "run": "2026-08-21T04:32:18.881Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 117,
+   "unit": "lookups"
+  },
+  {
+   "day": "2026-08-21",
+   "at": "2026-08-21T05:15:05.383Z",
+   "stage": "daily",
+   "run": "2026-08-21T04:32:18.881Z",
+   "category": "storage",
+   "usd": 0,
+   "estimated": true,
+   "units": 5.37,
    "unit": "MB"
   }
  ]
