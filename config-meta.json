@@ -320,6 +320,13 @@
       "def": "seances,seanse,repertuar,repertoire,showtimes,seansy"
     },
     {
+      "name": "PAGER_PROBE_RECHECK_DAYS",
+      "group": "pipeline",
+      "cls": "tuning",
+      "summary": "co ile dni ponawiamy sondę nazwy parametru paginacji (pager bez adresów)",
+      "def": 14
+    },
+    {
       "name": "LISTING_PAGES_MAX",
       "group": "pipeline",
       "cls": "tuning",

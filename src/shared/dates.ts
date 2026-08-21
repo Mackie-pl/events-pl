@@ -14,6 +14,14 @@ export const dayOffset = (days: number): string =>
   new Date(Date.now() - days * 86_400_000).toISOString().slice(0, 10);
 
 // Południe UTC jako punkt zaczepienia: chroni przed przeskokiem doby przy zmianie czasu.
+/**
+ * Pełne doby między dwiema datami ISO. Jedyny kształt „ile dni minęło" w potoku — wygasanie
+ * wpisów stanu (bloki, werdykt sondy pagera) liczy się przy ODCZYCIE i musi liczyć tak samo
+ * wszędzie, bo inaczej ten sam próg znaczy co innego w dwóch miejscach.
+ */
+export const daysBetween = (from: string, to: string): number =>
+  Math.floor((Date.parse(to) - Date.parse(from)) / 86_400_000);
+
 export function addDays(iso: string, days: number): string {
   const d = new Date(`${iso}T12:00:00Z`);
   d.setUTCDate(d.getUTCDate() + days);

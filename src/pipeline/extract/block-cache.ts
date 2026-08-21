@@ -23,7 +23,7 @@
  * odróżnienia od „blok nigdy nic nie dał".
  */
 import { audit } from "../../shared/audit.js";
-import { todayIso } from "../../shared/dates.js";
+import { daysBetween, todayIso } from "../../shared/dates.js";
 import type { CachedBlock, EventItem, PipelineState } from "../../types/index.js";
 
 /** Blok bez wydarzeń przestaje być wiarygodny po tylu dniach — może serwis coś dopisał. */
@@ -58,9 +58,6 @@ export const lastDay = (ev: EventItem): string =>
  * przebiegi z jednego wydarzenia zrobiły się cztery — po jednym duplikacie na przebieg.
  */
 export const detach = (events: EventItem[]): EventItem[] => structuredClone(events);
-
-const daysBetween = (from: string, to: string): number =>
-  Math.floor((Date.parse(to) - Date.parse(from)) / 86_400_000);
 
 /**
  * Odsiew minionych. Zwraca też ILE odpadło — sam wynik nie odróżnia „serwis nic nie ma"

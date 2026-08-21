@@ -152,6 +152,17 @@ export const P = defineParams({
       "Pusta wartość wyłącza regułę.",
     ],
   }),
+  PAGER_PROBE_RECHECK_DAYS: num({
+    group: "pipeline", cls: "tuning", def: 14, min: 1,
+    summary: "co ile dni ponawiamy sondę nazwy parametru paginacji (pager bez adresów)",
+    doc: [
+      "Dotyczy listingów, których pager nie niesie adresów, bo numer dokłada JS (okpoznan.pl).",
+      "Sonda zgaduje nazwę parametru i SPRAWDZA ją za darmo — patrz extract/pager-probe.ts.",
+      "Werdykt, także odmowny, zapamiętujemy: bez tego pięć pobrań u cudzego serwisu wracałoby",
+      "w każdym przebiegu. Wygasanie liczone przy odczycie, więc zmiana progu działa od razu,",
+      "a serwis przebudowany w międzyczasie odnajduje się sam.",
+    ],
+  }),
   LISTING_PAGES_MAX: num({
     group: "pipeline", cls: "tuning", def: 3, min: 1,
     summary: "ile stron listingu czytamy przy jednym źródle (1 = tylko pierwsza, czyli jak dotąd)",

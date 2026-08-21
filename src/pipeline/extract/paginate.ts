@@ -38,6 +38,8 @@ import { fetchableUrls } from "../repertoire.js";
 import { detach } from "./block-cache.js";
 import { blockSource } from "./block-source.js";
 import { extractEvents } from "./extract.js";
+import { isNextPage, listingShape, notePager, pageCandidateTemplates, pagerWithoutLinks, rememberedPager }
+  from "./pager-probe.js";
 import { groundFollowups } from "./followup-url.js";
 
 /** Wyżej niż tyle numer w pagerze nie sięga; większa liczba to rok albo licznik odsłon. */
@@ -236,6 +238,10 @@ export interface PagesCtx {
   /** HTML strony, na której właśnie stoimy; bez niego nie ma skąd wziąć adresu następnej */
   html: string | undefined;
   pageUrl: string;
+  /** HTML STRONY PIERWSZEJ — wzorzec dla bramki ogona; niezmienny przez całe chodzenie */
+  base?: string | undefined;
+  /** kształt wpisu listingu ze strony 1; `undefined` = nie da się ocenić, bramka milczy */
+  shape?: string | undefined;
 }
 
 /** Wynik jednej strony: co wnosi do źródła i czy jest sens iść dalej. */
@@ -278,6 +284,28 @@ const ground = (urls: string[], url: string, html: string | undefined): string[]
   fetchableUrls(groundFollowups(urls, url, html));
 
 /**
+ * BRAMKA OGONA: czy to jeszcze listing, czy już sama ramka serwisu.
+ *
+ * `okpoznan.pl?active_page=5` oddaje 31 524 znaki i ZERO wpisów, a sonda dat mówi wtedy
+ * „w treści nie ma dat, czytaj" (fail open, i słusznie — patrz `worthReading`), czyli sama
+ * zapłaciłaby za tę ramkę. Kształt wpisu ze strony 1 rozstrzyga to za darmo.
+ *
+ * Milczy, gdy strony 1 nie da się ocenić szablonem: „nie umiem tego ocenić" to nie to samo,
+ * co „to nie jest dalsza strona", a fail closed skasowałby paginację serwisom, których listy
+ * nie rozpoznajemy.
+ */
+function ogonListy(ctx: PagesCtx, got: Fetched, pr: PageRun): boolean {
+  if (!ctx.shape) return false;
+  const dalej = isNextPage(ctx.base ?? "", got.html ?? "", ctx.pageUrl);
+  if (dalej.ok) return false;
+  pr.outcome = "stale";
+  pr.why = dalej.why;
+  audit("page", `strona ${pr.page} to nie dalszy ciąg listy: ${dalej.why}`,
+    { url: pr.url, page: pr.page, why: dalej.why });
+  return true;
+}
+
+/**
  * Jedna dalsza strona: pobranie, trzy odsiewy i ewentualne wywołanie modelu.
  * `html: undefined` w wyniku znaczy „nie idziemy dalej" — patrz warunki w nagłówku sekcji.
  */
@@ -317,6 +345,8 @@ async function pullPage(
     return { events: detach(cached.events), followups: [], html: got.html };
   }
 
+  if (ogonListy(ctx, got, pr)) return KONIEC;
+
   // DARMOWA SONDA PRZED PŁATNYM WYWOŁANIEM — patrz `worthReading`
   const verdict = worthReading(got.text, today);
   pr.why = verdict.why;
@@ -338,6 +368,49 @@ async function pullPage(
 }
 
 /**
+ * Adres kolejnej strony, gdy pagera NIE DA SIĘ odczytać: pamięć werdyktu albo sonda.
+ *
+ * Osobno od `nextPageUrl`, bo to inna jakość wiedzy. Tam adres STOI na stronie i wystarczy
+ * go wziąć; tu go nie ma i musimy zgadnąć nazwę parametru — co wolno wyłącznie dlatego, że
+ * zgadnięcie da się sprawdzić za darmo (patrz pager-probe.ts). Sonda rusza jedynie tam, gdzie
+ * pager JEST, ale jego numery nigdzie nie prowadzą; strona bez pagera nie jest sondowana nigdy.
+ */
+async function guessedNext(
+  ctx: PagesCtx, html: string | undefined, page: number, today: string,
+): Promise<string | null> {
+  const pamiec = rememberedPager(ctx.state, ctx.src.id, today, P.PAGER_PROBE_RECHECK_DAYS.get());
+  if (pamiec !== undefined) return pamiec.url?.replace("{page}", String(page)) ?? null;
+  if (!html || !pagerWithoutLinks(html)) return null;
+
+  const szablon = await probeTemplate(html, ctx.pageUrl, page);
+  notePager(ctx.state, ctx.src.id, szablon, today);
+  return szablon?.replace("{page}", String(page)) ?? null;
+}
+
+/** Kandydaci po kolei, każdy sprawdzony wyrocznią. Zwraca SZABLON z `{page}` albo `null`. */
+async function probeTemplate(html: string, pageUrl: string, page: number): Promise<string | null> {
+  const sprawdzone: string[] = [];
+  for (const szablon of pageCandidateTemplates(pageUrl)) {
+    const kandydat = szablon.replace("{page}", String(page));
+    sprawdzone.push(new URL(kandydat).search);
+    let got: Fetched;
+    try {
+      got = await fetchPlain(kandydat);
+    } catch { continue; }
+    if (got.kind === "not-modified" || !got.html) continue;
+    const v = isNextPage(html, got.html, pageUrl);
+    if (!v.ok) continue;
+    audit("page", `pager bez adresów, ale zgadnięty parametr oddał kolejną stronę — ${v.why}`,
+      { url: kandydat, page, template: szablon, why: v.why });
+    return szablon;
+  }
+  audit("page", `pager bez adresów i żaden z ${sprawdzone.length} sprawdzonych parametrów nie `
+    + "oddał kolejnej strony — zostajemy przy pierwszej",
+  { url: pageUrl, tried: sprawdzone.join(" ") });
+  return null;
+}
+
+/**
  * Wydarzenia i propozycje followupów z DALSZYCH stron listingu. Nie rusza strony pierwszej —
  * tę przeczytał już `processSource`, a tutaj zaczynamy od jej pagera.
  */
@@ -348,18 +421,15 @@ export async function runPages(ctx: PagesCtx): Promise<{ events: EventItem[]; fo
   const today = todayIso();
   let html = ctx.html;
   let url = ctx.pageUrl;
+  ctx.base = ctx.html;
+  ctx.shape = (ctx.html ? listingShape(ctx.html, ctx.pageUrl) : null) ?? undefined;
 
   for (let page = 2; page <= max; page++) {
-    const next = html ? nextPageUrl(html, url, page - 1) : null;
-    if (!next) {
-      // milczymy przy stronie bez pagera (to norma) — meldujemy tylko pager, który JEST,
-      // ale nie niesie adresów, bo to jedyny przypadek, w którym coś naprawdę tracimy
-      if (page === 2 && html && /js_ajax_box_page|pagination|paggination/iu.test(html)) {
-        audit("page", "pager na stronie jest, ale bez adresów — numer dokłada JS, "
-          + "więc zostajemy przy pierwszej stronie", { url, pages: 1 });
-      }
-      break;
-    }
+    const next = (html ? nextPageUrl(html, url, page - 1) : null)
+      ?? await guessedNext(ctx, html, page, today);
+    // strona bez pagera to norma i nie zasługuje na wiersz w śladzie; przypadki, w których
+    // coś tracimy, meldują się same w `guessedNext`
+    if (!next) break;
     const pr: PageRun = { page, url: next, outcome: "ok", events: 0 };
     ctx.run.pages = [...(ctx.run.pages ?? []), pr];
 
