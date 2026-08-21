@@ -30,6 +30,8 @@ export type AuditKind =
   | 'followup.proposed'
   /** adres followupa skonfrontowany z inwentarzem strony: przyciągnięty albo odrzucony */
   | 'followup.url'
+  /** obcy serwis w followupach: plon po publikacji, licznik jałowych przebiegów i wyciszenie */
+  | 'followup.host'
   /** wpis o kształcie strony programu: sonda adresu i werdykt, czy stał pod nim program */
   | 'container'
   | 'followup'

@@ -37,6 +37,7 @@ import { detach } from "./block-cache.js";
 import { blockSource } from "./block-source.js";
 import { containerStats, dropUmbrellas, planProbes, probeContext } from "./container.js";
 import { extractEvents, extractPoster } from "./extract.js";
+import { noteFollowupEvents } from "./followup-hosts.js";
 import { followupsPerSource, rememberSameAsPage } from "./followup-queue.js";
 
 /**
@@ -250,7 +251,13 @@ async function pullOne(
   // „same-as-page" NIE wnosi wydarzeń: to te same bajty, co strona, a jej wydarzenia stoją już
   // w sumie. Dorzucenie ich tutaj byłoby dokładnie tym duplikatem, dla którego ten przypadek
   // w ogóle wykrywamy.
-  if (fr.outcome === "ok" || fr.outcome === "unchanged") into.push(...followupEvents(url, state));
+  if (fr.outcome === "ok" || fr.outcome === "unchanged") {
+    const got = followupEvents(url, state);
+    // rozliczenie obcych serwisów bierze KLUCZE stąd, a nie adresy z opublikowanych rekordów:
+    // wydarzenie z followupa bywa opublikowane pod adresem posta — patrz followup-hosts.ts
+    noteFollowupEvents(url, fr.kind, got);
+    into.push(...got);
+  }
   return fr;
 }
 

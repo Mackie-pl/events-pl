@@ -68,6 +68,12 @@ export interface PipelineState {
    * odpowiedzi z innego obszaru zostałyby tu na zawsze, bo klucz „venue|town" się nie zmienia.
    */
   geoRegion?: string;
+  /**
+   * Obce serwisy odwiedzane followupami: ile przebiegów Z RZĘDU nie dały ani jednego
+   * OPUBLIKOWANEGO wydarzenia. Klucz to host bez „www". Wpis rośnie, zeruje się przy
+   * pierwszym opublikowanym wydarzeniu i wygasa — patrz extract/followup-hosts.ts.
+   */
+  followupHosts?: Record<string, { runs: number; since: string; lastTry: string }>;
   /** cache ekstrakcji per source.id / URL followupa */
   extractions?: Record<string, CachedExtraction>;
   /**

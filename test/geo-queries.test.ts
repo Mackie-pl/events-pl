@@ -9,7 +9,7 @@
 import { strict as assert } from "node:assert";
 import { describe, it } from "node:test";
 
-import { geoQueries } from "../src/adapters/nominatim-query.js";
+import { geoQueries, looksLikeTown } from "../src/adapters/nominatim-query.js";
 
 describe("geoQueries — rozbijanie venue na człony", () => {
   it("rozdziela nazwę miejsca i adres, nazwa idzie pierwsza", () => {
@@ -174,5 +174,32 @@ describe("geoQueries — rozbijanie venue na człony", () => {
       geoQueries("Muzeum Kultur Świata (wejście od ul. Mostowej 7)"),
       [{ q: "Muzeum Kultur Świata" }, { q: "Mostowej 7" }],
     );
+  });
+});
+
+/**
+ * Sito nazw miejscowości dla pytania „gdzie to leży". Pomyłka jest tu niesymetryczna:
+ * za ciasne sito NIE PYTA i wycieczka biura podróży idzie do publikacji (tak przechodziły
+ * „St. Julian's" i „Lloret de Mar" — 2026-08-21), za luźne pyta o coś, co nie jest
+ * miejscowością, i najwyżej dostaje „nie wiem" za darmo.
+ */
+describe("looksLikeTown — o co wolno zapytać geokoder", () => {
+  it("przepuszcza nazwy z kropką, apostrofem i przyimkiem", () => {
+    for (const t of ["St. Julian's", "Lloret de Mar", "Nowy Jork", "Ceradz Kościelny",
+      "Dymaczewo Nowe", "Poznań-Grunwald", "Turcja"]) {
+      assert.equal(looksLikeTown(t), true, t);
+    }
+  });
+
+  it("odrzuca adresy i listy — cyfra i przecinek znaczą, że to już nie miejscowość", () => {
+    for (const t of ["ul. Polna 1a", "Mosina, Poznań", "Rynek 3", "Sala Fitness OSiR 2"]) {
+      assert.equal(looksLikeTown(t), false, t);
+    }
+  });
+
+  it("odrzuca zdania i puste wejście", () => {
+    for (const t of ["", "  ", "at", "poznań", "Bardzo długa nazwa opisująca miejsce zbiórki"]) {
+      assert.equal(looksLikeTown(t), false, t);
+    }
   });
 });

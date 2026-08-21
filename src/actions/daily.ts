@@ -25,6 +25,7 @@ import { harvestEventUrls, isEventUrl } from "../pipeline/facebook.js";
 import { pruneBlocks } from "../pipeline/extract/block-cache.js";
 import { resolveFbEvents } from "../pipeline/extract/fb-events.js";
 import { startFbPosterRun } from "../pipeline/extract/fb-posters.js";
+import { noteFollowupHosts, resetFollowupHosts } from "../pipeline/extract/followup-hosts.js";
 import { fbPageDatasetReady } from "../pipeline/extract/fb-page.js";
 import { fbDailyBudget } from "../pipeline/extract/fb-budget.js";
 import { applyFbMutes, mutedSkip } from "../pipeline/extract/fb-cost-mute.js";
@@ -53,6 +54,7 @@ import {
 } from "../shared/audit.js";
 import { todayIso } from "../shared/dates.js";
 import { BD_USAGE_LOG } from "../shared/paths.js";
+import { host } from "../shared/url.js";
 import { eventsStore, sourcesStore, stateStore } from "../storage/index.js";
 import type {
   EventItem,
@@ -85,6 +87,8 @@ async function run(): Promise<void> {
   // sufit odczytów plakatów jest wspólny dla całego przebiegu, więc zeruje się TU, a nie
   // w processSource; przy okazji z cache'u wypadają wpisy minione i puste (patrz fb-posters.ts)
   startFbPosterRun(state, todayIso());
+  // plon obcych serwisów liczymy per przebieg — pamięć musi zaczynać pusta
+  resetFollowupHosts();
 
   for (const src of cfg.sources) {
     beginAuditSource(src.id);
@@ -256,6 +260,16 @@ async function run(): Promise<void> {
       { folded: folded.dropped.length, kept: allEvents.length },
     );
   }
+
+  // dopiero TU, bo dopiero teraz wiadomo, co czytelnik zobaczy: obcy serwis, na który
+  // wyszły followupy, rozlicza się z OPUBLIKOWANYCH wydarzeń, nie z wyciągniętych
+  noteFollowupHosts({
+    runs: sourceRuns,
+    published: allEvents,
+    registry: new Set(cfg.sources.map((s) => host(s.url))),
+    state,
+    today: todayIso(),
+  });
 
   // pełna wersja (z kontaktami) do prywatnego archiwum — MUSI polecieć przed redakcją
   await archiveEventsFull({

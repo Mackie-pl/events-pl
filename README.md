@@ -30,7 +30,7 @@ src/actions/discover.ts  ·  --why <id> = skąd to źródło      (metryki + śl
 | `sources.json` | rejestr źródeł Poznań +15 km (etap 1 wykonany ręcznie 2026-07-20; 46 źródeł, 13 gmin) + `provenance` przy każdym źródle dodanym automatycznie |
 | `src/actions/` | wejścia potoku — `daily`, `discover`, `digest`, `backfill-costs`, `probe` (sprawdzenie jednego źródła na żądanie), `probe-fb-pages` (jednorazowy pomiar fanpage'ów), `fb-budget-preview` (darmowy podgląd decyzji regulatora budżetu), `panel-server` (lokalny most panelu). Same main() + orkiestracja, zero logiki dziedzinowej |
 | `src/adapters/` | wyjścia do świata: `openrouter`, `search` (fasada) + `serper`/`google-cse`/`brave`, `overpass`, `nominatim`, `page-fetch`, `brightdata`, `supabase-archive`, `telegram`, `resend`, `http` |
-| `src/pipeline/` | logika dziedzinowa: `discover/` (discovery gmin, walidacja propozycji, `entrypoint`, `capabilities`, `--why`), `verify/` (drabina osiągalności, profil, naprawa URL-i), `extract/` (ekstrakcja, followupy, wydarzenia FB), `digest/`, `dedupe`, `non-events` (odsiew wpisów, na które nie da się przyjść — półkolonie, spotkania organizacyjne; jeden filtr przed scalaniem, wspólny dla wszystkich ścieżek, uzupełnia werdykt modelu `is_noise`), `locality` (odsiew wydarzeń spoza regionu — wycieczki biur podróży; werdykt geokodera, nie lista słów ani domen), `series` (rytm `repeat` z drutu → terminy, a powtórzenia → jeden wpis z listą `dates`; zwijanie po dedupe, wspólne dla modelu, plakatów, cache'u i kalendarzy), `pii`, `facebook`, `prompts` |
+| `src/pipeline/` | logika dziedzinowa: `discover/` (discovery gmin, walidacja propozycji, `entrypoint`, `capabilities`, `--why`), `verify/` (drabina osiągalności, profil, naprawa URL-i), `extract/` (ekstrakcja, followupy, `followup-hosts` — licznik jałowych obcych serwisów, wydarzenia FB), `digest/`, `dedupe`, `non-events` (odsiew wpisów, na które nie da się przyjść — półkolonie, spotkania organizacyjne; jeden filtr przed scalaniem, wspólny dla wszystkich ścieżek, uzupełnia werdykt modelu `is_noise`), `locality` (odsiew wydarzeń spoza regionu — wycieczki biur podróży; werdykt geokodera, nie lista słów ani domen), `series` (rytm `repeat` z drutu → terminy, a powtórzenia → jeden wpis z listą `dates`; zwijanie po dedupe, wspólne dla modelu, plakatów, cache'u i kalendarzy), `pii`, `facebook`, `prompts` |
 | `src/shared/` | narzędzia bez zależności: `url-template` (zwijanie adresów do szablonów — serce rozpoznania list), `links`, `dates`, `text`, `url`, `hash`, `audit`, `errors`, `json-schema`, `series` (arytmetyka rytmu + etykieta cyklu — jedna implementacja dla digestu i strony) |
 | `src/reporting/` | agregaty, koszty, podsumowania Actions, redakcja PII, polityki retencji raportów |
 | `src/storage/` | **port składowania** — `DocStore`/`CollectionStore` + implementacja na plikach JSON. Jedyne miejsce znające ścieżki; przejście na bazę to druga implementacja i podmiana wiązań w `storage/index.ts` |
@@ -931,6 +931,52 @@ Followupy z dalszych stron gruntujemy **wobec ich własnej strony**: `groundFoll
 adres z serwisu, którego nie ma na czytanej stronie, więc przepuszczenie propozycji ze strony 2
 przez inwentarz strony 1 skasowałoby je co do jednej.
 
+## Obce serwisy w followupach: licznik jałowych przebiegów
+
+Followup potrafi wyprowadzić potok poza serwis źródła. W przebiegu 2026-08-21 udostępniony post
+na tablicy gminy odesłał nas na `st.pl/trip/index` — katalog biura podróży. Ten jeden followup
+kosztował **$0.0104, czyli więcej niż cała strona źródła** ($0.0102), oddał **38 „wydarzeń"**
+i **ani jednego opublikowanego**: wycieczki zagraniczne wypadły w [odsiewie lokalności](#lokalność-wydarzenie-ma-się-dziać-u-nas),
+reszta w scalaniu duplikatów.
+
+**Plon liczymy PO PUBLIKACJI, nie po ekstrakcji** — i to jest cała treść mechanizmu. Po liczbie
+wyciągniętych rekordów `st.pl` był NAJLEPSZYM followupem tamtego przebiegu; ledger liczący
+ekstrakcje awansowałby go, zamiast wyciszyć. Dopiero pytanie „ile z tego zobaczył czytelnik"
+odróżnia katalog wycieczek od podstrony domu kultury.
+
+Licznik (`extract/followup-hosts.ts`) nie zna ANI JEDNEJ nazwy domeny — uczy się ich sam i sam
+o nich zapomina. Lista domen zestarzeje się w miesiąc, bo za rok będzie 99 innych biur podróży
+pod 99 innymi adresami; `if (host === "st.pl")` załatwia jeden wiersz danych zamiast zjawiska.
+
+| | |
+|---|---|
+| co liczymy | przebiegi Z RZĘDU, w których obcy host nie dał ani jednego opublikowanego wydarzenia |
+| po czym wiążemy | KLUCZ wydarzenia (`shared/event-key.ts`), nie `source_url` — patrz niżej |
+| kiedy milknie | po `FOLLOWUP_HOST_LIMIT` (3) — adres przestaje zajmować miejsce w kolejce |
+| co zeruje | jedno opublikowane wydarzenie z tego hosta |
+| droga powrotna | sonda po `FOLLOWUP_HOST_RECHECK_DAYS` (30 dni) od ostatniej próby |
+| gdzie stan | `state.json` → `followupHosts` (host bez „www"), przerwane serie są przycinane |
+
+Trzy bezpieczniki, bo pomyłka wycisza **cały serwis**, a nie jeden wiersz w raporcie:
+
+- **tylko hosty OBCE wobec źródła.** Podstrony własnego serwisu gminy nie mają jak tu trafić,
+  choćby milczały tygodniami;
+- **host obecny w rejestrze źródeł jest nietykalny.** `bibldop-wydarzenia` linkuje do
+  `dopiewo.pl`, który skrobiemy osobno — wyciszenie zabrałoby nam wejście do własnego źródła;
+- **tylko followupy `kind: "page"`.** Wydarzenie z plakatu wskazuje POST, nie plik graficzny,
+  więc host obrazu (`scontent.xx.fbcdn.net`) wyglądałby na jałowy ZAWSZE i licznik wyciszyłby
+  sam odczyt plakatów.
+
+**Plon wiążemy KLUCZEM wydarzenia, nie adresem** — pierwsza wersja pytała, czy któryś
+opublikowany rekord ma `source_url` na tym hoście, i była błędna. W tym samym przebiegu followup
+na `imd.org.pl` oddał sześć wpisów o bawialni, a opublikowane rekordy wskazują POST z grupy FB,
+bo tam model kazał pójść czytelnikowi. Host wyglądałby na jałowy i po trzech przebiegach zabrałby
+ze sobą jedyne miejsce, z którego znamy godziny bawialni. Klucz przeżywa i klonowanie z cache'u,
+i scalanie duplikatów — zwycięzca dedupe ma z definicji ten sam klucz, co przegrany.
+
+Ślad idzie krokiem `followup.host`: licznik przy każdym jałowym przebiegu, zerowanie przy
+pierwszym opublikowanym wydarzeniu i pominięcie adresu w kolejce, gdy wyciszenie już działa.
+
 ## Lokalność: wydarzenie ma się dziać u nas
 
 Wpis może być prawdziwym wydarzeniem — mieć datę, cenę, zapisy i komplet danych — a i tak nie być
@@ -968,7 +1014,10 @@ przybyło (181 → 197), bo przestały wędrować.
 Trzy bezpieczniki, wszystkie z pomiaru:
 
 - **pytamy o `town`, nigdy o człony `venue`.** „Sala Fitness OSiR" puszczone na świat trafia
-  w cokolwiek, a fałszywe „to nie nasze" kasuje wydarzenie po cichu;
+  w cokolwiek, a fałszywe „to nie nasze" kasuje wydarzenie po cichu. Samo `town` przechodzi
+  przez `looksLikeTown`: cyfra znaczy adres, przecinek listę, a pięć wyrazów zdanie. Sito jest
+  szersze niż `isLocality` od rozbierania adresu, bo za ciasne NIE PYTA — „St. Julian's"
+  i „Lloret de Mar" tak właśnie przechodziły do publikacji;
 - **`featureType=settlement`**, bo bez niego prostokąt przepuszczał „Maroko" (sklep w Suchym Lesie),
   „Peru" (konsulat honorowy) i „Maderę" (przysiółek pod Neklą) — filtr podniósł rozdzielenie
   z 15/19 do 21/23, nie tracąc żadnej z naszych wsi;
@@ -1215,10 +1264,10 @@ tego nie widać w historii.
 <!-- Tabela poniżej jest generowana z src/config/params.ts przez `npm run config:docs`.
      Ręczne zmiany przepadną — popraw wpis w rejestrze. -->
 
-Wszystkie 72 parametrów, jakie potok czyta z konfiguracji. Kolumna **klasa** mówi,
+Wszystkie 74 parametrów, jakie potok czyta z konfiguracji. Kolumna **klasa** mówi,
 czym parametr jest i — co ważniejsze — GDZIE mieszka:
 
-- **próg** (38 sztuk) — steruje zachowaniem potoku i stoi w commitowanym `config.json`.
+- **próg** (40 sztuk) — steruje zachowaniem potoku i stoi w commitowanym `config.json`.
   Zmiana progu ma zostawiać ślad: `git log -p config.json` daje datę, autora i wartość przed i po,
   do zestawienia z tym, co w tych dniach robił potok. Każdy przebieg zapisuje w raporcie migawkę
   progów, którymi się kierował (`RunReport.config`), więc stary raport da się czytać bez zgadywania.
@@ -1304,6 +1353,8 @@ która obowiązuje, gdy nie ustawiono nic. Dłuższe uzasadnienia stoją przy wp
 | `LISTING_PAGES_MAX` | `3` | próg | ile stron listingu czytamy przy jednym źródle (1 = tylko pierwsza, czyli jak dotąd) |
 | `FOLLOWUPS_PER_SOURCE` | `7` | próg | ile podstron / PDF-ów / plakatów dociągamy przy jednym źródle (0 = wcale) |
 | `FOLLOWUP_SAME_PAGE_RECHECK_DAYS` | `30` | próg | po ilu dniach followup identyczny ze stroną źródła wraca do kolejki (0 = pyta zawsze) |
+| `FOLLOWUP_HOST_LIMIT` | `3` | próg | po ilu przebiegach bez opublikowanego wydarzenia obcy serwis wypada z kolejki followupów (0 = mechanizm wyłączony) |
+| `FOLLOWUP_HOST_RECHECK_DAYS` | `30` | próg | po ilu dniach wyciszony serwis wraca do kolejki followupów na próbę |
 | `CONTAINER_MIN_SPAN_DAYS` | `8` | próg | od ilu dni zakres bez rytmu i bez godziny uznajemy za stronę programu (0 = nie sonduj) |
 | `CONTAINER_MAX_PROBES` | `3` | próg | ile stron-programów sondujemy w jednym źródle na przebieg |
 | `ENTRYPOINT_LLM` | `always` | próg | kiedy pytać model o punkt wejścia gminy: always \| ambiguous \| never |

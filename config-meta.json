@@ -348,6 +348,20 @@
       "def": 30
     },
     {
+      "name": "FOLLOWUP_HOST_LIMIT",
+      "group": "pipeline",
+      "cls": "tuning",
+      "summary": "po ilu przebiegach bez opublikowanego wydarzenia obcy serwis wypada z kolejki followupów (0 = mechanizm wyłączony)",
+      "def": 3
+    },
+    {
+      "name": "FOLLOWUP_HOST_RECHECK_DAYS",
+      "group": "pipeline",
+      "cls": "tuning",
+      "summary": "po ilu dniach wyciszony serwis wraca do kolejki followupów na próbę",
+      "def": 30
+    },
+    {
       "name": "CONTAINER_MIN_SPAN_DAYS",
       "group": "pipeline",
       "cls": "tuning",

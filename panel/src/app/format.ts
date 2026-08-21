@@ -130,6 +130,9 @@ export const STEP_META: Record<
   // 'save': adres, który nigdzie nie prowadzi, odpada PRZED pobraniem — a odrzucony wracałby
   // po 404 w każdym przebiegu, bo 404 nie zmienia hasha strony
   'followup.url': { icon: '@tui.link-2-off', tone: 'save' },
+  // 'save': krok wycisza serwis, który kosztuje pobrania i nie publikuje ani jednego
+  // wydarzenia — a przy zerowaniu licznika mówi, że jednak zarabia na siebie
+  'followup.host': { icon: '@tui.globe-lock', tone: 'save' },
   // 'spend': sonda to pobranie, za które nikt nas nie prosił — ma być widać, że kosztuje,
   // nawet gdy okaże się trafiona i wniesie wydarzenia
   container: { icon: '@tui.package-open', tone: 'spend' },

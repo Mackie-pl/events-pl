@@ -44,6 +44,8 @@ export type AuditKind =
   | "followup.url"
   /** wpis o kształcie strony programu: sonda adresu i werdykt, czy stał pod nim program */
   | "container"
+  /** obcy serwis w followupach: plon po publikacji, licznik jałowych przebiegów i wyciszenie */
+  | "followup.host"
   /** wynik jednego followupa */
   | "followup"
   /** linki facebook.com/events/… wyłuskane z treści */

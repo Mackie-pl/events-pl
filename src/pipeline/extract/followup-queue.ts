@@ -45,6 +45,7 @@ import { urlKey } from "../../shared/url.js";
 import type { EventItem, PipelineState, Source } from "../../types/index.js";
 
 import { entryUrl } from "./entry-url.js";
+import { followupHostMuted, hostRecheckDays } from "./followup-hosts.js";
 
 /** Sufit followupów na źródło — ta sama liczba jedzie do promptu, patrz `pipeline/prompts.ts`. */
 export const followupsPerSource = (): number => Math.max(P.FOLLOWUPS_PER_SOURCE.get(), 0);
@@ -102,6 +103,16 @@ export interface QueueCtx {
 export function queueFollowups(urls: readonly string[], ctx: QueueCtx): string[] {
   const kept: string[] = [];
   for (const url of urls) {
+    // wyciszenie hosta PRZED „to ta sama strona": obcy serwis odpada niezależnie od tego,
+    // co oddaje, a jego treść i tak nigdy nie była treścią strony źródła
+    const mute = followupHostMuted(url, ctx.state, ctx.today);
+    if (mute) {
+      audit("followup.host",
+        `serwis milczał przez ${mute.runs} przebiegi (od ${mute.since}) — nie zajmuje miejsca `
+        + `w kolejce, sonda po ${hostRecheckDays()} dniach od ${mute.lastTry}`,
+        { url, runs: mute.runs, since: mute.since, lastTry: mute.lastTry });
+      continue;
+    }
     if (!knownSameAsPage(url, ctx.srcId, ctx.state, ctx.today)) { kept.push(url); continue; }
     audit("followup.proposed",
       "ten adres oddawał już bajt w bajt treść strony źródła — nie zajmuje miejsca w kolejce",

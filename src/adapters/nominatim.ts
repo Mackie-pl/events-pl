@@ -6,7 +6,7 @@ import { describeError } from "../shared/errors.js";
 import type { GeoVerdict, PipelineState } from "../types/index.js";
 
 import { fetchUrl } from "./http.js";
-import { geoQueries, isLocality, norm } from "./nominatim-query.js";
+import { geoQueries, looksLikeTown, norm } from "./nominatim-query.js";
 
 // Nominatim wymaga UA identyfikującego aplikację (usage policy) — tu zostaje bot.
 const UA = { "User-Agent": "LocalEventsBot/0.3 (+kontakt: twoj@email)" };
@@ -178,12 +178,12 @@ const SETTLEMENT = { countrycodes: "pl", featureType: "settlement" };
  *   2. dopiero gdy jej u nas nie ma, pytamy GDZIE jest. To już tylko opis do śladu:
  *      „Turcja, gmina Sanniki" i „Türkiye" znaczą dla nas dokładnie to samo — nie u nas.
  *
- * Czego to pytanie NIE robi: nie sięga po człony `venue`. „Sala Fitness OSiR" puszczone na
- * świat trafi w cokolwiek, a fałszywe „nie nasze" kasuje prawdziwe wydarzenie po cichu.
+ * Czego to pytanie NIE robi: nie sięga po człony `venue` — pytamy o samo `town`, i to
+ * przepuszczone przez `looksLikeTown`. Fałszywe „nie nasze" kasuje wydarzenie po cichu.
  * Bez znanego regionu nie orzekamy nic — nie ma z czym porównać.
  */
 async function probeWhere(town: string): Promise<GeoVerdict> {
-  if (!region || !town || !isLocality(town)) return UNKNOWN;
+  if (!region || !looksLikeTown(town)) return UNKNOWN;
   const here = await nominatim(`${town}, Poland`,
     { ...SETTLEMENT, viewbox: region.view, bounded: "1" });
   // miejscowość jest nasza — adresu OSM nie zna, ale to najczęstszy i niegroźny przypadek

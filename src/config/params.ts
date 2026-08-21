@@ -208,6 +208,34 @@ export const P = defineParams({
       "Wpis WYGASA celowo — serwis może kiedyś rozdzielić paginację i nikt nam tego nie zgłosi.",
     ],
   }),
+  FOLLOWUP_HOST_LIMIT: num({
+    group: "pipeline", cls: "tuning", def: 3, min: 0,
+    summary: "po ilu przebiegach bez opublikowanego wydarzenia obcy serwis wypada z kolejki "
+      + "followupów (0 = mechanizm wyłączony)",
+    doc: [
+      "Followup potrafi wyjść poza serwis źródła: udostępniony post odesłał potok na katalog",
+      "biura podróży st.pl (2026-08-21). Kosztował $0.0104, czyli więcej niż cała strona źródła,",
+      "i oddał 38 „wydarzeń”, z których do publikacji nie weszło ANI JEDNO.",
+      "Plon liczymy PO publikacji, nie po ekstrakcji — po liczbie wyciągniętych rekordów ten",
+      "katalog był najlepszym followupem przebiegu. Dopiero pytanie „ile z tego czytelnik",
+      "zobaczył” (po odsiewie i scalaniu duplikatów) odróżnia go od podstrony domu kultury.",
+      "Seria, nie pojedynczy dzień: podstrona bywa pusta w poniedziałek i pełna w piątek.",
+      "Jedno opublikowane wydarzenie zeruje licznik. Hosty z rejestru źródeł i podstrony",
+      "własnego serwisu źródła NIE są liczone — patrz pipeline/extract/followup-hosts.ts.",
+    ],
+  }),
+  FOLLOWUP_HOST_RECHECK_DAYS: num({
+    group: "pipeline", cls: "tuning", def: 30, min: 0,
+    summary: "po ilu dniach wyciszony serwis wraca do kolejki followupów na próbę",
+    doc: [
+      "Wyciszenie MUSI wygasać: serwis może zacząć publikować coś z naszego regionu, a nikt",
+      "nam tego nie zgłosi. Stan „raz zapadł, na zawsze” jest błędem projektowym — ta sama",
+      "zasada, co przy grupach FB (FB_GROUP_BLOCKED_RECHECK_DAYS) i wyciszeniu kosztowym.",
+      "Sonda kosztuje jedno pobranie i jedno wywołanie modelu, czyli rzędu $0.001.",
+      "Ta sama liczba przycina wpisy o PRZERWANEJ serii: host odwiedzony raz i nigdy więcej",
+      "wypada ze state.json, zamiast puchnąć w commitowanym pliku bez końca.",
+    ],
+  }),
   CONTAINER_MIN_SPAN_DAYS: num({
     group: "pipeline", cls: "tuning", def: 8, min: 0,
     summary: "od ilu dni zakres bez rytmu i bez godziny uznajemy za stronę programu (0 = nie sonduj)",

@@ -187,6 +187,27 @@ export const isLocality = (s: string): boolean =>
   /^\p{Lu}[\p{L}-]+(\s\p{Lu}[\p{L}-]+)?$/u.test(s.trim());
 
 /**
+ * Szersze sito dla pola `town` — używa go WYŁĄCZNIE pytanie „gdzie leży ta miejscowość"
+ * (`probeWhere` w nominatim.ts), nie rozbieranie adresu.
+ *
+ * `isLocality` jest tam za ciasne, bo pilnuje czego innego: rozstrzyga, czy lewa strona
+ * przed „ul." to miejscowość, i pomyłka kosztuje tam zły adres. Tutaj pomyłka kosztuje
+ * jedno darmowe zapytanie, które i tak wróci z „nie wiem" — sprawdzone 2026-08-21:
+ * „Sala Fitness OSiR", „Restauracja Panorama" i „Poznań-Grunwald" nie trafiają w żadną osadę
+ * ani w Polsce, ani na świecie. Za ciasne sito kosztuje za to konkret: „St. Julian's" (Malta)
+ * i „Lloret de Mar" (Hiszpania) nie były w ogóle PYTANE, więc dwie wycieczki biura podróży
+ * przechodziły do publikacji — a przy okazji zerowały licznik jałowych przebiegów hosta.
+ *
+ * Cyfra dyskwalifikuje (to już adres), przecinek też (to lista), i najwyżej cztery wyrazy.
+ */
+export const looksLikeTown = (s: string): boolean => {
+  const t = s.trim();
+  if (t.length < 3 || t.length > 40 || /[\d,;/]/.test(t)) return false;
+  if (!/^\p{Lu}/u.test(t)) return false;
+  return /^[\p{L}\s.'’-]+$/u.test(t) && t.split(/\s+/).length <= 4;
+};
+
+/**
  * „Mosina ul. Jana Cybisa 4" → ulica osobno, miejscowość osobno.
  *
  * Źródła gminne piszą adres jednym ciągiem, bez przecinka. Doklejenie do tego `ev.town`
