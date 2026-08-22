@@ -25,6 +25,14 @@ export const routes: Routes = [
       import('./pages/source-history/source-history').then((m) => m.SourceHistoryPage),
   },
   {
+    // wejście do śladu od strony NAZWY wydarzenia — zapytanie siedzi w `?q=`, więc wynik
+    // da się wkleić komuś w rozmowie zamiast opisywać, gdzie kliknąć
+    path: 'search',
+    title: 'Szukaj wydarzenia · events-pl',
+    loadComponent: () =>
+      import('./pages/event-search/event-search').then((m) => m.EventSearchPage),
+  },
+  {
     path: 'costs',
     title: 'Pieniądze · events-pl',
     loadComponent: () => import('./pages/costs/costs').then((m) => m.CostsPage),

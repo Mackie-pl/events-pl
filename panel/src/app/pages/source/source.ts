@@ -6,6 +6,7 @@ import { TuiBadge, TuiChip } from '@taiga-ui/kit';
 
 import { BridgeService } from '../../bridge';
 import { DataService } from '../../data';
+import { eventKey } from '../../event-identity';
 import {
   STATUS_META, STEP_META, fmtDateTime, fmtMs, fmtNum, fmtTokens, fmtUsd,
 } from '../../format';
@@ -40,6 +41,12 @@ const pathOf = (step: AuditStep): string | null => {
 export class SourcePage {
   readonly runId = input.required<string>();
   readonly sourceId = input.required<string>();
+  /**
+   * Klucz wydarzenia z adresu (`?event=`) — wejście z wyszukiwarki celuje w KONKRETNY rekord,
+   * a nie w stronę źródła. Bez tego trzeba było szukać tytułu wzrokiem na liście wyników,
+   * czyli robić ręcznie to, po co się tu przyszło.
+   */
+  readonly event = input<string>();
 
   protected readonly data = inject(DataService);
   protected readonly bridge = inject(BridgeService);
@@ -119,11 +126,13 @@ export class SourcePage {
     return this.fullByKey().get(`${ref.title}|${ref.date}`);
   }
 
-  /** Selected event; resets when the source changes. */
+  /** Selected event; follows `?event=` and resets when the source changes. */
   protected readonly selected = linkedSignal<EventRef | null>(() => {
     // Depend on the event list so selection resets on navigation.
-    this.produced();
-    return null;
+    const refs = this.produced();
+    const key = this.event();
+    if (!key) return null;
+    return refs.find((r) => (r.key ?? eventKey(r.title, r.date)) === key) ?? null;
   });
 
   protected readonly showRawJson = signal(false);

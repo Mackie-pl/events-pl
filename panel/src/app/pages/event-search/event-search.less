@@ -1,0 +1,157 @@
+.crumbs {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+}
+
+.page-title {
+  margin-bottom: 1rem;
+}
+
+.search {
+  width: 100%;
+  max-width: 44rem;
+  padding: 0.6rem 0.85rem;
+  border-radius: 0.6rem;
+  border: 1px solid var(--tui-border-normal);
+  background: var(--tui-background-base);
+  color: inherit;
+  font: inherit;
+
+  &:focus-visible {
+    outline: 2px solid var(--tui-border-focus);
+    outline-offset: 1px;
+  }
+}
+
+.hint {
+  margin: 0.9rem 0;
+  font-size: 0.9rem;
+  max-width: 44rem;
+}
+
+.hits {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.hit {
+  border: 1px solid var(--tui-border-normal);
+  border-radius: 0.6rem;
+  overflow: hidden;
+
+  &.open {
+    border-color: var(--tui-border-focus);
+  }
+}
+
+.hit-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--tui-background-neutral-1-hover);
+  }
+}
+
+.hit-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.hit-title {
+  font-weight: 500;
+}
+
+.hit-sub {
+  font-size: 0.83rem;
+}
+
+.hit-badges {
+  display: flex;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.hit-body {
+  padding: 0.25rem 0.75rem 0.9rem 2rem;
+  border-top: 1px solid var(--tui-border-normal);
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: 7rem 1fr;
+  gap: 0.2rem 0.75rem;
+  margin: 0.75rem 0;
+  font-size: 0.85rem;
+
+  dt {
+    color: var(--tui-text-secondary);
+  }
+
+  dd {
+    margin: 0;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}
+
+.sightings {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+
+  th {
+    text-align: left;
+    font-weight: 500;
+    color: var(--tui-text-secondary);
+    padding: 0.3rem 0.5rem 0.3rem 0;
+  }
+
+  td {
+    padding: 0.35rem 0.5rem 0.35rem 0;
+    border-top: 1px solid var(--tui-border-normal);
+    vertical-align: top;
+  }
+}
+
+.mono {
+  font-family: var(--tui-font-text-mono, monospace);
+  font-size: 0.82em;
+}
+
+.muted {
+  color: var(--tui-text-secondary);
+}
+
+.page-loader {
+  margin: 3rem auto;
+}
+
+.error-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.6rem;
+  border: 1px solid var(--tui-status-negative);
+  color: var(--tui-status-negative);
+}

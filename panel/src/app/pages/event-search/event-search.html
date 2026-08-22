@@ -1,0 +1,165 @@
+@if (data.runs.error()) {
+  <div class="error-box">
+    <tui-icon icon="@tui.triangle-alert" />
+    Failed to load runs.json
+    <button tuiLink type="button" (click)="data.runs.reload()">Retry</button>
+  </div>
+} @else {
+  <nav class="crumbs">
+    <a tuiLink routerLink="/">Overview</a>
+    <span class="muted">/</span>
+    <span>Search</span>
+  </nav>
+
+  <header tuiTitle class="page-title">
+    <h1>Find an event by name</h1>
+    <div tuiSubtitle>
+      Which run produced it, from which source, and what the pipeline decided along the way. Index
+      covers {{ scope().events }} events from {{ scope().withRefs }} of {{ scope().runs }} kept
+      runs, plus today's events.json.
+    </div>
+  </header>
+
+  <input
+    class="search"
+    type="search"
+    placeholder="Event title, URL, source or town — diacritics optional (dozynki → Dożynki)…"
+    [value]="query()"
+    (input)="onInput($event)"
+  />
+
+  @if (data.loading()) {
+    <tui-loader size="xl" class="page-loader" />
+  } @else if (!query()?.trim()) {
+    <p class="muted hint">
+      Type a few words from the title. Every word has to occur somewhere, order does not matter.
+    </p>
+  } @else if (!results().length) {
+    <p class="muted hint">
+      Nothing matches “{{ query() }}”.
+      @if (!scope().withRefs) {
+        None of the kept runs record event identity yet — the trail exists, but the index that maps
+        a title back to a run is empty.
+      } @else {
+        Runs older than the ones kept in runs.json are gone, so an event that stopped being
+        published a while ago is no longer reachable from here.
+      }
+    </p>
+  } @else {
+    <p class="muted hint">
+      {{ results().length }} match{{ results().length === 1 ? '' : 'es' }}
+      @if (results().length > limit) {
+        · showing the first {{ limit }}
+      }
+    </p>
+
+    <ul class="hits">
+      @for (hit of shown(); track hit.key) {
+        <li class="hit" [class.open]="opened() === hit.key">
+          <button class="hit-head" type="button" (click)="toggle(hit.key)">
+            <tui-icon [icon]="opened() === hit.key ? '@tui.chevron-down' : '@tui.chevron-right'" />
+            <span class="hit-main">
+              <span class="hit-title">{{ hit.title }}</span>
+              <span class="muted hit-sub">
+                {{ hit.date }}
+                @if (first(hit); as f) {
+                  · first seen {{ dt(f.run) }} in <strong>{{ f.sourceName }}</strong> ({{ f.town }})
+                } @else {
+                  · in today's events.json only — no kept run explains it
+                }
+                @if (sources(hit) > 1) {
+                  · {{ sources(hit) }} sources
+                }
+              </span>
+            </span>
+            <span class="hit-badges">
+              @if (hit.published) {
+                <span tuiBadge size="s" appearance="positive">in events.json</span>
+              } @else {
+                <span tuiBadge size="s" appearance="neutral">not published today</span>
+              }
+              <span tuiBadge size="s" appearance="neutral">
+                {{ hit.sightings.length }} sighting{{ hit.sightings.length === 1 ? '' : 's' }}
+              </span>
+            </span>
+          </button>
+
+          @if (opened() === hit.key) {
+            <div class="hit-body">
+              <dl class="meta">
+                <dt>Identity</dt>
+                <dd class="mono">{{ hit.key }}</dd>
+                <dt>URL</dt>
+                <dd>
+                  <a tuiLink [href]="hit.url" target="_blank" rel="noopener">{{ hit.url }}</a>
+                </dd>
+              </dl>
+
+              @if (!hit.sightings.length) {
+                <p class="muted">
+                  No run in runs.json produced this record. It survives in today's events.json, and
+                  its trail — if any — is in the private archive.
+                </p>
+              } @else {
+                <table class="sightings">
+                  <thead>
+                    <tr>
+                      <th>Run</th>
+                      <th>Source</th>
+                      <th>Status</th>
+                      <th>How</th>
+                      <th>Dedupe</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (s of hit.sightings; track s.run + s.sourceId + $index) {
+                      <tr>
+                        <td>{{ dt(s.run) }}</td>
+                        <td>
+                          <a tuiLink [routerLink]="['/source', s.sourceId]">{{ s.sourceName }}</a>
+                          <span class="muted mono">{{ s.sourceId }}</span>
+                        </td>
+                        <td>
+                          <span tuiBadge size="s" [appearance]="statusMeta[s.status].appearance">
+                            {{ s.status }}
+                          </span>
+                        </td>
+                        <td>
+                          {{ s.viaFollowup ? 'followup page' : 'listing page' }}
+                          @if (s.fromCache) {
+                            <span class="muted">· from cache, no model call</span>
+                          }
+                        </td>
+                        <td>
+                          @if (s.mergedInto) {
+                            merged into <span class="mono">{{ s.mergedInto }}</span>
+                          } @else {
+                            <span class="muted">kept</span>
+                          }
+                        </td>
+                        <td>
+                          @if (runExists(s.run)) {
+                            <a
+                              tuiLink
+                              [routerLink]="['/run', s.run, 'source', s.sourceId]"
+                              [queryParams]="{ event: hit.key }"
+                            >
+                              Decision trail →
+                            </a>
+                          } @else {
+                            <span class="muted">run dropped from history</span>
+                          }
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              }
+            </div>
+          }
+        </li>
+      }
+    </ul>
+  }
+}

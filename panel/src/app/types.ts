@@ -327,6 +327,12 @@ export interface EventRef {
   url: string;
   /** id źródła, którego rekord wygrał dedupe; brak = ten poszedł do events.json */
   mergedInto?: string;
+  /**
+   * Klucz rekordu, którym ten ref OSTATECZNIE został — po dedupe i po zwinięciu serii.
+   * Bez niego jeden post o cotygodniowych zajęciach wygląda jak kilkadziesiąt osobnych
+   * wydarzeń, bo rytm rozwija się PRZED dedupe (mirror `src/types/run.ts`).
+   */
+  key?: string;
 }
 
 export interface SourceRun {

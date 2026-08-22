@@ -47,7 +47,7 @@ tylko tutaj. Ta sama retencja co `runs.json` (7 dni), ~46 kB na przebieg. Panel 
 | `fb-pages.json` | wynik sondy `probe-fb-pages` — jednorazowy pomiar, **nie** produkt przebiegu. Powstaje tylko po `--go` i nie wchodzi do `costs.json` (jednorazowy wydatek zafałszowałby średnią dzienną) |
 | `eslint.shared.js` | wspólne progi rozmiaru dla potoku i panelu (max 350 linii kodu na plik, 120 znaków na linię) — pilnowane przez `ci.yml` |
 | `template.html` | frontend (wiek dziecka, tagi zagnieżdżone, weekend, mapa OSM); `reporting/render-index.ts` wstrzykuje JSON |
-| `panel/` | panel observability (Angular 22 + Taiga UI): **Day** (przegląd dnia → source runs → eventy + ślad decyzyjny + iframe podglądu + **Check now**: sonda jednego źródła na żądanie, przy działającym `npm run panel-server`), **Discovery** (proweniencja rejestru → przebiegi discover) i **Money** (wydatki dzień po dniu wg kategorii); deploy na GH Pages pod `/panel/` przez `deploy-pages.yml` (Settings → Pages → Source: GitHub Actions) |
+| `panel/` | panel observability (Angular 22 + Taiga UI): **Day** (przegląd dnia → source runs → eventy + ślad decyzyjny + iframe podglądu + **Check now**: sonda jednego źródła na żądanie, przy działającym `npm run panel-server`), **Discovery** (proweniencja rejestru → przebiegi discover), **Search** (wydarzenie po NAZWIE → przebieg, źródło i ślad decyzyjny; skorowidz z `produced` w `runs.json`, więc widać też rekordy, które przegrały dedupe) i **Money** (wydatki dzień po dniu wg kategorii); deploy na GH Pages pod `/panel/` przez `deploy-pages.yml` (Settings → Pages → Source: GitHub Actions) |
 
 ## Setup
 
