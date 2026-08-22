@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-21T05:15:05.537Z",
+ "updated": "2026-08-22T05:08:07.222Z",
  "rates": {
   "bdPerRecord": 0.0015,
   "searchPerQuery": 0.001,
@@ -3274,6 +3274,157 @@
    "usd": 0,
    "estimated": true,
    "units": 5.37,
+   "unit": "MB"
+  },
+  {
+   "day": "2026-08-22",
+   "at": "2026-08-22T05:08:07.057Z",
+   "stage": "daily",
+   "run": "2026-08-22T04:27:09.350Z",
+   "category": "llm-extract",
+   "usd": 0.152668,
+   "estimated": false,
+   "units": 85,
+   "unit": "calls",
+   "tokensIn": 336125,
+   "tokensOut": 95542,
+   "top": [
+    {
+     "id": "okpoznan-wydarzenia",
+     "usd": 0.032518,
+     "units": 13
+    },
+    {
+     "id": "poznan-co-gdzie-kiedy",
+     "usd": 0.017506,
+     "units": 11
+    },
+    {
+     "id": "fb-group-wydarzenia-w-poznaniu-1",
+     "usd": 0.017224,
+     "units": 2
+    },
+    {
+     "id": "puszczykowo-pl-wydarzenia",
+     "usd": 0.013642,
+     "units": 11
+    },
+    {
+     "id": "kultura-poznan",
+     "usd": 0.013363,
+     "units": 11
+    }
+   ]
+  },
+  {
+   "day": "2026-08-22",
+   "at": "2026-08-22T05:08:07.057Z",
+   "stage": "daily",
+   "run": "2026-08-22T04:27:09.350Z",
+   "category": "llm-vision",
+   "usd": 0.043022,
+   "estimated": false,
+   "units": 60,
+   "unit": "calls",
+   "tokensIn": 216873,
+   "tokensOut": 11586,
+   "top": [
+    {
+     "id": "mieszkancy-lubonia-fb-group",
+     "usd": 0.012869,
+     "units": 20
+    },
+    {
+     "id": "fb-group-wydarzenia-w-poznaniu-1",
+     "usd": 0.012394,
+     "units": 17
+    },
+    {
+     "id": "fb-group-imprezy-poznan",
+     "usd": 0.009297,
+     "units": 12
+    },
+    {
+     "id": "dopiewo-aktywnie-kulturalnie-fb",
+     "usd": 0.003643,
+     "units": 6
+    },
+    {
+     "id": "lubon-fb-group",
+     "usd": 0.003458,
+     "units": 4
+    }
+   ]
+  },
+  {
+   "day": "2026-08-22",
+   "at": "2026-08-22T05:08:07.057Z",
+   "stage": "daily",
+   "run": "2026-08-22T04:27:09.350Z",
+   "category": "fb",
+   "usd": 0.3735,
+   "estimated": true,
+   "units": 249,
+   "unit": "records",
+   "top": [
+    {
+     "id": "mieszkancy-lubonia-fb-group",
+     "usd": 0.075,
+     "units": 50
+    },
+    {
+     "id": "fb-group-wydarzenia-w-poznaniu-1",
+     "usd": 0.075,
+     "units": 50
+    },
+    {
+     "id": "fb-group-baba-cool",
+     "usd": 0.075,
+     "units": 50
+    },
+    {
+     "id": "dopiewo-aktywnie-kulturalnie-fb",
+     "usd": 0.072,
+     "units": 48
+    },
+    {
+     "id": "fb-group-imprezy-poznan",
+     "usd": 0.03,
+     "units": 20
+    }
+   ]
+  },
+  {
+   "day": "2026-08-22",
+   "at": "2026-08-22T05:08:07.057Z",
+   "stage": "daily",
+   "run": "2026-08-22T04:27:09.350Z",
+   "category": "scrape",
+   "usd": 0,
+   "estimated": true,
+   "units": 215,
+   "unit": "fetches"
+  },
+  {
+   "day": "2026-08-22",
+   "at": "2026-08-22T05:08:07.057Z",
+   "stage": "daily",
+   "run": "2026-08-22T04:27:09.350Z",
+   "category": "geo",
+   "usd": 0,
+   "estimated": true,
+   "units": 316,
+   "unit": "lookups"
+  },
+  {
+   "day": "2026-08-22",
+   "at": "2026-08-22T05:08:07.057Z",
+   "stage": "daily",
+   "run": "2026-08-22T04:27:09.350Z",
+   "category": "storage",
+   "usd": 0,
+   "estimated": true,
+   "units": 6.243,
    "unit": "MB"
   }
  ]
